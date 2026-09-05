@@ -103,6 +103,8 @@ test("CLI document operations cover list, show, validate, save, and guarded dele
   assert.match((await invoke(root, ["result", "save", resultFile])).output[0], /Saved/);
   assert.match((await invoke(root, ["result", "show", result.runId])).output[0], /"classification": "passed"/);
   assert.match((await invoke(root, ["result", "list"])).output.join("\n"), /run_20260830_120000/);
+  assert.match((await invoke(root, ["result", "delete", result.runId])).output[0], /Deleted result/);
+  assert.match((await invoke(root, ["result", "list"])).output[0], /No entries found/);
 
   const previousEditor = process.env.EDITOR;
   process.env.EDITOR = "/usr/bin/true";
@@ -179,6 +181,7 @@ test("CLI rejects missing values, unknown operations, files, and extra arguments
     [["result"], "UNKNOWN_COMMAND"],
     [["result", "validate"], "MISSING_ARGUMENT"],
     [["result", "save"], "MISSING_ARGUMENT"],
+    [["result", "delete"], "MISSING_ARGUMENT"],
     [["run"], "MISSING_ARGUMENT"],
     [["run", "checkout-card", "extra"], "UNKNOWN_ARGUMENT"],
     [["run-last", "extra"], "UNKNOWN_ARGUMENT"],

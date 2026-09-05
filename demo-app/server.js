@@ -49,11 +49,12 @@ async function form(request) {
 }
 
 export function createDemoApplication({ variant = "stable" } = {}) {
-  if (!new Set(["stable", "drift", "broken", "drift-broken"]).has(variant)) {
+  if (!new Set(["stable", "drift", "broken", "drift-broken", "design"]).has(variant)) {
     throw new TypeError(`Unknown demo variant: ${variant}`);
   }
   const hasCheckoutDrift = variant === "drift" || variant === "drift-broken";
   const hasBrokenConfirmation = variant === "broken" || variant === "drift-broken";
+  const hasDesignRegression = variant === "design";
   const state = { loggedIn: false, orderCreated: false, variant };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
@@ -109,6 +110,13 @@ export function createDemoApplication({ variant = "stable" } = {}) {
         ? page("Order failed", `
         <h1>Order could not be completed</h1>
         <p>An error message is shown.</p>`)
+        : hasDesignRegression
+          ? page("Order confirmed", `
+        <section data-design-regression style="display:grid;gap:32px;background:#fef2f2;padding:28px;border:4px solid #dc2626">
+          <a class="button" href="/orders/current" style="background:#dc2626">View test order</a>
+          <p>Order QA-1001 was placed successfully.</p>
+          <h1>Order confirmation</h1>
+        </section>`)
         : page("Order confirmed", `
         <h1>Order confirmation</h1>
         <p class="success">Order QA-1001 was placed successfully.</p>

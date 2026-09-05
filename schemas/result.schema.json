@@ -145,6 +145,8 @@
             "step_completed",
             "healing_started",
             "healing_completed",
+            "design_started",
+            "design_completed",
             "screenshot_captured",
             "cleanup_started",
             "cleanup_completed",
@@ -152,7 +154,7 @@
           ]
         },
         "status": { "$ref": "#/$defs/status" },
-        "phase": { "enum": ["environment", "before", "between", "test", "after", "run"] },
+        "phase": { "enum": ["environment", "before", "between", "test", "design", "after", "run"] },
         "fixtureId": { "$ref": "#/$defs/id" },
         "stepIndex": { "type": "integer", "minimum": 1 },
         "message": { "type": "string", "minLength": 1 }
@@ -165,20 +167,39 @@
     "designResult": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["reference", "viewport", "status"],
+      "required": ["reference", "referenceKind", "viewport", "afterStep", "status", "explanation"],
       "properties": {
         "reference": { "type": "string", "minLength": 1 },
+        "referenceKind": { "enum": ["unresolved", "image", "url", "figma"] },
         "viewport": {
           "type": "object",
           "additionalProperties": false,
           "required": ["width", "height"],
           "properties": {
-            "width": { "type": "integer", "minimum": 320 },
-            "height": { "type": "integer", "minimum": 320 }
+            "width": { "type": "integer", "minimum": 320, "maximum": 7680 },
+            "height": { "type": "integer", "minimum": 320, "maximum": 7680 }
           }
         },
+        "afterStep": { "type": "integer", "minimum": 1 },
         "status": { "enum": ["matched", "regression", "not_checked"] },
-        "explanation": { "type": "string", "minLength": 1 }
+        "explanation": { "type": "string", "minLength": 1 },
+        "actualScreenshot": { "$ref": "#/$defs/screenshotPath" },
+        "referenceScreenshot": { "$ref": "#/$defs/screenshotPath" },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["category", "status", "explanation"],
+            "properties": {
+              "category": {
+                "enum": ["components", "content", "layout", "order", "grouping", "alignment", "style"]
+              },
+              "status": { "enum": ["matched", "regression", "not_checked"] },
+              "explanation": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
       }
     }
   }

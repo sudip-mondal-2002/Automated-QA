@@ -103,6 +103,47 @@ export function demoNativeExecutor(fetchImpl = globalThis.fetch) {
       const passed = checks[expectation] === true;
       return { status: passed ? "passed" : "failed", observation: passed ? expectation : `${expectation} was not observed` };
     },
+    compareDesign() {
+      if (html.includes("data-design-regression")) {
+        return {
+          status: "regression",
+          explanation: "The confirmation action appears before the heading, and the approved success treatment changed to a red warning panel.",
+          findings: [
+            {
+              category: "order",
+              status: "regression",
+              explanation: "The primary action moved ahead of the confirmation heading and message.",
+            },
+            {
+              category: "style",
+              status: "regression",
+              explanation: "The approved green success treatment changed to a prominent red bordered panel.",
+            },
+          ],
+        };
+      }
+      return {
+        status: "matched",
+        explanation: "Required confirmation content, order, grouping, and success styling match the explicit reference.",
+        findings: [
+          {
+            category: "components",
+            status: "matched",
+            explanation: "The heading, success message, and order link are present.",
+          },
+          {
+            category: "layout",
+            status: "matched",
+            explanation: "The confirmation content keeps the approved hierarchy and grouping.",
+          },
+          {
+            category: "style",
+            status: "matched",
+            explanation: "The success message retains the approved green treatment.",
+          },
+        ],
+      };
+    },
     screenshot() {
       return { data: PIXEL_PNG, extension: "png" };
     },

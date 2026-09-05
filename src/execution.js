@@ -5,6 +5,12 @@ import { detectNativeCapability } from "./native-executor.js";
 import { prepareEnvironment } from "./environment.js";
 import { QaError } from "./errors.js";
 import {
+  buildDesignComparisonRequest,
+  designConfigurationForSpec,
+  normalizeDesignComparison,
+  resolveDesignReference,
+} from "./design.js";
+import {
   classifyFailure,
   createExpectationGuard,
   normalizeRediscovery,
@@ -435,21 +441,27 @@ export async function executeRun(options) {
   let canExecuteCleanup = false;
   let previousTargets = new Map();
   let healedSteps = 0;
+  let designReference;
 
-  const capture = async (label, details = {}) => {
+  const storeScreenshotArtifact = async (artifact, label, details = {}) => {
+    const safeLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) || "checkpoint";
+    const fileName = `${String(journal.events.length + 1).padStart(3, "0")}-${safeLabel}.${artifact.extension}`;
+    const relativePath = await workspace.saveScreenshot(runId, fileName, artifact.contents);
+    result.evidence.screenshots.push(relativePath);
+    await journal.add("screenshot_captured", { message: relativePath, ...details });
+    return { path: relativePath, ...artifact };
+  };
+
+  const captureArtifact = async (label, details = {}, screenshotContext = {}) => {
     try {
       const artifact = await screenshotArtifact(await executor.screenshot({
         runId,
         checkpoint: label,
         avoidSensitiveFields: true,
         outputs,
+        ...screenshotContext,
       }));
-      const safeLabel = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) || "checkpoint";
-      const fileName = `${String(journal.events.length + 1).padStart(3, "0")}-${safeLabel}.${artifact.extension}`;
-      const relativePath = await workspace.saveScreenshot(runId, fileName, artifact.contents);
-      result.evidence.screenshots.push(relativePath);
-      await journal.add("screenshot_captured", { message: relativePath, ...details });
-      return relativePath;
+      return await storeScreenshotArtifact(artifact, label, details);
     } catch (error) {
       const notice = `screenshot capture: ${errorMessage(error)}`;
       if (!result.evidence.unsupported.includes(notice)) result.evidence.unsupported.push(notice);
@@ -457,6 +469,8 @@ export async function executeRun(options) {
       return undefined;
     }
   };
+
+  const capture = async (label, details = {}) => (await captureArtifact(label, details))?.path;
 
   const runFixture = async (fixtureId, phase, betweenAfterStep) => {
     const fixture = await workspace.loadFixture(fixtureId);
@@ -529,11 +543,116 @@ export async function executeRun(options) {
     return status;
   };
 
+  const runDesignComparison = async (afterStep) => {
+    if (!result.design || result.design.status !== "not_checked") return;
+    const details = { phase: "design", stepIndex: afterStep };
+    await journal.add("design_started", { ...details, message: `Comparing design after step ${afterStep}` });
+
+    let comparison;
+    if (executor.supports?.("compareDesign") !== true) {
+      comparison = {
+        status: "blocked",
+        explanation: "Native executor does not expose design comparison",
+        findings: [],
+      };
+    } else {
+      const actual = await captureArtifact(
+        `design-actual-step-${afterStep}`,
+        details,
+        { viewport: result.design.viewport, design: true },
+      );
+      if (!actual) {
+        comparison = {
+          status: "blocked",
+          explanation: "The rendered design screenshot could not be captured",
+          findings: [],
+        };
+      } else {
+        result.design.actualScreenshot = actual.path;
+        const request = buildDesignComparisonRequest({
+          reference: designReference,
+          actual: {
+            path: actual.path,
+            image: { contents: actual.contents, extension: actual.extension },
+          },
+          viewport: result.design.viewport,
+          afterStep,
+        });
+        try {
+          comparison = normalizeDesignComparison(await executor.compareDesign(request, {
+            runId,
+            target: resolvedEnvironment,
+            signal,
+            afterStep,
+          }));
+        } catch (error) {
+          comparison = { status: "blocked", explanation: errorMessage(error), findings: [] };
+        }
+      }
+    }
+
+    if (comparison.referenceScreenshot && !result.design.referenceScreenshot) {
+      try {
+        const referenceArtifact = await screenshotArtifact(comparison.referenceScreenshot);
+        const saved = await storeScreenshotArtifact(referenceArtifact, "design-reference", details);
+        result.design.referenceScreenshot = saved.path;
+      } catch (error) {
+        comparison = {
+          status: "blocked",
+          explanation: `Design reference evidence is invalid: ${errorMessage(error)}`,
+          findings: [],
+        };
+      }
+    }
+
+    result.design.status = comparison.status === "blocked" ? "not_checked" : comparison.status;
+    result.design.explanation = redact(comparison.explanation);
+    result.design.findings = redact(comparison.findings);
+    await journal.add("design_completed", {
+      ...details,
+      status: comparison.status === "matched" ? "passed" : comparison.status === "regression" ? "failed" : "blocked",
+      message: result.design.explanation,
+    });
+  };
+
   await journal.add("run_started", { message: `Running ${specId}` });
 
   try {
     spec = await workspace.loadSpec(specId);
     result.environment = options.environmentId ?? spec.environment;
+    if (spec.design) {
+      const configuration = designConfigurationForSpec(spec.design, spec.steps.length);
+      result.design = {
+        reference: configuration.reference,
+        referenceKind: "unresolved",
+        viewport: configuration.viewport,
+        afterStep: configuration.afterStep,
+        status: "not_checked",
+        explanation: "Design reference has not been resolved",
+        findings: [],
+      };
+      try {
+        designReference = await resolveDesignReference(configuration.reference, {
+          repositoryRoot: workspace.repositoryRoot,
+          variables,
+          outputs,
+        });
+        for (const secret of designReference.sensitiveValues) sensitiveValues.add(secret);
+        result.design.referenceKind = designReference.kind;
+        result.design.explanation = "Design comparison has not reached its declared checkpoint";
+        if (designReference.artifact) {
+          const storedReference = await storeScreenshotArtifact(
+            designReference.artifact,
+            "design-reference",
+            { phase: "design", stepIndex: configuration.afterStep },
+          );
+          result.design.referenceScreenshot = storedReference.path;
+        }
+      } catch (error) {
+        result.design.explanation = redact(errorMessage(error));
+        throw error;
+      }
+    }
     previousTargets = await previousTargetsFor(workspace, specId, result.environment);
     const environmentDocument = await workspace.loadEnvironments();
     const environment = environmentDocument.environments[result.environment];
@@ -624,6 +743,9 @@ export async function executeRun(options) {
             status: executed.status,
             message: executed.status === "passed" ? "Expectations passed" : "Expectation or action failed",
           });
+          if (executed.status === "passed" && result.design?.afterStep === index) {
+            await runDesignComparison(index);
+          }
           if (executed.status !== "passed") {
             primaryClassification = executed.status === "blocked" ? "blocked" : "functional_regression";
             primaryExplanation = executed.explanation
@@ -694,7 +816,13 @@ export async function executeRun(options) {
     } catch {}
   }
 
-  if (primaryClassification === "passed" && healedSteps > 0) {
+  if (primaryClassification === "passed" && result.design?.status === "regression") {
+    primaryClassification = "design_regression";
+    primaryExplanation = `Design regression after step ${result.design.afterStep}: ${result.design.explanation}`;
+  } else if (primaryClassification === "passed" && result.design?.status === "not_checked") {
+    primaryClassification = "blocked";
+    primaryExplanation = `Design comparison was not completed: ${result.design.explanation}`;
+  } else if (primaryClassification === "passed" && healedSteps > 0) {
     primaryClassification = "healed";
     primaryExplanation = `Recovered ${healedSteps} interaction${healedSteps === 1 ? "" : "s"} and verified every original expectation unchanged`;
   }

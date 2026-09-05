@@ -6,14 +6,18 @@ import {
   readFile,
   readdir,
   rename,
+  rm,
   unlink,
 } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { parseJson, parseYaml, stringifyJson, stringifyYaml } from "./documents.js";
+import { designConfigurationForSpec } from "./design.js";
 import { QaError } from "./errors.js";
 import { assertStableId, validateDocument } from "./schema-validator.js";
 import { SAMPLE_ENVIRONMENTS, SAMPLE_FIXTURES, SAMPLE_SPEC, SAMPLE_SPECS } from "./samples.js";
+
+export const MAX_RECENT_RUNS_PER_SPEC = 20;
 
 async function exists(filePath) {
   try {
@@ -274,6 +278,14 @@ export class QaWorkspace {
         ]);
       }
     }
+    if (spec.design?.afterStep > spec.steps.length) {
+      throw new QaError("INVALID_DESIGN_POSITION", `Spec ${spec.id} has an invalid design checkpoint`, [
+        {
+          path: "$.design.afterStep",
+          message: `must reference one of the ${spec.steps.length} test steps`,
+        },
+      ]);
+    }
     return spec;
   }
 
@@ -439,6 +451,59 @@ export class QaWorkspace {
     }
 
     const evidenceScreenshots = new Set(value.evidence?.screenshots ?? []);
+    if (!spec.design && value.design) {
+      throw new QaError("UNEXPECTED_DESIGN_RESULT", `Run ${value.runId} records an undeclared design comparison`, [
+        { path: "$.design", message: "the selected spec has no explicit design reference" },
+      ]);
+    }
+    if (spec.design && !value.design) {
+      throw new QaError("MISSING_DESIGN_RESULT", `Run ${value.runId} omitted its declared design comparison`, [
+        { path: "$.design", message: "a spec with design metadata must record the comparison outcome" },
+      ]);
+    }
+    if (spec.design && value.design) {
+      const expected = designConfigurationForSpec(spec.design, spec.steps.length);
+      if (value.design.reference !== expected.reference) {
+        throw new QaError("DESIGN_REFERENCE_CHANGED", `Run ${value.runId} changed the design reference`, [
+          { path: "$.design.reference", message: "must match the selected spec exactly" },
+        ]);
+      }
+      if (
+        value.design.afterStep !== expected.afterStep
+        || value.design.viewport.width !== expected.viewport.width
+        || value.design.viewport.height !== expected.viewport.height
+      ) {
+        throw new QaError("DESIGN_CHECKPOINT_CHANGED", `Run ${value.runId} changed the design checkpoint`, [
+          { path: "$.design", message: "viewport and afterStep must match the selected spec" },
+        ]);
+      }
+      if (new Set(["matched", "regression"]).has(value.design.status)) {
+        if (value.design.referenceKind === "unresolved") {
+          throw new QaError("UNRESOLVED_DESIGN_REFERENCE", `Run ${value.runId} checked an unresolved design reference`, [
+            { path: "$.design.referenceKind", message: "a completed comparison requires a resolved reference" },
+          ]);
+        }
+        if (!value.design.actualScreenshot || !evidenceScreenshots.has(value.design.actualScreenshot)) {
+          throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its actual design screenshot`, [
+            { path: "$.design.actualScreenshot", message: "must reference a screenshot in $.evidence.screenshots" },
+          ]);
+        }
+      }
+      if (value.design.referenceScreenshot && !evidenceScreenshots.has(value.design.referenceScreenshot)) {
+        throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its reference screenshot`, [
+          { path: "$.design.referenceScreenshot", message: "must reference a screenshot in $.evidence.screenshots" },
+        ]);
+      }
+      if (
+        value.design.status === "regression"
+        && !(value.design.findings ?? []).some((finding) => finding.status === "regression")
+      ) {
+        throw new QaError("UNSUPPORTED_DESIGN_REGRESSION", `Run ${value.runId} lacks a concrete design finding`, [
+          { path: "$.design.findings", message: "a regression requires a reference-backed regression finding" },
+        ]);
+      }
+    }
+
     const successfulHealings = [];
     for (const [stepIndex, step] of value.steps.entries()) {
       if (!step.healing || step.healing.outcome !== "healed") continue;
@@ -476,6 +541,28 @@ export class QaWorkspace {
         { path: "$.classification", message: "use healed when recovery was required" },
       ]);
     }
+    if (value.classification === "design_regression") {
+      if (!spec.design || value.design?.status !== "regression") {
+        throw new QaError("DESIGN_REGRESSION_WITHOUT_REFERENCE", `Run ${value.runId} lacks a supported design regression`, [
+          { path: "$.classification", message: "design_regression requires an explicit reference and regression result" },
+        ]);
+      }
+      if (value.steps.some((step) => step.status !== "passed")) {
+        throw new QaError("DESIGN_REGRESSION_WITH_FAILED_STEP", `Run ${value.runId} also has a functional failure`, [
+          { path: "$.steps", message: "functional failures take precedence over design classification" },
+        ]);
+      }
+    }
+    if (new Set(["passed", "healed"]).has(value.classification) && value.design?.status === "regression") {
+      throw new QaError("DESIGN_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a design regression`, [
+        { path: "$.classification", message: "use design_regression for a supported design mismatch" },
+      ]);
+    }
+    if (new Set(["passed", "healed"]).has(value.classification) && value.design?.status === "not_checked") {
+      throw new QaError("DESIGN_NOT_CHECKED", `Run ${value.runId} passed without completing its design check`, [
+        { path: "$.design.status", message: "an explicit design reference must be checked or block the run" },
+      ]);
+    }
 
     const resultPath = this.resultPath(value.runId);
     await mkdir(path.dirname(resultPath), { recursive: true });
@@ -486,10 +573,17 @@ export class QaWorkspace {
       lastRunId: value.runId,
     });
     await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+    await this.pruneResults(value.specId, MAX_RECENT_RUNS_PER_SPEC, value.runId);
     return value;
   }
 
-  async listResults() {
+  async listResults({ specId, limit } = {}) {
+    if (specId !== undefined) assertStableId(specId, "$.specId");
+    if (limit !== undefined && (!Number.isInteger(limit) || limit < 1)) {
+      throw new QaError("INVALID_RESULT_LIMIT", "Result limit must be a positive integer", [
+        { path: "$.limit", message: "must be a positive integer" },
+      ]);
+    }
     await this.ensureDirectories();
     const entries = await readdir(this.runsDirectory, { withFileTypes: true });
     const runIds = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
@@ -499,7 +593,53 @@ export class QaWorkspace {
         results.push(await this.loadResult(runId));
       }
     }
-    return results.sort((left, right) => right.completedAt.localeCompare(left.completedAt));
+    const sorted = results
+      .filter((result) => specId === undefined || result.specId === specId)
+      .sort((left, right) => (
+        right.completedAt.localeCompare(left.completedAt) || right.runId.localeCompare(left.runId)
+      ));
+    return limit === undefined ? sorted : sorted.slice(0, limit);
+  }
+
+  listRecentResults({ specId, limit = MAX_RECENT_RUNS_PER_SPEC } = {}) {
+    return this.listResults({ specId, limit });
+  }
+
+  async pruneResults(specId, keep = MAX_RECENT_RUNS_PER_SPEC, preserveRunId) {
+    assertStableId(specId, "$.specId");
+    if (!Number.isInteger(keep) || keep < 1) {
+      throw new QaError("INVALID_RESULT_LIMIT", "Result retention must be a positive integer", [
+        { path: "$.keep", message: "must be a positive integer" },
+      ]);
+    }
+    const results = await this.listResults({ specId });
+    const retained = new Set(results.slice(0, keep).map((result) => result.runId));
+    if (preserveRunId && results.some((result) => result.runId === preserveRunId) && !retained.has(preserveRunId)) {
+      retained.delete(results[keep - 1].runId);
+      retained.add(preserveRunId);
+    }
+    const expired = results.filter((result) => !retained.has(result.runId));
+    for (const result of expired) {
+      await rm(path.dirname(this.resultPath(result.runId)), { recursive: true });
+    }
+    return expired.map((result) => result.runId);
+  }
+
+  async deleteResult(runId) {
+    const result = await this.loadResult(runId);
+    const selected = (await exists(this.lastTestPath)) ? await this.readLastTest() : null;
+    await rm(path.dirname(this.resultPath(runId)), { recursive: true });
+    if (selected?.lastRunId === runId) {
+      const replacement = (await this.listResults({ specId: result.specId }))
+        .find((candidate) => candidate.environment === result.environment);
+      const pointer = validateDocument("lastTest", {
+        specId: result.specId,
+        environment: result.environment,
+        ...(replacement ? { lastRunId: replacement.runId } : {}),
+      });
+      await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+    }
+    return result;
   }
 
   async validateAll() {
