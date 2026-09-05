@@ -1,6 +1,6 @@
 export { draftSpec, slugify, SPEC_CHANNELS } from "./draft.js";
 export { parseJson, parseYaml, stringifyJson, stringifyYaml } from "./documents.js";
-export { formatQaError, QaError } from "./errors.js";
+export { formatQaError, ORCHESTRATION_ERROR_CODES, QaError } from "./errors.js";
 export { prepareEnvironment, spawnApplication } from "./environment.js";
 export { channelFor, createRunId, executeRun } from "./execution.js";
 export {
@@ -27,3 +27,17 @@ export { redactSensitive, resolveReference, resolveReferences } from "./referenc
 export { assertStableId, isStableId, validateDocument } from "./schema-validator.js";
 export { atomicWriteFile, MAX_RECENT_RUNS_PER_SPEC, QaWorkspace } from "./storage.js";
 export { createQaUiServer, startQaUi } from "./ui-server.js";
+export { createTracer, traceEvent } from "./trace.js";
+export {
+  authenticate,
+  buildTestPlan,
+  crawl,
+  detectLoginForm,
+  parseHtml,
+  parsePrd,
+  replan,
+  renderTestPlanMarkdown,
+  selectorCandidates,
+  STRATEGY_ORDER,
+} from "./planner.js";
+export { COVERAGE_RULES, decideVerdict, evaluatePlan, renderGapsMarkdown, scorePlan } from "./coverage.js";

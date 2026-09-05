@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "id": "plan_1788510057310",
+  "target": "http://127.0.0.1:59035",
+  "generatedAt": "2026-09-04T08:20:57.310Z",
+  "attempt": 1,
+  "guidance": {
+    "prompt": "focus on checkout and authentication",
+    "prd": {
+      "requirements": []
+    }
+  },
+  "siteMapRef": "site-map.json",
+  "flows": [
+    {
+      "id": "flow_form-0-happy",
+      "title": "Sign in via /",
+      "category": "happy",
+      "priority": "high",
+      "rationale": "Form discovered at / with 2 inputs",
+      "pages": [
+        "/"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in via /",
+          "page": "/",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "Customer dashboard is visible"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_form-0-empty-username",
+      "title": "Reject empty username on /",
+      "category": "error",
+      "priority": "high",
+      "rationale": "Required input username discovered on /",
+      "pages": [
+        "/"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Submit leaving username blank",
+          "page": "/",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "A validation error names the username field",
+            "No record is created"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_form-0-invalid-creds",
+      "title": "Reject invalid credentials on /",
+      "category": "error",
+      "priority": "critical",
+      "rationale": "Login form requires negative authentication coverage",
+      "pages": [
+        "/"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in with invalid credentials",
+          "page": "/",
+          "expect": [
+            "An error message is shown"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_unauthenticated-redirect",
+      "title": "Redirect unauthenticated deep links to login",
+      "category": "error",
+      "priority": "high",
+      "rationale": "Authenticated surface requires unauthenticated coverage",
+      "pages": [
+        "/dashboard"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Open a protected page without signing in",
+          "page": "/dashboard",
+          "expect": [
+            "Sign in is required"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_dashboard-form-0-happy",
+      "title": "Sign in via /dashboard",
+      "category": "happy",
+      "priority": "high",
+      "rationale": "Form discovered at /dashboard with 2 inputs",
+      "pages": [
+        "/dashboard"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in via /dashboard",
+          "page": "/dashboard",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "Customer dashboard is visible"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_dashboard-form-0-empty-username",
+      "title": "Reject empty username on /dashboard",
+      "category": "error",
+      "priority": "high",
+      "rationale": "Required input username discovered on /dashboard",
+      "pages": [
+        "/dashboard"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Submit leaving username blank",
+          "page": "/dashboard",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "A validation error names the username field",
+            "No record is created"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_dashboard-form-0-invalid-creds",
+      "title": "Reject invalid credentials on /dashboard",
+      "category": "error",
+      "priority": "critical",
+      "rationale": "Login form requires negative authentication coverage",
+      "pages": [
+        "/dashboard"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in with invalid credentials",
+          "page": "/dashboard",
+          "expect": [
+            "An error message is shown"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_cart-form-0-happy",
+      "title": "Sign in via /cart",
+      "category": "happy",
+      "priority": "high",
+      "rationale": "Form discovered at /cart with 2 inputs",
+      "pages": [
+        "/cart"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in via /cart",
+          "page": "/cart",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "Customer dashboard is visible"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_cart-form-0-empty-username",
+      "title": "Reject empty username on /cart",
+      "category": "error",
+      "priority": "high",
+      "rationale": "Required input username discovered on /cart",
+      "pages": [
+        "/cart"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Submit leaving username blank",
+          "page": "/cart",
+          "action": "submit",
+          "targetRef": "form:0",
+          "expect": [
+            "A validation error names the username field",
+            "No record is created"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    },
+    {
+      "id": "flow_cart-form-0-invalid-creds",
+      "title": "Reject invalid credentials on /cart",
+      "category": "error",
+      "priority": "critical",
+      "rationale": "Login form requires negative authentication coverage",
+      "pages": [
+        "/cart"
+      ],
+      "preconditions": [],
+      "steps": [
+        {
+          "intent": "Sign in with invalid credentials",
+          "page": "/cart",
+          "expect": [
+            "An error message is shown"
+          ]
+        }
+      ],
+      "risks": [],
+      "requirementIds": []
+    }
+  ],
+  "coverageClaims": {
+    "happy": 3,
+    "edge": 0,
+    "error": 7
+  },
+  "openQuestions": []
+}
