@@ -330,8 +330,13 @@ export async function runReplayAttempt(options = {}) {
     const expect = options.expectImpl ?? playwrightTest.expect ?? playwrightTest.default?.expect;
     if (!expect) throw new QaError("PLAYWRIGHT_UNAVAILABLE", "Bundled Playwright did not expose expect");
     await replay({ page, expect, checkpoint, target, value, baseURL: prepared.target.baseUrl });
-    if (covered.size !== status.manifest.coverage.total || !status.manifest.coverage.complete) {
-      throw new QaError("INCOMPLETE_REPLAY_COVERAGE", `Replay checked ${covered.size}/${status.manifest.coverage.total} expectations`);
+    const expected = new Set(status.source.spec.steps.flatMap((step, stepIndex) => (
+      step.expect.map((_expectation, expectationIndex) => `${stepIndex + 1}:${expectationIndex}`)
+    )));
+    const missing = [...expected].filter((key) => !covered.has(key));
+    const unexpected = [...covered].filter((key) => !expected.has(key));
+    if (covered.size !== status.manifest.coverage.total || missing.length > 0 || unexpected.length > 0 || !status.manifest.coverage.complete) {
+      throw new QaError("INCOMPLETE_REPLAY_COVERAGE", `Replay checked ${covered.size}/${status.manifest.coverage.total} expectations; checkpoint mismatch: missing [${missing.join(", ")}], unexpected [${unexpected.join(", ")}]`);
     }
     const completed = new Date();
     return { engine: "playwright", status: "passed", startedAt: started.toISOString(), completedAt: completed.toISOString(), durationMs: completed - started, browserChannel: launched.channel, validation, consoleErrors, networkErrors };
@@ -435,7 +440,7 @@ export async function executeWithReplay(options) {
       const result = fastResult({ spec: source.spec, environmentId, attempt: validation.attempts.at(-1), manifest });
       result.startedAt = validation.attempts[0].startedAt;
       result.execution.attempts = validation.attempts;
-      await workspace.saveResult(result);
+      await workspace.saveResult(result, { select: options.selectResult !== false });
       return result;
     }
   } else if (initial.state === "trusted") {
@@ -443,7 +448,7 @@ export async function executeWithReplay(options) {
     attempts.push(fastAttempt);
     if (fastAttempt.status === "passed" && fullyBrowserDeterministic) {
       const result = fastResult({ spec: source.spec, environmentId, attempt: fastAttempt, manifest });
-      await workspace.saveResult(result);
+      await workspace.saveResult(result, { select: options.selectResult !== false });
       return result;
     }
     if (fastAttempt.status === "failed") {
@@ -455,7 +460,10 @@ export async function executeWithReplay(options) {
     attempts.push({ engine: "playwright", status: "skipped", startedAt: now, completedAt: now, durationMs: 0, reason: `Replay is ${initial.state}` });
   }
 
-  const recorder = createReplayRecorder(options.executor);
+  const nativeExecutor = typeof options.executorFactory === "function"
+    ? await options.executorFactory({ spec: source.spec, environment: source.environment, environmentId })
+    : options.executor;
+  const recorder = createReplayRecorder(nativeExecutor);
   const agentStarted = new Date();
   const result = await executeRun({ ...options, environmentId, executor: recorder.executor });
   const agentCompleted = new Date();
@@ -470,7 +478,7 @@ export async function executeWithReplay(options) {
   const fallbackReason = fastAttempt?.reason ?? (initial.state === "trusted" ? "Replay requires hybrid checks" : `Replay is ${initial.state}`);
   result.execution = {
     mode: fastAttempt?.status === "passed" ? "hybrid" : fastAttempt?.status === "failed" ? "agent_fallback" : "agent",
-    agentCalls: options.executor ? 1 : 0,
+    agentCalls: nativeExecutor ? 1 : 0,
     fallbackReason,
     attempts,
     ...(manifest ? { script: { path: `.qa/specs/${specId}.playwright.mjs`, state: manifest.state, sourceHash: manifest.sourceHash, scriptHash: manifest.scriptHash, validationRuns: manifest.validation.passed } } : {}),
@@ -502,6 +510,6 @@ export async function executeWithReplay(options) {
   result.completedAt = new Date().toISOString();
   const completedEvent = result.events?.findLast((event) => event.type === "run_completed");
   if (completedEvent) completedEvent.at = result.completedAt;
-  await workspace.saveResult(result);
+  await workspace.saveResult(result, { select: options.selectResult !== false });
   return result;
 }

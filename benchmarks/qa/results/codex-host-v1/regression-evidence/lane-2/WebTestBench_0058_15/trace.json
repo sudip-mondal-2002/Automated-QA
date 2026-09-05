@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0058:15",
+  "appId": "WebTestBench_0058",
+  "candidateSha256": "ac28975cc0021fdefaf8b9c87880ab0ffd616b5f63ffb29c6e1844c67252a7ef",
+  "appArchiveSha256": "f2725079a73e49bc304d6eb71511061ce8e1464e0587789ae41f80f01ff491c4",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4738; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:09:15.574Z",
+  "actions": [
+    {
+      "action": "Selected the saved Default Rule and opened Input & Search",
+      "result": "The rule became active as required by the workflow."
+    },
+    {
+      "action": "Entered John before clicking Search Records",
+      "result": "Coverage/Potential updated, but no result list appeared."
+    },
+    {
+      "action": "Clicked Search Records",
+      "result": "Three John-related records appeared."
+    },
+    {
+      "action": "Changed the Name field to Alice without clicking Search Records",
+      "result": "The input showed Alice, but the result list remained the three stale John-related records."
+    },
+    {
+      "action": "Repeated John search then changed to Alice again",
+      "result": "The same stale three-result behavior reproduced."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Search results update in real time as any field content changes",
+      "observed": "Only derived coverage updated live; the actual result list was created/changed only by Search Records and stayed stale after field edits."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The live-results requirement failed reproducibly after the prescribed rule-selection workflow.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0058_15/after.png",
+      "sha256": "35c19e4e5b7660d33f00695616ee84ed49abed250646437c49ad100c140e0ff6",
+      "bytes": 34151
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0058_15/dom-after.txt",
+      "sha256": "c9f526cb370f20b13d92883a9a718525e5f3b4394b49c40c03af40e218142508",
+      "bytes": 1622
+    }
+  ],
+  "laneId": "lane-2"
+}

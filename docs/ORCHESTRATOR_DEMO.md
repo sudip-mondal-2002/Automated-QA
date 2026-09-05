@@ -1,72 +1,112 @@
-# 5-minute demo
+# 5-minute optimized-orchestration demo
+
+This is a maintainer demo. Application developers use the installed
+`$autonomous-qa` skill and do not run these commands themselves.
 
 ## Setup
-node demo-app/server.js &            # 127.0.0.1:4555
-rm -rf .qa                           # cold start, no pre-existing specs
 
-## 0:00 — one input
-qa-agent orchestrate --url http://127.0.0.1:4555 \
+Start the deterministic demo application in a separate terminal:
+
+```bash
+PORT=4555 npm --prefix demo-app run dev
+```
+
+Keep the existing `.qa/` workspace. History reuse is part of the product; do
+not delete evidence to manufacture a cold run. Use `--no-history` when a forced
+cold comparison is needed.
+
+## 0:00 — one request, two execution modes
+
+Run the cold path through the reference Playwright executor:
+
+```bash
+node scripts/run-with-playwright.mjs \
+  --url http://127.0.0.1:4555 \
+  --username demo --password demo \
+  --prompt "focus on checkout and authentication" \
+  --prd docs/prd.md \
+  --no-history
+```
+
+Say: the cold path probes once, discovers same-depth routes concurrently,
+partitions evidence by route ownership, gates the merged plan, generates
+target-isolated artifacts, and executes specs through fresh browser contexts.
+
+## 1:15 — repeat the exact request
+
+Run the same command without `--no-history`:
+
+```bash
+node scripts/run-with-playwright.mjs \
+  --url http://127.0.0.1:4555 \
   --username demo --password demo \
   --prompt "focus on checkout and authentication" \
   --prd docs/prd.md
+```
 
-Say: the URL is the only required input. Credentials and prompt
-are optional enrichment.
+Open the newest orchestration `trace.jsonl`. Point out:
 
-## 0:45 — the gate decides
-Open test-plan.md, then gaps.json. Gate scores the plan, finds
-fixable gaps, replans, re-scores, passes. Point at trace.jsonl.
-No human in that loop.
+- `memory:history_hit`;
+- no crawl or planner fan-out events;
+- no generation stage;
+- `run:spec_completed` with Playwright execution; and
+- a newly persisted report and verdict.
 
-## 1:45 — validation
-Open generated/*.spec.js beside .qa/specs/*.yaml. The YAML has no
-selectors. The .spec.js carries validated:true and the strategy
-counts. Every button was confirmed against the live page before
-the file was written.
+The repeat reuses the plan/spec/replay artifacts, not the previous result. It
+still probes and executes the live application.
 
-## 2:30 — it adapts without failing
-curl -X POST localhost:4555/__demo/reset -d 'scenario=locator'
-Re-run. The suite stays green: renamed controls still resolve and every
-fuzzy resolution leaves a receipt (`fuzzy 1/2`) in the selected target.
-Re-run again on `pass`: identical greens. Then show the contrast:
+## 2:15 — context and parallelism
 
-## 3:30 — it refuses to lie
-curl -X POST localhost:4555/__demo/reset -d 'scenario=functional'
-Re-run. Same pipeline, different verdict: the two confirmation-dependent
-flows go `app_defect`, nothing heals, exit 10. The healer is
-architecturally forbidden from touching an assertion. (A live `healed`
-recovery is unit-proven in test/healing.test.js; the semantic healer fires
-on action-stage failures with before/after evidence. Full cross-run sidecar
-promotion is scoped roadmap, not claimed.)
+Open:
 
-## 4:15 — the report
-report.md, PRD gap section: REQ-4 promo code, uncovered, no promo
-input exists on /checkout. A product gap, not a test gap.
+- [Current orchestration structure](current-orchestration-structure.md), sections
+  3 and 4; and
+- one cold `trace.jsonl` beside one exact-hit trace.
 
-## 4:45 — trade-offs
-Fetch-only crawler for portability. Playwright files as portable
-artifacts. Semantic YAML as the contract, selectors as rewritable
-state.
+Explain the bounds:
 
-## Optional technical-Q&A drill (off clock)
+- discovery: 4 by default, 8 maximum;
+- route-owned planning: 3 maximum;
+- isolated spec execution: 3 by default, 8 maximum; and
+- fixtures/destructive flows: one shared application-state lock.
 
-Run the complete documented judgement matrix:
+Workers receive compact route-owned evidence, not the full conversation, skill,
+raw HTML, traces, secrets, prior plan, or verdict.
+
+## 3:15 — artifact trust
+
+Open a semantic YAML spec and its adjacent `.playwright.mjs` and
+`.playwright.json` files. The YAML is authoritative. The manifest binds the
+replay to the semantic source and script hashes; promotion requires three fresh
+zero-retry passes. Exact checkpoint identities prevent duplicate assertions
+from satisfying a simple count.
+
+## 4:00 — evidence and limitations
+
+Open `report.md`, `request.json`, and `trace.jsonl`. Then show
+[Optimized agent orchestration](optimized-agent-orchestration.md):
+
+- 30/30 exact-history and trusted-replay hits;
+- 680.56 ms baseline repeat versus 195.08 ms optimized repeat;
+- 1 ms median and 2 ms p95 exact-history lookup; and
+- complete raw invocation JSON under `docs/benchmarks/`.
+
+Say the limitations explicitly: discovery is still fetch/HTML based; similarity
+is lexical; cross-process mutable-state locks and enforced capability deadlines
+remain roadmap items; and the repository coverage threshold is still red.
+
+## Optional adversarial checks
 
 ```bash
 npm run demo:corners
-```
-
-Or let the reviewer select a single adversarial contract:
-
-```bash
 npm run demo:corners -- --case P3
 npm run demo:corners -- --case H7
 npm run demo:corners -- --case E5
 ```
 
-`npm run demo:reset -- --list` shows the app-backed cases. In addition to the
-headline `pass`, `drift`, `functional`, and `design` states, the live target now
-has `missing-target` (H2), `fixture` (H4), `drift-functional` (H7), and
-`cleanup` (E5). Plan against `/spa-shell` for the degraded client-rendered
-crawl case (P7). The remaining cases stay explicit runtime probes rather than
-being disguised as UI mutations.
+These test the planner, healing, design, and executor refusal contracts. They do
+not replace the controlled timing benchmark:
+
+```bash
+npm run benchmark:orchestration -- --samples 30 --warmups 3
+```

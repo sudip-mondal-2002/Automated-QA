@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0008:14",
+  "appId": "WebTestBench_0008",
+  "candidateSha256": "762b63beace572d5e7fab828dea889cae6d247cfe7e145e84ef1308f3c432ce1",
+  "appArchiveSha256": "dcc04ed4355036772d53c189fe8f56752fd99fa666d4a77787fa8bde484868db",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4737; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:08:06.129Z",
+  "actions": [
+    {
+      "action": "Opened the Two Sum challenge",
+      "result": "The editor and Run Tests button were visible, with no Test Results/Passed/Failed content present."
+    },
+    {
+      "action": "Clicked Run Tests",
+      "result": "After execution, 'Test Results: 0/3 passed' and per-case Input/Expected/Got feedback appeared."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Test results appear only after the user clicks Run Test",
+      "observed": "Result content count was zero before the click and the full result panel appeared only after Run Tests was activated."
+    }
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The test-result reveal timing was verified before and after the explicit run action.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0008_14/after.png",
+      "sha256": "f722178b3f9559e8c7dee7098b999102b768ad8c09ae098109dcd9ad33a229ad",
+      "bytes": 24684
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0008_14/dom-after.txt",
+      "sha256": "6c336db96c9c43e1a708e3dd76c974d2c4ee230e16ea535f08c39ff91343b9a6",
+      "bytes": 1629
+    }
+  ],
+  "laneId": "lane-2"
+}

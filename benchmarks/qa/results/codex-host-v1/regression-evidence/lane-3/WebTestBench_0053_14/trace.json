@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0053:14",
+  "appId": "WebTestBench_0053",
+  "candidateSha256": "dba3faf1fd576e4ea74b602864c369ad284efdfbd948ed62d1046ecd65da1513",
+  "appArchiveSha256": "af3221be0290c95e0fdef9be944c774038b6a11a1bf78bccc0707ef7d22bf33a",
+  "runner": "codex-regression-lane-3",
+  "browser": "Chrome",
+  "browserVersion": "Chrome 152.0.0.0",
+  "startedAt": "2026-09-05T08:26:25.193Z",
+  "completedAt": "2026-09-05T08:29:05.528Z",
+  "isolation": "Fresh Chrome-controlled browser tab and newly started Vite process on case-unique origin http://rerun-wtb0053-14.localhost:43200; no cookie or localStorage origin was reused.",
+  "actions": [
+    "Opened the Products view at a new case-unique origin and confirmed the initial All state.",
+    "Selected Electronics, Apparel, Accessories, Home & Office, and Wellness one by one.",
+    "Exercised Most Popular, Points: Low to High, and Points: High to Low on All.",
+    "Repeated all sort modes within Wellness to verify sorting did not create an empty state.",
+    "Inspected every resulting DOM state for the exact text No related products available."
+  ],
+  "observations": [
+    "All displayed 12 items; Electronics displayed 4; Apparel, Accessories, Home & Office, and Wellness each displayed 2.",
+    "Low-to-high and high-to-low sorting changed product order but retained the same nonzero item counts.",
+    "No related products available was absent from every reachable category/sort state.",
+    "The rendered Products view exposes no search, secondary filter, custom category, or inventory mutation that can produce an empty category."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The shipped UI/data exposes no empty category: All has 12 products and Electronics/Apparel/Accessories/Home & Office/Wellness have 4/2/2/2/2. Every available sort mode only reorders these nonempty sets, so the required empty-category placeholder cannot be demonstrated.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/all-categories-nonempty.png",
+      "sha256": "b957f60794c5b0880dc837c21736d71748d9d478365a805581879b44fc39ce31",
+      "bytes": 272014
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-accessories.png",
+      "sha256": "31296cf47d5a57b0961df5d7072fafa315eeb26ef438cdf80718fe8524b78ca3",
+      "bytes": 63432
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-apparel.png",
+      "sha256": "a990d1437d991ab1c60f00f3ca1276e1aad6aaa75f84abeadbf101aad867bfa9",
+      "bytes": 58053
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-electronics.png",
+      "sha256": "b63d2cf3662925629528512b99fb9ba2c142b228fff14ede47160d36b76f5c64",
+      "bytes": 105730
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-home-office.png",
+      "sha256": "e62b361a74252fd756249c18d229d2002c4a7bed691f98c0ded7829ec075f3af",
+      "bytes": 54566
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-wellness.png",
+      "sha256": "3f18c791d5d8efe90e9b0efbcf772d65748e346bf3b09ea3b095584219505323",
+      "bytes": 58032
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/dom.txt",
+      "sha256": "7a057aca136a95014e5eac66c0b7999edc2a8a567cf77ee4c1389be0ddec3a2a",
+      "bytes": 24726
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/sort-high-to-low.png",
+      "sha256": "bd52ce16e8a36c0635499abeeba6f74284638630dd5be6f7ff27cc29a3637ef9",
+      "bytes": 229681
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/sort-low-to-high.png",
+      "sha256": "660d87e9ec5890a7e76eb0c7bb2216003b0fef406ba00834fec0e214bb68ad99",
+      "bytes": 216557
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/state-all-final.png",
+      "sha256": "867abc6b17e83e0cbf5dfd0b4f3b14b9dcdf562cd7a8446aa1edda82c3d0091b",
+      "bytes": 205262
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/state-all.png",
+      "sha256": "ded45bf23137fa1a8d1e62698aa2e4232042d70ddc24ba2019cb3699798352e9",
+      "bytes": 272390
+    }
+  ],
+  "laneId": "lane-3"
+}

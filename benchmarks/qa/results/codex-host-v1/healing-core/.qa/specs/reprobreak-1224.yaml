@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-1224
+title: ReproBreak 1224 healing core
+environment: local
+steps:
+  - intent: Inspect the Title column header menu for the descending-sort command
+    expect:
+      - The Title column header menu contains Sort Descending

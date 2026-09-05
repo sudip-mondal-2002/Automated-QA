@@ -1,0 +1,2793 @@
+{
+  "benchmarkVersion": 1,
+  "measuredAt": "2026-09-05T08:40:23.128Z",
+  "moduleRoot": "/tmp/auto-qa-agent-baseline-run2",
+  "supportsHistory": false,
+  "node": "v25.8.1",
+  "platform": "darwin-arm64",
+  "prompt": "verify that opening the status panel shows the ready page",
+  "samples": 30,
+  "warmups": 3,
+  "cold": {
+    "samples": 30,
+    "medianMs": 678.42,
+    "p95Ms": 683.97,
+    "madMs": 3.94,
+    "minMs": 641.79,
+    "maxMs": 685.31
+  },
+  "repeat": {
+    "samples": 30,
+    "medianMs": 680.56,
+    "p95Ms": 685.52,
+    "madMs": 2.77,
+    "minMs": 646.41,
+    "maxMs": 696.33
+  },
+  "medianSpeedupPct": -0.32,
+  "correctnessParity": true,
+  "historyHitRate": 0,
+  "directReplayHitRate": 0,
+  "pairs": [
+    {
+      "index": 1,
+      "cold": {
+        "durationMs": 673.46,
+        "orchestrationId": "orch_1788597582476",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 177,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 683.12,
+        "orchestrationId": "orch_1788597583153",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -1.43
+    },
+    {
+      "index": 2,
+      "cold": {
+        "durationMs": 647.9,
+        "orchestrationId": "orch_1788597583840",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 164,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 681.75,
+        "orchestrationId": "orch_1788597584492",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 169,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -5.22
+    },
+    {
+      "index": 3,
+      "cold": {
+        "durationMs": 662.67,
+        "orchestrationId": "orch_1788597585175",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 677.74,
+        "orchestrationId": "orch_1788597585841",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -2.27
+    },
+    {
+      "index": 4,
+      "cold": {
+        "durationMs": 683.63,
+        "orchestrationId": "orch_1788597586521",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 696.33,
+        "orchestrationId": "orch_1788597587209",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -1.86
+    },
+    {
+      "index": 5,
+      "cold": {
+        "durationMs": 677.43,
+        "orchestrationId": "orch_1788597587906",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 665.14,
+        "orchestrationId": "orch_1788597588586",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 1.81
+    },
+    {
+      "index": 6,
+      "cold": {
+        "durationMs": 682.05,
+        "orchestrationId": "orch_1788597589253",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 648.6,
+        "orchestrationId": "orch_1788597589938",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 157,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 4.9
+    },
+    {
+      "index": 7,
+      "cold": {
+        "durationMs": 678.26,
+        "orchestrationId": "orch_1788597590591",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 684.82,
+        "orchestrationId": "orch_1788597591270",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 168,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.97
+    },
+    {
+      "index": 8,
+      "cold": {
+        "durationMs": 641.79,
+        "orchestrationId": "orch_1788597591959",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 157,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 155,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 667.12,
+        "orchestrationId": "orch_1788597592603",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -3.95
+    },
+    {
+      "index": 9,
+      "cold": {
+        "durationMs": 663.06,
+        "orchestrationId": "orch_1788597593272",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 683.85,
+        "orchestrationId": "orch_1788597593939",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -3.14
+    },
+    {
+      "index": 10,
+      "cold": {
+        "durationMs": 676.31,
+        "orchestrationId": "orch_1788597594625",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 678.61,
+        "orchestrationId": "orch_1788597595304",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.34
+    },
+    {
+      "index": 11,
+      "cold": {
+        "durationMs": 685.31,
+        "orchestrationId": "orch_1788597595985",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.24,
+        "orchestrationId": "orch_1788597596673",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.74
+    },
+    {
+      "index": 12,
+      "cold": {
+        "durationMs": 681.84,
+        "orchestrationId": "orch_1788597597356",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 681.01,
+        "orchestrationId": "orch_1788597598043",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.12
+    },
+    {
+      "index": 13,
+      "cold": {
+        "durationMs": 680.63,
+        "orchestrationId": "orch_1788597598726",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 660.28,
+        "orchestrationId": "orch_1788597599408",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 2.99
+    },
+    {
+      "index": 14,
+      "cold": {
+        "durationMs": 681.51,
+        "orchestrationId": "orch_1788597600071",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 685.03,
+        "orchestrationId": "orch_1788597600756",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.52
+    },
+    {
+      "index": 15,
+      "cold": {
+        "durationMs": 642.16,
+        "orchestrationId": "orch_1788597601443",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 157,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 160,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 683.29,
+        "orchestrationId": "orch_1788597602088",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -6.4
+    },
+    {
+      "index": 16,
+      "cold": {
+        "durationMs": 660.89,
+        "orchestrationId": "orch_1788597602775",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 156,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.41,
+        "orchestrationId": "orch_1788597603441",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -2.95
+    },
+    {
+      "index": 17,
+      "cold": {
+        "durationMs": 663.12,
+        "orchestrationId": "orch_1788597604121",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 168,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 157,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 682.72,
+        "orchestrationId": "orch_1788597604787",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -2.96
+    },
+    {
+      "index": 18,
+      "cold": {
+        "durationMs": 663.57,
+        "orchestrationId": "orch_1788597605473",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 177,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 665.02,
+        "orchestrationId": "orch_1788597606138",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 158,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.22
+    },
+    {
+      "index": 19,
+      "cold": {
+        "durationMs": 679.4,
+        "orchestrationId": "orch_1788597606809",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 685.92,
+        "orchestrationId": "orch_1788597607488",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.96
+    },
+    {
+      "index": 20,
+      "cold": {
+        "durationMs": 673.15,
+        "orchestrationId": "orch_1788597608176",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 667.09,
+        "orchestrationId": "orch_1788597608853",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.9
+    },
+    {
+      "index": 21,
+      "cold": {
+        "durationMs": 684.25,
+        "orchestrationId": "orch_1788597609523",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 679.46,
+        "orchestrationId": "orch_1788597610210",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 168,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.7
+    },
+    {
+      "index": 22,
+      "cold": {
+        "durationMs": 675.29,
+        "orchestrationId": "orch_1788597610893",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.6,
+        "orchestrationId": "orch_1788597611571",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 182,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 157,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.79
+    },
+    {
+      "index": 23,
+      "cold": {
+        "durationMs": 681.74,
+        "orchestrationId": "orch_1788597612255",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 681.61,
+        "orchestrationId": "orch_1788597612939",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 169,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.02
+    },
+    {
+      "index": 24,
+      "cold": {
+        "durationMs": 679.86,
+        "orchestrationId": "orch_1788597613624",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 681.41,
+        "orchestrationId": "orch_1788597614305",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.23
+    },
+    {
+      "index": 25,
+      "cold": {
+        "durationMs": 678.57,
+        "orchestrationId": "orch_1788597614990",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 646.41,
+        "orchestrationId": "orch_1788597615672",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 4.74
+    },
+    {
+      "index": 26,
+      "cold": {
+        "durationMs": 683.6,
+        "orchestrationId": "orch_1788597616319",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 169,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 177,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 684.15,
+        "orchestrationId": "orch_1788597617008",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 176,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.08
+    },
+    {
+      "index": 27,
+      "cold": {
+        "durationMs": 674.53,
+        "orchestrationId": "orch_1788597617693",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.51,
+        "orchestrationId": "orch_1788597618371",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.89
+    },
+    {
+      "index": 28,
+      "cold": {
+        "durationMs": 682.42,
+        "orchestrationId": "orch_1788597619055",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.83,
+        "orchestrationId": "orch_1788597619741",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 167,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 0.23
+    },
+    {
+      "index": 29,
+      "cold": {
+        "durationMs": 679.74,
+        "orchestrationId": "orch_1788597620424",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 175,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 680.23,
+        "orchestrationId": "orch_1788597621105",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 174,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 172,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": -0.07
+    },
+    {
+      "index": 30,
+      "cold": {
+        "durationMs": 680.52,
+        "orchestrationId": "orch_1788597621790",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 169,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 170,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "repeat": {
+        "durationMs": 665.73,
+        "orchestrationId": "orch_1788597622471",
+        "verdict": "clean",
+        "exitCode": 0,
+        "history": "unsupported",
+        "plannerCalls": 1,
+        "executorFactoryCalls": 1,
+        "replayLaunches": 3,
+        "executionMode": "agent",
+        "agentCalls": 1,
+        "replayState": "trusted",
+        "replayAttempts": [
+          {
+            "status": "skipped",
+            "reason": "Replay is candidate",
+            "durationMs": 0,
+            "validation": false
+          },
+          {
+            "status": "passed",
+            "durationMs": 171,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 173,
+            "validation": true
+          },
+          {
+            "status": "passed",
+            "durationMs": 159,
+            "validation": true
+          }
+        ],
+        "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06",
+        "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+        "screenshots": 1,
+        "trace": {
+          "events": 14,
+          "historyEvents": [],
+          "stages": {}
+        }
+      },
+      "speedupPct": 2.17
+    }
+  ]
+}

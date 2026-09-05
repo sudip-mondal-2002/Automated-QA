@@ -1,0 +1,26 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites":
+      - /url: /favorites
+      - text: Favorites
+- main:
+  - heading "Your Favorites" [level=1]
+  - paragraph: Exhibitors you've saved during this session
+  - heading "No favorites yet" [level=3]
+  - paragraph: Browse the exhibitor directory and tap the heart icon to save companies you're interested in visiting.
+  - link "Browse Exhibitors":
+    - /url: /
+    - text: Browse Exhibitors

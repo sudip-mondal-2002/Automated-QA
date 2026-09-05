@@ -1,0 +1,27 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Workflow Builder" [level=1]
+  - paragraph: Define and simulate customer service workflows
+- navigation:
+  - button "Rule Sets":
+    - text: Rule Sets
+  - button "Editor":
+    - text: Editor
+  - button "Simulation":
+    - text: Simulation
+- main:
+  - generic: Rule Set Name
+  - textbox: Lane 3 isolated validation
+  - button "Save":
+    - text: Save
+  - button "Simulate" [disabled]:
+    - text: Simulate
+  - heading "Workflow Steps" [level=3]
+  - paragraph: No steps defined yet. Add your first step below.
+  - textbox "New step name..." [active]
+  - button "Add Step" [disabled]:
+    - text: Add Step
+
+Add Step enabled=false

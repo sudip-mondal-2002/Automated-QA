@@ -1,0 +1,23 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TableSpot":
+    - /url: /
+    - generic: TableSpot
+  - navigation:
+    - link "Restaurants":
+      - /url: /
+    - link "My Reservations":
+      - /url: /reservations
+- heading "My Reservations" [level=1]
+- paragraph: Manage your upcoming and past dining experiences
+- tablist:
+  - tab "Upcoming (0)"
+  - tab "Past (0)" [active] [selected]
+- tabpanel "Past (0)":
+  - paragraph: No past reservations yet.
+  - link "Browse Restaurants":
+    - /url: /
+    - button "Browse Restaurants":
+      - text: Browse Restaurants

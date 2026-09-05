@@ -4,11 +4,11 @@ import test from "node:test";
 import { buildChain, resolveWithChain, triage } from "../src/locator-chain.js";
 import { bindLocators, generate, planToSpecs, renderPlaywrightSpec, renderResolveHelper, validateSelectors } from "../src/generator.js";
 import { buildReport, computeUntestedRisk, diffPrd, renderReportMarkdown } from "../src/reporter.js";
-import { assertTargetAllowed, EXIT, orchestrate, planStages } from "../src/orchestrator.js";
+import { assertTargetAllowed, EXIT, orchestrate } from "../src/orchestrator.js";
 import { temporaryWorkspace } from "../test-support/helpers.js";
 import { createDemoApplication } from "../demo-app/server.js";
 import { demoNativeExecutor } from "../test-support/demo-native-executor.js";
-import { QaError } from "../src/index.js";
+import { QaError, replayStatus } from "../src/index.js";
 
 test("locator chain orders, dedupes and resolves first hit", async () => {
   const chain = buildChain([{ strategy: "css", value: "a" }, { strategy: "testid", value: "x" }, { strategy: "testid", value: "x" }]);
@@ -46,6 +46,12 @@ test("generator emits validated Playwright specs from recorded fixtures", async 
   assert.ok(sidecar.bindings.length > 0);
   const validation = await validateSelectors({ sidecar, origin: siteMap.origin, fetchImpl: async () => { throw new Error("down"); } });
   assert.equal(validation.validated, false);
+
+  const trustedId = out.artifacts[0];
+  const before = await replayStatus(workspace, trustedId);
+  await workspace.saveReplayManifest(trustedId, { ...before.manifest, state: "trusted", validation: { required: 3, passed: 3 } });
+  await generate({ workspace, plan: { ...plan, flows: plan.flows.slice(0, 2) }, siteMap, origin: siteMap.origin, fetchImpl: async () => ({ text: async () => "<button>Sign in</button>" }) });
+  assert.equal((await replayStatus(workspace, trustedId)).state, "trusted", "idempotent generation must preserve source-matched trust");
 });
 
 test("reporter builds defects-first report with PRD gaps", () => {
@@ -58,10 +64,7 @@ test("reporter builds defects-first report with PRD gaps", () => {
   assert.deepEqual(computeUntestedRisk({ siteMap: { pages: [{ path: "/z" }] }, plan, gaps: {} }), [{ area: "/z", reason: "no flow covers this page", risk: "medium", impact: "unverified surface" }]);
 });
 
-test("orchestrator guards targets, stages and remote policy", () => {
-  assert.equal(planStages({ stage: "bogus" }), "bootstrap");
-  assert.equal(planStages({ stage: "gate", verdict: "replan" }), "plan");
-  assert.equal(planStages({ stage: "plan" }), "gate");
+test("orchestrator guards targets and remote policy", () => {
   assert.throws(() => assertTargetAllowed("not-a-url"), (e) => e instanceof QaError);
   assert.throws(() => assertTargetAllowed("https://example.com", {}), (e) => e.code === "ORCHESTRATION_REMOTE_BLOCKED");
   assert.equal(EXIT.OK, 0);

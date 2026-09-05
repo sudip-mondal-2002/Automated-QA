@@ -1,0 +1,105 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - generic: CF
+  - generic: CashFlow
+  - navigation:
+    - generic: Main
+    - link "Dashboard":
+      - /url: /
+      - generic: Dashboard
+    - link "Transactions":
+      - /url: /transactions
+      - generic: Transactions
+    - link "Analytics":
+      - /url: /analytics
+      - generic: Analytics
+    - link "Forecast":
+      - /url: /forecast
+      - generic: Forecast
+    - generic: Custom Views
+    - button "Marketing Overview":
+      - generic: Marketing Overview
+      - button:
+    - button "Operations":
+      - generic: Operations
+      - button:
+    - button "TechCorp Client":
+      - generic: TechCorp Client
+      - button:
+    - button "Pending Payments":
+      - generic: Pending Payments
+      - button:
+    - link "Create View":
+      - /url: /views
+      - generic: Create View
+  - button "Collapse":
+    - generic: Collapse
+- main:
+  - heading "Dashboard" [level=1]
+  - paragraph: Overview of your business cash flow
+  - button "Add Transaction":
+    - text: Add Transaction
+  - generic: Total Income
+  - paragraph: $86,600
+  - paragraph: Paid transactions
+  - generic: Total Expenses
+  - paragraph: $72,300
+  - paragraph: Paid transactions
+  - generic: Net Cash Flow
+  - paragraph: +$14,300
+  - paragraph: Income - Expenses
+  - generic: Pending
+  - paragraph: $42,000
+  - paragraph: $75,000 in / $33,000 out
+  - heading "Cash Flow Overview" [level=2]
+  - paragraph: Historical data and 3-month forecast
+  - generic: Income
+  - generic: Expenses
+  - generic: Forecast
+  - paragraph: Nov
+  - generic: "income:"
+  - generic: $68,000
+  - generic: "expenses:"
+  - generic: $45,000
+  - heading "Recent Transactions" [level=2]
+  - link "View all":
+    - /url: /transactions
+    - text: View all
+  - heading "Team Salaries" [level=4]
+  - generic: Oct 4, 2026
+  - generic: •
+  - generic: Operations
+  - generic: expected
+  - generic: "-$28,000"
+  - button:
+  - heading "TechCorp Monthly Retainer" [level=4]
+  - generic: Oct 3, 2026
+  - generic: •
+  - generic: "Client: TechCorp"
+  - generic: expected
+  - generic: +$15,000
+  - button:
+  - heading "RetailMax Q1 Payment" [level=4]
+  - generic: Sep 20, 2026
+  - generic: •
+  - generic: "Client: RetailMax"
+  - generic: expected
+  - generic: +$35,000
+  - button:
+  - heading "Conference Sponsorship" [level=4]
+  - generic: Sep 12, 2026
+  - generic: •
+  - generic: Marketing Campaigns
+  - generic: pending
+  - generic: "-$5,000"
+  - button:
+  - heading "TechCorp Project Milestone" [level=4]
+  - generic: Sep 10, 2026
+  - generic: •
+  - generic: "Client: TechCorp"
+  - generic: pending
+  - generic: +$25,000
+  - button:
+- generic: $0k

@@ -1,0 +1,120 @@
+- list
+- region "Notifications alt+T"
+- banner:
+  - heading [level=1]: TaskFlow
+  - paragraph: Team Kanban Board
+  - generic: 4 members
+  - text: "2"
+  - generic: / 8 completed
+  - button:
+    - text: New Task
+- main:
+  - textbox:
+    - /placeholder: Search tasks...
+  - generic: "Filter by:"
+  - generic: "Team:"
+  - button:
+  - button:
+  - button:
+  - button:
+  - generic: "Status:"
+  - generic: To Do
+  - generic: In Progress
+  - generic: Review
+  - generic: Done
+  - heading [level=3]: To Do
+  - generic: "3"
+  - button:
+  - button:
+  - heading [level=4]: Design new dashboard layout
+  - generic: high
+  - generic: design
+  - generic: dashboard
+  - generic: "3"
+  - generic: Dec 18
+  - heading [level=4]: Update onboarding flow
+  - generic: low
+  - generic: ux
+  - generic: onboarding
+  - generic: Dec 20
+  - heading [level=4]: Create component library docs
+  - generic: low
+  - generic: documentation
+  - generic: components
+  - generic: Dec 25
+  - heading [level=3]: In Progress
+  - generic: "2"
+  - button:
+  - button:
+  - heading [level=4]: Implement user authentication
+  - generic: high
+  - generic: backend
+  - generic: security
+  - generic: "1"
+  - generic: Dec 15
+  - heading [level=4]: API rate limiting
+  - generic: medium
+  - generic: backend
+  - generic: performance
+  - generic: Dec 16
+  - heading [level=3]: Review
+  - generic: "1"
+  - button:
+  - button:
+  - heading [level=4]: Write unit tests for payment module
+  - generic: medium
+  - generic: testing
+  - generic: payments
+  - generic: "1"
+  - generic: Dec 14
+  - heading [level=3]: Done
+  - generic: "2"
+  - button:
+  - button:
+  - heading [level=4]: Mobile responsive fixes
+  - generic: high
+  - generic: mobile
+  - generic: bugfix
+  - generic: "1"
+  - generic: Dec 10
+  - heading [level=4]: Database optimization
+  - generic: medium
+  - generic: database
+  - generic: performance
+  - generic: Dec 8
+- dialog "Design new dashboard layout":
+  - heading "Design new dashboard layout" [level=2]
+  - generic: Assignee
+  - combobox [active]:
+    - generic: Sarah Kim
+  - generic: Priority
+  - combobox:
+    - generic: High
+  - generic: Due Date
+  - textbox: 2025-12-18
+  - generic: Status
+  - combobox:
+    - generic: To Do
+  - heading "Description" [level=4]
+  - button "Edit"
+  - paragraph: Create wireframes and high-fidelity mockups for the new analytics dashboard. Focus on data visualization and user-friendly navigation.
+  - heading "Tags" [level=4]
+  - generic: design
+  - generic: dashboard
+  - heading "Notes & Updates (3)" [level=4]
+  - textbox "Add a note or status update..."
+  - button [disabled]:
+  - generic: Sarah Kim
+  - generic: Dec 10, 5:30 AM
+  - paragraph: Initial sketches approved by the team. Moving to high-fidelity design.
+  - generic: Alex Chen
+  - generic: Sep 5, 1:34 PM
+  - paragraph: QA update older
+  - generic: Alex Chen
+  - generic: Sep 5, 1:34 PM
+  - paragraph: QA update newer
+  - button "Delete Task":
+    - text: Delete Task
+  - generic: Created Dec 8, 2025
+  - button "Close":
+    - generic: Close

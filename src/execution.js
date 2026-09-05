@@ -396,10 +396,11 @@ async function attemptHealing(executor, item, context, failed, hooks = {}) {
 
 async function previousTargetsFor(workspace, specId, environment) {
   try {
-    const selected = await workspace.readLastTest();
-    if (selected.specId !== specId || selected.environment !== environment || !selected.lastRunId) return new Map();
-    const previous = await workspace.loadResult(selected.lastRunId);
+    const previous = (await workspace.listResults({ specId }))
+      .find((result) => result.environment === environment && new Set(["passed", "healed"]).has(result.classification));
+    if (!previous) return new Map();
     return new Map(previous.steps.flatMap((step) => {
+      if (step.status !== "passed") return [];
       const target = normalizeTarget(step.selectedTarget);
       return target ? [[step.index, target]] : [];
     }));
@@ -719,7 +720,6 @@ export async function executeRun(options) {
             outputs,
             target: resolvedEnvironment,
             signal,
-            previousTarget: previousTargets.get(index),
           };
           let executed = await executeSemanticStep(executor, {
             intent: step.intent,
@@ -731,7 +731,7 @@ export async function executeRun(options) {
               intent: step.intent,
               expectations: step.expect,
               channel: channelFor(step),
-            }, stepContext, executed, {
+            }, { ...stepContext, previousTarget: previousTargets.get(index) }, executed, {
               capture,
               event: (type, details) => journal.add(type, details),
             });
@@ -852,6 +852,6 @@ export async function executeRun(options) {
     message: result.explanation,
   });
   result.completedAt = instant(clock);
-  await workspace.saveResult(result);
+  await workspace.saveResult(result, { select: options.selectResult !== false });
   return result;
 }

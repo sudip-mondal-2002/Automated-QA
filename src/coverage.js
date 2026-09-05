@@ -170,8 +170,8 @@ function checkAuthNegative({ plan, siteMap }) {
       target: "/login",
       autoFixable: true,
       suggestion: kind.includes("invalid")
-        ? { id: "flow_login_invalid_creds", title: "Reject invalid credentials", category: "error", priority: "critical", pages: ["/login"], steps: [{ intent: "Sign in with invalid credentials", expect: ["An error message is shown"] }] }
-        : { id: "flow_unauthenticated_redirect", title: "Redirect unauthenticated deep links to login", category: "error", priority: "high", pages: ["/dashboard"], steps: [{ intent: "Open a protected page without signing in", expect: ["Sign in is required"] }] },
+        ? { id: "flow_login_invalid_creds", title: "Reject invalid credentials", category: "error", priority: "critical", pages: ["/login"], steps: [{ intent: "Sign in with invalid credentials", expect: [{ prose: "Sign in remains visible", assert: { kind: "url_contains", value: "/login" } }] }] }
+        : { id: "flow_unauthenticated_redirect", title: "Redirect unauthenticated deep links to login", category: "error", priority: "high", pages: ["/dashboard"], steps: [{ intent: "Open a protected page without signing in", expect: [{ prose: "Sign in is required", assert: { kind: "url_contains", value: "/login" } }] }] },
     })),
   };
 }

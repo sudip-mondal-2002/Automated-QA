@@ -35,6 +35,112 @@ test("crawl respects depth caps and tolerates fetch failures", async () => {
   assert.equal(survived.pages.length, 1);
 });
 
+test("crawl overlaps independent siblings but preserves breadth-first evidence order", async () => {
+  let active = 0;
+  let peak = 0;
+  const fetchImpl = async (target) => {
+    const path = new URL(String(target)).pathname;
+    active += 1;
+    peak = Math.max(peak, active);
+    if (path !== "/") await new Promise((resolve) => setTimeout(resolve, path === "/a" ? 15 : 5));
+    active -= 1;
+    const html = path === "/" ? `<a href="/a">a</a><a href="/b">b</a><a href="/c">c</a>` : `<h1>${path}</h1>`;
+    return { status: 200, ok: true, headers: { get: () => null }, text: async () => html };
+  };
+
+  const siteMap = await crawl({ url: "http://127.0.0.1:4000/", fetchImpl, concurrency: 3 });
+  assert.ok(peak >= 3);
+  assert.deepEqual(siteMap.pages.map((page) => page.path), ["/", "/a", "/b", "/c"]);
+});
+
+test("crawl finishes one breadth-first depth before fetching the next", async () => {
+  let markCStarted;
+  let releaseC;
+  let deepStarted = false;
+  const cStarted = new Promise((resolve) => { markCStarted = resolve; });
+  const cCanFinish = new Promise((resolve) => { releaseC = resolve; });
+  const fetchImpl = async (target) => {
+    const path = new URL(String(target)).pathname;
+    if (path === "/c") {
+      markCStarted();
+      await cCanFinish;
+    }
+    if (path === "/deep") deepStarted = true;
+    const html = path === "/"
+      ? `<a href="/a">a</a><a href="/b">b</a><a href="/c">c</a>`
+      : path === "/a" ? `<a href="/deep">deep</a>` : `<h1>${path}</h1>`;
+    return { status: 200, ok: true, headers: { get: () => null }, text: async () => html };
+  };
+
+  const pending = crawl({ url: "http://127.0.0.1:4000/", fetchImpl, concurrency: 2 });
+  await cStarted;
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(deepStarted, false);
+  releaseC();
+  const siteMap = await pending;
+  assert.deepEqual(siteMap.pages.map((page) => page.path), ["/", "/a", "/b", "/c", "/deep"]);
+});
+
+test("crawl consumes a readiness snapshot instead of fetching the first page again", async () => {
+  const calls = [];
+  const fetchImpl = async (target) => {
+    calls.push(new URL(String(target)).pathname);
+    return { status: 200, ok: true, headers: { get: () => null }, text: async () => "<h1>Next</h1>" };
+  };
+  const response = { status: 200, ok: true, headers: { get: () => null }, text: async () => { throw new Error("already consumed"); } };
+  const siteMap = await crawl({
+    url: "http://127.0.0.1:4000/",
+    fetchImpl,
+    initialPage: { path: "/", response, html: `<h1>Home</h1><a href="/next">Next</a>` },
+  });
+  assert.deepEqual(calls, ["/next"]);
+  assert.deepEqual(siteMap.pages.map((page) => page.path), ["/", "/next"]);
+});
+
+test("crawl refetches a manual redirect probe instead of treating its empty body as the landing page", async () => {
+  const calls = [];
+  const fetchImpl = async (target) => {
+    calls.push(new URL(String(target)).pathname);
+    return { status: 200, ok: true, url: "http://127.0.0.1:4000/login", headers: { get: () => null }, text: async () => LOGIN_HTML };
+  };
+  const redirect = { status: 303, ok: false, headers: { get: (name) => name === "location" ? "/login" : null }, text: async () => "" };
+  const siteMap = await crawl({
+    url: "http://127.0.0.1:4000/",
+    fetchImpl,
+    initialPage: { path: "/", response: redirect, html: "" },
+  });
+  assert.deepEqual(calls, ["/"]);
+  assert.equal(siteMap.pages[0].path, "/login");
+  assert.equal(siteMap.pages[0].headings[0].text, "Customer sign in");
+  assert.equal(siteMap.pages[0].forms.length, 1);
+});
+
+test("an authenticated readiness snapshot seeds protected sibling discovery", async () => {
+  const calls = [];
+  const fetchImpl = async (target, init = {}) => {
+    const path = new URL(String(target)).pathname;
+    calls.push({ path, method: init.method ?? "GET", cookie: init.headers?.cookie ?? "" });
+    if (path === "/login" && init.method === "POST") {
+      return { status: 302, ok: false, headers: { get: (name) => name === "set-cookie" ? "sid=auth; Path=/" : null }, text: async () => "" };
+    }
+    return { status: 200, ok: true, headers: { get: () => null }, text: async () => "<h1>Private</h1>" };
+  };
+  const response = { status: 200, ok: true, headers: { get: () => null }, text: async () => "" };
+  const siteMap = await crawl({
+    url: "http://127.0.0.1:4000/",
+    credentials: { username: "user", password: "pass" },
+    fetchImpl,
+    initialPage: {
+      path: "/",
+      response,
+      html: `<form action="/login"><input name="username"><input name="password" type="password"><button>Sign in</button></form><a href="/private">Private</a>`,
+    },
+  });
+  assert.equal(siteMap.auth.authenticated, true);
+  assert.ok(calls.some((call) => call.path === "/private" && call.cookie === "sid=auth"));
+  assert.ok(!calls.some((call) => call.path === "/"));
+});
+
 test("crawl requires a URL and captures auth cookies when credentials fit", async () => {
   await assert.rejects(() => crawl({}), /target URL is required/);
   const fetchImpl = fakeFetch({

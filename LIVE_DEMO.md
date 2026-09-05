@@ -1,4 +1,6 @@
-# Five-minute live demo runbook
+# Recorded-video timing script
+
+This file preserves the timing and shots used by the existing 4:02 recording. For the current judge-facing workflow, including the integrated Console and visible disposable credentials, use [`demo.md`](demo.md). Do not use this older recording script as the live event runbook.
 
 This is the exact developer-facing presentation. It begins with skill installation, stays inside a standalone application project, and proves both developer experience and correctness. The internal QA implementation repository never appears on screen.
 

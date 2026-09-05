@@ -1,0 +1,91 @@
+AFTER ADD
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T":
+  - list:
+    - generic: Added to cart!
+- banner:
+  - link "ReVive":
+    - /url: /
+    - generic: ReVive
+  - navigation:
+    - link "Browse":
+      - /url: /
+    - link "Categories":
+      - /url: /categories
+    - link "About":
+      - /url: /about
+  - button:
+  - button "Sell":
+    - text: Sell
+  - button "1":
+    - generic: "1"
+  - button "Emma Green":
+    - img "Emma Green"
+- navigation:
+  - link "Home":
+    - /url: /
+  - generic: /
+  - link "Furniture":
+    - /url: /?category=furniture
+  - generic: /
+  - generic: Reclaimed Wood Bookshelf
+- img "Reclaimed Wood Bookshelf"
+- text: Upcycled
+- generic: Furniture
+- generic: New
+- heading "Reclaimed Wood Bookshelf" [level=1]
+- paragraph: $320
+- text: Portland, OR (9 mi)
+- text: Listed 2024-11-23
+- heading "Description" [level=2]
+- paragraph: Custom-built bookshelf using reclaimed barn wood and industrial pipes. 6 feet tall, 4 shelves. A conversation starter!
+- heading "Seller" [level=2]
+- img "James Wilson"
+- paragraph: James Wilson
+- paragraph: Portland, OR
+- button "Add to Cart" [active]:
+  - text: Add to Cart
+- button "Message Seller":
+  - text: Message Seller
+
+CART VIEW
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "ReVive":
+    - /url: /
+    - generic: ReVive
+  - navigation:
+    - link "Browse":
+      - /url: /
+    - link "Categories":
+      - /url: /categories
+    - link "About":
+      - /url: /about
+  - button:
+  - button "Sell":
+    - text: Sell
+  - button "1":
+    - generic: "1"
+  - button "Emma Green":
+    - img "Emma Green"
+- heading "Your Cart" [level=1]:
+  - text: Your Cart
+- paragraph: 1 item
+- link "Reclaimed Wood Bookshelf":
+  - /url: /product/prod-10
+  - img "Reclaimed Wood Bookshelf"
+- link "Reclaimed Wood Bookshelf":
+  - /url: /product/prod-10
+- paragraph: Portland, OR
+- paragraph: $320
+- button:
+- generic: Total
+- generic: $320.00
+- button "Send Purchase Request":
+  - text: Send Purchase Request
+- paragraph: Sellers will be notified and can accept your request

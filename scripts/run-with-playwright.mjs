@@ -38,9 +38,11 @@ const prdPath = option(args, "--prd");
 const root = option(args, "--root") ?? process.cwd();
 const browserName = option(args, "--browser") ?? "chromium";
 const headed = flag(args, "--headed");
+const noHistory = flag(args, "--no-history");
+const concurrency = Number(option(args, "--concurrency") ?? 3);
 
-if (!url || args.length > 0) {
-  console.error("Usage: run-with-playwright.mjs --url <url> [--username <u> --password <p>] [--prompt <text>] [--prd <file>] [--root <dir>] [--headed] [--browser chromium]");
+if (!url || args.length > 0 || !Number.isInteger(concurrency) || concurrency < 1) {
+  console.error("Usage: run-with-playwright.mjs --url <url> [--username <u> --password <p>] [--prompt <text>] [--prd <file>] [--root <dir>] [--headed] [--browser chromium] [--concurrency <n>] [--no-history]");
   process.exit(30);
 }
 
@@ -72,15 +74,20 @@ const browser = await chromium.launch({ headless: !headed }).catch((error) => {
 });
 
 try {
-  const page = await browser.newPage();
-  const executor = createPlaywrightDriver({ page, baseUrl: url });
+  const executorFactory = async () => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const executor = createPlaywrightDriver({ page, baseUrl: url });
+    executor.driver.close = async () => context.close();
+    return executor;
+  };
   // QA_TEST_CARD defaults to the demo shop's advertised test card (shown on
   // its checkout page as "saved test card ending in 4242"). Override with a
   // real operator-provided value for any other target. Resolved values are
   // redacted from all output by the runtime.
   const { report, exitCode, error } = await orchestrate({
-    url, username, password, prompt, prdText, root, executor,
-    variables: { ...process.env, QA_CUSTOMER_USERNAME: username ?? process.env.QA_CUSTOMER_USERNAME ?? "demo", QA_CUSTOMER_PASSWORD: password ?? process.env.QA_PASSWORD ?? process.env.QA_CUSTOMER_PASSWORD ?? "demo", QA_TEST_CARD: process.env.QA_TEST_CARD ?? "4242424242424242" },
+    url, username, password, prompt, prdText, root, executorFactory, executionConcurrency: concurrency, historyMode: noHistory ? "off" : "lookup",
+    variables: { ...process.env, QA_USERNAME: username ?? process.env.QA_USERNAME ?? "demo", QA_PASSWORD: password ?? process.env.QA_PASSWORD ?? "demo", QA_CUSTOMER_USERNAME: username ?? process.env.QA_CUSTOMER_USERNAME ?? "demo", QA_CUSTOMER_PASSWORD: password ?? process.env.QA_PASSWORD ?? process.env.QA_CUSTOMER_PASSWORD ?? "demo", QA_TEST_CARD: process.env.QA_TEST_CARD ?? "4242424242424242" },
   });
   if (error) throw error;
   console.log(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);

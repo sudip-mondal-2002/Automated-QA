@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0083:13",
+  "appId": "WebTestBench_0083",
+  "candidateSha256": "bd7fd5e81b30648a16f12b1c5cfb4331b09738f177a1b28f0b376c84165052a3",
+  "appArchiveSha256": "56c383cb7a53f7dbaeb36f7ac3c147581ecabe316d09ef659798eb2ef237236c",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T08:00:27.030Z",
+  "actions": [
+    {
+      "action": "Opened current Schedule view",
+      "result": "The working schedule appeared as an editable weekly grid with shift-add cells and a prominent Publish action."
+    },
+    {
+      "action": "Opened Published view",
+      "result": "A separate Published Schedules screen displayed a historical schedule card with an explicit 'Published' label, publication timestamp, and green status/icon treatment."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Draft and published schedules are visually distinct",
+      "observed": "The draft/workspace uses an editable grid and Publish controls, while the historical schedule is isolated in a Published view and carries an explicit green Published status."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "Draft editing and published history use clearly different views, controls, and status styling.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0083_13/after.png",
+      "sha256": "d5144d32e5099a710495b1fc9fcdac561e878c033e06885214d0b4753934b6b9",
+      "bytes": 15041
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0083_13/dom-after.txt",
+      "sha256": "84020df19a92401cd68f602f529c6cc3b216807fc4b8ca04f4c8c9ea3b19bfa7",
+      "bytes": 906
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4727; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

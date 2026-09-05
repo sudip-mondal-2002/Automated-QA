@@ -1,5 +1,9 @@
 # 06 — Storage, schemas and evidence
 
+> Historical storage deep dive. The optimized runtime also writes exact-history
+> `request.json` manifests and selects `.qa/last-test.json` once after concurrent
+> workers join; see [Current orchestration structure](../current-orchestration-structure.md).
+
 The system has no database. Every piece of state is a validated file in the
 developer's own repository. This document is the contract reference.
 
@@ -267,9 +271,11 @@ graded one), but structurally stable:
              "withPredicates": 2, "totalExpectations": 2 } }
 ```
 
-**The separation is the point:** semantic YAML is the *contract* (human, stable,
-selector-free); the sidecar is *rewritable state* (mechanical, regenerable,
-validated against the live page). Healing rewrites state, never contract.
+**The separation is the point:** semantic YAML is the canonical *contract* (human,
+stable, selector-free); generated JavaScript and sidecars are disposable,
+rewritable state (mechanical and regenerable). Fetch preflight can reject obvious
+misses, browser replay proves behavior, and source hashes reject edits. Healing
+rewrites state, never contract.
 
 `trace.jsonl` is likewise unvalidated by design — it is an append-only event log, and
 schema-validating one line at a time would add cost without catching the failure mode

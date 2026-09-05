@@ -1,5 +1,9 @@
 # 01 — Harness architecture
 
+> Historical module deep dive. Some module counts, bundle statements, and
+> sequencing below predate history lookup and parallel execution. The current
+> topology is [documented here](../current-orchestration-structure.md).
+
 The "harness" is the Node runtime in `src/`: 25 ES modules, two production
 dependencies, zero network egress except to the target under test. This document
 explains every module, the contracts between them, and the invariants that make
@@ -12,9 +16,9 @@ the whole thing trustworthy.
 ```mermaid
 flowchart TB
   CLI["cli.js<br/>20 commands · arg parsing · exit codes"]
-  ORC["orchestrator.js<br/>meta-agent · planStages · EXIT"]
+  ORC["orchestrator.js<br/>memory · orchestration · resource locks · EXIT"]
   PLAN["planner.js<br/>parseHtml · crawl · authenticate<br/>parsePrd · buildTestPlan · replan"]
-  PAG["planner-agent.js<br/>brief · reviewDraft · planWithAgent<br/>normalizePlan · PLANNER_INSTRUCTIONS"]
+  PAG["planner-agent.js<br/>bounded packets · parallel route owners<br/>review · merge · normalize"]
   COV["coverage.js<br/>12 rules · scorePlan · decideVerdict"]
   GEN["generator.js<br/>planToSpecs · bindLocators<br/>validateSelectors · render*"]
   EXE["execution.js<br/>executeRun · fixtures · steps<br/>journal · evidence"]

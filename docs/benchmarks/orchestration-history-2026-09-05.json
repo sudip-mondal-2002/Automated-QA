@@ -1,0 +1,127 @@
+{
+  "benchmarkVersion": 1,
+  "date": "2026-09-05",
+  "optimizedMeasuredAt": "2026-09-05T09:44:27.751Z",
+  "baselineRevision": "59620aa9e3dd70475bd324a769f6676780da480c",
+  "optimizedBranch": "codex/agent-orchestration-optimization",
+  "environment": {
+    "os": "macOS 15.5 (24F74)",
+    "architecture": "arm64",
+    "cpu": "Apple M4, 10 physical cores",
+    "node": "v25.8.1",
+    "chrome": "152.0.7977.76",
+    "codexCli": "0.150.0-alpha.8"
+  },
+  "controlledProtocol": {
+    "prompt": "verify that opening the status panel shows the ready page",
+    "samples": 30,
+    "discardedWarmups": 3,
+    "boundary": "orchestrate invocation through persisted report",
+    "application": "immutable two-route loopback app",
+    "browserPolicy": "fresh Playwright browser for every replay; native executor context created lazily",
+    "correctnessRequirement": "both paths produce clean exit 0 with identical semantic source and replay script hashes",
+    "command": "node scripts/benchmark-orchestration-history.mjs --samples 30 --warmups 3 [--module-root <baseline>]"
+  },
+  "baseline": {
+    "supportsHistory": false,
+    "correctnessParity": true,
+    "historyHitRate": 0,
+    "directReplayHitRate": 0,
+    "cold": { "medianMs": 678.42, "p95Ms": 683.97, "madMs": 3.94, "minMs": 641.79, "maxMs": 685.31 },
+    "repeat": { "medianMs": 680.56, "p95Ms": 685.52, "madMs": 2.77, "minMs": 646.41, "maxMs": 696.33 },
+    "repeatTotals": { "plannerCalls": 30, "nativeExecutorCreations": 30, "agentCalls": 30, "replayBrowserLaunches": 90, "screenshots": 30 },
+    "coldDurationsMs": [673.46, 647.90, 662.67, 683.63, 677.43, 682.05, 678.26, 641.79, 663.06, 676.31, 685.31, 681.84, 680.63, 681.51, 642.16, 660.89, 663.12, 663.57, 679.40, 673.15, 684.25, 675.29, 681.74, 679.86, 678.57, 683.60, 674.53, 682.42, 679.74, 680.52],
+    "repeatDurationsMs": [683.12, 681.75, 677.74, 696.33, 665.14, 648.60, 684.82, 667.12, 683.85, 678.61, 680.24, 681.01, 660.28, 685.03, 683.29, 680.41, 682.72, 665.02, 685.92, 667.09, 679.46, 680.60, 681.61, 681.41, 646.41, 684.15, 680.51, 680.83, 680.23, 665.73],
+    "sourceHash": "afa750d5c14a69d6a52d8f2a91e9752cdfc7680d3fab813759fe356e4f25af06"
+  },
+  "optimized": {
+    "supportsHistory": true,
+    "correctnessParity": true,
+    "historyHitRate": 1,
+    "directReplayHitRate": 1,
+    "cold": { "medianMs": 654.22, "p95Ms": 685.91, "madMs": 14.43, "minMs": 635.27, "maxMs": 687.44 },
+    "repeat": { "medianMs": 195.08, "p95Ms": 198.03, "madMs": 0.88, "minMs": 192.83, "maxMs": 204.84 },
+    "historyLookup": { "samples": 30, "medianMs": 1, "p95Ms": 2, "minMs": 1, "maxMs": 2 },
+    "repeatTotals": { "plannerCalls": 0, "nativeExecutorCreations": 0, "agentCalls": 0, "replayBrowserLaunches": 30, "screenshots": 0 },
+    "coldDurationsMs": [654.50, 650.83, 653.39, 635.27, 685.57, 653.82, 637.49, 686.18, 650.78, 653.52, 670.16, 635.69, 653.80, 668.64, 672.55, 652.58, 669.44, 668.67, 671.88, 637.10, 687.44, 666.70, 637.80, 655.14, 635.44, 668.89, 654.32, 653.00, 654.12, 666.05],
+    "repeatDurationsMs": [204.84, 197.94, 194.39, 197.60, 193.51, 193.43, 196.32, 197.29, 194.83, 194.13, 195.10, 195.47, 194.41, 194.62, 195.31, 194.14, 196.95, 193.91, 194.25, 194.64, 195.83, 194.28, 192.83, 195.91, 196.00, 195.07, 193.17, 195.30, 195.64, 198.10],
+    "sourceHash": "bfde48240abb78906b9524913c7b9f4295758dfb6e31501f7b67a3e31d0b718a"
+  },
+  "controlledComparison": {
+    "optimizedColdVsBaselineColdChangePct": -3.57,
+    "baselineColdToRepeatReductionPct": -0.32,
+    "optimizedRepeatVsBaselineRepeatReductionPct": 71.34,
+    "optimizedColdToRepeatReductionPct": 70.18,
+    "scriptHash": "125ec193058f691e9d36c9c1b66f3ee0c59f1d1013ba432ac85cc8417e7dfaea",
+    "benchmarkHarnessSha256": "ed89c6c4a35e4bb9705ee6931093330de7e02b2bc2978debd9a6c5eb9b0d8a83",
+    "optimizedSourceBundleSha256": "440605ee064634c74d7789a69b26fefed44700cb6edbbc0cafb71b7eedf23c94",
+    "optimizedSourceBundleFilesInHashOrder": ["src/orchestrator.js", "src/history.js", "src/planner.js", "src/planner-agent.js", "src/generator.js", "src/execution.js", "src/replay.js", "src/storage.js"],
+    "rawFileSha256": {
+      "baseline": "5832b48988480482f9cd038f515a8616a447f9bdafe5c4b45d6b8f9030940824",
+      "optimized": "3feea08d9f4ae1fa52cdf54eed0e85791ff84b8cc48e475e22e0625614f43335"
+    }
+  },
+  "terminalAgent": {
+    "baseline": {
+      "threadId": "01a0708f-b20c-7e60-a271-05e60bd7fca2",
+      "prompt": "Use $autonomous-qa to test the checkout and authentication journey at http://127.0.0.1:4667. Sign in with [REDACTED], open the cart, continue to checkout, place an order with test card [REDACTED], and verify the confirmation. Run it end to end and report the saved evidence.",
+      "promptRedacted": true,
+      "wallSeconds": 499.61,
+      "inputTokens": 3238496,
+      "cachedInputTokens": 3111936,
+      "outputTokens": 28598,
+      "reasoningTokens": 18477,
+      "result": "passed after native browser failure, manual replay construction, three trust validations, and canonical replay run"
+    },
+    "optimizedRepeat": {
+      "threadId": "01a070ab-e1f1-7b33-b957-280beedf52e6",
+      "prompt": "Use the autonomous-qa skill located at [WORKTREE]/.agents/skills/autonomous-qa/SKILL.md to test the checkout and authentication journey at http://127.0.0.1:4667. Sign in with [REDACTED], open the cart, continue to checkout, place an order with test card [REDACTED], and verify the confirmation. Run it end to end and report the saved evidence.",
+      "promptRedacted": true,
+      "wallSeconds": 62.19,
+      "inputTokens": 190698,
+      "cachedInputTokens": 158336,
+      "outputTokens": 3498,
+      "reasoningTokens": 1913,
+      "result": "history recommendation selected the existing source-matched replay; one Playwright run passed; governance audit passed",
+      "runId": "run_20260905_082536_858e27",
+      "executionMode": "playwright",
+      "agentCalls": 0,
+      "replayDurationMs": 1325
+    },
+    "reductionPct": { "wall": 87.55, "inputTokens": 94.11, "cachedInputTokens": 94.91, "outputTokens": 87.77, "reasoningTokens": 89.65 }
+  },
+  "promptContext": {
+    "tokenizer": "tiktoken 0.11.0, o200k_base",
+    "baselineSkillTokens": 3427,
+    "baselineSkillWords": 2479,
+    "baselineSkillBytes": 17211,
+    "optimizedSkillTokens": 1892,
+    "optimizedSkillWords": 1290,
+    "optimizedSkillBytes": 9594,
+    "skillTokenReductionPct": 44.79,
+    "baselinePlannerInstructionTokens": 655,
+    "optimizedPlannerInstructionTokens": 181,
+    "plannerInstructionReductionPct": 72.37,
+    "callbackFixture": "demo-site-map.json + docs/prd.md + focus on checkout and authentication",
+    "baselinePlannerCallbackTokens": 1986,
+    "optimizedUnpartitionedCallbackTokens": 1351,
+    "unpartitionedCallbackReductionPct": 31.97,
+    "optimizedPartitionedWorkerTokens": [1046, 793, 772],
+    "optimizedPartitionedMedianTokens": 793,
+    "partitionedMedianReductionPct": 60.07,
+    "optimizedPartitionedAggregateTokens": 2611,
+    "partitionedAggregateChangePct": 31.47
+  },
+  "verification": {
+    "runtime": "Node v25.8.1",
+    "optimizedFunctionalTests": { "passed": 259, "failed": 0 },
+    "coverageGate": { "required": { "linesPct": 100, "branchesPct": 95, "functionsPct": 98 }, "passed": false },
+    "baselineCoverage": { "testsPassed": 207, "linesPct": 96.93, "branchesPct": 83.33, "functionsPct": 95.23 },
+    "optimizedCoverage": { "testsPassed": 259, "linesPct": 97.46, "branchesPct": 83.36, "functionsPct": 93.15 }
+  },
+  "excludedDiagnostics": [
+    "The legacy benchmark:replay numbers are excluded because its replay timer includes browser launch while its comparison timer does not.",
+    "A 505.75-second terminal-agent run that never produced result.json is retained only as a censored browser-plugin failure diagnostic.",
+    "A 37.73-second intermediate optimized run is excluded because ambiguous skill wording sent a semantic recommendation through orchestration; the wording was corrected before the reported optimized run."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0082:12",
+  "appId": "WebTestBench_0082",
+  "candidateSha256": "c2f187876b516bf45a5b919b6d5f811f7f8f91ed7a61d7210be236c973876cef",
+  "appArchiveSha256": "e0a2eabb7ed28521c92c7a0ce2d98291c0e9e256e50525ec4c5127e5d320d640",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:57:22.691Z",
+  "completedAt": "2026-09-05T07:57:31.867Z",
+  "isolation": "Unique loopback origin 47103 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Loaded the parameter management landing page."
+    },
+    {
+      "step": 2,
+      "action": "Enumerated the visible parameter-set cards."
+    }
+  ],
+  "observations": [
+    "Parameter Sets lists Neural Network Training, Image Processing Pipeline, and Simulation Physics with parameter and snapshot summaries."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "A usable list of the system's parameter sets is directly visible.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0082_12/parameter-set-list.png",
+      "sha256": "88358f21c4824c09a51c551c50b8934a0aee1a192c5b8e7c71134f6386f65e19",
+      "bytes": 23741
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0082_12/dom-snapshot.txt",
+      "sha256": "57c5b111d8d69b778369ce9d8adaf30377862cd795e44b79fb84519ef8557fa3",
+      "bytes": 1366
+    }
+  ],
+  "laneId": "lane-1"
+}

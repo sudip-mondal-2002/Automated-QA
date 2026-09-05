@@ -1,0 +1,231 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "BudgetFlow" [level=1]
+  - paragraph: Track your finances
+  - paragraph: Total Spent
+  - paragraph: €1526.28
+  - combobox [active]:
+    - generic: € EUR
+- main:
+  - paragraph: Monthly Budget
+  - paragraph: €2600.00
+  - paragraph: Total Spent
+  - paragraph: €0.00
+  - paragraph: 0% of budget
+  - paragraph: Remaining
+  - paragraph: €2600.00
+  - paragraph: Available to spend
+  - paragraph: Daily Average
+  - paragraph: €109.02
+  - paragraph: Last 14 days
+  - button "Add Expense":
+    - text: Add Expense
+  - heading "Budget vs Spending" [level=2]
+  - heading "Spending Trend (Last 14 Days)" [level=2]
+  - heading "Budget Categories" [level=2]
+  - generic: 🍽️
+  - heading "Food & Dining" [level=3]
+  - paragraph: €0.00 of €600.00
+  - generic: 0%
+  - progressbar
+  - generic: 🚗
+  - heading "Transportation" [level=3]
+  - paragraph: €0.00 of €400.00
+  - generic: 0%
+  - progressbar
+  - generic: 🛍️
+  - heading "Shopping" [level=3]
+  - paragraph: €0.00 of €300.00
+  - generic: 0%
+  - progressbar
+  - generic: 🎬
+  - heading "Entertainment" [level=3]
+  - paragraph: €0.00 of €200.00
+  - generic: 0%
+  - progressbar
+  - generic: 💡
+  - heading "Utilities" [level=3]
+  - paragraph: €0.00 of €250.00
+  - generic: 0%
+  - progressbar
+  - generic: 🏥
+  - heading "Health" [level=3]
+  - paragraph: €0.00 of €150.00
+  - generic: 0%
+  - progressbar
+  - generic: ✈️
+  - heading "Travel" [level=3]
+  - paragraph: €0.00 of €500.00
+  - generic: 0%
+  - progressbar
+  - generic: 📦
+  - heading "Other" [level=3]
+  - paragraph: €0.00 of €200.00
+  - generic: 0%
+  - progressbar
+  - heading "Financial Goals" [level=2]
+  - heading "Summer Vacation" [level=3]
+  - paragraph: Deadline passed
+  - generic: Progress
+  - generic: €1850.00
+  - progressbar
+  - generic: Remaining
+  - generic: €1150.00
+  - heading "Emergency Fund" [level=3]
+  - paragraph: Deadline passed
+  - generic: Progress
+  - generic: €6500.00
+  - progressbar
+  - generic: Remaining
+  - generic: €3500.00
+  - heading "New Laptop" [level=3]
+  - paragraph: Deadline passed
+  - generic: Progress
+  - generic: €800.00
+  - progressbar
+  - generic: Remaining
+  - generic: €1200.00
+  - heading "Recent Expenses" [level=2]
+  - button "Filters":
+    - text: Filters
+  - generic: 🍽️
+  - paragraph: Grocery shopping
+  - paragraph: Food & Dining
+  - paragraph: €78.66
+  - paragraph: $85.50
+  - paragraph: Dec 12, 2024
+  - button:
+  - generic: 🚗
+  - paragraph: Uber ride
+  - paragraph: Transportation
+  - paragraph: €22.08
+  - paragraph: $24.00
+  - paragraph: Dec 11, 2024
+  - button:
+  - generic: 🎬
+  - paragraph: Netflix subscription
+  - paragraph: Entertainment
+  - paragraph: €14.71
+  - paragraph: $15.99
+  - paragraph: Dec 10, 2024
+  - button:
+  - generic: 🍽️
+  - paragraph: Coffee shop
+  - paragraph: Food & Dining
+  - paragraph: €12.50
+  - paragraph: Dec 10, 2024
+  - button:
+  - generic: 💡
+  - paragraph: Electric bill
+  - paragraph: Utilities
+  - paragraph: €87.40
+  - paragraph: $95.00
+  - paragraph: Dec 9, 2024
+  - button:
+  - generic: 🛍️
+  - paragraph: New shoes
+  - paragraph: Shopping
+  - paragraph: €82.79
+  - paragraph: $89.99
+  - paragraph: Dec 8, 2024
+  - button:
+  - generic: 🍽️
+  - paragraph: Restaurant dinner
+  - paragraph: Food & Dining
+  - paragraph: €59.80
+  - paragraph: $65.00
+  - paragraph: Dec 7, 2024
+  - button:
+  - generic: 🚗
+  - paragraph: Gas station
+  - paragraph: Transportation
+  - paragraph: €41.40
+  - paragraph: $45.00
+  - paragraph: Dec 6, 2024
+  - button:
+  - generic: 🏥
+  - paragraph: Pharmacy
+  - paragraph: Health
+  - paragraph: €29.90
+  - paragraph: $32.50
+  - paragraph: Dec 5, 2024
+  - button:
+  - generic: ✈️
+  - paragraph: Flight booking
+  - paragraph: TravelSummer Vacation
+  - paragraph: €322.00
+  - paragraph: $350.00
+  - paragraph: Dec 4, 2024
+  - button:
+  - generic: 🎬
+  - paragraph: Movie tickets
+  - paragraph: Entertainment
+  - paragraph: €25.76
+  - paragraph: $28.00
+  - paragraph: Dec 3, 2024
+  - button:
+  - generic: 🍽️
+  - paragraph: Lunch
+  - paragraph: Food & Dining
+  - paragraph: €21.54
+  - paragraph: £18.50
+  - paragraph: Dec 2, 2024
+  - button:
+  - generic: 🛍️
+  - paragraph: Amazon purchase
+  - paragraph: Shopping
+  - paragraph: €62.55
+  - paragraph: $67.99
+  - paragraph: Dec 1, 2024
+  - button:
+  - generic: 💡
+  - paragraph: Internet bill
+  - paragraph: Utilities
+  - paragraph: €73.59
+  - paragraph: $79.99
+  - paragraph: Nov 30, 2024
+  - button:
+  - generic: 🏥
+  - paragraph: Gym membership
+  - paragraph: Health
+  - paragraph: €45.99
+  - paragraph: $49.99
+  - paragraph: Nov 29, 2024
+  - button:
+  - generic: 🚗
+  - paragraph: Train ticket
+  - paragraph: Transportation
+  - paragraph: €35.00
+  - paragraph: Nov 28, 2024
+  - button:
+  - generic: 🍽️
+  - paragraph: Groceries
+  - paragraph: Food & Dining
+  - paragraph: €110.40
+  - paragraph: $120.00
+  - paragraph: Nov 27, 2024
+  - button:
+  - generic: 🎬
+  - paragraph: Concert tickets
+  - paragraph: Entertainment
+  - paragraph: €78.20
+  - paragraph: $85.00
+  - paragraph: Nov 26, 2024
+  - button:
+  - generic: ✈️
+  - paragraph: Hotel deposit
+  - paragraph: TravelSummer Vacation
+  - paragraph: €184.00
+  - paragraph: $200.00
+  - paragraph: Nov 25, 2024
+  - button:
+  - generic: 🛍️
+  - paragraph: Clothing
+  - paragraph: Shopping
+  - paragraph: €138.00
+  - paragraph: $150.00
+  - paragraph: Nov 24, 2024
+  - button:
+- generic: €4

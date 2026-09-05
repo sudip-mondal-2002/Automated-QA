@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0010:16",
+  "appId": "WebTestBench_0010",
+  "candidateSha256": "c1b6a00751f14b34a9a44cecced6e8ae6720b7f2a942228149714f13bcc5d0b5",
+  "appArchiveSha256": "939bcd589ad019edfe09912922efa8150f48cb4e68d0d8fdf86fc3b814266027",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4735; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:06:44.875Z",
+  "actions": [
+    {
+      "action": "Opened My Reservations",
+      "result": "The only personal-area-like page offered Upcoming and Past reservation tabs."
+    },
+    {
+      "action": "Opened Past (0)",
+      "result": "It showed only 'No past reservations yet' and no completed-order detail view."
+    },
+    {
+      "action": "Inspected available navigation",
+      "result": "Only Restaurants, My Reservations, and Browse Restaurants links existed; there was no Personal Center or comment/review-history view."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "A personal center exposes comment history, applications/bookings, and completed order details",
+      "observed": "The app exposes reservation lists only. It has no personal center and no centralized comment history; the empty Past tab provides no completed-order information."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The required combined personal center and comment-history capability is absent.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_16/after.png",
+      "sha256": "e314695ae516bcf94ece2a7e0132f69a89bddc059515e2630fc6128579e80af5",
+      "bytes": 12990
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_16/dom-after.txt",
+      "sha256": "44b636dabad20a14d684a985be41fd3d9605ff376a82762ef1e8278d8f49c694",
+      "bytes": 607
+    }
+  ],
+  "laneId": "lane-2"
+}

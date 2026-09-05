@@ -18,6 +18,10 @@
           <small>Semantic test workspace</small>
         </span>
       </div>
+      <nav class="product-tabs" aria-label="Workspace views">
+        <button class="product-tab active" id="workspace-tab" type="button" aria-selected="true">Workspace</button>
+        <button class="product-tab" id="demo-console-tab" type="button" aria-selected="false">Console</button>
+      </nav>
       <div class="topbar-actions">
         <span class="connection" id="connection-status"><i></i> Connecting</span>
         <button class="button button-secondary" id="copy-rerun" type="button">Copy rerun prompt</button>
@@ -25,7 +29,7 @@
       </div>
     </header>
 
-    <main class="workspace-shell">
+    <main class="workspace-shell" id="workspace-view">
       <section class="workspace-intro">
         <div>
           <p class="eyebrow">File-backed · Native execution</p>
@@ -106,11 +110,155 @@
           </div>
         </div>
       </section>
-      <section class="panel orchestration-panel" id="orchestration-panel" aria-labelledby="orchestration-title" hidden>
+    </main>
+
+    <main class="workspace-shell demo-console-view" id="demo-console-view" hidden>
+      <section class="workspace-intro demo-console-intro">
+        <div>
+          <p class="eyebrow">Prompt-driven · Read-only evidence</p>
+          <h1>Run the live story without leaving the skill workflow.</h1>
+          <p>Prepare an autonomous-QA request, then inspect the pipeline, coverage gate, scenarios, and evidence written to this repository.</p>
+        </div>
+        <span class="reviewer-boundary">The console reviews planning attempts. Completed test outcomes live in Workspace.</span>
+      </section>
+
+      <div class="demo-console-grid">
+        <section class="panel demo-request-panel" aria-labelledby="demo-request-title">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Request</p><h2 id="demo-request-title">Ask autonomous QA</h2></div>
+            <span class="count">01</span>
+          </div>
+          <div class="demo-request-body">
+            <label class="demo-field" for="demo-url">Target URL <code>--url</code>
+              <input id="demo-url" type="url" inputmode="url" placeholder="http://127.0.0.1:3000" autocomplete="url">
+            </label>
+            <label class="demo-field" for="demo-objective">What should QA prove? <code>--prompt</code>
+              <textarea id="demo-objective" rows="4">Verify checkout and authentication. Cover the successful journey, rejected credentials, observable validation, and cleanup.</textarea>
+            </label>
+            <label class="demo-field" for="demo-prd">PRD file <code>--prd</code> <span>optional · project-relative</span>
+              <input id="demo-prd" type="text" placeholder="docs/requirements.md" autocomplete="off">
+            </label>
+            <details class="demo-flags" open>
+              <summary><span>Orchestration flags</span><small>Every supported option</small></summary>
+              <div class="demo-flags-body">
+                <label class="demo-field" for="demo-root">Project root <code>--root</code>
+                  <input id="demo-root" type="text" value="Current application project" readonly>
+                </label>
+                <div class="demo-flag-grid">
+                  <label class="demo-field" for="demo-username">Username <code>--username</code>
+                    <input id="demo-username" type="text" placeholder="demo" value="demo" autocomplete="off">
+                  </label>
+                  <label class="demo-field" for="demo-password">Password <code>--password</code>
+                    <input id="demo-password" type="text" placeholder="demo" value="demo" autocomplete="off">
+                  </label>
+                  <label class="demo-field" for="demo-plan">Plan draft <code>--plan</code>
+                    <input id="demo-plan" type="text" placeholder=".qa/plan-draft.json" autocomplete="off">
+                  </label>
+                  <label class="demo-field" for="demo-out">Output directory <code>--out</code>
+                    <input id="demo-out" type="text" placeholder=".qa/orchestrations" autocomplete="off">
+                  </label>
+                  <label class="demo-field" for="demo-max-replans">Maximum replans <code>--max-replans</code>
+                    <input id="demo-max-replans" type="number" min="1" step="1" value="2">
+                  </label>
+                  <label class="demo-field" for="demo-concurrency">Execution concurrency <code>--concurrency</code>
+                    <input id="demo-concurrency" type="number" min="1" max="8" step="1" value="3">
+                  </label>
+                  <label class="demo-field" for="demo-planning-concurrency">Planning concurrency <code>--planning-concurrency</code>
+                    <input id="demo-planning-concurrency" type="number" min="1" max="3" step="1" value="3">
+                  </label>
+                  <label class="demo-field" for="demo-crawl-concurrency">Crawl concurrency <code>--crawl-concurrency</code>
+                    <input id="demo-crawl-concurrency" type="number" min="1" max="8" step="1" value="4">
+                  </label>
+                </div>
+                <label class="demo-field" for="demo-app-revision">Application revision <code>--app-revision</code>
+                  <input id="demo-app-revision" type="text" value="auto" placeholder="auto or a revision identifier" autocomplete="off">
+                </label>
+                <div class="demo-flag-toggles" aria-label="Boolean orchestration flags">
+                  <label class="demo-flag-toggle" for="demo-plan-only"><input id="demo-plan-only" type="checkbox"><span><strong>Plan only</strong><code>--plan-only</code></span></label>
+                  <label class="demo-flag-toggle" for="demo-no-history"><input id="demo-no-history" type="checkbox"><span><strong>Disable history</strong><code>--no-history</code></span></label>
+                  <label class="demo-flag-toggle" for="demo-allow-remote"><input id="demo-allow-remote" type="checkbox"><span><strong>Authorize remote target</strong><code>--allow-remote</code></span></label>
+                  <label class="demo-flag-toggle" for="demo-json"><input id="demo-json" type="checkbox"><span><strong>JSON response</strong><code>--json</code></span></label>
+                </div>
+                <p class="demo-secret-note">These are public synthetic demo fixtures, not personal credentials. Their values are visible in Console and in the copied request.</p>
+              </div>
+            </details>
+            <div class="demo-presets" aria-label="Demo request presets">
+              <button type="button" data-demo-preset="checkout">Checkout</button>
+              <button type="button" data-demo-preset="auth">Authentication</button>
+              <button type="button" data-demo-preset="coverage">Full coverage</button>
+              <button type="button" data-demo-preset="rerun">Rerun last</button>
+            </div>
+            <div class="prompt-preview" aria-live="polite">
+              <span class="prompt-avatar" aria-hidden="true">$</span>
+              <pre id="demo-prompt-preview"></pre>
+            </div>
+            <div class="demo-request-actions">
+              <button class="button button-primary" id="demo-copy-prompt" type="button">Copy request</button>
+            </div>
+            <p class="demo-boundary-note">Planning records can stop before execution and remain visible here. Check Workspace for the latest completed test outcomes. Paste the request into Codex; the installed skill owns discovery, native execution, and evidence.</p>
+          </div>
+        </section>
+
+        <section class="panel demo-dashboard-panel" aria-labelledby="demo-dashboard-title">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Live pipeline</p><h2 id="demo-dashboard-title">Awaiting an orchestration</h2></div>
+            <span class="status status-not_run" id="demo-verdict">Not run</span>
+          </div>
+          <div class="demo-dashboard-body">
+            <div class="demo-stage-track" id="demo-stage-track" aria-label="Orchestration stages">
+              <span data-demo-stage="probe"><i>1</i>Probe</span>
+              <b>›</b>
+              <span data-demo-stage="crawl"><i>2</i>Crawl</span>
+              <b>›</b>
+              <span data-demo-stage="plan"><i>3</i>Plan</span>
+              <b>›</b>
+              <span data-demo-stage="gate"><i>4</i>Gate</span>
+              <b>›</b>
+              <span data-demo-stage="generate"><i>5</i>Generate</span>
+              <b>›</b>
+              <span data-demo-stage="run"><i>6</i>Run</span>
+              <b>›</b>
+              <span data-demo-stage="report"><i>7</i>Report</span>
+            </div>
+
+            <div class="demo-score-card">
+              <div class="demo-score-heading">
+                <span>Coverage gate <small>threshold 0.75 · zero blocking gaps</small></span>
+                <strong id="demo-score">—</strong>
+              </div>
+              <div class="demo-score-track"><i id="demo-score-fill"></i></div>
+              <div class="demo-score-meta">
+                <span id="demo-blocking">— blocking</span>
+                <span id="demo-advisory">— advisory</span>
+              </div>
+            </div>
+
+            <div class="demo-metrics" aria-label="Orchestration metrics">
+              <div><span>Exit code</span><strong id="demo-exit">—</strong><small id="demo-exit-note">No run selected</small></div>
+              <div><span>Planner</span><strong id="demo-planner">—</strong><small id="demo-planner-note">Waiting for evidence</small></div>
+              <div><span>Generated specs</span><strong id="demo-specs">—</strong><small id="demo-specs-note">No generated artifacts</small></div>
+              <div><span>Assertions</span><strong id="demo-assertions">—</strong><small id="demo-assertions-note">No checks reported</small></div>
+            </div>
+
+            <div class="demo-compare-heading">
+              <div><p class="eyebrow">Recent evidence</p><h3>Planner comparison</h3></div>
+              <span id="demo-compare-count">0 runs</span>
+            </div>
+            <div class="demo-compare-table-wrap">
+              <table class="demo-compare-table">
+                <thead><tr><th>Planner</th><th>Verdict</th><th>Score</th><th>Scenarios</th><th>Exit</th></tr></thead>
+                <tbody id="demo-compare-body"><tr><td colspan="5">No orchestration evidence yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel orchestration-panel" id="orchestration-panel" aria-labelledby="orchestration-title">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">Autonomous orchestration</p>
-            <h2 id="orchestration-title">Decision timeline</h2>
+            <p class="eyebrow">Evidence and artifacts</p>
+            <h2 id="orchestration-title">Orchestration explorer</h2>
           </div>
           <span class="count" id="orchestrations-badge">0</span>
         </div>
@@ -119,8 +267,8 @@
           <div class="orchestration-detail" id="orchestration-detail">
             <div class="empty-result" id="orchestration-empty">
               <span class="empty-icon" aria-hidden="true">⌁</span>
-              <h2>Choose an orchestration</h2>
-              <p>Stage timeline, gate scoring, planned flows, and per-scenario triage will appear here.</p>
+              <h2>No orchestration selected</h2>
+              <p>Run the copied request through the skill. The newest decision record will appear here automatically.</p>
             </div>
             <div id="orchestration-body" hidden>
               <dl class="result-metadata" id="orchestration-metadata"></dl>

@@ -27,6 +27,8 @@ test("parsePrd extracts requirements and keywords", () => {
 test("buildTestPlan covers login negative, form errors, list, numeric and payment risks", () => {
   const plan = buildTestPlan({ siteMap: siteMap(), prompt: "focus on cart", prd: parsePrd("REQ-1 checkout with saved card"), now: () => new Date("2026-09-04T10:00:00.000Z") });
   assert.ok(plan.flows.some((f) => f.id.includes("invalid-creds")));
+  const invalidCredentials = plan.flows.find((flow) => flow.id.includes("invalid-creds"));
+  assert.deepEqual(invalidCredentials.steps.at(-1).expect[0].assert, { kind: "url_contains", value: "/login" });
   // Session-isolation flows are cut (single-context runs cannot isolate
   // sessions) and tracked as an open question instead of failing silently.
   assert.ok(!plan.flows.some((f) => f.id.includes("unauthenticated-redirect")));

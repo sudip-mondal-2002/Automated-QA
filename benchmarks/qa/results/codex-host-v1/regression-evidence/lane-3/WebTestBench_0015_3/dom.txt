@@ -1,0 +1,71 @@
+CREATOR
+
+- region "Notifications alt+T"
+- banner:
+  - link "PollWise":
+    - /url: /
+    - generic: PollWise
+  - navigation:
+    - link "Create Poll":
+      - /url: /create
+      - button "Create Poll":
+        - generic: Create Poll
+    - link "Demo User":
+      - /url: /dashboard
+      - button "Demo User":
+        - generic: Demo User
+    - button:
+- link "Back to dashboard":
+  - /url: /dashboard
+  - text: Back to dashboard
+- heading "Lane 3 share-link poll?" [level=3]
+- generic: active
+- generic: 0 votes
+- generic: Sep 5, 2026
+- generic: Anonymous
+- heading "Share Your Poll" [level=3]:
+  - text: Share Your Poll
+- generic: http://wtb0015-3.localhost:43185/poll/poll-1788595762801
+- button "Copy":
+  - text: Copy
+- link:
+  - /url: /poll/poll-1788595762801
+  - button:
+- heading "Poll Status" [level=3]
+- paragraph: Control whether your poll is accepting votes
+- button "Open":
+  - generic: Open
+- button "Close":
+  - generic: Close
+- button "Read-only":
+  - generic: Read-only
+- paragraph: Poll is accepting votes
+- heading "Results" [level=3]
+- paragraph: Live breakdown of all votes
+- generic: "Yes"
+- generic: 0 votes
+- generic: 0%
+- generic: "No"
+- generic: 0 votes
+- generic: 0%
+- paragraph: "Total votes: 0"
+
+TARGET VOTER
+
+- region "Notifications alt+T"
+- banner:
+  - link "PollWise":
+    - /url: /
+    - generic: PollWise
+  - navigation:
+    - link "Log in":
+      - /url: /login
+      - button "Log in"
+    - link "Sign up":
+      - /url: /signup
+      - button "Sign up"
+- heading "Poll Not Found" [level=1]
+- paragraph: This poll may have been deleted or the link is incorrect.
+- link "Go Home":
+  - /url: /
+  - button "Go Home"

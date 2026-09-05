@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0049:17",
+  "appId": "WebTestBench_0049",
+  "candidateSha256": "bf0825b32ada83ee05273a2a2a27a500a8bf60869dd0cf3a4d4d85389755486f",
+  "appArchiveSha256": "10dd8353bc63d48d580d26c6bcc1b42d9fb2ebecf6f314bc4633d5ecd67503ca",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4731; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:04:12.482Z",
+  "actions": [
+    {
+      "action": "Selected Focus Pod A",
+      "result": "The Make Reservation form appeared."
+    },
+    {
+      "action": "Left purpose and date incomplete and clicked Reserve",
+      "result": "The reservation was not created and a visible status notification said 'Please select a date'."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Visual feedback is provided when reservation information is incomplete",
+      "observed": "Submitting the incomplete form produced an immediate on-screen validation notification."
+    }
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Incomplete reservation feedback was directly triggered and displayed.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0049_17/after.png",
+      "sha256": "a0f80ee0179640ee9e3645a6006e8df8046619ac007fe0b1070497c2adc0c517",
+      "bytes": 43067
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0049_17/dom-after.txt",
+      "sha256": "2f2d9cca8f2e597ede3eed71bf1a33f8b764f8ca6a916e3a0aaaadcf6c918d3a",
+      "bytes": 3324
+    }
+  ],
+  "laneId": "lane-2"
+}

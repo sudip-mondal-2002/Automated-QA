@@ -1,0 +1,10 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Error Lookup" [level=1]
+  - paragraph: Paste your error message and find solutions. Fuzzy search helps you find matches even with partial text.
+- textbox "Paste your error message here..." [active]: qwerty-impossible-token-442211
+- button:
+- paragraph: No errors found
+- paragraph: Try searching with different keywords

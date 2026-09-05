@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { runCli } from "../src/cli.js";
 import { QaWorkspace } from "../src/index.js";
 import { createNativeWebExecutor } from "../src/index.js";
+import { createDemoApplication } from "../demo-app/server.js";
 
 function capture() {
   const output = [];
@@ -135,6 +136,59 @@ test("CLI setup validates required and target-specific options", async (t) => {
     const result = capture();
     assert.equal(await runCli([...entry.args, "--root", root], result.io), 1);
     assert.match(result.errors.join("\n"), entry.error);
+  }
+});
+
+test("CLI history and orchestration expose the optimized controls", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-orchestration-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const demo = createDemoApplication();
+  t.after(() => demo.stop());
+  const baseUrl = await demo.start(0);
+  const planPath = path.join(root, "plan.json");
+  await writeFile(planPath, JSON.stringify({
+    flows: [{
+      id: "home",
+      title: "Inspect home",
+      category: "happy",
+      priority: "medium",
+      pages: ["/"],
+      steps: [{ intent: "Open the shop", page: "/", action: "navigate", expect: [{ prose: "QA Shop", assert: { kind: "text", value: "QA Shop" } }] }],
+    }],
+  }));
+
+  const planned = capture();
+  assert.equal(await runCli([
+    "orchestrate", "--url", baseUrl, "--plan", planPath, "--plan-only", "--no-history", "--json",
+    "--max-replans", "1", "--concurrency", "2", "--planning-concurrency", "2", "--crawl-concurrency", "2",
+    "--app-revision", "immutable-demo-v1", "--root", root,
+  ], planned.io), 12);
+  assert.equal(JSON.parse(planned.output[0]).exitCode, 12);
+
+  const normalizedPlanPath = path.join(root, "normalized-plan.json");
+  await writeFile(normalizedPlanPath, JSON.stringify(JSON.parse(planned.output[0]).plan));
+  const reusedNormalized = capture();
+  assert.equal(await runCli([
+    "orchestrate", "--url", baseUrl, "--plan", normalizedPlanPath, "--plan-only", "--no-history", "--json",
+    "--root", root,
+  ], reusedNormalized.io), 12);
+  const reusedPayload = JSON.parse(reusedNormalized.output[0]);
+  assert.equal(reusedPayload.report.planSource.planner, "agent");
+  assert.equal(reusedPayload.report.planSource.fellBack, false);
+
+  const history = capture();
+  assert.equal(await runCli(["history", "query", "--url", baseUrl, "--prompt", "inspect home", "--app-revision", "immutable-demo-v1", "--root", root], history.io), 0);
+  assert.equal(JSON.parse(history.output[0]).kind, "miss");
+
+  for (const optionName of ["--concurrency", "--planning-concurrency", "--crawl-concurrency", "--max-replans"]) {
+    const invalid = capture();
+    assert.equal(await runCli(["orchestrate", "--url", baseUrl, optionName, "0", "--root", root], invalid.io), 1);
+    assert.match(invalid.errors.join("\n"), /positive integer|integer from 1/);
+  }
+  for (const [optionName, value] of [["--concurrency", "9"], ["--planning-concurrency", "4"], ["--crawl-concurrency", "9"]]) {
+    const excessive = capture();
+    assert.equal(await runCli(["orchestrate", "--url", baseUrl, optionName, value, "--root", root], excessive.io), 1);
+    assert.match(excessive.errors.join("\n"), /integer from 1/);
   }
 });
 

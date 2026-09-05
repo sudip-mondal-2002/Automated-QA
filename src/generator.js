@@ -6,11 +6,12 @@ import {
   createReplayManifest,
   renderReplayFromBindings,
   replaySource,
+  replayStatus,
   validateReplayScriptSource,
 } from "./replay.js";
 
 function slugify(value) {
-  return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "flow";
+  return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48).replace(/-+$/g, "") || "flow";
 }
 
 function escapeRegex(value) {
@@ -101,16 +102,17 @@ export function mergeActionSteps(steps = []) {
   return merged;
 }
 
-export function planToSpecs({ plan } = {}) {
+export function planToSpecs({ plan, environment = "local", idPrefix = "" } = {}) {
   const specs = [];
   for (const flow of plan?.flows ?? []) {
-    const id = slugify(flow.id.replace(/^flow_/, ""));
+    const flowId = flow.id.replace(/^flow_/, "");
+    const id = slugify(idPrefix ? `${idPrefix}-${flowId}` : flowId);
     const steps = mergeActionSteps(flow.steps ?? []);
     specs.push({
       version: 1,
       id,
       title: flow.title,
-      environment: "local",
+      environment,
       // The saved semantic spec stays selector-free prose — that contract is
       // the point of the product. Predicates ride in the locators sidecar.
       steps: steps.map((step) => ({
@@ -248,10 +250,9 @@ export async function validateSelectors({ sidecar, origin, fetchImpl = globalThi
     const needsLocator = binding.action !== "navigate" && (binding.inputs ?? []).length + (binding.candidates ?? []).length > 0;
 
     try {
-      if (executor?.observe) {
-        await executor.observe(binding.candidates?.[0]?.value ?? "", {});
+      if (executor?.probeLocator) {
+        locatorOk = await executor.probeLocator(binding.candidates ?? [], { page: binding.page });
         probeSource = "executor";
-        locatorOk = true;
       } else if (origin && fetchImpl) {
         page = await fetchPageText(origin, binding.page, fetchImpl, cache);
         probeSource = "fetch";
@@ -462,8 +463,8 @@ export function authDetailsFrom(siteMap) {
   return null;
 }
 
-export async function generate({ workspace, plan, siteMap, origin, fetchImpl, executor, outDir, emit } = {}) {
-  const specs = planToSpecs({ plan });
+export async function generate({ workspace, plan, siteMap, origin, environment = "local", idPrefix = "", fetchImpl, executor, outDir, emit } = {}) {
+  const specs = planToSpecs({ plan, environment, idPrefix });
   const artifacts = [];
   const generatedDir = outDir ?? `${workspace.qaDirectory}/../generated`;
   await mkdir(generatedDir, { recursive: true });
@@ -518,15 +519,22 @@ export async function generate({ workspace, plan, siteMap, origin, fetchImpl, ex
       auth: (spec._preconditions ?? []).includes("authenticated") ? auth : null,
     });
     const source = await replaySource(workspace, clean.id, clean.environment);
-    const replayScript = validateReplayScriptSource(replay.script);
-    const replayManifest = createReplayManifest({
-      specId: clean.id,
-      environment: clean.environment,
-      sourceHash: source.sourceHash,
-      script: replayScript,
-      coverage: replay.coverage,
-    });
-    await workspace.saveReplayArtifacts(clean.id, replayScript, replayManifest);
+    let replayScript = validateReplayScriptSource(replay.script);
+    const existing = await replayStatus(workspace, clean.id, clean.environment);
+    if (existing.state === "trusted" && existing.manifest?.sourceHash === source.sourceHash) {
+      // Generation is idempotent. An equivalent semantic source must never
+      // downgrade a validated replay to a fresh candidate.
+      replayScript = existing.script;
+    } else {
+      const replayManifest = createReplayManifest({
+        specId: clean.id,
+        environment: clean.environment,
+        sourceHash: source.sourceHash,
+        script: replayScript,
+        coverage: replay.coverage,
+      });
+      await workspace.saveReplayArtifacts(clean.id, replayScript, replayManifest);
+    }
     await writeFile(path.join(generatedDir, `${spec.id}.playwright.mjs`), replayScript);
     artifacts.push(spec.id);
     if (spec._flowId) flowMap[spec.id] = spec._flowId;
@@ -541,5 +549,6 @@ export async function generate({ workspace, plan, siteMap, origin, fetchImpl, ex
     dir: generatedDir,
     artifacts,
     flowMap,
+    replayStates: Object.fromEntries(await Promise.all(artifacts.map(async (id) => [id, (await replayStatus(workspace, id)).state]))),
   };
 }

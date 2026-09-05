@@ -5,6 +5,7 @@ import { draftSpec } from "./draft.js";
 import { parseJson, stringifyJson, stringifyYaml } from "./documents.js";
 import { formatQaError, QaError } from "./errors.js";
 import { executeWithReplay, replayStatus, validateReplayCandidate } from "./replay.js";
+import { createHistoryRequest, resolveHistory } from "./history.js";
 import { atomicWriteFile, QaWorkspace } from "./storage.js";
 import { startQaUi } from "./ui-server.js";
 
@@ -16,7 +17,9 @@ Usage:
                  [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
   qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>]
-                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
+                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--concurrency <n>]
+                       [--planning-concurrency <n>] [--crawl-concurrency <n>] [--no-history] [--app-revision <id>] [--allow-remote] [--json]
+  qa-agent history query --url <url> --prompt <text> [--authenticated] [--app-revision <id>]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
@@ -86,6 +89,28 @@ function flag(args, name) {
 function assertNoUnknownOptions(args) {
   const unknown = args.find((value) => value.startsWith("--"));
   if (unknown) throw new QaError("UNKNOWN_OPTION", `Unknown option: ${unknown}`);
+}
+
+function plannerDraftFromFile(value) {
+  const isNormalizedPlan = value?.version === 1
+    && typeof value?.id === "string"
+    && typeof value?.target === "string"
+    && Array.isArray(value?.flows);
+  if (!isNormalizedPlan) return value;
+  const pick = (source, keys) => Object.fromEntries(keys.filter((key) => source?.[key] !== undefined).map((key) => [key, source[key]]));
+  return {
+    flows: value.flows.map((flow) => ({
+      ...pick(flow, ["id", "title", "category", "priority", "rationale", "pages", "preconditions", "risks", "requirementIds"]),
+      steps: (flow.steps ?? []).map((step) => ({
+        ...pick(step, ["intent", "page", "action", "channel", "inputs"]),
+        ...(step.expect ? {
+          expect: step.expect.map((expectation) => typeof expectation === "string" ? { prose: expectation } : expectation),
+        } : {}),
+      })),
+    })),
+    ...(Array.isArray(value.openQuestions) ? { openQuestions: value.openQuestions } : {}),
+    ...(typeof value.notes === "string" ? { notes: value.notes } : {}),
+  };
 }
 
 async function input(fileName) {
@@ -336,6 +361,37 @@ async function replayCommand(workspace, args, io, output) {
   throw new QaError("UNKNOWN_COMMAND", `Unknown replay operation: ${action ?? "(missing)"}`);
 }
 
+async function historyCommand(workspace, args, output) {
+  const action = args.shift();
+  if (action !== "query") throw new QaError("UNKNOWN_COMMAND", `Unknown history operation: ${action ?? "(missing)"}`);
+  const url = option(args, "--url");
+  const prompt = option(args, "--prompt") ?? "";
+  const appRevisionOption = option(args, "--app-revision") ?? "auto";
+  const authenticated = flag(args, "--authenticated");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected history argument: ${args[0]}`);
+  if (!url) throw new QaError("MISSING_OPTION_VALUE", "history query requires --url");
+  const { resolveApplicationRevision } = await import("./orchestrator.js");
+  const appRevision = await resolveApplicationRevision(workspace.repositoryRoot, appRevisionOption);
+  const request = createHistoryRequest({ target: url, prompt, authScope: authenticated ? "authenticated" : "anonymous", appRevision });
+  const result = await resolveHistory({ workspace, request });
+  const candidates = result.kind === "exact"
+    ? result.replay.map((entry) => ({ specId: entry.specId, replayState: entry.state, sourceHash: entry.sourceHash, scriptHash: entry.scriptHash, requiredVariables: entry.requiredVariables, score: 1 }))
+    : result.candidates ?? [];
+  const recommended = candidates.find((candidate) => candidate.replayState === "trusted"
+    && candidate.score >= 0.35
+    && (result.kind === "exact" || new Set(["passed", "healed"]).has(candidate.lastClassification)));
+  output(stringifyJson({
+    version: 1,
+    kind: result.kind,
+    fingerprint: request.fingerprint,
+    ...(result.kind === "exact" ? { sourceOrchestrationId: result.manifest.orchestrationId } : {}),
+    candidates,
+    ...(recommended ? { recommendedSpecId: recommended.specId, reason: result.kind === "exact" ? "exact compatible orchestration with trusted replay" : "same-origin source-matched trusted replay with sufficient semantic overlap and a prior clean outcome" } : {}),
+  }));
+  return 0;
+}
+
 export function auditResult({ spec, result }) {
   const checks = [];
   const push = (name, passed, detail) => checks.push({ name, passed, ...(detail ? { detail } : {}) });
@@ -480,6 +536,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     else if (command === "fixture") await fixtureCommand(workspace, args, output);
     else if (command === "environment") await environmentCommand(workspace, args, output);
     else if (command === "result") await resultCommand(workspace, args, output);
+    else if (command === "history") return await historyCommand(workspace, args, output);
     else if (command === "replay") return await replayCommand(workspace, args, io, output);
     else if (command === "ui") {
       const host = option(args, "--host");
@@ -519,7 +576,12 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       const prdPath = option(args, "--prd");
       const outDir = option(args, "--out");
       const maxReplansValue = option(args, "--max-replans");
+      const concurrencyValue = option(args, "--concurrency");
+      const planningConcurrencyValue = option(args, "--planning-concurrency");
+      const crawlConcurrencyValue = option(args, "--crawl-concurrency");
+      const appRevision = option(args, "--app-revision") ?? "auto";
       const allowRemote = flag(args, "--allow-remote");
+      const noHistory = flag(args, "--no-history");
       const json = flag(args, "--json");
       const planOnly = flag(args, "--plan-only");
       // A plan authored by the Planner sub-agent, handed back on disk. The
@@ -531,6 +593,12 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
       const maxReplans = maxReplansValue === undefined ? 2 : Number(maxReplansValue);
       if (!Number.isInteger(maxReplans) || maxReplans < 1) throw new QaError("INVALID_OPTION_VALUE", "--max-replans must be a positive integer");
+      const executionConcurrency = concurrencyValue === undefined ? 3 : Number(concurrencyValue);
+      if (!Number.isInteger(executionConcurrency) || executionConcurrency < 1 || executionConcurrency > 8) throw new QaError("INVALID_OPTION_VALUE", "--concurrency must be an integer from 1 to 8");
+      const planningConcurrency = planningConcurrencyValue === undefined ? 3 : Number(planningConcurrencyValue);
+      if (!Number.isInteger(planningConcurrency) || planningConcurrency < 1 || planningConcurrency > 3) throw new QaError("INVALID_OPTION_VALUE", "--planning-concurrency must be an integer from 1 to 3");
+      const crawlConcurrency = crawlConcurrencyValue === undefined ? 4 : Number(crawlConcurrencyValue);
+      if (!Number.isInteger(crawlConcurrency) || crawlConcurrency < 1 || crawlConcurrency > 8) throw new QaError("INVALID_OPTION_VALUE", "--crawl-concurrency must be an integer from 1 to 8");
       let prdText;
       if (prdPath) {
         try {
@@ -543,7 +611,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       if (planPath) {
         let draft;
         try {
-          draft = parseJson(await readPrdFile(planPath, "utf8"));
+          draft = plannerDraftFromFile(parseJson(await readPrdFile(planPath, "utf8")));
         } catch {
           throw new QaError("INVALID_OPTION_VALUE", `Plan draft is unreadable or not JSON: ${planPath}`);
         }
@@ -553,8 +621,9 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       }
       const { report, plan, exitCode, error } = await orchestrate({
         url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote, planOnly,
-        planner,
-        executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl, browserLauncher: io.browserLauncher,
+        planner, plannerAttempts: planPath ? 1 : 2, planningConcurrency: planPath ? 1 : planningConcurrency, crawlConcurrency,
+        executionConcurrency, historyMode: noHistory ? "off" : "lookup", appRevision,
+        executor: io.nativeExecutor, executorFactory: io.executorFactory, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl, browserLauncher: io.browserLauncher,
       });
       if (error) throw error;
       if (json) output(JSON.stringify({ exitCode, report, ...(plan ? { plan } : {}) }));

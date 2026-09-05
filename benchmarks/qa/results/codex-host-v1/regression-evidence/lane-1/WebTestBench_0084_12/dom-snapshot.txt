@@ -1,0 +1,110 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites 1":
+      - /url: /favorites
+      - text: Favorites
+      - generic: "1"
+- generic: TechExpo 2024 • January 15-18
+- heading "Exhibitor Directory" [level=1]
+- paragraph: Discover 8 innovative companies across electronics, healthcare, and manufacturing. Save your favorites and plan your visit.
+- main:
+  - textbox "Search exhibitors..."
+  - generic: "Filter:"
+  - button "All Areas"
+  - button "Electronics & Technology"
+  - button "Healthcare & Medical"
+  - button "Manufacturing & Automation"
+  - paragraph: Showing 8 of 8 exhibitors
+  - button "Remove from favorites" [active]:
+  - link "QuantTech Systems logo Electronics & Technology QuantTech Systems Next-Generation Quantum Computing Solutions QuantTech Systems is pioneering accessible quantum computing for enterprise applications. Our hybrid quantum-classical systems enable businesses to solve complex optimization problems in logistics, finance, and drug discovery. Hall A • Booth E-101 View Details":
+    - /url: /exhibitor/quantech-systems
+    - img "QuantTech Systems logo"
+    - generic: Electronics & Technology
+    - heading "QuantTech Systems" [level=3]
+    - paragraph: Next-Generation Quantum Computing Solutions
+    - paragraph: QuantTech Systems is pioneering accessible quantum computing for enterprise applications. Our hybrid quantum-classical systems enable businesses to solve complex optimization problems in logistics, finance, and drug discovery.
+    - generic: Hall A • Booth E-101
+    - text: View Details
+  - button "Add to favorites":
+  - link "MediCore Innovations logo Healthcare & Medical MediCore Innovations AI-Powered Diagnostic Imaging MediCore Innovations combines advanced AI with medical imaging to deliver faster, more accurate diagnoses. Our FDA-cleared solutions help radiologists detect conditions earlier and improve patient outcomes. Hall B • Booth H-205 View Details":
+    - /url: /exhibitor/medicore-innovations
+    - img "MediCore Innovations logo"
+    - generic: Healthcare & Medical
+    - heading "MediCore Innovations" [level=3]
+    - paragraph: AI-Powered Diagnostic Imaging
+    - paragraph: MediCore Innovations combines advanced AI with medical imaging to deliver faster, more accurate diagnoses. Our FDA-cleared solutions help radiologists detect conditions earlier and improve patient outcomes.
+    - generic: Hall B • Booth H-205
+    - text: View Details
+  - button "Add to favorites":
+  - link "AutoForge Robotics logo Manufacturing & Automation AutoForge Robotics Collaborative Robots for Smart Manufacturing AutoForge Robotics designs collaborative robots (cobots) that work safely alongside human workers. Our solutions increase productivity while reducing workplace injuries and training time. Hall C • Booth M-312 View Details":
+    - /url: /exhibitor/autoforge-robotics
+    - img "AutoForge Robotics logo"
+    - generic: Manufacturing & Automation
+    - heading "AutoForge Robotics" [level=3]
+    - paragraph: Collaborative Robots for Smart Manufacturing
+    - paragraph: AutoForge Robotics designs collaborative robots (cobots) that work safely alongside human workers. Our solutions increase productivity while reducing workplace injuries and training time.
+    - generic: Hall C • Booth M-312
+    - text: View Details
+  - button "Add to favorites":
+  - link "NeuralSense AI logo Electronics & Technology NeuralSense AI Edge AI for Industrial IoT NeuralSense AI brings machine learning to the edge with low-power chips designed for industrial environments. Process data in real-time without cloud connectivity for predictive maintenance and quality control. Hall A • Booth E-118 View Details":
+    - /url: /exhibitor/neuralsense-ai
+    - img "NeuralSense AI logo"
+    - generic: Electronics & Technology
+    - heading "NeuralSense AI" [level=3]
+    - paragraph: Edge AI for Industrial IoT
+    - paragraph: NeuralSense AI brings machine learning to the edge with low-power chips designed for industrial environments. Process data in real-time without cloud connectivity for predictive maintenance and quality control.
+    - generic: Hall A • Booth E-118
+    - text: View Details
+  - button "Add to favorites":
+  - link "BioSynth Labs logo Healthcare & Medical BioSynth Labs Precision Medicine Through Genomics BioSynth Labs offers next-generation sequencing solutions and bioinformatics platforms that enable personalized medicine. From sample to insight in under 24 hours. Hall B • Booth H-221 View Details":
+    - /url: /exhibitor/biosynth-labs
+    - img "BioSynth Labs logo"
+    - generic: Healthcare & Medical
+    - heading "BioSynth Labs" [level=3]
+    - paragraph: Precision Medicine Through Genomics
+    - paragraph: BioSynth Labs offers next-generation sequencing solutions and bioinformatics platforms that enable personalized medicine. From sample to insight in under 24 hours.
+    - generic: Hall B • Booth H-221
+    - text: View Details
+  - button "Add to favorites":
+  - link "Precision Dynamics logo Manufacturing & Automation Precision Dynamics Smart CNC Solutions for Industry 4.0 Precision Dynamics delivers connected CNC machining centers with built-in AI optimization. Our machines learn from every cut to continuously improve quality and reduce cycle times. Hall C • Booth M-340 View Details":
+    - /url: /exhibitor/precision-dynamics
+    - img "Precision Dynamics logo"
+    - generic: Manufacturing & Automation
+    - heading "Precision Dynamics" [level=3]
+    - paragraph: Smart CNC Solutions for Industry 4.0
+    - paragraph: Precision Dynamics delivers connected CNC machining centers with built-in AI optimization. Our machines learn from every cut to continuously improve quality and reduce cycle times.
+    - generic: Hall C • Booth M-340
+    - text: View Details
+  - button "Add to favorites":
+  - link "Voltaic Energy logo Electronics & Technology Voltaic Energy Next-Gen Battery Technology Voltaic Energy develops solid-state batteries with unprecedented energy density and safety. Our technology powers everything from EVs to grid storage with faster charging and longer life. Hall A • Booth E-125 View Details":
+    - /url: /exhibitor/voltaic-energy
+    - img "Voltaic Energy logo"
+    - generic: Electronics & Technology
+    - heading "Voltaic Energy" [level=3]
+    - paragraph: Next-Gen Battery Technology
+    - paragraph: Voltaic Energy develops solid-state batteries with unprecedented energy density and safety. Our technology powers everything from EVs to grid storage with faster charging and longer life.
+    - generic: Hall A • Booth E-125
+    - text: View Details
+  - button "Add to favorites":
+  - link "Healix Therapeutics logo Healthcare & Medical Healix Therapeutics Wearable Health Monitoring Healix Therapeutics creates medical-grade wearable devices that continuously monitor vital signs and detect health anomalies before they become emergencies. Hall B • Booth H-238 View Details":
+    - /url: /exhibitor/healix-therapeutics
+    - img "Healix Therapeutics logo"
+    - generic: Healthcare & Medical
+    - heading "Healix Therapeutics" [level=3]
+    - paragraph: Wearable Health Monitoring
+    - paragraph: Healix Therapeutics creates medical-grade wearable devices that continuously monitor vital signs and detect health anomalies before they become emergencies.
+    - generic: Hall B • Booth H-238
+    - text: View Details

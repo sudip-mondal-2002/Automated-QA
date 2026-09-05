@@ -1,0 +1,55 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- navigation:
+  - link "CodeForge":
+    - /url: /
+    - generic: CodeForge
+  - link "Login":
+    - /url: /login
+  - link "Get Started":
+    - /url: /register
+- main:
+  - button "Back to Challenges":
+    - text: Back to Challenges
+  - heading "Two Sum" [level=3]
+  - text: easy
+  - generic: arrays
+  - text: 10 pts
+  - tablist:
+    - tab "Description" [selected]
+    - tab "History (0)"
+  - tabpanel "Description":
+    - generic: Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice.
+    - heading "Examples" [level=4]
+    - paragraph: "Input: [2,7,11,15], 9"
+    - paragraph: "Output: [0,1]"
+    - paragraph: "Input: [3,2,4], 6"
+    - paragraph: "Output: [1,2]"
+  - heading "JavaScript" [level=3]
+  - button "Run Tests":
+    - text: Run Tests
+  - code:
+    - textbox "Editor content"
+    - textbox
+    - generic: 
+    - generic: "1"
+    - generic: "2"
+    - generic: "3"
+    - generic: "4"
+    - generic: "function twoSum(nums, target) {"
+    - generic: // Write your solution here
+    - generic: "}"
+  - 'heading "Test Results: 0/3 passed" [level=3]':
+    - text: "Test Results: 0/3 passed"
+  - paragraph: "Input: [2,7,11,15], 9"
+  - paragraph: "Expected: [0,1]"
+  - paragraph: "Got:"
+  - paragraph: "Input: [3,2,4], 6"
+  - paragraph: "Expected: [1,2]"
+  - paragraph: "Got:"
+  - paragraph: "Input: [3,3], 6"
+  - paragraph: "Expected: [0,1]"
+  - paragraph: "Got:"
+- alert
+- alert

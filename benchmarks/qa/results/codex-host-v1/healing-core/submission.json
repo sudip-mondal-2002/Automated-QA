@@ -1,0 +1,554 @@
+[
+  {
+    "caseId": "reprobreak-3316",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.getByRole('button', { name: 'OK', exact: true })",
+      "replacement": "confirmation button \"Ok\" in the open dialog",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/result.json",
+        "sha256": "28c229e50cb32dd5f7c11a034f3eba5db1c313e00d142bb7417228165d7669df",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.getByRole('button', { name: 'OK', exact: true })",
+        "replacement": "confirmation button \"Ok\" in the open dialog",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/result.json",
+          "sha256": "7bef6a9a4021ecb6334e5ce5bcfdc6cf71f73a65e0b244b62877eb3450489911",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-1224",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Sort Descending\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "cy.get('.slick-header-menu')",
+      "replacement": "command list \"Title column commands\" nested in the failed menu root",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Sort Descending\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/result.json",
+        "sha256": "7aa777acc17c00157ee96c67c9d697cc29cfa90a385710d589af00beb8d0eb03",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Sort Descending\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "cy.get('.slick-header-menu')",
+        "replacement": "command list \"Title column commands\" nested in the failed menu root",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Sort Descending\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/result.json",
+          "sha256": "914108b302c36e03b729fc49a6f124f621da77537982f5465c2d34b6df318adb",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-1225",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Remove Filter\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "cy.get('.slick-header-menu')",
+      "replacement": "command list \"Title column commands\" nested in the failed menu root",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Remove Filter\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/result.json",
+        "sha256": "316e3397a507ca205ed45f221deb340d1c8de05407d245b3ef9ecac0e9992af7",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Remove Filter\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "cy.get('.slick-header-menu')",
+        "replacement": "command list \"Title column commands\" nested in the failed menu root",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The failed menu root still exists and the live DOM contains exactly one nested accessible list named \"Title column commands\". Inspecting that list for \"Remove Filter\", named by the unchanged expectation, preserves the semantic check without consulting a reference replacement.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/result.json",
+          "sha256": "81a67f853c138265170fe4841f6cbbda4f104951a8310fc7c07da71837c229f9",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-619",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.$('[data-kg-floating-toolbar]'))",
+      "replacement": "ARIA toolbar absence query in the Editor region",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/result.json",
+        "sha256": "bdedc7693b572c8a8656313187ae91cf3df774fd1f3c849e356aa4e212128ae0",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.$('[data-kg-floating-toolbar]'))",
+        "replacement": "ARIA toolbar absence query in the Editor region",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/result.json",
+          "sha256": "a2c5564aed61dbfe550cf3d340edd62ad5cade5b5e2b1b933e9f3937ebea7b35",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-5609",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The live ARIA tree has one treeitem named \"suite\" with the visible \"Expand suite\" control; those semantic names occur in the unchanged journey, independently of the failed role locator.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.getByRole('listitem')",
+      "replacement": "treeitem \"suite\" via \"Expand suite\" in the live test tree",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The live ARIA tree has one treeitem named \"suite\" with the visible \"Expand suite\" control; those semantic names occur in the unchanged journey, independently of the failed role locator.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/result.json",
+        "sha256": "254c62d6641ddafc566e61ee1369b36c82c80db374a2e47d89cbee801c15fc7a",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The live ARIA tree has one treeitem named \"suite\" with the visible \"Expand suite\" control; those semantic names occur in the unchanged journey, independently of the failed role locator.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.getByRole('listitem')",
+        "replacement": "treeitem \"suite\" via \"Expand suite\" in the live test tree",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The live ARIA tree has one treeitem named \"suite\" with the visible \"Expand suite\" control; those semantic names occur in the unchanged journey, independently of the failed role locator.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/result.json",
+          "sha256": "b34482955280ea06d7adc02acf39d310387cc97d7b0dcaa15b41b74958343999",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-5620",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The live DOM has one visible tag button named \"smoke\". Its name is present in the unchanged intent/expectation and its Test filters context is consistent with the failed target, so equivalence is semantic rather than locator-text equality.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.locator('.ui-mode-list-item-title')",
+      "replacement": "visible tag button \"smoke\" in Test filters",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The live DOM has one visible tag button named \"smoke\". Its name is present in the unchanged intent/expectation and its Test filters context is consistent with the failed target, so equivalence is semantic rather than locator-text equality.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/result.json",
+        "sha256": "7b364b0f0698eede264f24c4369c31ad244399892f0da08267b80077d0ec39d9",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The live DOM has one visible tag button named \"smoke\". Its name is present in the unchanged intent/expectation and its Test filters context is consistent with the failed target, so equivalence is semantic rather than locator-text equality.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.locator('.ui-mode-list-item-title')",
+        "replacement": "visible tag button \"smoke\" in Test filters",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The live DOM has one visible tag button named \"smoke\". Its name is present in the unchanged intent/expectation and its Test filters context is consistent with the failed target, so equivalence is semantic rather than locator-text equality.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/result.json",
+          "sha256": "7f64803735d04ae0201ce1c35e15251fe2eca000b59bda94c43eb6476fd8953f",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-3318",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.getByRole('button', { name: 'OK', exact: true })",
+      "replacement": "confirmation button \"Ok\" in the open dialog",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/result.json",
+        "sha256": "c115419001260cd64b00a9b9060dc73bc8c5047f7bec85bc283a43149f48a28f",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.getByRole('button', { name: 'OK', exact: true })",
+        "replacement": "confirmation button \"Ok\" in the open dialog",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The open dialog contains exactly one visible button whose accessible name \"Ok\" is a case-insensitive match for the failed target and whose confirmation role matches the unchanged intent.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/result.json",
+          "sha256": "aefae9323e405ab5b809df01e7b2bfa2941961123baf200bf96ab37b8c2e8d5e",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  },
+  {
+    "caseId": "reprobreak-616",
+    "outcome": "healed",
+    "breakReproduced": true,
+    "actionAttempts": 1,
+    "retryCount": 1,
+    "recoveryAttempts": 1,
+    "retryPassed": true,
+    "equivalenceVerified": true,
+    "expectationsUnchanged": true,
+    "expectationsFrozen": true,
+    "beforeEvidenceExists": true,
+    "afterEvidenceExists": true,
+    "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+    "evidence": {
+      "before": [
+        ".qa/runs/run_20260905_120014_767e9625173428973b46fb1e/screenshots/005-healing-before-step-1.png"
+      ],
+      "after": [
+        ".qa/runs/run_20260905_120014_767e9625173428973b46fb1e/screenshots/006-healing-after-step-1.png"
+      ],
+      "failedTarget": "page.$('[data-kg-floating-toolbar]'))",
+      "replacement": "ARIA toolbar absence query in the Editor region",
+      "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+      "retryOutcome": "healed",
+      "verification": "the original expectation passed unchanged after exactly one retry, while the matched broken-outcome control remained a functional regression",
+      "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+      "execution": {
+        "result": ".qa/runs/run_20260905_120014_767e9625173428973b46fb1e/result.json",
+        "sha256": "b75519039e28ccfd7daec7a3beaef66d64fe3ee1de02b07aaf163f2b3b13f298",
+        "classification": "healed",
+        "healingOutcome": "healed"
+      }
+    },
+    "regressionControl": {
+      "outcome": "functional_regression",
+      "breakReproduced": true,
+      "actionAttempts": 1,
+      "retryCount": 1,
+      "recoveryAttempts": 1,
+      "retryPassed": false,
+      "equivalenceVerified": true,
+      "expectationsUnchanged": true,
+      "expectationsFrozen": true,
+      "beforeEvidenceExists": true,
+      "afterEvidenceExists": true,
+      "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+      "evidence": {
+        "before": [
+          ".qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/screenshots/005-healing-before-step-1.png"
+        ],
+        "after": [
+          ".qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/screenshots/006-healing-after-step-1.png"
+        ],
+        "failedTarget": "page.$('[data-kg-floating-toolbar]'))",
+        "replacement": "ARIA toolbar absence query in the Editor region",
+        "strategy": "live-DOM semantic rediscovery from the failed target, frozen intent, and unchanged expectation",
+        "retryOutcome": "functional_regression",
+        "verification": "the same semantic rediscovery and single recovery attempt executed, but the unchanged product expectation failed and was classified as a functional regression",
+        "semanticAudit": "The failed target, intent, and unchanged expectation all identify the floating toolbar; the live DOM exposes one Editor region, so an ARIA toolbar count is an equivalent assertion even when the expected count is zero.",
+        "execution": {
+          "result": ".qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/result.json",
+          "sha256": "64cc226a72c8edd65e88e34019dd36ea8978add531bae45d1a00a45e8f8b1c07",
+          "classification": "functional_regression",
+          "healingOutcome": "failed"
+        }
+      }
+    }
+  }
+]

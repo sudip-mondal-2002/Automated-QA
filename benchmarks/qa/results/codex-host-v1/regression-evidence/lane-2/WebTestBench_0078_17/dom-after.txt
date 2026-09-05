@@ -1,0 +1,46 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "ProcureFlow" [level=1]
+  - paragraph: Purchase Management
+  - button "New Request":
+    - text: New Request
+- main:
+  - heading "Dashboard" [level=2]
+  - paragraph: Manage purchase requests, review supplier quotes, and generate orders.
+  - paragraph: "4"
+  - paragraph: Total Requests
+  - paragraph: "2"
+  - paragraph: Active Quotes
+  - paragraph: "1"
+  - paragraph: Orders Generated
+  - paragraph: "1"
+  - paragraph: Revoked
+  - heading "Purchase Requests" [level=3]
+  - generic: REQ-003
+  - heading "Standing Desks" [level=3]
+  - generic: Pending
+  - paragraph: Electric height-adjustable standing desks, 60x30 inches, with memory presets.
+  - generic: "Qty: 15"
+  - generic: Jan 10, 2026
+  - generic: REQ-001
+  - heading "Office Chairs (Ergonomic)" [level=3]
+  - generic: Quoted
+  - paragraph: High-quality ergonomic office chairs with lumbar support and adjustable armrests for the new open office space.
+  - generic: "Qty: 25"
+  - generic: Jan 8, 2026
+  - generic: 2 quotes
+  - generic: REQ-002
+  - heading "MacBook Pro 14\"" [level=3]
+  - generic: Ordered
+  - paragraph: Apple MacBook Pro 14-inch with M3 Pro chip, 18GB RAM, 512GB SSD for the development team.
+  - generic: "Qty: 10"
+  - generic: Jan 5, 2026
+  - generic: 2 quotes
+  - generic: REQ-004
+  - heading "Conference Room Projector" [level=3]
+  - generic: Revoked
+  - paragraph: 4K laser projector with wireless connectivity for the main conference rooms.
+  - generic: "Qty: 2"
+  - generic: Jan 3, 2026

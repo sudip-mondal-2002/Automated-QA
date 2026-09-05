@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0064:16",
+  "appId": "WebTestBench_0064",
+  "candidateSha256": "6fdfba9a7c2d4b53994a73dd532420a270e9446c3085981c0f3f5f14f12d7383",
+  "appArchiveSha256": "3b6b47541e635b5f2a4f6942b629e66e4358dfc60e1e55fb4c9b20aff28c6a7b",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:16:48.543Z",
+  "completedAt": "2026-09-05T08:17:48.543Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0064-16.localhost:43192; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened My Biology Notes.",
+    "Added a card with distinctive full question and answer text, Hard difficulty, and isolated-tag.",
+    "Observed the newly rendered card in the set."
+  ],
+  "observations": [
+    "The card showed the complete question and answer.",
+    "The card showed hard, New, and isolated-tag metadata."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Created card content and assigned metadata are displayed without truncation.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_16/after-created-card.png",
+      "sha256": "d4dfc786f77f551364dd603b0da73277239cabd4648ec56e0310327a5d3e3577",
+      "bytes": 26385
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_16/dom.txt",
+      "sha256": "c8feb32b8b96a4aa213fc6520a78c4019e1681592104cd0fa824354a2a6ea57e",
+      "bytes": 1871
+    }
+  ],
+  "laneId": "lane-3"
+}

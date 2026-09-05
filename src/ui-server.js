@@ -161,7 +161,7 @@ async function workspaceSummary(workspace) {
       lastEnvironment: environment,
       lastStatus: lastRun?.classification ?? "not_run",
       lastRunId: lastRun?.runId,
-      runPrompt: `$autonomous-qa Run ${spec.id} on ${environment} through the native UI capability and save the result and evidence.`,
+      runPrompt: `$autonomous-qa Run ${spec.id} on ${environment} replay-first; use native UI only if the source-matched replay cannot complete the semantic checks. Save the result and evidence.`,
     };
   });
   return {

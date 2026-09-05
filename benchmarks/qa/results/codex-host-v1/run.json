@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "trackId": "qa-core-v1",
+  "runId": "codex-host-v1",
+  "agent": "Autonomous QA skill with separate Codex host planner, browser runners, and checklist judges",
+  "model": "Codex GPT-5 family; exact serving snapshot was not exposed to the benchmark runner",
+  "protocols": {
+    "generation": "One candidate-only pass from instruction to at most 20 binary semantic checks, followed by three separate judges. Each judge mapped a prediction to at most one gold check, applied this track's disclosed duplicate-to-null rule, and recorded rationale plus candidate/reference content hashes.",
+    "regression": "Three app-disjoint Codex browser runners each received only stripped candidate cases and pinned rendered WebTestBench apps. Every case used a fresh browser tab, case-unique loopback origin, and restarted app process; runners were instructed not to access reference labels, prior results, source metadata, or the network and self-attested that they did not. Each verdict binds the exact candidate, pinned app archive, actions, observations, confidence, screenshot/DOM evidence, and execution trace.",
+    "healing": "A deterministic, model-free live-DOM semantic adapter evaluated eight ReproBreak-derived local microfixtures and eight paired behavior-regression controls. Recovery never reads the upstream replacement locator in its decision path; this is not an execution of the four upstream applications."
+  },
+  "healingRunner": {
+    "summary": "healing-core/summary.json",
+    "sourceCases": "healing-core/source-cases.json",
+    "submission": "healing-core/submission.json"
+  },
+  "executionLimitations": "Generation predictions and judgments were executed outside a checked-in model runner, and exact planner/judge serving snapshots are unavailable. Regression verdicts are bound to pinned runnable-app archives and recorded action/evidence traces, but browser-runner isolation is operationally instruction-enforced and self-attested rather than cryptographically attested. The healing conformance core is locally rerunnable. This public-label result is content-bound, auditable, and independently re-scoreable, not a fully rerunnable model evaluation or an upstream leaderboard/SOTA claim.",
+  "publicLabelDisclosure": "WebTestBench and ReproBreak labels are public; masking was enforced operationally, but this run is not a secret holdout or SOTA claim",
+  "baseRevision": "85eeac57fad6c57e27b07cf0bd03d10bf4ba7696",
+  "runDate": "2026-09-05",
+  "regressionRunners": {
+    "schemaVersion": 1,
+    "strategy": "app-disjoint",
+    "runnerCount": 3,
+    "isolationEnforcement": "Assignment and app ownership are verifier-enforced; fresh-context and information-boundary claims are instruction-enforced and self-attested in each trace.",
+    "lanes": [
+      {
+        "id": "lane-1",
+        "runner": "codex-regression-lane-1",
+        "caseIds": [
+          "WebTestBench_0093:17",
+          "WebTestBench_0040:7",
+          "WebTestBench_0082:12",
+          "WebTestBench_0018:17",
+          "WebTestBench_0084:12",
+          "WebTestBench_0022:11",
+          "WebTestBench_0005:9",
+          "WebTestBench_0073:3",
+          "WebTestBench_0012:16",
+          "WebTestBench_0085:5",
+          "WebTestBench_0040:16",
+          "WebTestBench_0043:8",
+          "WebTestBench_0084:3",
+          "WebTestBench_0005:14",
+          "WebTestBench_0084:10",
+          "WebTestBench_0085:7",
+          "WebTestBench_0084:8",
+          "WebTestBench_0057:12",
+          "WebTestBench_0029:19"
+        ],
+        "appIds": [
+          "WebTestBench_0005",
+          "WebTestBench_0012",
+          "WebTestBench_0018",
+          "WebTestBench_0022",
+          "WebTestBench_0029",
+          "WebTestBench_0040",
+          "WebTestBench_0043",
+          "WebTestBench_0057",
+          "WebTestBench_0073",
+          "WebTestBench_0082",
+          "WebTestBench_0084",
+          "WebTestBench_0085",
+          "WebTestBench_0093"
+        ]
+      },
+      {
+        "id": "lane-2",
+        "runner": "codex-regression-lane-2",
+        "caseIds": [
+          "WebTestBench_0071:12",
+          "WebTestBench_0024:14",
+          "WebTestBench_0013:2",
+          "WebTestBench_0030:12",
+          "WebTestBench_0071:4",
+          "WebTestBench_0020:14",
+          "WebTestBench_0083:13",
+          "WebTestBench_0004:14",
+          "WebTestBench_0044:15",
+          "WebTestBench_0094:15",
+          "WebTestBench_0049:17",
+          "WebTestBench_0078:17",
+          "WebTestBench_0044:17",
+          "WebTestBench_0010:6",
+          "WebTestBench_0010:16",
+          "WebTestBench_0071:11",
+          "WebTestBench_0008:14",
+          "WebTestBench_0058:15",
+          "WebTestBench_0010:15"
+        ],
+        "appIds": [
+          "WebTestBench_0004",
+          "WebTestBench_0008",
+          "WebTestBench_0010",
+          "WebTestBench_0013",
+          "WebTestBench_0020",
+          "WebTestBench_0024",
+          "WebTestBench_0030",
+          "WebTestBench_0044",
+          "WebTestBench_0049",
+          "WebTestBench_0058",
+          "WebTestBench_0071",
+          "WebTestBench_0078",
+          "WebTestBench_0083",
+          "WebTestBench_0094"
+        ]
+      },
+      {
+        "id": "lane-3",
+        "runner": "codex-regression-lane-3",
+        "caseIds": [
+          "WebTestBench_0089:23",
+          "WebTestBench_0070:9",
+          "WebTestBench_0064:16",
+          "WebTestBench_0064:11",
+          "WebTestBench_0021:9",
+          "WebTestBench_0011:14",
+          "WebTestBench_0068:5",
+          "WebTestBench_0001:4",
+          "WebTestBench_0032:4",
+          "WebTestBench_0080:18",
+          "WebTestBench_0001:16",
+          "WebTestBench_0015:3",
+          "WebTestBench_0027:7",
+          "WebTestBench_0064:4",
+          "WebTestBench_0023:15",
+          "WebTestBench_0023:8",
+          "WebTestBench_0068:16",
+          "WebTestBench_0053:14"
+        ],
+        "appIds": [
+          "WebTestBench_0001",
+          "WebTestBench_0011",
+          "WebTestBench_0015",
+          "WebTestBench_0021",
+          "WebTestBench_0023",
+          "WebTestBench_0027",
+          "WebTestBench_0032",
+          "WebTestBench_0053",
+          "WebTestBench_0064",
+          "WebTestBench_0068",
+          "WebTestBench_0070",
+          "WebTestBench_0080",
+          "WebTestBench_0089"
+        ]
+      }
+    ]
+  }
+}

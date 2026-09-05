@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0010:6",
+  "appId": "WebTestBench_0010",
+  "candidateSha256": "da5821272122eff128a2a222fb74e3f9db3083f38d0e25fc24fd4637d9ba1228",
+  "appArchiveSha256": "939bcd589ad019edfe09912922efa8150f48cb4e68d0d8fdf86fc3b814266027",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4734; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:05:59.971Z",
+  "actions": [
+    {
+      "action": "Opened The Golden Fork reservation form",
+      "result": "A Discount Coupon input and Apply button were present."
+    },
+    {
+      "action": "Entered WELCOME10 and clicked Apply",
+      "result": "The UI showed 'Coupon Applied! 10% off your first reservation' and replaced the input with a WELCOME10 / '- 10% off' badge."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Coupon codes can be entered selectively during booking and apply a price reduction",
+      "observed": "WELCOME10 was accepted in the booking form and visibly applied a 10% discount."
+    }
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The optional coupon workflow and its reduction were directly verified.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_6/after.png",
+      "sha256": "3137bd7cb8ba35208963407fdba8b156468aac378aa34a5fbe687a9ba5590dff",
+      "bytes": 65815
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_6/dom-after.txt",
+      "sha256": "cb0758e112dd36a4600d6c3460c07da68b0e742771d1cc2eb11572d374d9e12e",
+      "bytes": 1943
+    }
+  ],
+  "laneId": "lane-2"
+}

@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120012_b0682eb78d83614961fcf7fd",
+  "specId": "reprobreak-5620",
+  "environment": "local",
+  "classification": "functional_regression",
+  "startedAt": "2026-09-05T12:00:12.000Z",
+  "completedAt": "2026-09-05T12:00:12.130Z",
+  "explanation": "Filter=empty; visible=p,pwt",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Select the smoke tag in the test tree",
+      "status": "failed",
+      "expectations": [
+        {
+          "expectation": "The Filter field contains @smoke and only the tagged test remains",
+          "status": "failed",
+          "observation": "Filter=empty; visible=p,pwt"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "visible tag button \"smoke\" in Test filters",
+        "role": "button",
+        "name": "smoke"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "failed",
+        "originalFailure": "The old list-item title class is absent after the tree UI migration: page.locator('.ui-mode-list-item-title'). Previous target: page.locator('.ui-mode-list-item-title')",
+        "replacement": "visible tag button \"smoke\" in Test filters",
+        "verification": "Filter=empty; visible=p,pwt",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-failure-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:12.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-5620"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:12.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:12.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Select the smoke tag in the test tree"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:12.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The old list-item title class is absent after the tree UI migration: page.locator('.ui-mode-list-item-title'). Previous target: page.locator('.ui-mode-list-item-title')"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:12.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:12.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:12.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "visible tag button \"smoke\" in Test filters: Filter=empty; visible=p,pwt"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:12.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-failure-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:12.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "Expectation or action failed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:12.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:12.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:12.120Z",
+      "type": "run_completed",
+      "status": "failed",
+      "message": "Filter=empty; visible=p,pwt"
+    }
+  ]
+}

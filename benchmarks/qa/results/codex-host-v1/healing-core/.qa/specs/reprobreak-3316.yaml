@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-3316
+title: ReproBreak 3316 healing core
+environment: local
+steps:
+  - intent: Confirm deletion of the renamed folder from the tree
+    expect:
+      - The renamed folder and its clock are absent from Recently Viewed

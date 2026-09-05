@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0064:11",
+  "appId": "WebTestBench_0064",
+  "candidateSha256": "36d3940d379d1ef4d2fa4cb7c2be53995012acab3b873a3e0f0b5bf803046956",
+  "appArchiveSha256": "3b6b47541e635b5f2a4f6942b629e66e4358dfc60e1e55fb4c9b20aff28c6a7b",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:17:26.270Z",
+  "completedAt": "2026-09-05T08:18:26.271Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0064-11.localhost:43193; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened New Set.",
+    "Filled title and description while leaving Cards (0).",
+    "Pressed Create Card Set."
+  ],
+  "observations": [
+    "A Cards required notification appeared.",
+    "The notification said Add at least one card to your set, and the zero-card form remained open."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The app blocks an empty set before it can be published.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_11/after-empty-set-attempt.png",
+      "sha256": "6691f480c36c829188cf939e364a40daab4fa19702b62cc63ccd73fe0a5f0396",
+      "bytes": 19911
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_11/dom.txt",
+      "sha256": "e57feb7ee1a36b32e6d5fa368dd4b49fb9148af3f999971c83ae69266003f9f8",
+      "bytes": 1286
+    }
+  ],
+  "laneId": "lane-3"
+}

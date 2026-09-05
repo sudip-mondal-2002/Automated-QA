@@ -1,0 +1,319 @@
+- list
+- region "Notifications alt+T"
+- banner:
+  - heading [level=1]: JobBoard
+  - paragraph: Find your dream job
+  - button:
+    - text: History
+  - button:
+    - text: Saved Searches
+  - heading [level=2]: Discover Amazing Opportunities
+  - paragraph: Browse through hundreds of job listings from top companies. Filter by type, location, and save your favorite searches.
+  - generic: 16 active jobs
+  - generic: Updated daily
+- main:
+  - textbox:
+    - /placeholder: Search jobs, companies, or keywords...
+  - combobox:
+    - generic: All Types
+  - combobox:
+    - generic: All Locations
+  - button:
+    - text: Search
+  - generic: Showing 16 jobs
+  - checkbox [checked]:
+  - generic: 🏢
+  - heading [level=3]: Senior Frontend Developer
+  - paragraph: TechCorp Inc.
+  - generic: Full-Time
+  - paragraph: Join our team to build cutting-edge web applications using React and TypeScript.
+  - text: San Francisco
+  - text: $120,000 - $160,000
+  - text: 5+ years
+  - text: Jan 10
+  - generic: React
+  - generic: TypeScript
+  - generic: CSS
+  - generic: Git
+  - checkbox [checked]:
+  - generic: 📊
+  - heading [level=3]: Marketing Manager
+  - paragraph: BrandBoost Agency
+  - generic: Full-Time
+  - paragraph: Lead marketing campaigns and drive brand awareness for Fortune 500 clients.
+  - text: New York
+  - text: $85,000 - $110,000
+  - text: 3-5 years
+  - text: Jan 12
+  - generic: Digital Marketing
+  - generic: SEO
+  - generic: Analytics
+  - generic: Team Leadership
+  - checkbox
+  - generic: 🎨
+  - heading [level=3]: UX Designer
+  - paragraph: DesignHub
+  - generic: Contract
+  - paragraph: Create intuitive user experiences for mobile and web applications.
+  - text: Los Angeles
+  - text: $70/hour
+  - text: 2-4 years
+  - text: Jan 8
+  - generic: Figma
+  - generic: User Research
+  - generic: Prototyping
+  - generic: Design Systems
+  - checkbox
+  - generic: 📈
+  - heading [level=3]: Data Analyst
+  - paragraph: DataDriven Co.
+  - generic: Full-Time
+  - paragraph: Analyze complex datasets and provide actionable insights to stakeholders.
+  - text: Chicago
+  - text: $75,000 - $95,000
+  - text: 2+ years
+  - text: Jan 14
+  - generic: SQL
+  - generic: Python
+  - generic: Tableau
+  - generic: Statistics
+  - checkbox
+  - generic: ✍️
+  - heading [level=3]: Part-time Content Writer
+  - paragraph: ContentKing
+  - generic: Part-Time
+  - paragraph: Write engaging blog posts and articles for various tech clients.
+  - text: Remote
+  - text: $35/hour
+  - text: 1-2 years
+  - text: Jan 11
+  - generic: SEO Writing
+  - generic: Research
+  - generic: CMS
+  - generic: Editing
+  - checkbox
+  - generic: ☁️
+  - heading [level=3]: DevOps Engineer
+  - paragraph: CloudScale
+  - generic: Full-Time
+  - paragraph: Build and maintain CI/CD pipelines and cloud infrastructure.
+  - text: Seattle
+  - text: $130,000 - $170,000
+  - text: 4+ years
+  - text: Jan 9
+  - generic: AWS
+  - generic: Kubernetes
+  - generic: Docker
+  - generic: Terraform
+  - checkbox
+  - generic: 🚀
+  - heading [level=3]: Product Manager
+  - paragraph: InnovateTech
+  - generic: Full-Time
+  - paragraph: Drive product strategy and roadmap for our SaaS platform.
+  - text: Austin
+  - text: $110,000 - $140,000
+  - text: 5+ years
+  - text: Jan 13
+  - generic: Product Strategy
+  - generic: Agile
+  - generic: User Stories
+  - generic: Analytics
+  - checkbox
+  - generic: 👥
+  - heading [level=3]: HR Coordinator
+  - paragraph: PeopleFirst
+  - generic: Part-Time
+  - paragraph: Support HR operations including recruiting and onboarding.
+  - text: Boston
+  - text: $28/hour
+  - text: 1-3 years
+  - text: Jan 7
+  - generic: HRIS
+  - generic: Recruiting
+  - generic: Communication
+  - generic: Organization
+  - checkbox
+  - generic: ⚙️
+  - heading [level=3]: Backend Developer
+  - paragraph: APIFirst
+  - generic: Contract
+  - paragraph: Design and implement scalable REST APIs and microservices.
+  - text: San Francisco
+  - text: $85/hour
+  - text: 4-6 years
+  - text: Jan 10
+  - generic: Node.js
+  - generic: PostgreSQL
+  - generic: Redis
+  - generic: GraphQL
+  - checkbox
+  - generic: 💼
+  - heading [level=3]: Sales Representative
+  - paragraph: GrowthMax
+  - generic: Full-Time
+  - paragraph: Drive B2B sales and build lasting client relationships.
+  - text: Denver
+  - text: $55,000 + Commission
+  - text: 1-3 years
+  - text: Jan 12
+  - generic: CRM
+  - generic: Cold Calling
+  - generic: Negotiation
+  - generic: Presentation
+  - checkbox
+  - generic: 📱
+  - heading [level=3]: Mobile Developer
+  - paragraph: AppWorks
+  - generic: Full-Time
+  - paragraph: Build cross-platform mobile applications using React Native.
+  - text: New York
+  - text: $100,000 - $130,000
+  - text: 3+ years
+  - text: Jan 14
+  - generic: React Native
+  - generic: iOS
+  - generic: Android
+  - generic: JavaScript
+  - checkbox
+  - generic: 🖼️
+  - heading [level=3]: Graphic Designer
+  - paragraph: CreativeStudio
+  - generic: Part-Time
+  - paragraph: Create stunning visual designs for print and digital media.
+  - text: Los Angeles
+  - text: $40/hour
+  - text: 2+ years
+  - text: Jan 6
+  - generic: Photoshop
+  - generic: Illustrator
+  - generic: InDesign
+  - generic: Branding
+  - checkbox
+  - generic: 💰
+  - heading [level=3]: Financial Analyst
+  - paragraph: CapitalGroup
+  - generic: Full-Time
+  - paragraph: Perform financial modeling and investment analysis.
+  - text: Chicago
+  - text: $80,000 - $100,000
+  - text: 2-4 years
+  - text: Jan 11
+  - generic: Excel
+  - generic: Financial Modeling
+  - generic: Bloomberg
+  - generic: CFA
+  - checkbox
+  - generic: 🤝
+  - heading [level=3]: Customer Success Manager
+  - paragraph: SaaSly
+  - generic: Full-Time
+  - paragraph: Ensure customer satisfaction and drive product adoption.
+  - text: Remote
+  - text: $70,000 - $90,000
+  - text: 2-3 years
+  - text: Jan 13
+  - generic: Customer Service
+  - generic: SaaS
+  - generic: Onboarding
+  - generic: Retention
+  - checkbox
+  - generic: 🔍
+  - heading [level=3]: QA Engineer
+  - paragraph: QualityFirst
+  - generic: Contract
+  - paragraph: Design and execute test plans for web applications.
+  - text: Austin
+  - text: $60/hour
+  - text: 3+ years
+  - text: Jan 8
+  - generic: Selenium
+  - generic: Jest
+  - generic: API Testing
+  - generic: Test Automation
+  - checkbox
+  - generic: 🤖
+  - heading [level=3]: Machine Learning Engineer
+  - paragraph: AI Dynamics
+  - generic: Full-Time
+  - paragraph: Develop and deploy ML models for production systems.
+  - text: Seattle
+  - text: $150,000 - $200,000
+  - text: 5+ years
+  - text: Jan 14
+  - generic: Python
+  - generic: TensorFlow
+  - generic: PyTorch
+  - generic: MLOps
+- generic: 2 jobs selected
+- generic: 🏢
+- generic: Senior Frontend Developer
+- button:
+- generic: 📊
+- generic: Marketing Manager
+- button:
+- button [expanded]:
+  - text: Compare
+- button:
+  - text: Clear
+- dialog "Job Comparison":
+  - heading "Job Comparison" [level=2]:
+    - text: Job Comparison
+  - table:
+    - rowgroup:
+      - row "Attribute 🏢 Senior Frontend Developer TechCorp Inc. 📊 Marketing Manager BrandBoost Agency":
+        - columnheader "Attribute"
+        - columnheader "🏢 Senior Frontend Developer TechCorp Inc.":
+          - generic: 🏢
+          - generic: Senior Frontend Developer
+          - generic: TechCorp Inc.
+        - columnheader "📊 Marketing Manager BrandBoost Agency":
+          - generic: 📊
+          - generic: Marketing Manager
+          - generic: BrandBoost Agency
+    - rowgroup:
+      - row "Company TechCorp Inc. BrandBoost Agency":
+        - cell "Company":
+          - text: Company
+        - cell "TechCorp Inc."
+        - cell "BrandBoost Agency"
+      - row "Location San Francisco New York":
+        - cell "Location":
+          - text: Location
+        - cell "San Francisco"
+        - cell "New York"
+      - row "Job Type Full-Time Full-Time":
+        - cell "Job Type":
+          - text: Job Type
+        - cell "Full-Time":
+          - generic: Full-Time
+        - cell "Full-Time":
+          - generic: Full-Time
+      - row "Salary $120,000 - $160,000 $85,000 - $110,000":
+        - cell "Salary":
+          - text: Salary
+        - cell "$120,000 - $160,000"
+        - cell "$85,000 - $110,000"
+      - row "Experience 5+ years 3-5 years":
+        - cell "Experience":
+          - text: Experience
+        - cell "5+ years"
+        - cell "3-5 years"
+      - row "Requirements React TypeScript CSS Git Digital Marketing SEO Analytics Team Leadership":
+        - cell "Requirements"
+        - cell "React TypeScript CSS Git":
+          - generic: React
+          - generic: TypeScript
+          - generic: CSS
+          - generic: Git
+        - cell "Digital Marketing SEO Analytics Team Leadership":
+          - generic: Digital Marketing
+          - generic: SEO
+          - generic: Analytics
+          - generic: Team Leadership
+      - row "Posted January 10, 2024 January 12, 2024":
+        - cell "Posted"
+        - cell "January 10, 2024"
+        - cell "January 12, 2024"
+  - button "Close" [active]:
+    - generic: Close

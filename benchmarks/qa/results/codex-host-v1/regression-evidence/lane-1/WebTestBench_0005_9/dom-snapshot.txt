@@ -1,0 +1,112 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - button:
+  - button "Product Designer Resume":
+    - heading "Product Designer Resume" [level=1]
+  - button "Hide Preview":
+    - generic: Hide Preview
+- tablist:
+  - tab "Contact":
+    - generic: Contact
+  - tab "Summary":
+    - generic: Summary
+  - tab "Experience" [selected]:
+    - generic: Experience
+  - tab "Education":
+    - generic: Education
+  - tab "Skills":
+    - generic: Skills
+  - tab "Template":
+    - generic: Template
+  - tab "Sections":
+    - generic: Sections
+- tabpanel "Experience":
+  - heading "Work Experience" [level=2]
+  - generic: Position 1
+  - button "↑" [disabled]
+  - button "↓"
+  - button:
+  - text: Company
+  - textbox "Company Name": Design Studio
+  - text: Position
+  - textbox "Job Title": Product Designer
+  - text: Start Date
+  - textbox: 2022-06
+  - text: End Date
+  - textbox [disabled]
+  - checkbox "I currently work here" [checked]:
+  - generic: I currently work here
+  - text: Description
+  - textbox "Describe your responsibilities and achievements...": Lead product design for mobile and web applications. Conduct user research and usability testing. Created a comprehensive design system adopted by 3 product teams.
+  - generic: Position 2
+  - button "↑"
+  - button "↓"
+  - button:
+  - text: Company
+  - textbox "Company Name": Creative Agency
+  - text: Position
+  - textbox "Job Title": UI/UX Designer
+  - text: Start Date
+  - textbox: 2020-01
+  - text: End Date
+  - textbox: 2022-05
+  - checkbox "I currently work here"
+  - generic: I currently work here
+  - text: Description
+  - textbox "Describe your responsibilities and achievements...": Designed user interfaces for various client projects. Collaborated with developers to ensure design fidelity. Increased user engagement metrics by 35% through design improvements.
+  - generic: Position 3
+  - button "↑"
+  - button "↓" [disabled]
+  - button:
+  - text: Company
+  - textbox "Company Name": QA Co
+  - text: Position
+  - textbox "Job Title": Tester
+  - text: Start Date
+  - textbox: 2024-12
+  - text: End Date
+  - textbox [active]: 2024-01
+  - checkbox "I currently work here"
+  - generic: I currently work here
+  - text: Description
+  - textbox "Describe your responsibilities and achievements..."
+  - button "Add Experience":
+    - text: Add Experience
+- heading "Live Preview" [level=3]
+- banner:
+  - heading "Jordan Rivera" [level=1]
+  - generic: jordan.rivera@email.com
+  - generic: (555) 456-7890
+  - generic: Austin, TX
+  - generic: linkedin.com/in/jordanrivera
+  - generic: jordanrivera.design
+- paragraph: Creative product designer with 4 years of experience crafting user-centered digital experiences. Skilled in user research, prototyping, and design systems. Passionate about creating accessible and delightful products.
+- heading "Experience" [level=2]
+- text: Jun 2022
+- text: Present
+- heading "Product Designer" [level=3]
+- paragraph: Design Studio
+- paragraph: Lead product design for mobile and web applications. Conduct user research and usability testing. Created a comprehensive design system adopted by 3 product teams.
+- text: Jan 2020
+- text: May 2022
+- heading "UI/UX Designer" [level=3]
+- paragraph: Creative Agency
+- paragraph: Designed user interfaces for various client projects. Collaborated with developers to ensure design fidelity. Increased user engagement metrics by 35% through design improvements.
+- heading "Tester" [level=3]
+- paragraph: QA Co
+- paragraph
+- heading "Skills" [level=2]
+- generic: Figma
+- generic: User Research
+- generic: Prototyping
+- generic: Design Systems
+- generic: HTML/CSS
+- heading "Education" [level=2]
+- text: Sep 2016
+- text: May 2020
+- heading "Rhode Island School of Design" [level=3]
+- paragraph:
+  - text: Bachelor of Fine Arts in Graphic Design
+  - generic: • 3.9

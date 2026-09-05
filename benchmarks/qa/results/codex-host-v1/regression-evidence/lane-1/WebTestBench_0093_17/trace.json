@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0093:17",
+  "appId": "WebTestBench_0093",
+  "candidateSha256": "1af86f51ab1984eee6fce6831d239e3ea58b4a78a538ebbe86a8b6b97d6cff18",
+  "appArchiveSha256": "ce0ad9261878b6f53a0cf2724cef9bc86b99070677f9a810bd9c1c9c764325dd",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:54:37.000Z",
+  "completedAt": "2026-09-05T07:55:41.000Z",
+  "isolation": "Unique loopback origin 47101 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Loaded Home Use documentation and recorded visible sections."
+    },
+    {
+      "step": 2,
+      "action": "Opened the scenario selector and chose Business Use."
+    },
+    {
+      "step": 3,
+      "action": "Compared the resulting navigation and body content with the prior scenario."
+    }
+  ],
+  "observations": [
+    "The banner changed to Business Use.",
+    "Business-only Network Configuration, Advanced Features, Security, licensing, support, and backup guidance appeared while Home Use text disappeared.",
+    "Section headings exposed anchor links."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Scenario selection produced clearly context-appropriate documentation rather than merely changing the selector label.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0093_17/after-business-scenario.png",
+      "sha256": "df9fd9d3c5e2b0d0cdb7bd3505a9acb6874c3ef80e6d5e0a0a28d7ef6b8a6f90",
+      "bytes": 166528
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0093_17/dom-snapshot.txt",
+      "sha256": "282d6924fd08cea2ae9a04550272d11fd2588a12d7f54b467b97fbe8fd15ff7d",
+      "bytes": 7030
+    }
+  ],
+  "laneId": "lane-1"
+}

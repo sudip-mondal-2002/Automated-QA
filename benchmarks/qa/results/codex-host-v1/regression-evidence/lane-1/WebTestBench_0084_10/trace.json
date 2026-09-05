@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0084:10",
+  "appId": "WebTestBench_0084",
+  "candidateSha256": "eca152ee9dd93dd772856dc812c980db73f299cc178274732dcf9821d6cf0fd2",
+  "appArchiveSha256": "1313b6fefb9a5692e0f4233635b1a0d92c5832e07505ee5abdb94596c377d0f2",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:07:12.683Z",
+  "completedAt": "2026-09-05T08:07:23.488Z",
+  "isolation": "Unique loopback origin 47115 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened QuantTech Systems details."
+    },
+    {
+      "step": 2,
+      "action": "Clicked Schedule a Meeting."
+    }
+  ],
+  "observations": [
+    "The click immediately displayed Meeting request sent.",
+    "No appointment form or contact-information field was shown, so no contact validation was possible."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "A meeting is accepted without collecting or validating contact information.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_10/meeting-sent-without-form.png",
+      "sha256": "7eb350f3beb607b907dc691c5247c8e6186fcddbcc49d778f9c3731f31887d8e",
+      "bytes": 36988
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_10/dom-snapshot.txt",
+      "sha256": "ac39937b3490c6232b51d88bb41b737b3aa48207a85b6f050688f7c4747f9335",
+      "bytes": 2402
+    }
+  ],
+  "laneId": "lane-1"
+}

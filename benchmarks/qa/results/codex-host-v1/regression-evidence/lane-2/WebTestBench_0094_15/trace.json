@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0094:15",
+  "appId": "WebTestBench_0094",
+  "candidateSha256": "0059626886ee07a95eaa575f9ba860e4650971a5d35dca0a4b75234b66e020cb",
+  "appArchiveSha256": "754a0c8d61776d46bac6307d7daad51920e6e398b6c492d7499494e282ccc337",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T08:00:39.865Z",
+  "completedAt": "2026-09-05T08:02:56.088Z",
+  "actions": [
+    {
+      "action": "Selected Senior Frontend Developer and Marketing Manager",
+      "result": "Comparison tray showed 2 jobs selected."
+    },
+    {
+      "action": "Opened Job Comparison",
+      "result": "The table displayed Location, Salary, and Experience rows with differing values."
+    },
+    {
+      "action": "Visually and programmatically inspected rendered cell styling",
+      "result": "Only the higher salary was green/bold; both differing location values and both differing experience values used the same plain black regular-weight styling."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Salary, experience, and location metrics are highlighted to expose differences",
+      "observed": "Salary had a highlight, but location and experience differences were not highlighted."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The comparison table exists, but it fails the requirement to highlight all three key metric differences.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0094_15/after.png",
+      "sha256": "02d631ac94937c434449a1f59e6429c85c09f9910f07ee00ecf6682d30739538",
+      "bytes": 132404
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0094_15/dom-after.txt",
+      "sha256": "013af4f3512be65c7e53680917538da5ba07ae0192fd82bd738e928a5651d857",
+      "bytes": 9013
+    }
+  ],
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4730; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0071:11",
+  "appId": "WebTestBench_0071",
+  "candidateSha256": "c4dee01f48cfe670a29e572344b7d50c6b36e416c5ade2db4552accbf3f070e6",
+  "appArchiveSha256": "9dc3bafd6623b0badc5496566b7300251dc1c2f23e3c3fdc6408a6be35760c05",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4736; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:07:26.159Z",
+  "actions": [
+    {
+      "action": "Navigated to Our Programs chapter",
+      "result": "The chapter became active after scrolling into view."
+    },
+    {
+      "action": "Inspected the chart area visually",
+      "result": "A multi-color donut chart titled 'Impact Distribution by Program' was visibly rendered beside the program metrics."
+    },
+    {
+      "action": "Verified rendered graphics",
+      "result": "A 456×320 Recharts SVG occupied the visible chart region."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Relevant visible sections render and display their data visualizations",
+      "observed": "The active Our Programs section displayed its labeled donut visualization in the viewport, backed by a nonzero-size rendered SVG."
+    }
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The program impact chart was both visually present and structurally rendered after chapter activation.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_11/after.png",
+      "sha256": "b6510fd3fc0621e2ac71048531c43c1d00bf77fc85a68d18b1f1788cf6f24aa1",
+      "bytes": 122300
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_11/dom-after.txt",
+      "sha256": "435914841ed5fd555e3b5a3887ede9fd4ceccb43dcee08881c0f94e0eff3a930",
+      "bytes": 7705
+    }
+  ],
+  "laneId": "lane-2"
+}

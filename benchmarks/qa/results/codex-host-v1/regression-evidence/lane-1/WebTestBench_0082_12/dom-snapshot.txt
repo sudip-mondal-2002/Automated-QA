@@ -1,0 +1,53 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "ParamLab" [level=1]:
+    - text: ParamLab
+  - paragraph: Experiment Parameter Management
+- main:
+  - heading "Parameter Sets" [level=2]
+  - paragraph: Manage experiment configurations and track runs
+  - button "New Set":
+    - text: New Set
+  - heading "Neural Network Training" [level=3]
+  - paragraph: Hyperparameters for training a deep neural network
+  - generic: 4 params
+  - generic: learning_rate
+  - generic: batch_size
+  - generic: epochs
+  - generic: +1 more
+  - generic: Updated over 2 years ago
+  - text: 2 snapshots
+  - button "Run":
+    - text: Run
+  - button:
+  - button:
+  - button:
+  - heading "Image Processing Pipeline" [level=3]
+  - paragraph: Parameters for image enhancement and filtering
+  - generic: 4 params
+  - generic: brightness
+  - generic: contrast
+  - generic: saturation
+  - generic: +1 more
+  - generic: Updated over 2 years ago
+  - text: 1 snapshot
+  - button "Run":
+    - text: Run
+  - button:
+  - button:
+  - button:
+  - heading "Simulation Physics" [level=3]
+  - paragraph: Physical constants and simulation parameters
+  - generic: 4 params
+  - generic: gravity
+  - generic: friction
+  - generic: time_step
+  - generic: +1 more
+  - generic: Updated over 2 years ago
+  - button "Run":
+    - text: Run
+  - button:
+  - button:
+  - button:

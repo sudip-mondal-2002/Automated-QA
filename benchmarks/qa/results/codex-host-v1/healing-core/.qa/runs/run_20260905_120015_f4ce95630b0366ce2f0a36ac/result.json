@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120015_f4ce95630b0366ce2f0a36ac",
+  "specId": "reprobreak-1225",
+  "environment": "local",
+  "classification": "functional_regression",
+  "startedAt": "2026-09-05T12:00:15.000Z",
+  "completedAt": "2026-09-05T12:00:15.130Z",
+  "explanation": "The rediscovered command list does not contain Remove Filter; observed Pin Column, Autosize, Sort Ascending, Sort Descending, Group, Command unavailable, Remove Sort, Hide Column",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Inspect the Title column header menu for the remove-filter command",
+      "status": "failed",
+      "expectations": [
+        {
+          "expectation": "The Title column header menu contains Remove Filter",
+          "status": "failed",
+          "observation": "The rediscovered command list does not contain Remove Filter; observed Pin Column, Autosize, Sort Ascending, Sort Descending, Group, Command unavailable, Remove Sort, Hide Column"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "command list \"Title column commands\" nested in the failed menu root",
+        "role": "list",
+        "name": "Title column commands"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "failed",
+        "originalFailure": "The old menu root cannot reach command items after the command-list wrapper was introduced: cy.get('.slick-header-menu'). Previous target: cy.get('.slick-header-menu')",
+        "replacement": "command list \"Title column commands\" nested in the failed menu root",
+        "verification": "The rediscovered command list does not contain Remove Filter; observed Pin Column, Autosize, Sort Ascending, Sort Descending, Group, Command unavailable, Remove Sort, Hide Column",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-failure-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:15.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-1225"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:15.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:15.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Inspect the Title column header menu for the remove-filter command"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:15.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The old menu root cannot reach command items after the command-list wrapper was introduced: cy.get('.slick-header-menu'). Previous target: cy.get('.slick-header-menu')"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:15.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:15.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:15.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "command list \"Title column commands\" nested in the failed menu root: The rediscovered command list does not contain Remove Filter; observed Pin Column, Autosize, Sort Ascending, Sort Descending, Group, Command unavailable, Remove Sort, Hide Column"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:15.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-failure-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:15.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "Expectation or action failed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:15.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:15.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:15.120Z",
+      "type": "run_completed",
+      "status": "failed",
+      "message": "The rediscovered command list does not contain Remove Filter; observed Pin Column, Autosize, Sort Ascending, Sort Descending, Group, Command unavailable, Remove Sort, Hide Column"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - navigation:
+    - link "Inkwell":
+      - /url: /
+    - link "Home":
+      - /url: /
+    - link "Saved":
+      - /url: /saved
+    - link "Write":
+      - /url: /write
+      - text: Write
+    - button "Sarah Chen":
+      - img "Sarah Chen"
+- main:
+  - button "Back":
+    - text: Back
+  - button "Save Draft":
+    - text: Save Draft
+  - button "Publish":
+    - text: Publish
+  - textbox "Your story title...": Python Flask Tutorial
+  - text: Cover Image URL (optional)
+  - textbox "https://example.com/image.jpg"
+  - text: Short excerpt (optional)
+  - textbox "A brief description of your story..."
+  - paragraph: 0/200
+  - text: Tags
+  - generic: Custom Tags
+  - textbox "Add a tag (e.g., Technology, Life)..."
+  - button:
+  - generic: Intelligent Tags (auto-detected)
+  - paragraph: "Suggested based on content:"
+  - button "Python":
+    - text: Python
+  - button "Backend Development":
+    - text: Backend Development
+  - button "Tutorial":
+    - text: Tutorial
+  - button "Design":
+    - text: Design
+  - button "Code Examples":
+    - text: Code Examples
+  - text: Content
+  - tablist:
+    - tab "Write" [selected]:
+      - text: Write
+    - tab "Preview":
+      - text: Preview
+  - generic: Markdown supported
+  - tabpanel "Write":
+    - textbox "Tell your story... (Markdown supported)" [active]: "# Python Flask Tutorial Python developers can build web APIs with Flask. This Python guide shows Python syntax, Flask routes, pip packages, and backend development. ```python from flask import Flask app = Flask(__name__) ```"
+- contentinfo:
+  - generic: Inkwell
+  - generic: •
+  - generic: Stories that matter
+  - paragraph: © 2026 Inkwell. Made with ♥

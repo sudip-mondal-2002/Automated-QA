@@ -1,0 +1,521 @@
+{
+  "track": "operation-code-21-v2",
+  "correct": 18,
+  "attempted": 21,
+  "total": 21,
+  "accuracy": 0.8571428571428571,
+  "ci95": {
+    "low": 0.6536393971937906,
+    "high": 0.9501898750027473
+  },
+  "meanActions": 16.523809523809526,
+  "meanElapsedSeconds": 113.04314285714285,
+  "evidenceCoverage": 1,
+  "byLevel": [
+    {
+      "key": "L1",
+      "correct": 6,
+      "total": 7,
+      "accuracy": 0.8571428571428571
+    },
+    {
+      "key": "L2",
+      "correct": 7,
+      "total": 7,
+      "accuracy": 1
+    },
+    {
+      "key": "L3",
+      "correct": 5,
+      "total": 7,
+      "accuracy": 0.7142857142857143
+    }
+  ],
+  "byDomain": [
+    {
+      "key": "domain_1",
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1
+    },
+    {
+      "key": "domain_2",
+      "correct": 2,
+      "total": 3,
+      "accuracy": 0.6666666666666666
+    },
+    {
+      "key": "domain_3",
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1
+    },
+    {
+      "key": "domain_4",
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1
+    },
+    {
+      "key": "domain_5",
+      "correct": 2,
+      "total": 3,
+      "accuracy": 0.6666666666666666
+    },
+    {
+      "key": "domain_6",
+      "correct": 2,
+      "total": 3,
+      "accuracy": 0.6666666666666666
+    },
+    {
+      "key": "domain_7",
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1
+    }
+  ],
+  "cases": [
+    {
+      "taskId": "83abbca115d4abeb",
+      "domain": "domain_1",
+      "domainName": "Consumer Transaction/Service",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 6,
+      "elapsedSeconds": 29,
+      "evidence": true,
+      "submittedAnswerSha256": "5eb17370f57fcb7b9cb1f0d29d657922a0c37ff1b08ade75ff4688d7129dc888"
+    },
+    {
+      "taskId": "c83fb0102e594abb",
+      "domain": "domain_1",
+      "domainName": "Consumer Transaction/Service",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 19,
+      "elapsedSeconds": 118.609,
+      "evidence": true,
+      "submittedAnswerSha256": "9106424a0c41b3a8a2e7e4bd196744c7745132e5d99d4f3c1c2452848bde3d57"
+    },
+    {
+      "taskId": "ea2ace1cb939a9f6",
+      "domain": "domain_1",
+      "domainName": "Consumer Transaction/Service",
+      "level": 3,
+      "attempted": true,
+      "correct": true,
+      "actions": 50,
+      "elapsedSeconds": 462,
+      "evidence": true,
+      "submittedAnswerSha256": "3002151c285a814a3df1d4a9dec77b2cb453cd2d8caaef75b12a2323e071e2ef"
+    },
+    {
+      "taskId": "8d37437e2c33cb5d",
+      "domain": "domain_2",
+      "domainName": "Content Moderation/Compliance",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 10,
+      "elapsedSeconds": 48,
+      "evidence": true,
+      "submittedAnswerSha256": "0e847b3b20b57878cb702dd45b30fa818b6937fd4c03792774e0cc89d115d854"
+    },
+    {
+      "taskId": "5394cf3e15f3e7ec",
+      "domain": "domain_2",
+      "domainName": "Content Moderation/Compliance",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 12,
+      "elapsedSeconds": 107.969,
+      "evidence": true,
+      "submittedAnswerSha256": "1b50db77e5e9352f928469458c06c1edd1545a8fdd25a4894788f0eae4cbcda2"
+    },
+    {
+      "taskId": "a81115d13618fcec",
+      "domain": "domain_2",
+      "domainName": "Content Moderation/Compliance",
+      "level": 3,
+      "attempted": true,
+      "correct": false,
+      "actions": 33,
+      "elapsedSeconds": 180,
+      "evidence": true,
+      "submittedAnswerSha256": "33b2bd72992e7c19ba79d67181e1c682d72910eb5278ccc1ec4a12dcfe0168e7"
+    },
+    {
+      "taskId": "07537823afdd9793",
+      "domain": "domain_3",
+      "domainName": "Enterprise Process/Collaboration",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 6,
+      "elapsedSeconds": 29,
+      "evidence": true,
+      "submittedAnswerSha256": "36f5c49adbb0648db84dbd637d9e9ff7312481fd0b74c72ca9648bad3b75a688"
+    },
+    {
+      "taskId": "c0575dcbc99390db",
+      "domain": "domain_3",
+      "domainName": "Enterprise Process/Collaboration",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 17,
+      "elapsedSeconds": 113.43,
+      "evidence": true,
+      "submittedAnswerSha256": "118ef8ca95271dcb1765a607d0e454d4f29211e0cf85bc1907261bc9a29c9311"
+    },
+    {
+      "taskId": "75a6cd75b0335547",
+      "domain": "domain_3",
+      "domainName": "Enterprise Process/Collaboration",
+      "level": 3,
+      "attempted": true,
+      "correct": true,
+      "actions": 39,
+      "elapsedSeconds": 153,
+      "evidence": true,
+      "submittedAnswerSha256": "46ab1a1ee58be820fc02bad6f44ec7b57c375259f859a4231a11fb560f5326fa"
+    },
+    {
+      "taskId": "7df4b1198ee9cf01",
+      "domain": "domain_4",
+      "domainName": "Info Retrieval/Analysis",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 5,
+      "elapsedSeconds": 42,
+      "evidence": true,
+      "submittedAnswerSha256": "66364ed36130f5b1797cac760ae4795d431dc2577910cb24bbcee793213caf89"
+    },
+    {
+      "taskId": "3bd1b254f448d763",
+      "domain": "domain_4",
+      "domainName": "Info Retrieval/Analysis",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 13,
+      "elapsedSeconds": 68.899,
+      "evidence": true,
+      "submittedAnswerSha256": "d6573da1e91ac173a66bd08b35f9e53ae07e2d6362f3322221bab6de89a338dd"
+    },
+    {
+      "taskId": "8bf50f93a202a7b5",
+      "domain": "domain_4",
+      "domainName": "Info Retrieval/Analysis",
+      "level": 3,
+      "attempted": true,
+      "correct": true,
+      "actions": 26,
+      "elapsedSeconds": 169,
+      "evidence": true,
+      "submittedAnswerSha256": "64cb0b6b188306c3f5c1c54dab5c7b02823f3ec0488df279ccabeebf3951e3ce"
+    },
+    {
+      "taskId": "5ff721459019696f",
+      "domain": "domain_5",
+      "domainName": "Platform Management/Ops",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 5,
+      "elapsedSeconds": 34,
+      "evidence": true,
+      "submittedAnswerSha256": "b617014145db647c0ae5c3de71d220b8ca83e025adcc730bc0a5d69133dee09c"
+    },
+    {
+      "taskId": "fc7ef2b1db6efa56",
+      "domain": "domain_5",
+      "domainName": "Platform Management/Ops",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 13,
+      "elapsedSeconds": 89.014,
+      "evidence": true,
+      "submittedAnswerSha256": "4a1c684a3e9a942ce0138a448ce7a9099612f56fdc66b369b7b8ab90f9ba401c"
+    },
+    {
+      "taskId": "541e77c05263f156",
+      "domain": "domain_5",
+      "domainName": "Platform Management/Ops",
+      "level": 3,
+      "attempted": true,
+      "correct": false,
+      "actions": 13,
+      "elapsedSeconds": 160,
+      "evidence": true,
+      "submittedAnswerSha256": "6f205ec837b6bdc4fe61b1ce3077c45f039761d7cbf8b5c594d52f6476359bef"
+    },
+    {
+      "taskId": "8d1a19339800ac51",
+      "domain": "domain_6",
+      "domainName": "Tool Usage",
+      "level": 1,
+      "attempted": true,
+      "correct": false,
+      "actions": 7,
+      "elapsedSeconds": 45,
+      "evidence": true,
+      "submittedAnswerSha256": "40b37f6f57f6fc8b8ecc2d767af40e17e9895d207dd65e6775390fe2f3675274"
+    },
+    {
+      "taskId": "d3ee4ad98503d301",
+      "domain": "domain_6",
+      "domainName": "Tool Usage",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 14,
+      "elapsedSeconds": 60.001,
+      "evidence": true,
+      "submittedAnswerSha256": "f6d11415d1de366d2d813e2393811e655f994c0a16d8069a8a78c1789657cd50"
+    },
+    {
+      "taskId": "13057afe9b761478",
+      "domain": "domain_6",
+      "domainName": "Tool Usage",
+      "level": 3,
+      "attempted": true,
+      "correct": true,
+      "actions": 14,
+      "elapsedSeconds": 81,
+      "evidence": true,
+      "submittedAnswerSha256": "0ed5152ae0a7ba5b3b4806ea1fcd198bacf21334af1a9b7dde6ddf57ce985bdc"
+    },
+    {
+      "taskId": "e297fe296246f701",
+      "domain": "domain_7",
+      "domainName": "Content Creation/Publishing",
+      "level": 1,
+      "attempted": true,
+      "correct": true,
+      "actions": 8,
+      "elapsedSeconds": 39,
+      "evidence": true,
+      "submittedAnswerSha256": "0301aecc7dcf85a653dd9ac1da4237b86470af69ff29e1812f166b1f998383cb"
+    },
+    {
+      "taskId": "ec58461561075b8b",
+      "domain": "domain_7",
+      "domainName": "Content Creation/Publishing",
+      "level": 2,
+      "attempted": true,
+      "correct": true,
+      "actions": 13,
+      "elapsedSeconds": 94.984,
+      "evidence": true,
+      "submittedAnswerSha256": "53d24727ff0a7b4ddbe3828e524d91f0f50a32f2bce132b7c6849d83c985e42c"
+    },
+    {
+      "taskId": "83c5870bd2ce825b",
+      "domain": "domain_7",
+      "domainName": "Content Creation/Publishing",
+      "level": 3,
+      "attempted": true,
+      "correct": true,
+      "actions": 24,
+      "elapsedSeconds": 250,
+      "evidence": true,
+      "submittedAnswerSha256": "a6d13fbf56cad6d89e13e8d0f2366fa7301cadc058403bf0f3ed51fa506abcf1"
+    }
+  ],
+  "runId": "native-chrome-v2",
+  "datasetRevision": "56e0903f9205577cf39a4253bb0fc163fdb3cbd5",
+  "assetCount": 422,
+  "assetBytes": 56885459,
+  "generatedAt": "2026-09-05T05:57:48.410Z",
+  "executionProtocolRevision": "8808291c9766bbd91f35d31ff88eea259b5b3a6c",
+  "publisherRevision": "f0eb818585ac039dffd5c8cef52470d0f29af7c8",
+  "runtime": {
+    "node": "v25.8.1",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "agentRuntime": "Codex collaborative task runners",
+    "model": "not exposed to the benchmark harness",
+    "reasoningEffort": "not exposed to the benchmark harness",
+    "runnerInstances": 3,
+    "executionSplit": "three parallel runners divided by difficulty, with remaining Level-3 tasks split after Level 1 completed",
+    "browserExecutor": "OpenAI Chrome plugin 26.820.60940",
+    "browserSurfaces": [
+      "Chrome extension"
+    ],
+    "originIsolation": "historical version-2 run requested an ephemeral 127.0.0.1 port per task; assigned origins were not recorded, so reuse cannot be audited"
+  },
+  "trackDisclosure": {
+    "status": "retired-disclosed",
+    "reason": "Published final-state evidence and expected-answer hashes can reveal benchmark answers.",
+    "futureBlindEvaluation": "Freeze a new held-out track and exclude this results directory from every runner context."
+  },
+  "scoringAudit": {
+    "normalization": "Unicode NFKC followed by removal of outer whitespace only",
+    "comparison": "SHA-256(normalized submitted answer) equals the pinned expected hash for the task",
+    "submittedHashField": "cases[].submittedAnswerSha256",
+    "expectedHashesFile": "expected-answer-hashes.json",
+    "expectedHashesFileSha256": "c6add27df5fbcadf55668868cd4916a62b0c4e384ad62a07bb18e4323134dfff"
+  },
+  "metricDefinitions": {
+    "actions": "runner-reported navigation, click, fill, select, press, and scroll interactions",
+    "elapsedSeconds": "runner-reported wall time from opening the task through visible final state",
+    "evidenceCoverage": "presence of one non-empty final-state screenshot file per attempted task; not independent visual adjudication",
+    "ci95": "Wilson score interval under a 21-case binomial model; not an inference to the deterministic 934-task upstream suite"
+  },
+  "evidence": [
+    {
+      "taskId": "83abbca115d4abeb",
+      "file": "evidence/83abbca115d4abeb.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "7331de17486afa0b47dda17ba6a0a782a1052ba4ebc37c55241ae43b1e90d362",
+      "bytes": 49939
+    },
+    {
+      "taskId": "c83fb0102e594abb",
+      "file": "evidence/c83fb0102e594abb.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "f73756ae9ca29e00891a556239beaf23247755e7413f42d35ce0049add73ba51",
+      "bytes": 32819
+    },
+    {
+      "taskId": "ea2ace1cb939a9f6",
+      "file": "evidence/ea2ace1cb939a9f6.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "ec1e5401ccf6a1b31064bb9e4f2c58b1224b21124073155e897cee3a2972365a",
+      "bytes": 30884
+    },
+    {
+      "taskId": "8d37437e2c33cb5d",
+      "file": "evidence/8d37437e2c33cb5d.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "aab81df5ed4517ce3a3161509894b9afc9bdc68db7eeb503a38cf26d25699ddd",
+      "bytes": 69445
+    },
+    {
+      "taskId": "5394cf3e15f3e7ec",
+      "file": "evidence/5394cf3e15f3e7ec.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "2a3090a8b5dd06f3a11dead6f50540cecdd60b721b75a39fa5411432d987a2ad",
+      "bytes": 62763
+    },
+    {
+      "taskId": "a81115d13618fcec",
+      "file": "evidence/a81115d13618fcec.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "1f22520f7250cb99fc147e63bf44ecf9d44a46112274df926f676d766e417b71",
+      "bytes": 50018
+    },
+    {
+      "taskId": "07537823afdd9793",
+      "file": "evidence/07537823afdd9793.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "a6fe9d7db121a93c0abd9e9291976ffc4a6d2ce0fba3be94fd862927f5f825a9",
+      "bytes": 71626
+    },
+    {
+      "taskId": "c0575dcbc99390db",
+      "file": "evidence/c0575dcbc99390db.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "a42a3718e60fed97b1b6574ccd30a9228c93d5d3e043af365e30ad334180a35d",
+      "bytes": 27747
+    },
+    {
+      "taskId": "75a6cd75b0335547",
+      "file": "evidence/75a6cd75b0335547.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "a20e81010a34cb66c0ad12fc8cdb0095462d4fb71fe6c1010fe09bfbcf0e7479",
+      "bytes": 86280
+    },
+    {
+      "taskId": "7df4b1198ee9cf01",
+      "file": "evidence/7df4b1198ee9cf01.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "68b4dcdd73d34ed01ad6c0226760583fcb1a765d25b4511e97f4c7916ebc4e74",
+      "bytes": 65942
+    },
+    {
+      "taskId": "3bd1b254f448d763",
+      "file": "evidence/3bd1b254f448d763.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "da077a9d7ec58eb8f7bf95429fd9dbe871c0d2add23b3242c83535e8e3cf8da9",
+      "bytes": 108332
+    },
+    {
+      "taskId": "8bf50f93a202a7b5",
+      "file": "evidence/8bf50f93a202a7b5.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "8d1ca0aaeeed2b39ed9e36004714ca556d8acc96b5df86c76fba1fcf9770170b",
+      "bytes": 92848
+    },
+    {
+      "taskId": "5ff721459019696f",
+      "file": "evidence/5ff721459019696f.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "0b07e9fcaa70ff555813f74bdda1e418b8fbab0b7eaa334bb76cc18057d1a824",
+      "bytes": 67958
+    },
+    {
+      "taskId": "fc7ef2b1db6efa56",
+      "file": "evidence/fc7ef2b1db6efa56.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "124dc4ef78ea0aff6c80a04b956fc36cbf01d617b52af8718aec8ca8c1a9b0f1",
+      "bytes": 85874
+    },
+    {
+      "taskId": "541e77c05263f156",
+      "file": "evidence/541e77c05263f156.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "95ea789b13b264042377f7c2e33d5b75fa5dab21b0dfc9c5c9359e9fe1e35a69",
+      "bytes": 39202
+    },
+    {
+      "taskId": "8d1a19339800ac51",
+      "file": "evidence/8d1a19339800ac51.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "1e37bce1c66428a669a70f82505164f9c278a86e90137193d8fd934721131481",
+      "bytes": 55185
+    },
+    {
+      "taskId": "d3ee4ad98503d301",
+      "file": "evidence/d3ee4ad98503d301.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "5341f468d47ee4831d81487d2f4a30845512b4e5bb853709def2e5b38a717da3",
+      "bytes": 99792
+    },
+    {
+      "taskId": "13057afe9b761478",
+      "file": "evidence/13057afe9b761478.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "8ec5c231de75146aad1337f7298516528cc0cbe3d1ea31a1afa3e3976089e5ee",
+      "bytes": 54737
+    },
+    {
+      "taskId": "e297fe296246f701",
+      "file": "evidence/e297fe296246f701.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "0e0b7fb9e5d59d7f31b21b747df4d40732ae1b9a85bb9adbd0528df98067399f",
+      "bytes": 36676
+    },
+    {
+      "taskId": "ec58461561075b8b",
+      "file": "evidence/ec58461561075b8b.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "8ae2b458f4daa90e48848fdd3d1741fb51d0140f4d456df34f7200f9c9e46924",
+      "bytes": 122496
+    },
+    {
+      "taskId": "83c5870bd2ce825b",
+      "file": "evidence/83c5870bd2ce825b.jpg",
+      "mimeType": "image/jpeg",
+      "sha256": "ee5bfda50ecf1f646da2f5d4b04440a07868902de93c471157a09c15d592866f",
+      "bytes": 34374
+    }
+  ]
+}

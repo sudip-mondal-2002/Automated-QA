@@ -1,11 +1,25 @@
 # Orchestrator architecture (as implemented)
 
+This is the compact diagram. For the exact dispatch pseudocode, concurrency
+scheduler, capability envelopes, memory keys, and `.qa/` tree, see
+[Current orchestration structure](current-orchestration-structure.md).
+
+In the challenge's terminology, the three required specialised roles map to
+Planner (`planner-agent.js`), Generator (`generator.js`), and failure-only
+Healer (`healing.js` plus the executor's constrained rediscovery capability).
+They are capability seats coordinated by the meta-agent, not three persistent
+services. The coverage gate sits between Planner and Generator and the final
+Reporter synthesises their validated outputs.
+
 ```mermaid
 flowchart TB
-  CLI["cli.js orchestrate --url"] --> ORC{{"orchestrator.js<br/>planStages · EXIT codes"}}
-  ORC --> PROBE["probe<br/>reach · auth · cookie jar"]
-  PROBE --> PLAN["planner.js<br/>fetch-only BFS crawl<br/>flow synthesis"]
-  PLAN -->|"planner capability"| PAGENT["planner-agent.js<br/>brief · reviewDraft · plan-draft.schema<br/>falls back to planner.js on reject/absent"]
+  CLI["cli.js orchestrate --url"] --> ORC{{"orchestrator.js<br/>memory · fan-out · locks · EXIT codes"}}
+  ORC --> MEM["history.js<br/>exact fingerprint · semantic replay search"]
+  MEM -->|"exact"| EPROBE["live readiness probe"]
+  EPROBE --> COORD
+  MEM -->|"miss / hint"| PROBE["probe once<br/>reach · reusable first-page snapshot"]
+  PROBE --> PLAN["planner.js<br/>bounded concurrent BFS crawl<br/>flow synthesis"]
+  PLAN -->|"planner capability"| PAGENT["planner-agent.js<br/>route packets · bounded fan-out<br/>schema review · deterministic merge"]
   PAGENT --> GATE
   PLAN --> GATE{{"coverage.js<br/>12 rules · score · verdict<br/>blocking rules must be auto-fixable or actionable"}}
   GATE -->|replan, autoFixable gaps| PLAN
@@ -46,13 +60,15 @@ Two pipelines share this codebase:
 
 `orchestrator.js` calls `buildTestPlan()` (deterministic, regex/keyword-based)
 by default. When a `planner` capability is supplied — the host agent (Claude
-or Codex) acting as the Planner per `SKILL.md` — `planWithAgent()` instead:
+or Codex) acting as the Planner per `SKILL.md` — `planWithParallelAgents()`:
 
-1. builds a brief (site map + prompt + PRD) from `plan-draft.schema.json`;
-2. hands it to the capability and validates the returned draft against that
-   schema;
-3. on rejection, returns the specific errors once for a repair attempt;
-4. after a second rejection, falls back to the deterministic planner and
+1. partitions normalized evidence by route owner and assigns relevant PRD
+   clauses without copying resolved values;
+2. invokes at most three immutable planner packets concurrently;
+3. validates each returned draft against `plan-draft.schema.json` and bounds
+   one repair packet;
+4. merges and deduplicates accepted flows in stable order; and
+5. after a second rejection, falls back to the deterministic planner and
    records `plan.source.fallbackReason`.
 
 The runtime itself never calls a model or holds an API key. `plan.source.planner`
@@ -126,10 +142,10 @@ trusted, otherwise it executes the semantic plan through
 
 `report.json`, `gaps.json`, `site-map.json`, `test-plan.json`, and the Planner
 sub-agent's `plan-draft.json` are all schema-validated (`schema-validator.js`)
-before being written; a validation failure is traced as a warning rather than
-silently shipping a malformed artifact judges or the UI would read. `trace.jsonl`
-carries every stage/decision event and is what `ui-server.js`'s orchestration
-decision timeline renders.
+before they become trusted state. A validation failure stops that path instead
+of silently shipping a malformed artifact for the UI or reporter to consume.
+`trace.jsonl` carries every stage/decision event and is what `ui-server.js`'s
+orchestration decision timeline renders.
 
 Two honest notes: a trusted complete replay can finish in shell mode with zero
 agent calls; if replay is unavailable or fails and no native executor exists,

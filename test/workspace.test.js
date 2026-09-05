@@ -187,7 +187,13 @@ test("completed results update last-test and preserve expectations", async (t) =
       selectedTarget: { summary: "Shopping cart link", role: "link", name: "Cart" },
     }],
   });
-  await workspace.saveResult(result);
+  await workspace.saveResult(result, { select: false });
+
+  assert.deepEqual(await workspace.readLastTest(), {
+    specId: "checkout-card",
+    environment: "local",
+  });
+  await workspace.selectResult(result.runId);
 
   assert.equal((await workspace.loadResult(result.runId)).classification, "passed");
   assert.deepEqual(await workspace.readLastTest(), {
@@ -196,6 +202,14 @@ test("completed results update last-test and preserve expectations", async (t) =
     lastRunId: result.runId,
   });
   assert.equal((await workspace.listResults())[0].runId, result.runId);
+
+  await workspace.selectSpec("checkout-saved-card", "staging");
+  await workspace.selectResult(result.runId);
+  assert.deepEqual(await workspace.readLastTest(), {
+    specId: "checkout-card",
+    environment: "local",
+    lastRunId: result.runId,
+  });
 
   result.runId = "run_20260830_120001";
   result.steps[0].expectations[0].expectation = "Anything passes";

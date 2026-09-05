@@ -1,5 +1,10 @@
 # 05 — Execution, healing, design and safety
 
+> Execution invariants remain useful, but this page predates executor factories,
+> failure-only target history, and concurrent non-selecting result writes. See
+> [Current orchestration structure](../current-orchestration-structure.md) for
+> current scheduling and context boundaries.
+
 `src/execution.js` (852 lines) is the engine both pipelines converge on. This
 document walks `executeRun()` end to end, then the healing machine, the design
 comparator, and the safety guards.

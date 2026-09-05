@@ -9,16 +9,19 @@
   "properties": {
     "notes": {
       "type": "string",
+      "maxLength": 2000,
       "description": "One or two sentences on how the plan was scoped."
     },
     "openQuestions": {
       "type": "array",
+      "maxItems": 50,
       "description": "What could not be determined from the site map. Prefer saying so over inventing page text.",
-      "items": { "type": "string", "minLength": 1 }
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
     },
     "flows": {
       "type": "array",
       "minItems": 1,
+      "maxItems": 100,
       "items": { "$ref": "#/definitions/flow" }
     }
   },
@@ -28,26 +31,29 @@
       "additionalProperties": false,
       "required": ["id", "title", "category", "priority", "steps"],
       "properties": {
-        "id": { "type": "string", "minLength": 1, "description": "Stable snake or kebab id, e.g. checkout_happy_path." },
-        "title": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1, "maxLength": 120, "description": "Stable snake or kebab id, e.g. checkout_happy_path." },
+        "title": { "type": "string", "minLength": 1, "maxLength": 300 },
         "category": { "enum": ["happy", "error", "edge"] },
         "priority": { "enum": ["critical", "high", "medium", "low"] },
-        "rationale": { "type": "string", "description": "Why this flow is worth testing on THIS application." },
-        "pages": { "type": "array", "items": { "type": "string" } },
+        "rationale": { "type": "string", "maxLength": 1000, "description": "Why this flow is worth testing on THIS application." },
+        "pages": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 300 } },
         "preconditions": {
           "type": "array",
+          "maxItems": 50,
           "description": "Use \"authenticated\" when the flow requires a signed-in session.",
-          "items": { "type": "string" }
+          "items": { "type": "string", "maxLength": 500 }
         },
-        "risks": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } },
         "requirementIds": {
           "type": "array",
+          "maxItems": 100,
           "description": "PRD requirement ids this flow covers. Omit or leave empty when it covers none.",
-          "items": { "type": "string" }
+          "items": { "type": "string", "maxLength": 120 }
         },
         "steps": {
           "type": "array",
           "minItems": 1,
+          "maxItems": 50,
           "items": { "$ref": "#/definitions/step" }
         }
       }
@@ -57,17 +63,19 @@
       "additionalProperties": false,
       "required": ["intent"],
       "properties": {
-        "intent": { "type": "string", "minLength": 1, "description": "What the user is trying to do, in their words." },
-        "page": { "type": "string", "description": "Path this step happens on, e.g. /checkout." },
+        "intent": { "type": "string", "minLength": 1, "maxLength": 500, "description": "What the user is trying to do, in their words." },
+        "page": { "type": "string", "maxLength": 300, "description": "Path this step happens on, e.g. /checkout." },
         "action": { "enum": ["navigate", "click", "fill", "submit", "observe"] },
         "channel": { "enum": ["web", "chat", "voice", "workflow", "api"] },
         "inputs": {
           "type": "array",
+          "maxItems": 20,
           "description": "Field values this step supplies, using the exact input name from the site map.",
           "items": { "$ref": "#/definitions/input" }
         },
         "expect": {
           "type": "array",
+          "maxItems": 20,
           "description": "Omit on a pure action step; the orchestrator folds it into the step that asserts its outcome.",
           "items": { "$ref": "#/definitions/expectation" }
         }
@@ -78,8 +86,8 @@
       "additionalProperties": false,
       "required": ["name", "value"],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "value": { "type": "string" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "value": { "type": "string", "maxLength": 2000 },
         "sensitive": { "type": "boolean", "description": "True for passwords and tokens." }
       }
     },
@@ -88,21 +96,32 @@
       "additionalProperties": false,
       "required": ["prose"],
       "properties": {
-        "prose": { "type": "string", "minLength": 1, "description": "The human-readable expectation, e.g. \"Order confirmation is visible\"." },
+        "prose": { "type": "string", "minLength": 1, "maxLength": 1000, "description": "The human-readable expectation, e.g. \"Order confirmation is visible\"." },
         "assert": { "$ref": "#/definitions/predicate" }
       }
     },
     "predicate": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind"],
       "description": "Never copy the prose into value. The value must be text observed in the crawl, not a description of it.",
-      "properties": {
-        "kind": { "enum": ["text", "absent_text", "url_contains", "visible", "absent", "count"] },
-        "value": { "type": "string", "description": "Literal string expected in the page, or the URL fragment." },
-        "selector": { "type": "string", "description": "CSS selector, for visible/absent/count only." },
-        "count": { "type": "integer", "minimum": 0 }
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": { "kind": { "enum": ["text", "absent_text", "url_contains"] }, "value": { "type": "string", "minLength": 1, "maxLength": 1000 } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "selector"],
+          "properties": { "kind": { "enum": ["visible", "absent"] }, "selector": { "type": "string", "minLength": 1, "maxLength": 1000 } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "selector", "count"],
+          "properties": { "kind": { "const": "count" }, "selector": { "type": "string", "minLength": 1, "maxLength": 1000 }, "count": { "type": "integer", "minimum": 0 } }
+        }
+      ]
     }
   }
 }

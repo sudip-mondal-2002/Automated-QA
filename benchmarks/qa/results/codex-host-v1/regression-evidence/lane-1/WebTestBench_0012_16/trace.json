@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0012:16",
+  "appId": "WebTestBench_0012",
+  "candidateSha256": "6b8ceca9daf230e56cccd163b4d725eb26196973ab60b37a4700a25ca3dac9ee",
+  "appArchiveSha256": "b8c0a8583e87f99d66ade4d6c8a28255ff3b22536e8d6d2e056af42ffdfec5eb",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:02:05.408Z",
+  "completedAt": "2026-09-05T08:03:11.653Z",
+  "isolation": "Unique loopback origin 47109 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Signed in as the displayed demo user Alex Chen."
+    },
+    {
+      "step": 2,
+      "action": "Confirmed Calculus Champions card count/avatars matched its Members tab."
+    },
+    {
+      "step": 3,
+      "action": "Joined Biology Study Circle."
+    },
+    {
+      "step": 4,
+      "action": "Opened that group's Members tab."
+    }
+  ],
+  "observations": [
+    "The Biology group count changed from 2 to 3 and Alex Chen was added to its avatar list.",
+    "Members displayed Sarah Martinez owner, Priya Patel member, and Alex Chen member with subject lists, matching the count and newly joined state."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Member information remained consistent across group card and member-detail views after a membership transition.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0012_16/updated-member-list.png",
+      "sha256": "cfd916937b00e4063921ac08f75b64a7ecdcc715c2f5c25587f280d706147f28",
+      "bytes": 20547
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0012_16/dom-snapshot.txt",
+      "sha256": "0c3f56147ad917d4ee4761a491828806126799a7d5ae06a2e86e87e4890c8392",
+      "bytes": 1128
+    }
+  ],
+  "laneId": "lane-1"
+}

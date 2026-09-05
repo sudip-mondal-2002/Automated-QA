@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0032:4",
+  "appId": "WebTestBench_0032",
+  "candidateSha256": "8b04d8ad02bbf5395a57acdf7b1f4f37b040a4e2bf143f806a4bde704099443c",
+  "appArchiveSha256": "7a6196867229acb6b0ad87019cfba3a561732d85296739ca7a7471c39ae5829b",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:05:23.877Z",
+  "completedAt": "2026-09-05T08:06:23.877Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0032-4.localhost:43183; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Observed the USD aggregate and mixed-currency rows.",
+    "Changed the primary currency from USD to EUR."
+  ],
+  "observations": [
+    "Total Spent changed from $1659.00 to €1526.28.",
+    "USD rows were converted (for example $85.50 became €78.66), while original non-primary values remained visible where applicable."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The aggregate and individual expenditures are automatically converted to the selected primary currency.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0032_4/after-eur-conversion.png",
+      "sha256": "1f84788964343013986531fbc9aec5798d0315da193b040d6225cb15532b52e4",
+      "bytes": 70015
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0032_4/dom.txt",
+      "sha256": "dcdb7e29d1b9914086e1c7efc7ee2b2e7b5e4fe98038a1daccf9bff4d8b3b78c",
+      "bytes": 5579
+    }
+  ],
+  "laneId": "lane-3"
+}

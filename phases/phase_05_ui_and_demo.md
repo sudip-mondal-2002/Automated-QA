@@ -11,9 +11,11 @@ Build the smallest localhost experience that makes the product legible during th
 ## In scope
 
 - One localhost page for tests, editing, and recent runs.
+- Integrated **Workspace** and **Console** tabs; no standalone demo UI or runner.
+- Console fields for the URL, optional intent/PRD/credentials, and every supported orchestration flag.
 - Spec/fixture YAML editing with validation feedback.
 - Last status and environment per test.
-- Copyable run/rerun commands.
+- Copyable `$autonomous-qa` run/rerun requests.
 - Screenshot and result explanation viewer.
 - Run deletion.
 - End-to-end integration and demo-state reset.
@@ -22,6 +24,7 @@ Build the smallest localhost experience that makes the product legible during th
 ## Deliverables
 
 - `qa-agent ui` command.
+- URL-first Console prompt composer and orchestration decision dashboard.
 - Tests panel, YAML editor, and recent-runs panel.
 - Result detail view with step statuses, screenshots, selected target, and explanation.
 - Demo application states for pass, harmless drift, functional bug, and design mismatch.
@@ -36,8 +39,9 @@ Build the smallest localhost experience that makes the product legible during th
 4. Add recent-run cards and a focused result detail view.
 5. Add safe deletion for one selected run directory.
 6. Wire live refresh or simple polling while a run writes its result.
-7. Create deterministic demo reset states.
-8. Rehearse all four scenarios from a clean checkout.
+7. Integrate the orchestration controls, coverage dashboard, and explorer into the same UI.
+8. Create deterministic demo reset states.
+9. Rehearse all four scenarios from a clean checkout.
 
 ## Demo checkpoint
 
@@ -53,6 +57,7 @@ Run the complete judge-facing flow from a clean demo state and show each classif
 ## Key invariants
 
 - The UI remains optional; skill operations still work without it.
+- Console composes requests; only the installed skill executes them.
 - The UI does not store a second copy of specs or results.
 - A run deletion cannot escape its `.qa/runs/<run-id>/` directory.
 - Demo reset tooling affects only the authorized demo application/data.

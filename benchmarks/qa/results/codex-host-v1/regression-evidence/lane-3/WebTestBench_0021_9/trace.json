@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0021:9",
+  "appId": "WebTestBench_0021",
+  "candidateSha256": "f9f0e2f19d3ffeaeda73eb4846e40a74cb3fc600be1ab0bc0dfa8688cba64a99",
+  "appArchiveSha256": "91f93d3f6f6a5e6fb3d6e1b90d07d3a2ac19accfd3345a13dac15eb02541ae3c",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:18:41.441Z",
+  "completedAt": "2026-09-05T08:19:41.442Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0021-9.localhost:43195; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened the complete Customers list and inspected its actions.",
+    "Opened Reports and inspected report controls across the displayed report view."
+  ],
+  "observations": [
+    "Customers exposed Add Customer and per-record unlabeled actions but no export control.",
+    "Reports exposed no Export or CSV text and no report action beyond sidebar controls."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "No rendered customer-list or report export affordance exists, so completeness/format cannot be exercised.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0021_9/dom.txt",
+      "sha256": "6e7439d19580aac2a0585305dbba300c87ff249dbea75ae5d108733e929ba5f1",
+      "bytes": 5219
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0021_9/reports-no-export.png",
+      "sha256": "9f028c13d3ac3edde50a4439b728a53b7a9e211a77e0a1e2e1f1859721bbc866",
+      "bytes": 36182
+    }
+  ],
+  "laneId": "lane-3"
+}

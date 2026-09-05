@@ -1,5 +1,9 @@
 # 02 — Skill package design
 
+> Historical presentation snapshot. The current compressed `SKILL.md`,
+> memory-first routing, and capability context are documented in
+> [Current orchestration structure](../current-orchestration-structure.md).
+
 How a Node runtime becomes a **one-install skill** that a coding agent (Codex or
 Claude) can operate on the developer's behalf, without the developer ever adding
 a QA dependency to their own project.

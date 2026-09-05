@@ -1,5 +1,9 @@
 # 07 — UI, CLI and developer surface
 
+> Historical CLI/UI snapshot. Current orchestration adds `history query`,
+> history/revision controls, and bounded crawl/planner/execution concurrency.
+> See [Current orchestration structure](../current-orchestration-structure.md).
+
 Everything a human (or a host agent acting for one) actually touches.
 
 ---
@@ -265,22 +269,21 @@ boundaries, and **rejects audio/video end drift above 12 ms**.
 `artifacts/demo-video/` — a second full walkthrough with 14 keyframes, a recording
 server, a timing manifest and a playback contact sheet.
 
-`LIVE_DEMO.md` — a 191-line runbook with hard stop times per section, off-camera
-preflight (including "set credentials off camera; never type or display either
-value"), and named recovery tabs for when something is slow on stage.
+`demo.md` — the current judge runbook, aligned to the official scoring weights,
+integrated Console, visible disposable demo credentials, and named timing
+recoveries. `LIVE_DEMO.md` preserves the shot timing for the existing recording.
 
 `docs/ORCHESTRATOR_DEMO.md` — the tighter 5-minute orchestration demo:
 0:00 one input → 0:45 the gate decides → 1:45 validation → 2:30 **it adapts without
 failing** → 3:30 **it refuses to lie** → 4:15 the report → 4:45 trade-offs.
 
-PR #3 rewrote the two middle beats to match what the code actually does:
-- **2:30** now resets to `scenario=locator` and shows the suite **staying green** —
-  renamed controls still resolve and every fuzzy resolution leaves a receipt
-  (`fuzzy 1/2`, `[chain: testid=…:miss -> role=…]`) in the selected target.
-- **3:30** resets to `scenario=functional`: the two confirmation-dependent flows go
-  `app_defect`, nothing heals, exit 10. The script now adds an explicit honesty
-  note — a live `healed` recovery is **unit-proven** in `test/healing.test.js`, and
-  **full cross-run sidecar promotion is scoped roadmap, not claimed.**
+The Sep 5 rehearsal ran pass → drift → functional → design against real Chromium.
+Every beat completed at 3/7 clean with four `app_defect` reds and exit 10. The pass
+variant has no injected shop defect, so those four are demonstrably false-reds and
+the aggregate result does not distinguish the variants. The stage script therefore
+uses the resets to show application surfaces, not to claim classification fidelity.
+It says plainly that three or four reds are harness proof failures, and that exit 10
+means a completed red verdict rather than a crash.
 
 > That edit is itself a good slide: the demo script was corrected to stop claiming
 > something the implementation had not yet earned.

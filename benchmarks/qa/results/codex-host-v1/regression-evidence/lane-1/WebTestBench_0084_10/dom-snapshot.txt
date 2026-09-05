@@ -1,0 +1,71 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T":
+  - list:
+    - generic: Meeting request sent!
+    - generic: We'll connect you with QuantTech Systems shortly.
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites":
+      - /url: /favorites
+      - text: Favorites
+- button "Back":
+  - text: Back
+- button "Save":
+  - text: Save
+- main:
+  - img "QuantTech Systems logo"
+  - generic: Electronics & Technology
+  - heading "QuantTech Systems" [level=1]
+  - paragraph: Next-Generation Quantum Computing Solutions
+  - paragraph: QuantTech Systems is pioneering accessible quantum computing for enterprise applications. Our hybrid quantum-classical systems enable businesses to solve complex optimization problems in logistics, finance, and drug discovery.
+  - heading "Highlights" [level=3]:
+    - button "Highlights" [expanded]:
+      - text: Highlights
+  - region "Highlights":
+    - list:
+      - generic: "1"
+      - generic: Live quantum computing demos every hour
+      - generic: "2"
+      - generic: New QT-500 processor launch
+      - generic: "3"
+      - generic: Free workshop on quantum algorithms
+      - generic: "4"
+      - generic: Partner ecosystem showcase
+  - heading "Specifications" [level=3]:
+    - button "Specifications":
+      - text: Specifications
+  - heading "Target Audience" [level=3]:
+    - button "Target Audience":
+      - text: Target Audience
+  - heading "Frequently Asked Questions" [level=3]:
+    - button "Frequently Asked Questions":
+      - text: Frequently Asked Questions
+  - heading "Location" [level=3]
+  - paragraph: Hall & Booth
+  - paragraph: Hall A • Booth E-101
+  - link "View on Floor Map":
+    - /url: /map
+    - text: View on Floor Map
+  - heading "On-site Actions" [level=3]
+  - button "Schedule a Meeting" [active]:
+    - text: Schedule a Meeting
+  - button "Request Materials":
+    - text: Request Materials
+  - heading "Contact" [level=3]
+  - link "Visit Website":
+    - /url: https://quanttech.example.com
+    - text: Visit Website
+  - link "contact@quanttech.example.com":
+    - /url: mailto:contact@quanttech.example.com
+    - text: contact@quanttech.example.com

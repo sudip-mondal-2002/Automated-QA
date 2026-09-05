@@ -1,0 +1,136 @@
+- region "Notifications alt+T"
+- complementary:
+  - generic: BoxFlow
+  - button:
+  - navigation:
+    - list:
+      - link "Dashboard":
+        - /url: /
+        - generic: Dashboard
+      - link "Box Plans":
+        - /url: /plans
+        - generic: Box Plans
+      - link "Products":
+        - /url: /products
+        - generic: Products
+      - link "Subscribers":
+        - /url: /subscribers
+        - generic: Subscribers
+      - link "Payments":
+        - /url: /payments
+        - generic: Payments
+      - link "Orders":
+        - /url: /orders
+        - generic: Orders
+  - link "Settings":
+    - /url: /settings
+    - generic: Settings
+- banner:
+  - textbox "Search..."
+  - button:
+  - generic: AD
+  - paragraph: Admin User
+  - paragraph: admin@boxflow.com
+- main:
+  - heading "Orders & Fulfillment" [level=1]
+  - paragraph: Track and manage order preparation and shipping
+  - heading "Pending" [level=3]
+  - paragraph: "1"
+  - heading "Preparing" [level=3]
+  - paragraph: "2"
+  - heading "Shipped" [level=3]
+  - paragraph: "2"
+  - heading "Delivered" [level=3]
+  - paragraph: "1"
+  - textbox "Search by customer or order ID..."
+  - combobox:
+    - generic: All Statuses
+  - table:
+    - rowgroup:
+      - row "Order ID Customer Plan Billing Cycle Status Created Actions":
+        - columnheader "Order ID"
+        - columnheader "Customer"
+        - columnheader "Plan"
+        - columnheader "Billing Cycle"
+        - columnheader "Status"
+        - columnheader "Created"
+        - columnheader "Actions"
+    - rowgroup:
+      - row "ord-1 Emma Thompson Portland, OR Premium Box January 2025 preparing 2024-12-28 Ship":
+        - cell "ord-1"
+        - cell "Emma Thompson Portland, OR":
+          - paragraph: Emma Thompson
+          - paragraph: Portland, OR
+        - cell "Premium Box"
+        - cell "January 2025"
+        - cell "preparing":
+          - generic: preparing
+        - cell "2024-12-28"
+        - cell "Ship":
+          - button "Ship":
+            - text: Ship
+      - row "ord-2 Marcus Chen Seattle, WA Starter Box January 2025 shipped 2024-12-29 Delivered":
+        - cell "ord-2"
+        - cell "Marcus Chen Seattle, WA":
+          - paragraph: Marcus Chen
+          - paragraph: Seattle, WA
+        - cell "Starter Box"
+        - cell "January 2025"
+        - cell "shipped":
+          - generic: shipped
+        - cell "2024-12-29"
+        - cell "Delivered":
+          - button "Delivered":
+            - text: Delivered
+      - row "ord-3 Sofia Rodriguez San Francisco, CA Deluxe Quarterly Q1 2025 pending 2024-12-30 Prepare":
+        - cell "ord-3"
+        - cell "Sofia Rodriguez San Francisco, CA":
+          - paragraph: Sofia Rodriguez
+          - paragraph: San Francisco, CA
+        - cell "Deluxe Quarterly"
+        - cell "Q1 2025"
+        - cell "pending":
+          - generic: pending
+        - cell "2024-12-30"
+        - cell "Prepare":
+          - button "Prepare":
+            - text: Prepare
+      - row "ord-4 Aisha Patel Austin, TX Starter Box January 2025 shipped 2024-12-26 Delivered 1Z999AA10123456784":
+        - cell "ord-4"
+        - cell "Aisha Patel Austin, TX":
+          - paragraph: Aisha Patel
+          - paragraph: Austin, TX
+        - cell "Starter Box"
+        - cell "January 2025"
+        - cell "shipped":
+          - generic: shipped
+        - cell "2024-12-26"
+        - cell "Delivered 1Z999AA10123456784":
+          - button "Delivered":
+            - text: Delivered
+          - generic: 1Z999AA10123456784
+      - row "ord-5 Oliver Brown Chicago, IL Annual VIP 2025 preparing 2024-12-27 Ship":
+        - cell "ord-5"
+        - cell "Oliver Brown Chicago, IL":
+          - paragraph: Oliver Brown
+          - paragraph: Chicago, IL
+        - cell "Annual VIP"
+        - cell "2025"
+        - cell "preparing":
+          - generic: preparing
+        - cell "2024-12-27"
+        - cell "Ship":
+          - button "Ship":
+            - text: Ship
+      - row "ord-6 Emma Thompson Portland, OR Premium Box December 2024 delivered 2024-11-28 1Z999AA10123456785":
+        - cell "ord-6"
+        - cell "Emma Thompson Portland, OR":
+          - paragraph: Emma Thompson
+          - paragraph: Portland, OR
+        - cell "Premium Box"
+        - cell "December 2024"
+        - cell "delivered":
+          - generic: delivered
+        - cell "2024-11-28"
+        - cell "1Z999AA10123456785":
+          - generic: 1Z999AA10123456785

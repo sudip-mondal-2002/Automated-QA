@@ -2,7 +2,7 @@
 
 This roadmap turns the hackathon MVP in [README.md](README.md) into five implementation phases. Each phase ends with a demonstrable product increment and has explicit exit criteria.
 
-The phases intentionally exclude production-scale infrastructure such as Playwright, Stagehand, headless CI, scheduling, SQLite, multi-user authentication, and enterprise audit systems.
+The phases intentionally exclude production-scale infrastructure such as Stagehand, hosted CI/CD orchestration, scheduling, SQLite, multi-user authentication, and enterprise audit systems. A constrained Playwright replay is included because the challenge requires generated executable tests; it remains derived from semantic source and is never hand-authored by the developer.
 
 ## Phase overview
 

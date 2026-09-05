@@ -1,0 +1,89 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "MeetSync":
+    - /url: /
+    - generic: MeetSync
+  - navigation:
+    - link "Meetings":
+      - /url: /
+      - text: Meetings
+    - link "My Availability":
+      - /url: /profile
+      - text: My Availability
+  - link "New Meeting":
+    - /url: /meeting/new
+    - button "New Meeting":
+      - text: New Meeting
+- main:
+  - button:
+  - heading "Lane 2 QA Sync" [level=1]
+  - generic: Draft
+  - paragraph: Verify meeting creation flow
+  - button:
+  - paragraph: Duration
+  - paragraph: 60 minutes
+  - paragraph: Date Range
+  - paragraph: Sep 6 - Sep 12
+  - paragraph: Participants
+  - paragraph: 0 invited
+  - heading "Participants" [level=3]
+  - paragraph: People invited to this meeting
+  - button "Add":
+    - text: Add
+  - paragraph: No participants yet
+  - heading "Suggested Times" [level=3]
+  - paragraph: Ranked by availability scores
+  - paragraph: Mon, Sep 7 • 9:00 AM - 10:00 AM
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 9:30 AM - 10:30 AM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 10:00 AM - 11:00 AM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 10:30 AM - 11:30 AM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 11:00 AM - 12:00 PM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 11:30 AM - 12:30 PM
+  - generic: Tied
+  - text: 1 conflict
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 12:00 PM - 1:00 PM
+  - generic: Tied
+  - text: 1 conflict
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 12:30 PM - 1:30 PM
+  - generic: Tied
+  - text: 1 conflict
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 1:00 PM - 2:00 PM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm
+  - paragraph: Mon, Sep 7 • 1:30 PM - 2:30 PM
+  - generic: Tied
+  - generic: "100"
+  - button "Confirm":
+    - text: Confirm

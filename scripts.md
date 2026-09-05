@@ -41,8 +41,12 @@ The QA UI never clicks through the application, runs a hidden worker, schedules 
 
 ### QA workspace behavior
 
+- The top-level **Workspace** and **Console** tabs are two views over the same `.qa/` files and loopback API.
 - Tests show their environment and most recent classification.
 - Copy actions return `$autonomous-qa` run/rerun prompts—not internal shell commands.
+- The Console exposes a field for every supported `orchestrate` option: target, objective, PRD/plan/output paths, username and password, revision, replan/concurrency limits, and the plan-only, history, remote-authorization, and JSON flags.
+- Console composes those fields into an `$autonomous-qa` request and renders the newest pipeline stages, coverage score, planner comparison, scenarios, trace, and declared unknowns from saved orchestration evidence.
+- Console credentials are literal and visible in the copied request, so they must be disposable demo-only values. Console never launches a runner, resets the target, or exposes arbitrary adapter commands; the installed skill remains the only execution interface.
 - Spec and fixture YAML is validated with the packaged JSON Schemas and cross-file checks before an atomic save.
 - Invalid edits stay unsaved and show their exact document path.
 - Result detail shows original expectations, observations, selected accessible targets, healing evidence, design findings, and declared screenshots.
@@ -149,7 +153,7 @@ evidence tests, and prints the live reset command for app-backed cases. Use
 
 ## Live developer demo and recording
 
-The live sequence in [LIVE_DEMO.md](LIVE_DEMO.md) shows only supported developer actions:
+The current live sequence in [demo.md](demo.md) shows only supported developer actions. [LIVE_DEMO.md](LIVE_DEMO.md) is retained only as the timing script for the existing recording:
 
 1. install the skill from its GitHub directory;
 2. open a clean copy of the standalone demo app;

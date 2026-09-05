@@ -87,7 +87,8 @@ test("P3/P4 corner: invalid draft gets one repair, empty plan rejected", async (
     siteMap,
   });
   assert.equal(seen.length, 2);
-  assert.match(seen[1].feedback, /rejected/i);
+  assert.match(seen[1].repair.validationIssues, /kind|enum/i);
+  assert.equal(seen[1].repair.rejectedDraft.flows[0].id, "x");
   assert.match(plan.source.fallbackReason, /rejected after 2/);
   assert.equal(reviewDraft({ flows: [] }).ok, false);
   assert.equal(reviewDraft(null).ok, false);
@@ -105,15 +106,9 @@ test("P5 corner: planner cannot smuggle selectors or invented predicates", () =>
 
 // P6/P7/P8: brief honesty — anonymous, degraded, truncated.
 test("P6/P7/P8 corner: brief marks anonymous, degraded, truncation", () => {
-  assert.match(buildPlannerBrief({ siteMap }), /CRAWL SESSION: anonymous/);
-  assert.match(
-    buildPlannerBrief({ siteMap: { ...siteMap, auth: { authenticated: true } } }),
-    /CRAWL SESSION: authenticated/,
-  );
-  assert.match(
-    buildPlannerBrief({ siteMap: { ...siteMap, degraded: true } }),
-    /WARNING: the crawl looks degraded/,
-  );
+  assert.equal(JSON.parse(buildPlannerBrief({ siteMap })).session.authProvenance, "anonymous");
+  assert.equal(JSON.parse(buildPlannerBrief({ siteMap: { ...siteMap, auth: { authenticated: true } } })).session.authProvenance, "authenticated");
+  assert.equal(JSON.parse(buildPlannerBrief({ siteMap: { ...siteMap, degraded: true } })).session.degraded, true);
   assert.match(renderSiteMapBrief(siteMap, { maxChars: 10 }), /site map truncated/);
 });
 
@@ -195,7 +190,8 @@ test("E1/E2/E3 corner: kind mismatch, missing methods, absent executor block", a
 
   const absent = await detectNativeCapability({ type: "web" }, undefined);
   assert.equal(absent.available, false);
-  assert.match(absent.explanation, /No native.*capability was provided/);
+  assert.match(absent.explanation, /No native.*executor was provided to this process/);
+  assert.match(absent.explanation, /does not establish that the host capability is unavailable/);
 });
 
 // E6: remote targets require explicit opt-in.

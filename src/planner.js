@@ -2,6 +2,7 @@ import { QaError } from "./errors.js";
 
 export const STRATEGY_ORDER = Object.freeze(["testid", "role", "label", "text", "css"]);
 const BINARY_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp", "gif", "svg", "ico", "css", "js", "woff", "woff2", "map"]);
+export const MAX_CRAWL_CONCURRENCY = 8;
 
 function stripTags(value) {
   return String(value ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -148,13 +149,23 @@ function normalizePath(href) {
   return clean.split("?")[0] || "/";
 }
 
-export async function crawl({ url, credentials, fetchImpl = globalThis.fetch, maxPages = 25, maxDepth = 3, emit, now = () => new Date() } = {}) {
+export async function crawl({ url, credentials, fetchImpl = globalThis.fetch, initialPage, maxPages = 25, maxDepth = 3, concurrency = 4, emit, now = () => new Date() } = {}) {
   if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "A target URL is required for crawl");
   const origin = new URL(url).origin;
   const visited = new Set();
   const pages = [];
   const queue = [{ path: new URL(url).pathname || "/", depth: 0 }];
+  const fetchConcurrency = Math.max(1, Math.min(Number.isInteger(concurrency) ? concurrency : 1, MAX_CRAWL_CONCURRENCY));
   let cookie = "";
+  let auth = { authenticated: false };
+  // A readiness probe intentionally uses redirect: manual. Its 3xx body is
+  // not page evidence, so never consume it as the crawl seed; refetching with
+  // normal redirect handling discovers the actual landing/login document.
+  let seed = initialPage?.path === queue[0].path
+    && initialPage?.response?.status >= 200
+    && initialPage?.response?.status < 300
+    ? initialPage
+    : null;
 
   const at = now instanceof Date ? now : now();
   const crawledAt = (at instanceof Date ? at : new Date(at)).toISOString();
@@ -163,13 +174,13 @@ export async function crawl({ url, credentials, fetchImpl = globalThis.fetch, ma
   // login-gate mislabeling where /cart content was the login form).
   if (credentials?.username && credentials?.password) {
     try {
-      const probeResponse = await fetchImpl(new URL(queue[0].path, origin).href, { headers: {} });
+      const probeResponse = seed?.response ?? await fetchImpl(new URL(queue[0].path, origin).href, { headers: {} });
       if (probeResponse.ok || [301, 302, 303, 307, 308].includes(probeResponse.status)) {
-        const probeHtml = typeof probeResponse.text === "function" ? await probeResponse.text() : "";
+        const probeHtml = seed ? seed.html : typeof probeResponse.text === "function" ? await probeResponse.text() : "";
         const probePage = { forms: parseHtml(probeHtml).forms };
         const loginForm = detectLoginForm(probePage);
         if (loginForm) {
-          const auth = await authenticate({ origin, page: probePage, credentials, fetchImpl });
+          auth = await authenticate({ origin, page: probePage, credentials, fetchImpl });
           cookie = auth.cookie || cookie;
         }
       }
@@ -179,33 +190,62 @@ export async function crawl({ url, credentials, fetchImpl = globalThis.fetch, ma
   }
 
   while (queue.length > 0 && pages.length < maxPages) {
-    const { path, depth } = queue.shift();
-    if (visited.has(path) || depth > maxDepth) continue;
-    visited.add(path);
-    const target = new URL(path, origin).href;
-    let response;
-    try {
-      response = await fetchImpl(target, { headers: cookie ? { cookie } : {} });
-    } catch {
-      continue;
+    const batch = [];
+    let batchDepth;
+    while (queue.length > 0 && batch.length < fetchConcurrency && pages.length + batch.length < maxPages) {
+      const candidate = queue[0];
+      if (visited.has(candidate.path) || candidate.depth > maxDepth) {
+        queue.shift();
+        continue;
+      }
+      if (batchDepth === undefined) batchDepth = candidate.depth;
+      if (candidate.depth !== batchDepth) break;
+      queue.shift();
+      visited.add(candidate.path);
+      batch.push(candidate);
     }
-    const setCookie = cookieFrom(response);
-    if (setCookie) cookie = setCookie;
-    if (!response.ok && ![301, 302, 303, 307, 308].includes(response.status)) continue;
-    const html = typeof response.text === "function" ? await response.text() : "";
-    const parsed = parseHtml(html);
-    pages.push({ path, depth, status: response.status, ...parsed });
-    await emit?.("plan", "page_crawled", { message: path });
-    if (depth >= maxDepth) continue;
-    for (const link of parsed.links) {
-      const next = normalizePath(link.href);
-      if (next && !visited.has(next)) queue.push({ path: next, depth: depth + 1 });
+    if (batch.length === 0) continue;
+
+    // Every item in a breadth-first batch uses the same established session.
+    // Response order is restored below, so concurrent latency cannot change the
+    // page or link order recorded in the evidence packet.
+    const requestCookie = cookie;
+    const fetched = await Promise.all(batch.map(async ({ path, depth }) => {
+      const target = new URL(path, origin).href;
+      try {
+        const prefetched = seed?.path === path ? seed : null;
+        if (prefetched) seed = null;
+        const response = prefetched?.response ?? await fetchImpl(target, { headers: requestCookie ? { cookie: requestCookie } : {} });
+        if (!response.ok && ![301, 302, 303, 307, 308].includes(response.status)) return null;
+        const html = prefetched ? prefetched.html : typeof response.text === "function" ? await response.text() : "";
+        let effectivePath = path;
+        try {
+          const finalUrl = response.url ? new URL(response.url) : null;
+          if (finalUrl?.origin === origin) effectivePath = finalUrl.pathname || "/";
+        } catch {}
+        return { path: effectivePath, requestedPath: path, depth, response, parsed: parseHtml(html), setCookie: prefetched && auth.authenticated ? "" : cookieFrom(response) };
+      } catch {
+        return null;
+      }
+    }));
+
+    for (const item of fetched) {
+      if (!item) continue;
+      if (item.setCookie) cookie = item.setCookie;
+      const { path, depth, response, parsed } = item;
+      visited.add(path);
+      pages.push({ path, depth, status: response.status, ...parsed });
+      await emit?.("plan", "page_crawled", { message: path });
+      if (depth >= maxDepth) continue;
+      for (const link of parsed.links) {
+        const next = normalizePath(link.href);
+        if (next && !visited.has(next)) queue.push({ path: next, depth: depth + 1 });
+      }
     }
   }
 
-  let auth = { authenticated: false };
   const loginPage = pages.find((page) => detectLoginForm(page));
-  if (loginPage && credentials?.username && credentials?.password) {
+  if (!auth.authenticated && loginPage && credentials?.username && credentials?.password) {
     try {
       auth = await authenticate({ origin, page: loginPage, credentials, fetchImpl });
       cookie = auth.cookie || cookie;
@@ -383,6 +423,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
     if (!positive) return prose;
     return { prose, assert: { kind: "absent_text", value: positive.slice(0, 120) } };
   };
+  const urlExpect = (prose, pagePath) => ({ prose, assert: { kind: "url_contains", value: pagePath || "/" } });
 
   for (const page of pages) {
     for (const [formIndex, form] of (page.forms ?? []).entries()) {
@@ -433,7 +474,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
             page: page.path,
             action: "submit",
             targetRef: `form:${formIndex}`,
-            expect: [textExpect("An error message is shown", ["error", "message"], pages), absentExpect("No record is created")],
+            expect: [urlExpect(`Submission remains on ${page.path} for validation`, page.path), absentExpect("No record is created")],
           }],
           risks: [],
           requirementIds: requirementFor(page.path),
@@ -460,7 +501,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
             page: page.path,
             action: "submit",
             targetRef: `form:${formIndex}`,
-            expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No duplicate record is created")],
+            expect: [urlExpect(`Submission remains on ${page.path} for validation`, page.path), absentExpect("No duplicate record is created")],
           }],
           risks: [],
           requirementIds: requirementFor(page.path),
@@ -476,7 +517,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
           rationale: "Login form requires negative authentication coverage",
           pages: [page.path],
           preconditions: [],
-          steps: [{ intent: "Sign in with invalid credentials", page: page.path, expect: [textExpect("An error message is shown", ["error", "message"], pages), absentExpect("No session is created")] }],
+          steps: [{ intent: "Sign in with invalid credentials", page: page.path, expect: [urlExpect(`Sign-in remains on ${page.path}`, page.path), absentExpect("No session is created")] }],
           risks: [],
           requirementIds: requirementFor("login sign in authentication"),
         });
@@ -512,7 +553,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
         rationale: "Numeric input discovered",
         pages: [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
         preconditions: ["authenticated"],
-        steps: [...journeyTo(page.path), { intent: "Submit a negative quantity", page: page.path, expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No record is created")] }],
+        steps: [...journeyTo(page.path), { intent: "Submit a negative quantity", page: page.path, expect: [urlExpect(`Submission remains on ${page.path} for validation`, page.path), absentExpect("No record is created")] }],
         risks: [],
         requirementIds: requirementFor(page.path),
       });
@@ -584,7 +625,7 @@ export function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }
         rationale: `Form surface on ${page.path} with no other edge coverage; invalid-format probe`,
         pages: [page.path],
         preconditions: ["authenticated"],
-        steps: [{ intent: `Submit malformed input on ${page.path}`, page: page.path, expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No record is created")] }],
+        steps: [{ intent: `Submit malformed input on ${page.path}`, page: page.path, expect: [urlExpect(`Submission remains on ${page.path} for validation`, page.path), absentExpect("No record is created")] }],
         risks: [],
         requirementIds: requirementFor(page.path),
       };

@@ -161,6 +161,32 @@ test("a replay failure falls back once and keeps the agent verdict in one result
   assert.equal((await workspace.readLastTest()).lastRunId, result.runId);
 });
 
+test("an executor factory takes precedence over a shared fallback executor", async (t) => {
+  const { workspace, spec } = await workspaceFixture(t);
+  let sharedCalls = 0;
+  let factoryCalls = 0;
+  const shared = createNativeWebExecutor({
+    act: async () => { sharedCalls += 1; throw new Error("shared executor must not run"); },
+    observe: async () => ({ status: "passed" }),
+    screenshot: async () => Buffer.from("image"),
+  });
+  const isolated = createNativeWebExecutor({
+    act: async () => ({ selectedTarget: { summary: "Home" } }),
+    observe: async () => ({ status: "passed", observation: "Home is visible" }),
+    screenshot: async () => Buffer.from("image"),
+  });
+  const result = await executeWithReplay({
+    workspace,
+    specId: spec.id,
+    executor: shared,
+    executorFactory: async () => { factoryCalls += 1; return isolated; },
+    fetchImpl: reachable,
+  });
+  assert.equal(result.classification, "passed");
+  assert.equal(factoryCalls, 1);
+  assert.equal(sharedCalls, 0);
+});
+
 test("a successful recorded agent run promotes a replay and the next run is agent-free", async (t) => {
   const { workspace, spec } = await workspaceFixture(t);
   let acts = 0;

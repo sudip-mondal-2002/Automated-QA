@@ -434,11 +434,25 @@ export class QaWorkspace {
     return this.validateResult(await readText(this.resultPath(runId), `Run ${runId}`), `Run ${runId}`);
   }
 
+  async #writeResultPointer(result) {
+    const pointer = validateDocument("lastTest", {
+      specId: result.specId,
+      environment: result.environment,
+      lastRunId: result.runId,
+    });
+    await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+    return pointer;
+  }
+
+  async selectResult(runId) {
+    return this.#writeResultPointer(await this.loadResult(runId));
+  }
+
   validateResult(valueOrJson, label = "Run result JSON") {
     return validateDocument("result", parseJson(valueOrJson, label));
   }
 
-  async saveResult(valueOrJson) {
+  async saveResult(valueOrJson, { select = true } = {}) {
     await this.ensureDirectories();
     const value = this.validateResult(valueOrJson);
     const spec = await this.loadSpec(value.specId);
@@ -628,12 +642,7 @@ export class QaWorkspace {
     const resultPath = this.resultPath(value.runId);
     await mkdir(path.dirname(resultPath), { recursive: true });
     await atomicWriteFile(resultPath, stringifyJson(value));
-    const pointer = validateDocument("lastTest", {
-      specId: value.specId,
-      environment: value.environment,
-      lastRunId: value.runId,
-    });
-    await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+    if (select) await this.#writeResultPointer(value);
     await this.pruneResults(value.specId, MAX_RECENT_RUNS_PER_SPEC, value.runId);
     return value;
   }

@@ -1,0 +1,69 @@
+- region "Notifications (F8)":
+  - list:
+    - status:
+      - generic: Card added!
+      - generic: Your flashcard has been added to the set.
+      - button:
+- region "Notifications alt+T"
+- banner:
+  - link "FlashMind":
+    - /url: /
+    - generic: FlashMind
+  - navigation:
+    - link "Home":
+      - /url: /
+      - button "Home":
+        - text: Home
+    - link "My Sets":
+      - /url: /my-sets
+      - button "My Sets":
+        - text: My Sets
+    - link "Browse":
+      - /url: /browse
+      - button "Browse":
+        - text: Browse
+  - link "New Set":
+    - /url: /create
+    - button "New Set":
+      - generic: New Set
+  - button:
+- main:
+  - text: Private
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Personal study cards for biology exam preparation.
+  - paragraph: by You
+  - link "Start Studying":
+    - /url: /study/4
+    - button "Start Studying":
+      - text: Start Studying
+  - button "Add Card" [active]:
+    - text: Add Card
+  - button "Publish":
+    - text: Publish
+  - button "Delete Set":
+    - text: Delete Set
+  - heading "Cards (3)" [level=2]
+  - generic: "1"
+  - generic: medium
+  - generic: know
+  - generic: cell-biology
+  - generic: division
+  - paragraph: What is mitosis?
+  - paragraph: Mitosis is cell division that results in two daughter cells with the same number of chromosomes as the parent cell.
+  - button:
+  - generic: "2"
+  - generic: medium
+  - generic: uncertain
+  - generic: cell-biology
+  - generic: division
+  - paragraph: What are the four phases of mitosis?
+  - paragraph: "Prophase, Metaphase, Anaphase, and Telophase (remember: PMAT)"
+  - button:
+  - generic: "3"
+  - generic: hard
+  - generic: New
+  - generic: isolated-tag
+  - paragraph: Isolated complete question text?
+  - paragraph: Isolated complete answer text.
+  - button:
+- status: Notification Card added!Your flashcard has been added to the set.

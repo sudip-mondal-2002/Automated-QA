@@ -92,7 +92,10 @@ export async function detectNativeCapability(environment, executor) {
   const kind = environment?.type;
   if (!executor) {
     const name = kind === "desktop" ? "computer use" : "Browser or Chrome";
-    return { available: false, explanation: `No native ${name} capability was provided` };
+    return {
+      available: false,
+      explanation: `No native ${name} executor was provided to this process; this does not establish that the host capability is unavailable`,
+    };
   }
   if (executor.kind !== kind) {
     return {

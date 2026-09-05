@@ -4,6 +4,8 @@ const state = {
   selectedRunId: null,
   orchestrations: [],
   selectedOrchestration: null,
+  demoPromptMode: "orchestrate",
+  demoUrlInitialized: false,
   toastTimer: null,
 };
 
@@ -18,6 +20,15 @@ const elements = Object.fromEntries([
   "orchestration-empty", "orchestration-body", "orchestration-metadata", "gate-score", "gate-list",
   "timeline", "timeline-count", "flow-list", "flow-count", "scenario-list", "scenario-count",
   "unknown-list", "unknown-count",
+  "workspace-tab", "demo-console-tab", "workspace-view", "demo-console-view",
+  "demo-url", "demo-objective", "demo-prd", "demo-root", "demo-username", "demo-password",
+  "demo-plan", "demo-out", "demo-max-replans", "demo-concurrency", "demo-planning-concurrency",
+  "demo-crawl-concurrency", "demo-app-revision", "demo-plan-only", "demo-no-history",
+  "demo-allow-remote", "demo-json", "demo-prompt-preview", "demo-copy-prompt",
+  "demo-dashboard-title", "demo-verdict", "demo-stage-track", "demo-score",
+  "demo-score-fill", "demo-blocking", "demo-advisory", "demo-exit", "demo-exit-note",
+  "demo-planner", "demo-planner-note", "demo-specs", "demo-specs-note", "demo-assertions",
+  "demo-assertions-note", "demo-compare-count", "demo-compare-body",
 ].map((id) => [id, document.getElementById(id)]));
 
 const statusLabels = {
@@ -47,6 +58,17 @@ function statusBadge(status) {
   return node("span", {
     className: `status status-${status}`,
     text: statusLabels[status] ?? status.replaceAll("_", " "),
+  });
+}
+
+function orchestrationBadge(entry = {}) {
+  if (entry.verdict === "clean") return node("span", { className: "status status-passed", text: "Completed" });
+  if (entry.verdict === "defects_found") return node("span", { className: "status status-functional_regression", text: "Completed with defects" });
+  const scenarios = entry.scenarios ?? entry.summary?.scenarios ?? {};
+  const planningOnly = (scenarios.total ?? 0) > 0 && scenarios.skipped === scenarios.total;
+  return node("span", {
+    className: `status status-${planningOnly ? "skipped" : "blocked"}`,
+    text: planningOnly ? "Planning incomplete" : "Execution incomplete",
   });
 }
 
@@ -82,6 +104,96 @@ function formatTime(value) {
     month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
   }).format(new Date(value));
 }
+
+function switchView(view) {
+  const demo = view === "demo";
+  elements["workspace-view"].hidden = demo;
+  elements["demo-console-view"].hidden = !demo;
+  elements["workspace-tab"].classList.toggle("active", !demo);
+  elements["demo-console-tab"].classList.toggle("active", demo);
+  elements["workspace-tab"].setAttribute("aria-selected", String(!demo));
+  elements["demo-console-tab"].setAttribute("aria-selected", String(demo));
+  document.title = demo ? "Intent QA · Console" : "Intent QA · Workspace";
+  if (demo) updateDemoPrompt();
+}
+
+function renderDemoUrl() {
+  if (!state.workspace || state.demoUrlInitialized) return;
+  const selectedId = state.workspace.selected?.environment;
+  const selected = state.workspace.environments.find((environment) => environment.id === selectedId);
+  const webEnvironment = selected?.type === "web"
+    ? selected
+    : state.workspace.environments.find((environment) => environment.type === "web");
+  elements["demo-url"].value = webEnvironment?.baseUrl ?? "";
+  state.demoUrlInitialized = true;
+  updateDemoPrompt();
+}
+
+function demoPrompt() {
+  if (state.demoPromptMode === "rerun") {
+    return state.workspace?.rerunPrompt
+      ?? "$autonomous-qa Rerun the last selected test and keep every expectation unchanged.";
+  }
+  const target = elements["demo-url"].value.trim();
+  const objective = elements["demo-objective"].value.trim()
+    || "Discover the objective-relevant journeys and verify their observable outcomes.";
+  const options = demoOrchestrationOptions();
+  return [
+    `$autonomous-qa Orchestrate QA for ${target || "the current application's configured local URL"}.`,
+    objective,
+    options.length > 0 ? `Apply these orchestration options: ${options.join("; ")}.` : "",
+    "Reuse trusted history only when its source and orchestration fingerprint match, preserve semantic expectations, save evidence, and open the results when complete.",
+  ].filter(Boolean).join(" ");
+}
+
+function demoValue(id) {
+  return elements[id].value.trim();
+}
+
+function integerOption(id, flag, fallback, minimum, maximum) {
+  const parsed = Number(demoValue(id));
+  const valid = Number.isInteger(parsed) && parsed >= minimum && (maximum === undefined || parsed <= maximum);
+  return `${flag} ${valid ? parsed : fallback}`;
+}
+
+function demoOrchestrationOptions() {
+  const options = [
+    "--root current application project",
+  ];
+  const username = demoValue("demo-username");
+  const password = demoValue("demo-password");
+  const prd = demoValue("demo-prd");
+  const plan = demoValue("demo-plan");
+  const out = demoValue("demo-out");
+  const revision = demoValue("demo-app-revision") || "auto";
+  if (username) options.push(`--username ${username}`);
+  if (password) options.push(`--password ${password}`);
+  if (prd) options.push(`--prd ${prd}`);
+  if (plan) options.push(`--plan ${plan}`);
+  if (out) options.push(`--out ${out}`);
+  options.push(
+    integerOption("demo-max-replans", "--max-replans", 2, 1),
+    integerOption("demo-concurrency", "--concurrency", 3, 1, 8),
+    integerOption("demo-planning-concurrency", "--planning-concurrency", 3, 1, 3),
+    integerOption("demo-crawl-concurrency", "--crawl-concurrency", 4, 1, 8),
+    `--app-revision ${revision}`,
+  );
+  if (elements["demo-plan-only"].checked) options.push("--plan-only");
+  if (elements["demo-no-history"].checked) options.push("--no-history");
+  if (elements["demo-allow-remote"].checked) options.push("--allow-remote (explicit remote authorization)");
+  if (elements["demo-json"].checked) options.push("--json");
+  return options.filter(Boolean);
+}
+
+function updateDemoPrompt() {
+  elements["demo-prompt-preview"].textContent = demoPrompt();
+}
+
+const demoPresets = {
+  checkout: "Verify that an authenticated customer can complete checkout. Cover cart state, checkout validation, duplicate submission protection, confirmation, and idempotent cleanup.",
+  auth: "Verify authentication end to end. Cover successful sign-in, rejected credentials, authenticated-only routes, session persistence, sign-out, and visible error feedback.",
+  coverage: "Discover the objective-relevant product surface and build complete ordered journeys. Cover success, rejection, boundaries, persistence, permissions, duplicate actions, destructive guards, and cross-view consistency.",
+};
 
 function renderTests() {
   elements["tests-list"].replaceChildren();
@@ -360,6 +472,7 @@ async function refreshWorkspace({ quiet = false } = {}) {
     elements["environment-count"].textContent = state.workspace.environments.length;
     renderTests();
     renderRuns();
+    renderDemoUrl();
     if (!quiet) showToast("Workspace refreshed");
   } catch (error) {
     elements["connection-status"].className = "connection error";
@@ -395,16 +508,16 @@ function renderOrchestrationList() {
   const list = elements["orchestrations-list"];
   list.replaceChildren();
   elements["orchestrations-badge"].textContent = state.orchestrations.length;
-  elements["orchestration-panel"].hidden = state.orchestrations.length === 0;
+  elements["orchestration-panel"].hidden = false;
   for (const entry of state.orchestrations) {
     const button = node("button", {
-      className: `list-button${entry.orchestrationId === state.selectedOrchestration ? " active" : ""}`,
+      className: `list-button${entry.orchestrationId === state.selectedOrchestration ? " selected" : ""}`,
       type: "button",
       dataset: { id: entry.orchestrationId },
     }, [
       node("span", { className: "list-row" }, [
         node("span", { className: "list-title", text: entry.target ?? entry.orchestrationId }),
-        statusBadge(entry.verdict === "clean" ? "passed" : entry.verdict === "defects_found" ? "functional_regression" : "blocked"),
+        orchestrationBadge(entry),
       ]),
       node("span", { className: "list-meta" }, [
         node("span", { className: "list-id", text: entry.orchestrationId }),
@@ -414,6 +527,72 @@ function renderOrchestrationList() {
     button.addEventListener("click", () => selectOrchestration(entry.orchestrationId));
     list.append(button);
   }
+  if (state.orchestrations.length === 0) {
+    list.append(node("div", { className: "no-evidence", text: "No orchestration evidence yet. Copy a request above and run it through the installed skill." }));
+  }
+  renderDemoComparison();
+}
+
+function renderDemoComparison() {
+  const body = elements["demo-compare-body"];
+  body.replaceChildren();
+  elements["demo-compare-count"].textContent = `${state.orchestrations.length} run${state.orchestrations.length === 1 ? "" : "s"}`;
+  if (state.orchestrations.length === 0) {
+    body.append(node("tr", {}, [node("td", { colspan: "5", text: "No orchestration evidence yet." })]));
+    return;
+  }
+  for (const entry of state.orchestrations.slice(0, 8)) {
+    const scenarios = entry.scenarios;
+    const total = scenarios?.total ?? 0;
+    const clean = (scenarios?.passed ?? 0) + (scenarios?.healed ?? 0);
+    body.append(node("tr", {}, [
+      node("td", { text: entry.planner ?? "deterministic" }),
+      node("td", {}, [orchestrationBadge(entry)]),
+      node("td", { text: entry.score == null ? "—" : Number(entry.score).toFixed(2) }),
+      node("td", { text: total ? `${clean}/${total} clean` : "—" }),
+      node("td", { text: entry.exitCode == null ? "—" : String(entry.exitCode) }),
+    ]));
+  }
+}
+
+function renderDemoDashboard(detail, events) {
+  const report = detail.report ?? {};
+  const summary = report.summary ?? {};
+  const coverage = summary.coverage ?? {};
+  const generation = summary.generation ?? {};
+  const assertions = generation.assertions ?? {};
+  const verdict = summary.verdict ?? "unknown";
+  elements["demo-dashboard-title"].textContent = detail.orchestrationId;
+  elements["demo-verdict"].replaceChildren(orchestrationBadge({ verdict, summary }));
+  elements["demo-verdict"].className = "demo-verdict-wrap";
+
+  const stageNames = new Set((events ?? []).map((event) => event.stage === "triage" ? "run" : event.stage));
+  elements["demo-stage-track"].querySelectorAll("[data-demo-stage]").forEach((stage) => {
+    stage.classList.toggle("done", stageNames.has(stage.dataset.demoStage));
+  });
+
+  const score = Number(coverage.score ?? 0);
+  const blocking = detail.checklist.filter((entry) => entry.severity === "blocking" && entry.status === "fail").length;
+  const advisory = detail.checklist.filter((entry) => entry.severity === "advisory" && entry.status === "fail").length;
+  elements["demo-score"].textContent = coverage.score == null ? "—" : `${score.toFixed(2)} / 1.00`;
+  elements["demo-score-fill"].style.width = `${Math.max(0, Math.min(100, score * 100))}%`;
+  elements["demo-score-fill"].className = blocking > 0 ? "danger" : score >= 0.75 ? "success" : "warning";
+  elements["demo-blocking"].textContent = `${blocking} blocking failure${blocking === 1 ? "" : "s"}`;
+  elements["demo-blocking"].className = blocking > 0 ? "danger" : "success";
+  elements["demo-advisory"].textContent = `${advisory} advisory gap${advisory === 1 ? "" : "s"}`;
+
+  const exitCode = summary.exitCode;
+  elements["demo-exit"].textContent = exitCode == null ? "—" : String(exitCode);
+  elements["demo-exit-note"].textContent = verdict.replaceAll("_", " ");
+  elements["demo-planner"].textContent = detail.planSource?.planner ?? "deterministic";
+  const plannerAttempts = detail.planSource?.attempts ?? 1;
+  elements["demo-planner-note"].textContent = detail.planSource?.fellBack
+    ? `Fell back · ${detail.planSource.fallbackReason ?? "planner output rejected"}`
+    : `Accepted in ${plannerAttempts} attempt${plannerAttempts === 1 ? "" : "s"}`;
+  elements["demo-specs"].textContent = String(generation.specs ?? detail.flows.length);
+  elements["demo-specs-note"].textContent = `${generation.validated ?? 0} validated`;
+  elements["demo-assertions"].textContent = `${assertions.withPredicates ?? 0}/${assertions.total ?? 0}`;
+  elements["demo-assertions-note"].textContent = `${assertions.verified ?? 0} verified · ${assertions.refuted ?? 0} refuted`;
 }
 
 function renderGate(detail) {
@@ -568,6 +747,7 @@ async function selectOrchestration(orchestrationId) {
     renderFlows(detail);
     renderScenarios(detail);
     renderUnknowns(detail);
+    renderDemoDashboard(detail, trace.events ?? []);
   } catch (error) {
     showToast(error.message);
   }
@@ -580,8 +760,9 @@ async function refreshOrchestrations() {
     renderOrchestrationList();
     // Open the newest run on first load so the panel is never empty when there
     // is something to show.
-    if (!state.selectedOrchestration && state.orchestrations.length > 0) {
-      await selectOrchestration(state.orchestrations[0].orchestrationId);
+    if (state.orchestrations.length > 0) {
+      const selectedStillExists = state.orchestrations.some((entry) => entry.orchestrationId === state.selectedOrchestration);
+      await selectOrchestration(selectedStillExists ? state.selectedOrchestration : state.orchestrations[0].orchestrationId);
     }
   } catch {
     // The workspace may simply have no orchestrations yet.
@@ -589,6 +770,8 @@ async function refreshOrchestrations() {
 }
 
 elements.refresh.addEventListener("click", () => refreshWorkspace());
+elements["workspace-tab"].addEventListener("click", () => switchView("workspace"));
+elements["demo-console-tab"].addEventListener("click", () => switchView("demo"));
 elements["copy-rerun"].addEventListener("click", () => {
   if (state.workspace) copy(state.workspace.rerunPrompt, "Rerun prompt copied");
 });
@@ -599,6 +782,33 @@ elements["yaml-editor"].addEventListener("input", () => {
   elements["save-state"].textContent = "Unsaved changes";
   setValidation("neutral", "Changes have not been validated yet.");
 });
+elements["demo-url"].addEventListener("input", () => {
+  state.demoPromptMode = "orchestrate";
+  updateDemoPrompt();
+});
+for (const id of [
+  "demo-objective", "demo-prd", "demo-username", "demo-password", "demo-plan", "demo-out",
+  "demo-max-replans", "demo-concurrency", "demo-planning-concurrency", "demo-crawl-concurrency",
+  "demo-app-revision", "demo-plan-only", "demo-no-history", "demo-allow-remote", "demo-json",
+]) {
+  elements[id].addEventListener("input", () => {
+    state.demoPromptMode = "orchestrate";
+    updateDemoPrompt();
+  });
+}
+document.querySelectorAll("[data-demo-preset]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const preset = button.dataset.demoPreset;
+    if (preset === "rerun") {
+      state.demoPromptMode = "rerun";
+    } else {
+      state.demoPromptMode = "orchestrate";
+      elements["demo-objective"].value = demoPresets[preset];
+    }
+    updateDemoPrompt();
+  });
+});
+elements["demo-copy-prompt"].addEventListener("click", () => copy(demoPrompt(), "Autonomous-QA request copied"));
 
 await refreshWorkspace({ quiet: true });
 await refreshOrchestrations();

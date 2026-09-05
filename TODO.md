@@ -1,5 +1,9 @@
 # TODO — gaps between what exists and what the brief needs
 
+> Historical implementation audit. For the current challenge requirements,
+> completed traceability, judging weights, scope boundary, and submission
+> artifacts, use [`docs/challenge-alignment.md`](docs/challenge-alignment.md).
+
 Scope note: this file assumes **everything in `exp_1.md` "Next" is already done** by another
 developer (live-verified Playwright batch, `unauth-redirect` session isolation, replan demo,
 coverage sweep, merge/logistics). Nothing here duplicates that list.

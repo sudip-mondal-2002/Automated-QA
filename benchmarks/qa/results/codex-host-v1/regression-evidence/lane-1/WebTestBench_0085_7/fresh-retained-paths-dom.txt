@@ -1,0 +1,151 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - text: Complete Learning Path
+  - heading "Programming Fundamentals From Zero to Hero" [level=1]:
+    - text: Programming Fundamentals
+    - generic: From Zero to Hero
+  - paragraph: A comprehensive course designed to take you from complete beginner to professional developer. Choose your learning pathway and progress at your own pace.
+  - generic: 5 Stages
+  - generic: 15 Topics
+  - generic: 45+ Hours
+- heading "Select Your Learning Pathways" [level=2]
+- paragraph: Choose one or more pathways to highlight relevant content. Selections are preserved when switching.
+- button "Beginner Active Start your programming journey with fundamental concepts 6 topics ~17 hours":
+  - generic: Beginner
+  - generic: Active
+  - paragraph: Start your programming journey with fundamental concepts
+  - generic: 6 topics
+  - generic: ~17 hours
+- button "Intermediate Active Deepen your knowledge with advanced techniques 10 topics ~32 hours" [active]:
+  - generic: Intermediate
+  - generic: Active
+  - paragraph: Deepen your knowledge with advanced techniques
+  - generic: 10 topics
+  - generic: ~32 hours
+- button "Advanced Master complex algorithms and system design 11 topics ~45 hours":
+  - generic: Advanced
+  - paragraph: Master complex algorithms and system design
+  - generic: 11 topics
+  - generic: ~45 hours
+- generic: "1"
+- heading "Foundations" [level=3]
+- paragraph: Build a solid understanding of core concepts
+- button "1.1 Introduction to Programming Concepts beginner 2 hours 3 objectives":
+  - generic: "1.1"
+  - heading "Introduction to Programming Concepts" [level=4]
+  - generic: beginner
+  - text: 2 hours
+  - text: 3 objectives
+- button "1.2 Variables and Data Types beginner intermediate 3 hours 3 objectives":
+  - generic: "1.2"
+  - heading "Variables and Data Types" [level=4]
+  - generic: beginner
+  - generic: intermediate
+  - text: 3 hours
+  - text: 3 objectives
+- button "1.3 Control Flow beginner intermediate 4 hours 3 objectives":
+  - generic: "1.3"
+  - heading "Control Flow" [level=4]
+  - generic: beginner
+  - generic: intermediate
+  - text: 4 hours
+  - text: 3 objectives
+- generic: "2"
+- heading "Core Development" [level=3]
+- paragraph: Master essential programming techniques
+- button "2.1 Functions and Scope beginner intermediate 4 hours 3 objectives":
+  - generic: "2.1"
+  - heading "Functions and Scope" [level=4]
+  - generic: beginner
+  - generic: intermediate
+  - text: 4 hours
+  - text: 3 objectives
+- button "2.2 Object-Oriented Programming intermediate advanced 6 hours 3 objectives":
+  - generic: "2.2"
+  - heading "Object-Oriented Programming" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 6 hours
+  - text: 3 objectives
+- button "2.3 Error Handling intermediate advanced 3 hours 3 objectives":
+  - generic: "2.3"
+  - heading "Error Handling" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 3 hours
+  - text: 3 objectives
+- generic: "3"
+- heading "Data Structures" [level=3]
+- paragraph: Learn to organize and manipulate data efficiently
+- button "3.1 Arrays and Lists beginner intermediate advanced 4 hours 3 objectives":
+  - generic: "3.1"
+  - heading "Arrays and Lists" [level=4]
+  - generic: beginner
+  - generic: intermediate
+  - generic: advanced
+  - text: 4 hours
+  - text: 3 objectives
+- button "3.2 Hash Maps and Sets intermediate advanced 3 hours 3 objectives":
+  - generic: "3.2"
+  - heading "Hash Maps and Sets" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 3 hours
+  - text: 3 objectives
+- button "3.3 Trees and Graphs advanced 8 hours 3 objectives":
+  - generic: "3.3"
+  - heading "Trees and Graphs" [level=4]
+  - generic: advanced
+  - text: 8 hours
+  - text: 3 objectives
+- generic: "4"
+- heading "Algorithms" [level=3]
+- paragraph: Solve problems with proven techniques
+- button "4.1 Searching Algorithms intermediate advanced 3 hours 3 objectives":
+  - generic: "4.1"
+  - heading "Searching Algorithms" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 3 hours
+  - text: 3 objectives
+- button "4.2 Sorting Algorithms intermediate advanced 5 hours 3 objectives":
+  - generic: "4.2"
+  - heading "Sorting Algorithms" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 5 hours
+  - text: 3 objectives
+- button "4.3 Dynamic Programming advanced 10 hours 3 objectives":
+  - generic: "4.3"
+  - heading "Dynamic Programming" [level=4]
+  - generic: advanced
+  - text: 10 hours
+  - text: 3 objectives
+- generic: "5"
+- heading "Professional Skills" [level=3]
+- paragraph: Prepare for real-world development
+- button "5.1 Version Control with Git beginner intermediate advanced 4 hours 3 objectives":
+  - generic: "5.1"
+  - heading "Version Control with Git" [level=4]
+  - generic: beginner
+  - generic: intermediate
+  - generic: advanced
+  - text: 4 hours
+  - text: 3 objectives
+- button "5.2 Testing and Debugging intermediate advanced 5 hours 3 objectives":
+  - generic: "5.2"
+  - heading "Testing and Debugging" [level=4]
+  - generic: intermediate
+  - generic: advanced
+  - text: 5 hours
+  - text: 3 objectives
+- button "5.3 System Design Basics advanced 8 hours 3 objectives":
+  - generic: "5.3"
+  - heading "System Design Basics" [level=4]
+  - generic: advanced
+  - text: 8 hours
+  - text: 3 objectives
+- contentinfo:
+  - paragraph: Course Outline Viewer • Select pathways to highlight relevant content

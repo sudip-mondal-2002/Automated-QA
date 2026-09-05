@@ -93,7 +93,8 @@ test("missing or mismatched native capabilities persist a clear blocked result",
   const { workspace } = await temporaryWorkspace(t);
   const missing = await executeRun({ workspace, specId: "checkout-card", environmentId: "local" });
   assert.equal(missing.classification, "blocked");
-  assert.match(missing.explanation, /No native Browser or Chrome capability/);
+  assert.match(missing.explanation, /No native Browser or Chrome executor was provided to this process/);
+  assert.match(missing.explanation, /does not establish that the host capability is unavailable/);
   assert.equal((await workspace.loadResult(missing.runId)).classification, "blocked");
 
   const desktop = createNativeDesktopExecutor({

@@ -1,0 +1,102 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "CuratedPicks":
+    - /url: /
+    - generic: CuratedPicks
+  - navigation:
+    - link "Home":
+      - /url: /
+    - link "All Products":
+      - /url: /products
+    - link "Tech":
+      - /url: /category/tech
+    - link "Home":
+      - /url: /category/home
+    - link "Fitness":
+      - /url: /category/fitness
+  - searchbox "Search products..."
+  - link:
+    - /url: /admin
+    - button:
+- main:
+  - link "Back to Products":
+    - /url: /products
+    - text: Back to Products
+  - article:
+    - img "Sony WH-1000XM5"
+    - generic: Tech
+    - generic: "4.8"
+    - heading "Sony WH-1000XM5" [level=1]
+    - paragraph: Industry-leading noise cancellation with exceptional sound quality and all-day comfort.
+    - generic: $399
+    - link "Buy Now":
+      - /url: https://example.com/sony-xm5
+      - text: Buy Now
+    - text: headphones
+    - text: wireless
+    - text: noise-cancelling
+    - text: premium
+    - heading "Key Specifications" [level=3]
+    - generic: Driver Size
+    - generic: 30mm
+    - generic: Battery Life
+    - generic: 30 hours
+    - generic: Weight
+    - generic: 250g
+    - generic: Bluetooth
+    - generic: "5.2"
+    - generic: Noise Cancelling
+    - generic: Yes, Adaptive
+  - heading "My Review" [level=2]
+  - paragraph: The Sony WH-1000XM5 represents the pinnacle of wireless noise-cancelling headphones. With its new 30mm driver units and improved noise-cancelling processor, these headphones deliver an audio experience that's hard to match. The comfort level is exceptional thanks to the soft-fit leather and lighter design. Battery life of 30 hours means you can go days between charges. The multipoint connection allows you to switch seamlessly between devices.
+  - heading "More in Tech" [level=2]
+  - article:
+    - link "Apple MacBook Pro 14\"":
+      - /url: /product/macbook-pro-14
+      - img "Apple MacBook Pro 14\""
+    - generic: Tech
+    - generic: $1,999
+    - link "Apple MacBook Pro 14\"":
+      - /url: /product/macbook-pro-14
+      - heading "Apple MacBook Pro 14\"" [level=3]
+    - paragraph: Pro-level performance with M3 Pro chip, stunning Liquid Retina XDR display.
+    - generic: "4.9"
+    - link "Buy Now":
+      - /url: https://example.com/macbook-pro
+      - text: Buy Now
+  - article:
+    - link "Samsung Galaxy S24 Ultra":
+      - /url: /product/samsung-galaxy-s24-ultra
+      - img "Samsung Galaxy S24 Ultra"
+    - generic: Tech
+    - generic: $1,299
+    - link "Samsung Galaxy S24 Ultra":
+      - /url: /product/samsung-galaxy-s24-ultra
+      - heading "Samsung Galaxy S24 Ultra" [level=3]
+    - paragraph: The ultimate Android phone with Galaxy AI, S Pen, and a stunning 200MP camera.
+    - generic: "4.7"
+    - link "Buy Now":
+      - /url: https://example.com/s24-ultra
+      - text: Buy Now
+- contentinfo:
+  - link "CuratedPicks":
+    - /url: /
+    - generic: CuratedPicks
+  - paragraph: Hand-picked product recommendations across tech, home, and fitness. Every item is personally tested and reviewed to help you make informed decisions.
+  - heading "Categories" [level=3]
+  - list:
+    - link "Tech Gadgets":
+      - /url: /category/tech
+    - link "Home Goods":
+      - /url: /category/home
+    - link "Fitness":
+      - /url: /category/fitness
+  - heading "Quick Links" [level=3]
+  - list:
+    - link "All Products":
+      - /url: /products
+    - link "Admin Panel":
+      - /url: /admin
+  - paragraph: © 2026 CuratedPicks. Affiliate links may earn us a commission.

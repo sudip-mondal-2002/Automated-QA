@@ -84,6 +84,11 @@ test("installed skill owns setup, native execution, evidence, and UI from an ext
 
   const runtimeSource = await readFile(path.join(installedSkill, "runtime", "qa-agent.mjs"), "utf8");
   assert.doesNotMatch(runtimeSource, /\.\.\/\.\.\/\.\.\/\.\.\/src|\/Users\//);
+  const skillInstructions = await readFile(path.join(installedSkill, "SKILL.md"), "utf8");
+  assert.match(skillInstructions, /do not cross into a standalone `node \.\.\.qa-agent\.mjs` subprocess/);
+  assert.match(skillInstructions, /Never infer that a host capability is unavailable from a subprocess result/);
+  assert.match(skillInstructions, /checkable-assertions.*request for host semantic planning/);
+  assert.match(skillInstructions, /safely projects a normalized `test-plan\.json` back to this wire shape/);
   const runtime = await import(pathToFileURL(path.join(installedSkill, "runtime", "qa-agent.mjs")));
   const output = [];
   const exitCode = await runtime.runCli(["run-last", "--root", projectRoot], {

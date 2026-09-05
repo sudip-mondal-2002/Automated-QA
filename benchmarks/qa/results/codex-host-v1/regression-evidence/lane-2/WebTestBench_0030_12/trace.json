@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0030:12",
+  "appId": "WebTestBench_0030",
+  "candidateSha256": "c00ed705c915affbffcf49b31831e137209698f83310a2b7592aa4a7e46b26f2",
+  "appArchiveSha256": "7acc25e7843819a7eb05964ef6b1fdfd89235221321f4d748ee1888b77d227d6",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T07:58:09.712Z",
+  "actions": [
+    {
+      "action": "Created a new note",
+      "result": "An untitled note appeared immediately."
+    },
+    {
+      "action": "Entered title and rich-text content without clicking a save control",
+      "result": "The note list updated to show the new title and content."
+    },
+    {
+      "action": "Reloaded the page",
+      "result": "The created note remained in All Notes with the exact title and content."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Locally stored notes persist automatically without user interaction",
+      "observed": "No save action was available or used; after a full reload, 'Autosave QA Note' and its content were still present."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "Automatic local persistence was verified by entering content and reloading without an explicit save action.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0030_12/after.png",
+      "sha256": "b86451ac0862a65d1d10bbf95cec354df45501d6d8e75dfa84536d4248c2041c",
+      "bytes": 18848
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0030_12/dom-after.txt",
+      "sha256": "c4d24dc24c010b93a2f2044a69b2348c51c2285e283bb6a87ee5a8f92fc88866",
+      "bytes": 3311
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4724; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0078:17",
+  "appId": "WebTestBench_0078",
+  "candidateSha256": "365e3a502ac01b025f11e45456016bf0d8005e1c8b322320f211bde4608cfe6d",
+  "appArchiveSha256": "8d3e2f34e6a164ea81c711bac88119ed0a0525ebc076639913861a0651a03e75",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4732; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:04:50.128Z",
+  "actions": [
+    {
+      "action": "Opened ProcureFlow dashboard",
+      "result": "The Purchase Requests list mixed pending, quoted, ordered, and one revoked request on the same page."
+    },
+    {
+      "action": "Inspected all rendered links and buttons",
+      "result": "No navigation control or link for a separate Revoked page existed; the only button was New Request."
+    },
+    {
+      "action": "Inspected visible Revoked labels",
+      "result": "They were non-interactive plain text with default cursor."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "All revoked applications can be viewed on a separate page",
+      "observed": "Revoked requests appear only inline with the general request list, with no separate page or route accessible from the UI."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The revoked count/status is visible, but the required separate revoked-applications page is absent.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0078_17/after.png",
+      "sha256": "3b68e5248f9a0fc14200035454c554967315b35271a899239e9c9265424b940f",
+      "bytes": 28557
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0078_17/dom-after.txt",
+      "sha256": "9f77f685ef080644f75ed516f86c9f5f3f441496e2a9716cce46f61a59c62395",
+      "bytes": 1561
+    }
+  ],
+  "laneId": "lane-2"
+}

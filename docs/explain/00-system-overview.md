@@ -1,5 +1,11 @@
 # 00 — System overview
 
+> Historical presentation snapshot. Its architecture and measurements predate
+> the memory-first parallel optimization. Use
+> [Current orchestration structure](../current-orchestration-structure.md) and
+> [Optimized agent orchestration](../optimized-agent-orchestration.md) for current
+> claims and measured values.
+
 > Deep-dive documentation set for the `auto-qa` repository. Written to be lifted
 > straight into slides. Every claim below is traceable to a file in this
 > repository; where something is aspirational or unfinished, it says so.
@@ -74,7 +80,7 @@ auto-qa/
 │   ├── planner.js                    # fetch-only crawl + deterministic plan synthesis
 │   ├── planner-agent.js              # Planner sub-agent protocol (brief · review · fallback)
 │   ├── coverage.js                   # 12-rule coverage gate, scoring, verdict
-│   ├── generator.js                  # plan → semantic specs + Playwright artifacts + live validation
+│   ├── generator.js                  # plan → semantic specs + Playwright artifacts + fetch preflight
 │   ├── execution.js                  # the semantic execution engine (852 LOC, the core)
 │   ├── healing.js                    # conservative self-healing decision machine
 │   ├── locator-chain.js              # strategy ordering + defect triage table

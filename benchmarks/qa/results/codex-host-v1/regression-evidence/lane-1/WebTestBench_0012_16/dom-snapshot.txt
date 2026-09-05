@@ -1,0 +1,43 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "StudyHub":
+    - /url: /
+    - generic: StudyHub
+  - navigation:
+    - link "Groups":
+      - /url: /groups
+      - text: Groups
+    - button "Alex Chen":
+      - img "Alex Chen"
+- main:
+  - link "Back to groups":
+    - /url: /groups
+    - text: Back to groups
+  - generic: Biology
+  - generic: member
+  - heading "Biology Study Circle" [level=1]
+  - paragraph: From cells to ecosystems, we explore the wonders of life sciences together.
+  - button "Leave":
+    - text: Leave
+  - generic: 3 members
+  - tablist:
+    - tab "Notes":
+      - text: Notes
+    - tab "Discussions":
+      - text: Discussions
+    - tab "Sessions":
+      - text: Sessions
+    - tab "Members" [active] [selected]:
+      - text: Members
+  - tabpanel "Members":
+    - paragraph: Sarah Martinez
+    - generic: owner
+    - paragraph: Biology, Chemistry, Biochemistry
+    - paragraph: Priya Patel
+    - generic: member
+    - paragraph: Chemistry, Biology, Physics
+    - paragraph: Alex Chen
+    - generic: member
+    - paragraph: Physics, Mathematics, Computer Science

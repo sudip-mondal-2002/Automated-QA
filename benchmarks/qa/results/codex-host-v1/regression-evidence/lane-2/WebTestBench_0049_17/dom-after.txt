@@ -1,0 +1,77 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Office Resources" [level=1]
+  - paragraph: Book rooms, equipment & workstations
+- main:
+  - heading "Available Resources" [level=2]
+  - button "All":
+    - text: All
+  - button "Rooms":
+    - text: Rooms
+  - button "Projectors":
+    - text: Projectors
+  - button "Workstations":
+    - text: Workstations
+  - button "Skyline Conference Room Meeting Room Large conference room with panoramic city views Floor 12, East Wing 20 people":
+    - heading "Skyline Conference Room" [level=3]
+    - generic: Meeting Room
+    - paragraph: Large conference room with panoramic city views
+    - text: Floor 12, East Wing
+    - text: 20 people
+  - button "Focus Pod A Meeting Room Small meeting room for focused discussions Floor 8, North Wing 4 people":
+    - heading "Focus Pod A" [level=3]
+    - generic: Meeting Room
+    - paragraph: Small meeting room for focused discussions
+    - text: Floor 8, North Wing
+    - text: 4 people
+  - button "Innovation Lab Meeting Room Creative space for brainstorming sessions Floor 5, Creative Hub 12 people":
+    - heading "Innovation Lab" [level=3]
+    - generic: Meeting Room
+    - paragraph: Creative space for brainstorming sessions
+    - text: Floor 5, Creative Hub
+    - text: 12 people
+  - button "Epson Pro 4K Projector High-resolution 4K projector for presentations Equipment Room, Floor 3":
+    - heading "Epson Pro 4K" [level=3]
+    - generic: Projector
+    - paragraph: High-resolution 4K projector for presentations
+    - text: Equipment Room, Floor 3
+  - button "Portable Mini Projector Projector Compact projector for small team meetings Equipment Room, Floor 3":
+    - heading "Portable Mini Projector" [level=3]
+    - generic: Projector
+    - paragraph: Compact projector for small team meetings
+    - text: Equipment Room, Floor 3
+  - button "Design Station Alpha Workstation High-performance workstation with dual monitors Floor 7, Design Area":
+    - heading "Design Station Alpha" [level=3]
+    - generic: Workstation
+    - paragraph: High-performance workstation with dual monitors
+    - text: Floor 7, Design Area
+  - button "Developer Hub 1 Workstation Ergonomic standing desk with powerful hardware Floor 6, Tech Zone":
+    - heading "Developer Hub 1" [level=3]
+    - generic: Workstation
+    - paragraph: Ergonomic standing desk with powerful hardware
+    - text: Floor 6, Tech Zone
+  - button "Quiet Corner Desk Workstation Secluded workspace for focused individual work Floor 4, Library Area":
+    - heading "Quiet Corner Desk" [level=3]
+    - generic: Workstation
+    - paragraph: Secluded workspace for focused individual work
+    - text: Floor 4, Library Area
+  - heading "Make Reservation" [level=2]
+  - heading "Focus Pod A" [level=3]
+  - paragraph: Floor 8, North Wing
+  - text: Purpose / Title
+  - textbox "Purpose / Title":
+    - /placeholder: e.g., Team standup, Client presentation
+  - text: Date
+  - button "Select a date":
+    - text: Select a date
+  - text: Start Time
+  - textbox "Start Time": 09:00
+  - text: End Time
+  - textbox "End Time": 10:00
+  - button "Cancel"
+  - button "Reserve" [active]
+  - heading "Your Reservations" [level=2]
+  - heading "No upcoming reservations" [level=3]
+  - paragraph: Select a resource and make a reservation to get started.
