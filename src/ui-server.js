@@ -161,7 +161,7 @@ async function workspaceSummary(workspace) {
       lastEnvironment: environment,
       lastStatus: lastRun?.classification ?? "not_run",
       lastRunId: lastRun?.runId,
-      runCommand: `npm run qa-agent -- run ${spec.id} --env ${environment}`,
+      runPrompt: `$autonomous-qa Run ${spec.id} on ${environment} through the native UI capability and save the result and evidence.`,
     };
   });
   return {
@@ -169,7 +169,7 @@ async function workspaceSummary(workspace) {
     fixtures: fixtures.map(({ id, title }) => ({ id, title })),
     environments,
     selected,
-    rerunCommand: "npm run qa-agent -- run-last",
+    rerunPrompt: "$autonomous-qa Rerun the last selected test with its saved environment and keep every expectation unchanged.",
     recentRuns: results.map((result) => ({
       runId: result.runId,
       specId: result.specId,

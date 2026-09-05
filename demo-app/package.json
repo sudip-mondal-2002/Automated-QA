@@ -1,0 +1,14 @@
+{
+  "name": "qa-shop-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone deterministic application used to demonstrate the autonomous QA skill",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "reset": "node reset.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

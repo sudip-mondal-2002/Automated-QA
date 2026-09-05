@@ -1,202 +1,191 @@
-# Live demo runbook
+# Five-minute live demo runbook
 
-This is the exact judge-facing path. It shows installation and developer experience first, then proves the correctness boundaries with the same semantic test.
+This is the exact developer-facing presentation. It begins with skill installation, stays inside a standalone application project, and proves both developer experience and correctness. The internal QA implementation repository never appears on screen.
 
-Target length: **five minutes**. Keep the demo application, QA workspace, and Codex task visible in separate tabs. Do not use `artifacts/demo-video/recording-server.mjs` during the live demo; that helper exists only to produce deterministic media assets.
+Target: **4:50 of content with a 10-second safety margin**. The section end times below are hard stops. If native execution is still running at a hard stop, use the named proof tab and continue narrating; do not wait silently or speed-read the close.
 
-## Preflight
+## Preflight — off camera
 
-Run these checks before the session, then leave the repository clean:
+1. Copy [`demo-app/`](demo-app/) to a clean directory named `qa-shop-demo`. Do not copy this repository's `.qa/`, `node_modules/`, or root `package.json`.
+2. Confirm the standalone project contains only `package.json`, `server.js`, and `reset.js`.
+3. Make sure `~/.codex/skills/autonomous-qa` is absent so the install step is real. If this is a repeated rehearsal, uninstall only that exact skill first.
+4. Set `QA_CUSTOMER_USERNAME` and `QA_CUSTOMER_PASSWORD` in the Codex local environment off camera. Never type or display either value during the demo.
+5. Save the clean `qa-shop-demo` directory as a Codex project. Open a task at that project root.
+6. Keep the app stopped. The skill must demonstrate that it can discover and run `npm run dev` itself.
+7. Prepare four browser tabs for fast switching after execution begins:
+   - Codex task;
+   - application target (the skill will open it);
+   - QA workspace (the skill will open it);
+   - this runbook, hidden unless recovery is needed.
+8. Rehearse the browser journey once. Do not reuse its `.qa/` output; replace the demo directory with a clean copy afterward.
 
-```bash
-npm install
-npm run qa-agent -- init
-npm run qa-agent -- validate
-npm run test:coverage
-```
+## On-screen sequence
 
-Open two terminals:
+### 0:00–0:18 — State the promise
 
-```bash
-# Terminal 1 — deterministic application under test
-npm run demo
+Show the clean `qa-shop-demo` project tree and say:
 
-# Terminal 2 — file-backed QA workspace
-npm run ui
-```
+> The developer installs one skill and stays in the application project. They describe the journey; the skill owns setup, app startup, native browser execution, evidence, reruns, and the results UI. It may recover harmless interaction drift, but it cannot rewrite correctness.
 
-Open these pages:
+Hard stop: **0:18**.
 
-- Application: `http://127.0.0.1:3000`
-- QA workspace: `http://127.0.0.1:4173`
+### 0:18–0:45 — Install the skill
 
-Set the demo-only fixture variables in the Codex environment. Do not type them while recording or while screenshots are being captured:
-
-```bash
-export QA_CUSTOMER_USERNAME=demo-customer
-export QA_CUSTOMER_PASSWORD=demo-password
-```
-
-## Five-minute sequence
-
-### 0:00–0:20 — State the promise
-
-Say:
-
-> UI tests usually fail for the wrong reason: a selector changed. This project stores intent and observable outcomes instead. It can recover a harmless interaction change, but it will not rewrite an assertion or normalize a real product or design bug.
-
-Show the QA workspace overview. Point out that tests, fixtures, recent runs, and evidence are one file-backed workspace—not a separate SaaS dashboard.
-
-### 0:20–0:55 — Show installation and validation
-
-Run:
-
-```bash
-npm install
-npm run qa-agent -- init
-npm run qa-agent -- validate
-npm run qa-agent -- spec list
-```
-
-Say:
-
-> Installation is ordinary npm. Init is idempotent, so it creates missing QA files without overwriting edits. Validate applies JSON Schema plus cross-file checks before a browser is opened.
-
-### 0:55–1:25 — Create and inspect a semantic test
-
-Run:
-
-```bash
-npm run qa-agent -- create \
-  "a logged-in customer completes checkout" \
-  --id live-checkout \
-  --env local \
-  --fixture-before login-customer \
-  --expect "Order confirmation is visible"
-```
-
-Select `live-checkout` in the workspace UI and show its YAML. Do not spend time editing prose. Point out the intent, expectation, environment, and fixture—and the absence of CSS selectors, XPath, coordinates, or fixed waits.
-
-Say:
-
-> This YAML is the source of truth. The UI and CLI use the same validator and atomic save path, so there is no browser-only copy of the test.
-
-Delete `live-checkout` after the demo if it is not needed:
-
-```bash
-npm run qa-agent -- select checkout-card --env local
-npm run qa-agent -- spec delete live-checkout
-```
-
-### 1:25–2:10 — Run the stable checkout
-
-Reset the target:
-
-```bash
-npm run demo:reset -- pass
-```
-
-In Codex, submit this exact request:
+In a Codex task, submit exactly:
 
 ```text
-Use $autonomous-qa to run checkout-card --env local. Drive the live app with the native Browser and save the result and screenshots.
+$skill-installer Install https://github.com/sudip-mondal-2002/auto-qa/tree/main/.agents/skills/autonomous-qa
 ```
 
-Show the Browser performing login, cart, checkout, and confirmation. Then switch to the QA workspace; its polling should reveal the completed run automatically. Select it and point out:
+Point out the successful install destination and “available on the next turn.” Move to the already-open `qa-shop-demo` task for the next prompt.
 
-- every original expectation passed;
-- the selected accessible targets are recorded;
-- fixture and step screenshots are attached;
-- the result is `passed`.
+Say:
 
-### 2:10–2:55 — Prove conservative healing
+> Installation copies one self-contained skill. The app does not add an npm dependency, QA script, service, or database.
 
-Change the application, not the test:
+Hard stop: **0:45**. If GitHub is slow, show the repository skill directory and the previously completed installer response; do not burn the demo budget retrying a network call.
 
-```bash
-npm run demo:reset -- drift
-```
+### 0:45–1:05 — Prove the app is clean
 
-In Codex:
+Show `qa-shop-demo/package.json`. It contains only the app's `dev` and `reset` scripts and no dependencies. Do not run `npm install`—this demo app has nothing to install.
+
+Say:
+
+> This is the only project the developer works in. There is no QA package here. The skill carries its runtime, schemas, and reviewer UI with it.
+
+Hard stop: **1:05**.
+
+### 1:05–1:55 — One request sets up and runs QA
+
+Submit exactly:
 
 ```text
-Use $autonomous-qa to run checkout-card --env local again. Keep every expectation unchanged.
+$autonomous-qa Set up QA for this app and verify that a logged-in customer can complete checkout. Require the cart to contain one item, the checkout form to be visible, and the order confirmation to be visible with no error. Reuse login and cleanup fixtures, save screenshots, and open the evidence when the run finishes.
 ```
 
-Open the cart and show that “Proceed to checkout” moved into “Checkout options” and became “Continue to payment.” In the result, show the failed original target, the explicitly equivalent replacement, the single retry, before/after evidence, and the unchanged checkout-form expectation.
+While the skill works, narrate its visible checkpoints instead of its internal commands:
+
+- it discovers `npm run dev` and `http://127.0.0.1:3000`;
+- it creates project-specific `.qa/` files rather than demo samples;
+- it validates the selector-free intent and expectations;
+- it starts the stopped app and connects native Browser;
+- it runs login, cart, checkout, confirmation, and cleanup;
+- it saves screenshots and opens the results UI.
+
+Switch briefly to `.qa/specs/checkout-card.yaml` once it appears. Point only to intent, expectations, environment, and fixtures. Then show the live browser journey.
 
 Say:
 
-> The interaction changed, not the requirement. Healing is allowed once because the replacement is explicitly equivalent and the original expectation passes unchanged.
+> One developer request produced a reviewable semantic test and executed it. There is no CSS selector, XPath, coordinate, fixed sleep, or browser script in the app project.
 
-### 2:55–3:30 — Prove that a real bug stays failed
+Hard stop: **1:55**. If execution is still active, switch to the prepared passing evidence tab and say, “The result only appears after the complete file validates.”
 
-Run:
+### 1:55–2:25 — Inspect passing evidence
 
-```bash
-npm run demo:reset -- functional
-```
+In the workspace UI, select the new `passed` result. Show:
 
-Rerun the same `checkout-card` spec. Show “Order could not be completed,” then open the new result.
+- the unchanged expectations;
+- the observed accessible targets;
+- the fixture and step screenshots;
+- the result path under `.qa/runs/`.
+
+Click **Copy rerun prompt** and show that it copies a `$autonomous-qa` request, not a runner command.
 
 Say:
 
-> The click succeeded, but the required outcome failed. That is not interaction drift, so the agent refuses to heal it and records `functional_regression`. The assertion still says “Order confirmation is visible.”
+> The second UI is only a reviewer over repository files. It does not run an agent. Even its rerun action hands control back to the installed skill.
 
-### 3:30–4:10 — Prove design intelligence
+Hard stop: **2:25**.
 
-Run:
+### 2:25–3:10 — Heal harmless interaction drift
+
+In the `qa-shop-demo` terminal, change only application state:
 
 ```bash
-npm run demo:reset -- design
+npm run reset -- drift
 ```
 
-In Codex:
+In Codex, submit:
 
 ```text
-Use $autonomous-qa to run checkout-design --env local. Compare the declared confirmation checkpoint with its explicit reference.
+$autonomous-qa Rerun the last test. Keep every expectation unchanged and show any healing evidence.
 ```
 
-Show that checkout still functions, but the confirmation action appears before the heading and the approved green success treatment becomes a red warning panel. In the result, show the declared viewport, reference provenance, actual screenshot, and concrete order/style findings.
+Show “Proceed to checkout” moved under “Checkout options” and became “Continue to payment.” Then open the `healed` result and point to the failed original target, explicitly equivalent replacement, single retry, before/after evidence, and original checkout-form expectation.
 
 Say:
 
-> Functionality passed. The separate, explicit design checkpoint failed with reference-backed findings, so the result is `design_regression` rather than an agent opinion.
+> The interaction changed, not the requirement. One equivalent retry is allowed because the same visible outcome passes unchanged.
 
-### 4:10–4:45 — Show inspectability and coverage
+Hard stop: **3:10**.
 
-Run:
+### 3:10–3:45 — Keep a real product bug failed
+
+Reset only the demo app:
 
 ```bash
-npm run qa-agent -- result list
-npm run qa-agent -- last
-npm run test:coverage
+npm run reset -- functional
 ```
 
-Open `.qa/runs/<run-id>/result.json` briefly or keep the result detail visible in the UI.
+Submit the copied rerun prompt again. Show “Order could not be completed,” then the new `functional_regression` result.
 
 Say:
 
-> Specs, results, screenshots, and the last-run pointer are ordinary repository files. The UI is optional. Ninety-seven tests enforce the storage guards, immutable expectations, healing boundary, result taxonomy, design evidence, reset states, and localhost UI.
+> The click worked, but the required outcome failed. There is no interaction to heal, so the agent keeps the regression red and leaves “Order confirmation is visible” untouched.
 
-### 4:45–5:00 — Close on the differentiator
+Hard stop: **3:45**.
+
+### 3:45–4:20 — Keep design separate from function
+
+Reset the demo app:
+
+```bash
+npm run reset -- design
+```
+
+Submit:
+
+```text
+$autonomous-qa Run the checkout design check. Keep functional and design decisions separate, compare the declared confirmation checkpoint with its explicit reference, and show the findings.
+```
+
+Show that checkout functionality succeeds, then show the red panel, reordered action/heading, explicit approved reference, actual screenshot, declared viewport, and concrete findings in the `design_regression` result.
 
 Say:
 
-> That is the complete developer loop: install, describe intent, run through the native browser, recover harmless drift, and keep real regressions visible. Intent survives UI churn; correctness does not get negotiated away.
+> Functionality passed. The separate design check failed only because an explicit reference and the actual screenshot support concrete order and style findings—not because the agent disliked the page.
 
-## What not to do live
+Hard stop: **4:20**.
 
-- Do not run bare `qa-agent run` and imply that it drove a browser. Without the Codex native capability it correctly saves `blocked`.
-- Do not change the YAML between the pass, drift, and functional runs.
-- Do not call the moved control “healed” until the original expectation has passed after the retry.
-- Do not call a visual difference a regression without showing its explicit reference and concrete finding.
-- Do not show or type fixture secrets while screenshots are being captured.
-- Do not wait silently. While Codex is executing, narrate the current fixture, intent, expectation, and evidence checkpoint.
+### 4:20–4:50 — Close on developer experience and correctness
 
-## Recovery lines
+Show the `qa-shop-demo` tree with its generated `.qa/` directory, then return to the workspace summary containing `passed`, `healed`, `functional_regression`, and `design_regression` results.
 
-- If a server is already running: “The local target is already healthy, so the environment resolver reuses it rather than starting another process.”
-- If native Browser is unavailable: “The runtime blocks instead of fabricating execution; I’ll reconnect the native browser and rerun the same spec.”
-- If a run takes longer than expected: open the UI and explain that only completed, validated result files appear.
-- If the design connector is unavailable: show that the declared design check becomes `blocked`, never an unsupported pass.
+Say:
+
+> That is the complete loop from the developer's application project: install one skill, describe intent, let it own execution and evidence, survive harmless UI churn, and keep real product or design regressions visible. The app gained reviewable QA files, not an automation framework dependency.
+
+Stop at **4:50**. Leave the final evidence overview visible for the remaining ten seconds if the event clock requires a full five-minute slot.
+
+## Timing fallback table
+
+| If this slips | Do this immediately | Never do this |
+| --- | --- | --- |
+| Install exceeds 27 seconds | Show the completed installer response and continue at 0:45 | Retry GitHub repeatedly |
+| Initial run exceeds 50 seconds | Use the prepared passing evidence tab at 1:55 | Wait silently |
+| Drift run exceeds 45 seconds | Show moved control, then prepared healed evidence at 3:10 | Change the test |
+| Functional run exceeds 35 seconds | Show the broken outcome and prepared result at 3:45 | Call it healed |
+| Design run exceeds 35 seconds | Show explicit reference and prepared findings at 4:20 | Claim a taste-based regression |
+
+Prepared tabs are recovery aids only; normal presentation uses fresh results. State clearly when a prepared result is being shown because a live run exceeded its window.
+
+## Non-negotiable demo rules
+
+- Do not open the QA implementation repository after the installation chapter.
+- Do not run or display `qa-agent`, `npm run qa-agent`, or `npm run ui` as developer steps.
+- Do not run `npm install` in the dependency-free demo project.
+- Do not type fixture secrets or capture credential fields while populated.
+- Do not change the semantic expectations between pass, drift, and functional runs.
+- Do not call recovery `healed` until the original expectation passes after the one equivalent retry.
+- Do not call a visual difference a regression without an explicit reference, actual screenshot, declared viewport, and concrete finding.
+- A missing native capability or design comparator is `blocked`, never an inferred pass.

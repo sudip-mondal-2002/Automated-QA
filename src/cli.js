@@ -12,6 +12,8 @@ const HELP = `qa-agent — semantic QA workspace and native execution runtime
 
 Usage:
   qa-agent init [--empty] [--root <repository>]
+  qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
+                 [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
@@ -211,6 +213,58 @@ async function environmentCommand(workspace, args, output) {
   throw new QaError("UNKNOWN_COMMAND", `Unknown environment operation: ${action ?? "(missing)"}`);
 }
 
+async function setupCommand(workspace, args, output) {
+  const type = option(args, "--type");
+  const environmentId = option(args, "--environment") ?? "local";
+  const baseUrl = option(args, "--base-url");
+  const startCommand = option(args, "--start-command");
+  const app = option(args, "--app");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected setup argument: ${args[0]}`);
+  if (!type) throw new QaError("MISSING_OPTION_VALUE", "setup requires --type web or --type desktop");
+
+  let target;
+  if (type === "web") {
+    if (!baseUrl) throw new QaError("MISSING_OPTION_VALUE", "web setup requires --base-url");
+    if (app) throw new QaError("INVALID_SETUP_OPTION", "--app is only valid for desktop setup");
+    target = { type, baseUrl, ...(startCommand ? { startCommand } : {}) };
+  } else if (type === "desktop") {
+    if (!app) throw new QaError("MISSING_OPTION_VALUE", "desktop setup requires --app");
+    if (baseUrl || startCommand) {
+      throw new QaError("INVALID_SETUP_OPTION", "--base-url and --start-command are only valid for web setup");
+    }
+    target = { type, app };
+  } else {
+    throw new QaError("INVALID_ENVIRONMENT_TYPE", "--type must be web or desktop");
+  }
+
+  await workspace.ensureDirectories();
+  let environments;
+  try {
+    environments = await workspace.loadEnvironments();
+  } catch (error) {
+    if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
+    environments = { version: 1, environments: {} };
+  }
+
+  const existing = environments.environments[environmentId];
+  if (existing && JSON.stringify(existing) !== JSON.stringify(target)) {
+    throw new QaError(
+      "ENVIRONMENT_EXISTS",
+      `Environment ${environmentId} already exists with different settings; edit .qa/environments.yaml explicitly`,
+    );
+  }
+
+  if (!existing) {
+    environments.environments[environmentId] = target;
+    await workspace.saveEnvironments(environments);
+    output(`Created environment ${environmentId}`);
+  } else {
+    output(`Kept existing environment ${environmentId}`);
+  }
+  output(`QA workspace is ready at ${workspace.qaDirectory}`);
+}
+
 async function resultCommand(workspace, args, output) {
   const action = args.shift();
   if (action === "list") {
@@ -263,6 +317,11 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       const result = await workspace.init({ seed });
       output(`Initialized ${workspace.qaDirectory}`);
       output(`Created ${result.created.length}; kept ${result.skipped.length} existing files.`);
+      return 0;
+    }
+
+    if (command === "setup") {
+      await setupCommand(workspace, args, output);
       return 0;
     }
 

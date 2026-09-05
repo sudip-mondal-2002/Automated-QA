@@ -67,10 +67,10 @@ test("localhost UI serves its shell, workspace summary, run detail, and declared
   assert.equal(summary.value.tests.length, 3);
   assert.equal(summary.value.fixtures.length, 2);
   assert.equal(summary.value.environments.length, 3);
-  assert.equal(summary.value.rerunCommand, "npm run qa-agent -- run-last");
+  assert.match(summary.value.rerunPrompt, /^\$autonomous-qa Rerun/);
   assert.equal(summary.value.tests.find((entry) => entry.id === "checkout-card").lastStatus, "passed");
   assert.equal(summary.value.tests.find((entry) => entry.id === "checkout-design").lastStatus, "not_run");
-  assert.match(summary.value.tests[0].runCommand, /^npm run qa-agent -- run /);
+  assert.match(summary.value.tests[0].runPrompt, /^\$autonomous-qa Run /);
   assert.equal(summary.value.recentRuns[0].explanation, "Checkout completed with visible confirmation.");
   assert.equal(summary.value.recentRuns[1].explanation, "No explanation was recorded.");
   assert.equal(summary.value.recentRuns[1].screenshotCount, 0);

@@ -51,6 +51,93 @@ test("CLI initializes, creates from natural language, and selects the draft", as
   assert.match(await readFile(workspace.specPath(spec.id), "utf8"), /intent: Logged-in customer completes checkout/);
 });
 
+test("CLI setup creates a project-specific web workspace without demo samples", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-setup-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const result = capture();
+
+  assert.equal(await runCli([
+    "setup",
+    "--type",
+    "web",
+    "--base-url",
+    "http://127.0.0.1:3000",
+    "--start-command",
+    "npm run dev",
+    "--root",
+    root,
+  ], result.io), 0);
+
+  const workspace = new QaWorkspace(root);
+  assert.deepEqual(await workspace.loadEnvironments(), {
+    version: 1,
+    environments: {
+      local: {
+        type: "web",
+        baseUrl: "http://127.0.0.1:3000",
+        startCommand: "npm run dev",
+      },
+    },
+  });
+  assert.deepEqual(await workspace.listSpecs(), []);
+  assert.deepEqual(await workspace.listFixtures(), []);
+  assert.match(result.output.join("\n"), /Created environment local/);
+});
+
+test("CLI setup is idempotent and refuses to overwrite environment settings", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-setup-repeat-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const command = [
+    "setup",
+    "--type",
+    "desktop",
+    "--app",
+    "Example App",
+    "--environment",
+    "desktop-local",
+    "--root",
+    root,
+  ];
+
+  assert.equal(await runCli(command, capture().io), 0);
+  const repeated = capture();
+  assert.equal(await runCli(command, repeated.io), 0);
+  assert.match(repeated.output.join("\n"), /Kept existing environment desktop-local/);
+
+  const conflict = capture();
+  assert.equal(await runCli([
+    "setup",
+    "--type",
+    "desktop",
+    "--app",
+    "Different App",
+    "--environment",
+    "desktop-local",
+    "--root",
+    root,
+  ], conflict.io), 1);
+  assert.match(conflict.errors.join("\n"), /ENVIRONMENT_EXISTS/);
+});
+
+test("CLI setup validates required and target-specific options", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-setup-errors-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const cases = [
+    { args: ["setup"], error: /requires --type/ },
+    { args: ["setup", "--type", "mobile"], error: /INVALID_ENVIRONMENT_TYPE/ },
+    { args: ["setup", "--type", "web"], error: /requires --base-url/ },
+    { args: ["setup", "--type", "web", "--base-url", "http:\/\/localhost", "--app", "Example"], error: /INVALID_SETUP_OPTION/ },
+    { args: ["setup", "--type", "desktop"], error: /requires --app/ },
+    { args: ["setup", "--type", "desktop", "--app", "Example", "--start-command", "npm start"], error: /INVALID_SETUP_OPTION/ },
+  ];
+
+  for (const entry of cases) {
+    const result = capture();
+    assert.equal(await runCli([...entry.args, "--root", root], result.io), 1);
+    assert.match(result.errors.join("\n"), entry.error);
+  }
+});
+
 test("CLI surfaces path-based validation errors", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-error-"));
   t.after(() => rm(root, { recursive: true, force: true }));
