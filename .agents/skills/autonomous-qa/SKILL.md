@@ -107,9 +107,12 @@ When `orchestrate` reaches the planning stage it needs a test plan for an applic
 What makes a plan worth generating tests from:
 
 - Cover happy paths, error states, and edge cases. A plan that is only happy paths is a failed plan.
+- Cover all four QA dimensions when the application exposes them: core functionality; constraints and state invariants; interaction feedback and state transitions; and content accuracy, completeness, and cross-view consistency.
+- Decompose every explicit product requirement into at least one binary check. Include latent rules implied by the requirement, such as invalid dates, duplicate actions, permissions, persistence, filtering accuracy, and consistency between list and detail views.
 - Prefer real multi-step journeys over disconnected single clicks. If the crawl shows cart → checkout → confirmation, that is one flow with ordered steps.
 - Every form deserves at least one success case and one rejection case.
 - Plan a guard for destructive or money-moving actions — double submission, confirmation required.
+- Verify observable feedback after actions and verify that saved or selected state survives the transitions the requirement promises. A click that merely completes without an error is not proof that the product outcome is correct.
 - Mark a flow that needs a session with `authenticated` in `preconditions`.
 
 **The assertion rule is the one that matters.** Each expectation carries `prose` — what a human would write — and an optional `assert` predicate that a browser can evaluate. The predicate's value must be a string you have reason to believe literally appears in the rendered page, taken from the crawled titles, headings, link text, and button labels you were given.

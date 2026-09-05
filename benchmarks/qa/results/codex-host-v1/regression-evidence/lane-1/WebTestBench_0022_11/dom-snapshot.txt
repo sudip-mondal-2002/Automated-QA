@@ -1,0 +1,111 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Pantry Planner" [level=1]
+  - paragraph: Smart meal planning that reduces food waste
+- main:
+  - tablist:
+    - tab "Pantry" [selected]
+    - tab "Meal Plan"
+    - tab "Grocery"
+  - tabpanel "Pantry":
+    - heading "My Pantry" [level=3]
+    - button "Add Item" [active]:
+      - text: Add Item
+    - generic: protein
+    - paragraph: Chicken Breast
+    - paragraph: 500 g
+    - text: Expired
+    - button:
+    - generic: protein
+    - paragraph: Eggs
+    - paragraph: 12 pcs
+    - text: Expired
+    - button:
+    - generic: produce
+    - paragraph: Spinach
+    - paragraph: 200 g
+    - text: Expired
+    - button:
+    - generic: produce
+    - paragraph: Tomatoes
+    - paragraph: 6 pcs
+    - text: Expired
+    - button:
+    - generic: produce
+    - paragraph: Onions
+    - paragraph: 4 pcs
+    - text: Expired
+    - button:
+    - generic: produce
+    - paragraph: Garlic
+    - paragraph: 2 heads
+    - text: Expired
+    - button:
+    - generic: dairy
+    - paragraph: Milk
+    - paragraph: 1000 ml
+    - text: Expired
+    - button:
+    - generic: dairy
+    - paragraph: Cheese
+    - paragraph: 200 g
+    - text: Expired
+    - button:
+    - generic: produce
+    - paragraph: Bell Peppers
+    - paragraph: 3 pcs
+    - text: Expired
+    - button:
+    - generic: grains
+    - paragraph: Bread
+    - paragraph: 1 loaf
+    - text: Expired
+    - button:
+    - generic: dairy
+    - paragraph: Butter
+    - paragraph: 250 g
+    - text: Expired
+    - button:
+    - generic: dairy
+    - paragraph: Greek Yogurt
+    - paragraph: 500 g
+    - text: Expired
+    - button:
+    - generic: grains
+    - paragraph: Rice
+    - paragraph: 1000 g
+    - button:
+    - generic: grains
+    - paragraph: Pasta
+    - paragraph: 500 g
+    - button:
+    - generic: pantry
+    - paragraph: Olive Oil
+    - paragraph: 500 ml
+    - button:
+    - generic: other
+    - paragraph: QA Negative Item
+    - paragraph: "-5 g"
+    - button:
+    - heading "Preferences" [level=3]
+    - text: Vegetarian
+    - paragraph: Plant-based meals only
+    - switch "Vegetarian"
+    - text: High Protein
+    - paragraph: Protein-rich recipes
+    - switch "High Protein"
+    - text: Budget Friendly
+    - paragraph: Cost-effective ingredients
+    - switch "Budget Friendly" [checked]
+    - text: Quick Meals
+    - paragraph: 30 minutes or less
+    - switch "Quick Meals"
+    - generic: Plan Duration
+    - combobox:
+      - generic: 5 Days
+    - button "Generate Meal Plan":
+      - text: Generate Meal Plan
+- contentinfo:
+  - paragraph: Pantry Planner — Reduce waste, eat well, save money

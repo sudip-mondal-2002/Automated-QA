@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120013_b17a83c9dc8a51bc3eef0bc7",
+  "specId": "reprobreak-3318",
+  "environment": "local",
+  "classification": "healed",
+  "startedAt": "2026-09-05T12:00:13.000Z",
+  "completedAt": "2026-09-05T12:00:13.130Z",
+  "explanation": "Recovered 1 interaction and verified every original expectation unchanged",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Confirm clearing the Recently Viewed list",
+      "status": "passed",
+      "expectations": [
+        {
+          "expectation": "The Recently Viewed list is empty and its clear button is disabled",
+          "status": "passed",
+          "observation": "Recently Viewed is empty and its clear button is disabled"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "confirmation button \"Ok\" in the open dialog",
+        "role": "button",
+        "name": "Ok"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "healed",
+        "originalFailure": "The exact accessible name OK no longer identifies the confirmation button: page.getByRole('button', { name: 'OK', exact: true }). Previous target: page.getByRole('button', { name: 'OK', exact: true })",
+        "replacement": "confirmation button \"Ok\" in the open dialog",
+        "verification": "The original expectations passed unchanged after recovery",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-checkpoint-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:13.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-3318"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:13.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:13.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Confirm clearing the Recently Viewed list"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:13.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The exact accessible name OK no longer identifies the confirmation button: page.getByRole('button', { name: 'OK', exact: true }). Previous target: page.getByRole('button', { name: 'OK', exact: true })"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:13.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:13.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:13.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "confirmation button \"Ok\" in the open dialog: The original expectations passed unchanged after recovery"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:13.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-checkpoint-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:13.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "Expectations passed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:13.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:13.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:13.120Z",
+      "type": "run_completed",
+      "status": "passed",
+      "message": "Recovered 1 interaction and verified every original expectation unchanged"
+    }
+  ]
+}

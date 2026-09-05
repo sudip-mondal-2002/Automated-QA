@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0020:14",
+  "appId": "WebTestBench_0020",
+  "candidateSha256": "199d58799bb497f70758a8859d69a6e9c668503c8abf0b5a09647a649eaf4f40",
+  "appArchiveSha256": "1627d2452a0849fc93efeba2906cdf038b92839067b87b206a35074ee602481e",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T07:59:39.714Z",
+  "actions": [
+    {
+      "action": "Opened Orders & Fulfillment",
+      "result": "Order rows showed their billing cycle, current status, and contextual action."
+    },
+    {
+      "action": "Clicked Prepare for ord-2 in January 2025",
+      "result": "The row changed from pending to preparing, the action became Ship, and a confirmation toast appeared."
+    },
+    {
+      "action": "Clicked Ship and confirmed Mark as Shipped",
+      "result": "The row changed to shipped, the action became Delivered, shipped count rose to 2, and a confirmation toast appeared."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Admins can move an order to ready-to-ship and then shipped within a billing cycle",
+      "observed": "The January 2025 order progressed pending → preparing (the ready-to-ship state) → shipped, while retaining its cycle in the row."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "The order status transition was exercised end to end on ord-2.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0020_14/after.png",
+      "sha256": "e07aef3de97d74961ec883024363789bb5679f68050e0745dde3eb503fad3bb8",
+      "bytes": 36507
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0020_14/dom-after.txt",
+      "sha256": "35d9064f9be6943e3d974c5124df4dc93a06d92b8af7b6adc997d5112d67733c",
+      "bytes": 4405
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4726; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

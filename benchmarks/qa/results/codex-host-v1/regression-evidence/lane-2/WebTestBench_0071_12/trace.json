@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0071:12",
+  "appId": "WebTestBench_0071",
+  "candidateSha256": "ab4285e28d96749ea8d82d9056b9e67b8cd7b1f43820cb366e19d5e5d51e164d",
+  "appArchiveSha256": "9dc3bafd6623b0badc5496566b7300251dc1c2f23e3c3fdc6408a6be35760c05",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T07:55:58.638Z",
+  "actions": [
+    {
+      "action": "Opened rendered annual report",
+      "result": "All six chapters and chapter navigation controls were visible."
+    },
+    {
+      "action": "Clicked 'Go to Global Impact'",
+      "result": "Page scrolled from y=0 to y=2594 and positioned the Global Impact chapter in view."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Click a corresponding chapter to view its details",
+      "observed": "The navigation control brought the selected Global Impact chapter heading and its detailed metrics/content into the viewport."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "Chapter navigation worked through the rendered UI; the target chapter became visible after the click.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_12/after.png",
+      "sha256": "a103e60f3330216a170bfa30210414011524646365cb7ccc935eea8d478afc9f",
+      "bytes": 122290
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_12/dom-after.txt",
+      "sha256": "f79c791840e49bfdf4bd4c33537afa3e09c0a0a8fb90b0e690ec7b3963ebd4cd",
+      "bytes": 7599
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4721; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

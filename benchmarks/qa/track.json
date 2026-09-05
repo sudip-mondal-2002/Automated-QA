@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "qa-core-v1",
+  "name": "Auto-QA Core",
+  "status": "derived-open-source-track",
+  "officialLeaderboardComparable": false,
+  "lanes": {
+    "generation": {
+      "source": "WebTestBench",
+      "selection": "Two applications in each of seven categories, ranked by SHA-256 with seed qa-core-v1:generation.",
+      "caseCount": 14,
+      "caseIdsSha256": "011253df439751cf6152d208c777c2fd787a7301f786da09d6e3524c17a180be",
+      "candidateSha256": "b4d3df8b6b0491360c22abe7bd2988e67beb75eff9fa95c534122f28625aefc3",
+      "referenceSha256": "a6b6bdb0a3dfb2a63934098e06ee078cda1d2451e46c67a9e6b8605d3e2e723d",
+      "metrics": ["precision", "recall", "f1", "coverage", "judgmentCoverage"]
+    },
+    "regression": {
+      "source": "WebTestBench",
+      "selection": "One hidden Pass and one hidden Fail checklist item for every category by QA-dimension cell, ranked by SHA-256 with seed qa-core-v1:regression.",
+      "caseCount": 56,
+      "caseIdsSha256": "32575cb794e0abf689e5442de9251935c84e4a35bce9d95ac042b63d47ee1078",
+      "candidateSha256": "93527478063ef30e1ceebcb5b8a9f65ed7cc19749131a9b7967324a7405ddff2",
+      "referenceSha256": "ecbff536255c82b8cdcb70d5720fb41e56a15f0b212495dfc0405e8464aa8ebb",
+      "appArchiveManifestSha256": "891b830a9d72f3d1caee6cd9461d233fdb95adf05ea0f090e69d945c4a4fe511",
+      "runnerCount": 3,
+      "positiveClass": "Fail",
+      "metrics": ["precision", "recall", "f1", "specificity", "balancedAccuracy", "accuracy", "coverage"]
+    },
+    "healing": {
+      "source": "ReproBreak",
+      "selection": "The upstream artifact's eight curated reduced-experiment locator breaks.",
+      "caseCount": 8,
+      "caseIdsSha256": "577494fb8d4238fb73ab9f69c3eff170631878c44253755d4756e73f653a7ba1",
+      "candidateSha256": "7dd18a93719401f2fbbce5778ffcdbf6b1e27fb35d2f0d8744a92514e668aaa6",
+      "referenceSha256": "48933d976781bfe075948b5058ef61475125841fe9a1618c8f4c83138cbbb51e",
+      "coreCasesSha256": "c9c94b043ac6e6ab951a671d5aa6d148f8baa77bb9825e571c2daea26445dc7c",
+      "locatorIds": [1224, 1225, 616, 619, 3316, 3318, 5609, 5620],
+      "metrics": ["healRecall", "invalidHealClaimRate", "falseHealRate", "trueRegressionDetection", "unchangedExpectations", "evidenceCompleteness", "equivalenceVerification", "breakReproduction", "safetyScore"]
+    }
+  },
+  "composite": {
+    "method": "Geometric mean of generation F1, the geometric mean of regression F1 and specificity, and healing safety score.",
+    "hardGates": [
+      "Every generated test has a separately identified judge decision with rationale and content hashes.",
+      "Every regression case receives Pass or Fail rather than blocked/missing.",
+      "No claimed drift heal is unsafe or unverified.",
+      "Every matched true-regression control is submitted and remains a functional regression.",
+      "Expectations remain unchanged for every healing case.",
+      "Before/after healing evidence is complete for every healing case."
+    ],
+    "ineligibleScore": 0
+  }
+}

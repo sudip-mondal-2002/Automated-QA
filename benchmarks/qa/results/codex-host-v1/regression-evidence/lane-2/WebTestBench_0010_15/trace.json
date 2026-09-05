@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0010:15",
+  "appId": "WebTestBench_0010",
+  "candidateSha256": "02931adbbe450022ff050569ced7e1a0ec9a50c4a0cd7ab6ded70d2c129b763d",
+  "appArchiveSha256": "939bcd589ad019edfe09912922efa8150f48cb4e68d0d8fdf86fc3b814266027",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4739; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:10:48.739Z",
+  "actions": [
+    {
+      "action": "Created a September 7 reservation at 19:00",
+      "result": "The page changed to a Reservation Confirmed state and My Reservations showed one Upcoming booking."
+    },
+    {
+      "action": "Modified the booking time to 19:30 and saved",
+      "result": "The reservation card updated immediately and a 'Reservation Updated' pop-up notification appeared."
+    },
+    {
+      "action": "Inspected the page header and all navigation/actions",
+      "result": "Only Restaurants, My Reservations, Modify, and Cancel were available; no message center or notification-history control existed."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Status changes update live with a pop-up, and historical notifications are available in a message center",
+      "observed": "Live update and pop-up behavior worked for a reservation modification, but there is no message center or way to revisit notification history."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The notification-history requirement is missing, so the combined expectation is not satisfied.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_15/after.png",
+      "sha256": "110029290907a09190365e878e9d59427e5a4766043f2122c3fa1612a14d4e54",
+      "bytes": 19608
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_15/dom-after.txt",
+      "sha256": "e922393b128e35a3a2f80f87dca663cf2cb9eab9b6c47827ca41705f74f2c25b",
+      "bytes": 752
+    }
+  ],
+  "laneId": "lane-2"
+}

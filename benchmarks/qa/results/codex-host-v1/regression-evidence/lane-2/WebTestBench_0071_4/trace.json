@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0071:4",
+  "appId": "WebTestBench_0071",
+  "candidateSha256": "a374a59b2c963f524332f7c4c9b14d02aeb71c8aac3080959f3cce0f929a9fd8",
+  "appArchiveSha256": "9dc3bafd6623b0badc5496566b7300251dc1c2f23e3c3fdc6408a6be35760c05",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Chrome",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4741; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:14:53.643Z",
+  "actions": [
+    {
+      "action": "Started a fresh Vite instance on a new loopback origin and opened it in a fresh browser tab",
+      "result": "The annual report loaded with no case-origin storage carry-over."
+    },
+    {
+      "action": "Compared rendered chapter navigation with chapter headings",
+      "result": "Exactly six navigation controls were present and mapped one-to-one to the six existing chapters: Year in Review through Looking Ahead; no out-of-range destination was exposed."
+    },
+    {
+      "action": "Clicked Go to Looking Ahead",
+      "result": "The page moved from y=0 to y=6433 and settled with the last chapter heading at top≈134px."
+    },
+    {
+      "action": "Clicked Go to Year in Review",
+      "result": "The page returned to y=831 and settled with the first chapter heading at top=136px."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Navigation controls cannot jump to non-existent chapters outside the first/last boundaries",
+      "observed": "The control set contained only existing chapter destinations, and both boundary controls consistently targeted the valid first and last chapters."
+    }
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Fresh rendered-UI review confirms a closed, one-to-one set of valid chapter destinations with working first/last boundaries.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_4/after.png",
+      "sha256": "ef7daf3d693298648ff98fb9c04a39561df1bae2b2bc34fe19cacdaa304535da",
+      "bytes": 558058
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_4/dom-after.txt",
+      "sha256": "eaf479fbb08b3a1e4635c490b580968bcc6060584ca90c77c1fffb5acc698b9d",
+      "bytes": 8483
+    }
+  ],
+  "laneId": "lane-2"
+}

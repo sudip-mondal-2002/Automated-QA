@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0084:3",
+  "appId": "WebTestBench_0084",
+  "candidateSha256": "35f84022cf734bffac49af375b06c342bb31f219d97b6d76233a36785d118260",
+  "appArchiveSha256": "1313b6fefb9a5692e0f4233635b1a0d92c5832e07505ee5abdb94596c377d0f2",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:05:40.815Z",
+  "completedAt": "2026-09-05T08:06:06.666Z",
+  "isolation": "Unique loopback origin 47113 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Favorited QuantTech Systems."
+    },
+    {
+      "step": 2,
+      "action": "Navigated through its detail page to Favorites and verified it was present."
+    },
+    {
+      "step": 3,
+      "action": "Reloaded Favorites in the same browser session."
+    }
+  ],
+  "observations": [
+    "Before reload, Favorites 1 and the saved QuantTech card were present across views.",
+    "After reload, the badge disappeared and the page showed No favorites yet."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The favorites list survives navigation but not a same-session reload.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_3/favorites-lost-after-reload.png",
+      "sha256": "172507734a85f5d4dac2fac95418e7703344a7b86b0abebe89a1ae59a6d46f81",
+      "bytes": 14456
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_3/dom-snapshot.txt",
+      "sha256": "5c8688eb3ab280c8e5456a4f13432457a4dedcfcda93b852812d6a6741a5ef5f",
+      "bytes": 774
+    }
+  ],
+  "laneId": "lane-1"
+}

@@ -1,0 +1,70 @@
+- list
+- region "Notifications alt+T"
+- banner:
+  - heading [level=1]: Job Tracker
+  - paragraph: 4 applications
+  - button:
+    - generic: Add Application
+- main:
+  - heading [level=3]: Stripe
+  - paragraph: Senior Frontend Engineer
+  - generic: Interviewed
+  - generic: Jan 15, 2024
+  - paragraph: Had a great call with the hiring manager. Technical interview scheduled for next week.
+  - button:
+    - text: Edit
+  - button:
+  - heading [level=3]: Notion
+  - paragraph: Product Designer
+  - generic: Applied
+  - generic: Jan 10, 2024
+  - paragraph: Applied through their careers page. Waiting to hear back.
+  - button:
+    - text: Edit
+  - button:
+  - heading [level=3]: Linear
+  - paragraph: Full Stack Developer
+  - generic: Offered
+  - generic: Jan 8, 2024
+  - paragraph: Received offer! Need to respond by end of week. Great team culture.
+  - button:
+    - text: Edit
+  - button:
+  - heading [level=3]: Figma
+  - paragraph: Software Engineer
+  - generic: Rejected
+  - generic: Jan 5, 2024
+  - paragraph: Position was filled internally. Recruiter suggested applying again in 6 months.
+  - button:
+    - text: Edit
+  - button:
+- dialog:
+  - heading [level=2]: Add New Application
+  - text: Company
+  - textbox:
+    - /placeholder: e.g., Stripe
+  - text: Role
+  - textbox:
+    - /placeholder: e.g., Senior Frontend Engineer
+  - text: Date Applied
+  - textbox: 2026-09-05
+  - text: Status
+  - combobox [expanded]:
+    - generic: Applied
+  - combobox
+  - text: Notes
+  - textbox:
+    - /placeholder: Add any notes about this application...
+  - button: Cancel
+  - button [disabled]: Add Application
+  - button:
+    - generic: Close
+- listbox:
+  - option "Applied" [active] [selected]:
+    - generic: Applied
+  - option "Interviewed":
+    - generic: Interviewed
+  - option "Offered":
+    - generic: Offered
+  - option "Rejected":
+    - generic: Rejected

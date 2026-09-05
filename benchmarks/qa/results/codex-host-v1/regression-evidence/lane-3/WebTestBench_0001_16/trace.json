@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0001:16",
+  "appId": "WebTestBench_0001",
+  "candidateSha256": "5270738798f740d4489380c60416aedde6722a6a3f6914f71ff6d057cd3956ef",
+  "appArchiveSha256": "2ebdb5a9e8a2262cf232971aac91eccdc898a56888650768e69ecda722fe3fef",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:04:38.911Z",
+  "completedAt": "2026-09-05T08:05:38.911Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0001-16.localhost:43182; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened the Sony WH-1000XM5 detail page from the catalog."
+  ],
+  "observations": [
+    "My Review displayed the full review paragraph.",
+    "Key Specifications displayed five labeled values.",
+    "Buy Now exposed the retailer URL https://example.com/sony-xm5."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The product detail page includes the review, specifications, and retailer link.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_16/dom.txt",
+      "sha256": "e9686b17f841f300862ad2769b6cb20c12bd883b44c2a14b53675e78a57ac9eb",
+      "bytes": 3522
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_16/product-detail.png",
+      "sha256": "b86f24007a4a9e025ebeae26b6fc14483f546e656b732702469f84cbdb3cc14a",
+      "bytes": 97619
+    }
+  ],
+  "laneId": "lane-3"
+}

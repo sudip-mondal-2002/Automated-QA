@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0005:9",
+  "appId": "WebTestBench_0005",
+  "candidateSha256": "7552a00c45a0aa8e3f8d91519c483cf4797e758688ca7f41fd49a4e68aefaf5b",
+  "appArchiveSha256": "56f717bb5728bfbecdbe39be2d36264e630ec8815c819660995fa9e90296b719",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:00:34.141Z",
+  "completedAt": "2026-09-05T08:01:20.829Z",
+  "isolation": "Unique loopback origin 47107 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened an existing resume and its Experience tab."
+    },
+    {
+      "step": 2,
+      "action": "Added a third work entry."
+    },
+    {
+      "step": 3,
+      "action": "Entered Start Date 2024-12 and End Date 2024-01."
+    }
+  ],
+  "observations": [
+    "The reversed period remained accepted in the form.",
+    "No conflict or date-range error appeared, and the entry was included in the live preview."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Work history does not enforce a valid chronological time frame.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_9/reversed-work-period.png",
+      "sha256": "e51c95453af1348ae61d1ef4c20d9e505e14844d6a068588bc29b9ff5444de7d",
+      "bytes": 55971
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_9/dom-snapshot.txt",
+      "sha256": "82ebc63788536f6e8e868913c2bc3e15bcc95adce2fc0e3ce67cd910ae6daf9d",
+      "bytes": 3834
+    }
+  ],
+  "laneId": "lane-1"
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0070:9",
+  "appId": "WebTestBench_0070",
+  "candidateSha256": "2da23116d6e89359f951c4595faebc772973bfb4f1ac8f989bfc9d45d79ba5c8",
+  "appArchiveSha256": "fbb9351f2a7c671db26cc4e013a6be4f3b48dc04830f9e57d2bb0be8b72b2811",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:16:14.883Z",
+  "completedAt": "2026-09-05T08:17:14.883Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0070-9.localhost:43191; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Created a named rule set.",
+    "Entered three spaces into New step name."
+  ],
+  "observations": [
+    "The Add Step button remained disabled.",
+    "The workflow continued to show no steps."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Whitespace-only steps cannot be added.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0070_9/after-spaces.png",
+      "sha256": "1184e5f0486d86b244d7b2c80e5b5b9a21722f3480e8cdb0d88380503e578ab9",
+      "bytes": 17034
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0070_9/dom.txt",
+      "sha256": "1ed188d2137559f608ca25a2237d5155cb2624ebf01ddb372b7656707183a7a7",
+      "bytes": 719
+    }
+  ],
+  "laneId": "lane-3"
+}

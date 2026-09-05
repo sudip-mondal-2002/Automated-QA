@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0068:16",
+  "appId": "WebTestBench_0068",
+  "candidateSha256": "43d7570305efc3b59b7e6cd558f8f760285084901144946b772c2fb7f6c206c6",
+  "appArchiveSha256": "e3fd9f29b04c140a76027cb40878ee5681bb1341e03845cda665fd4efc818584",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:20:20.840Z",
+  "completedAt": "2026-09-05T08:21:20.841Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0068-16.localhost:43198; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Added Basic Heat Transfer to comparison and started its instance at 25°C.",
+    "Returned to the editor and raised Beaker Initial Temp to 30°C.",
+    "Returned to Multi-Instance Comparison."
+  ],
+  "observations": [
+    "The instance remained Running across the view switch.",
+    "Avg Temp changed from 25.0°C to 30.0°C and the comparison chart redrew at the new value."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Component state, running behavior, result value, and chart remain synchronized across editor/comparison views.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/after-30c-chart.png",
+      "sha256": "a6537e034c1602792d2882d83ea9141492c8d5dc96e521f45c3b277c15517ffb",
+      "bytes": 21835
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/before-25c-chart.png",
+      "sha256": "863e05944309d8df25702d8754c40ac278ccebf8f738dbab08504800a9af79b2",
+      "bytes": 39046
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/dom.txt",
+      "sha256": "200c8ae474a3fe0dfb8613d59aca8e0d802213da6f9ecf6f8bba59e4815a2647",
+      "bytes": 835
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/transitions.txt",
+      "sha256": "3f6d3ee7d0a1a058fb203fdd5d3bf3ef0196d5ad459bcdbc8af089eb35d496fb",
+      "bytes": 3917
+    }
+  ],
+  "laneId": "lane-3"
+}

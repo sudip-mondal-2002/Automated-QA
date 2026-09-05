@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0005:14",
+  "appId": "WebTestBench_0005",
+  "candidateSha256": "46905dd49cc27d76876acc21732cb498305e4d7e9d51abc11459a231bb9f621e",
+  "appArchiveSha256": "56f717bb5728bfbecdbe39be2d36264e630ec8815c819660995fa9e90296b719",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:06:20.908Z",
+  "completedAt": "2026-09-05T08:15:32.502Z",
+  "isolation": "Primary run used unique origin http://127.0.0.1:47114; independent self-review used new origin http://127.0.0.1:47214. Neither origin had prior case storage. Each Vite process was started fresh and stopped afterward.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Primary run: created, renamed, and edited a resume, then returned to the list."
+    },
+    {
+      "step": 2,
+      "action": "Confirmed the new resume was saved in the list but saw no success feedback."
+    },
+    {
+      "step": 3,
+      "action": "Independent self-review repeated creation/editing, blurred the edited field by switching tabs, and returned to the list."
+    }
+  ],
+  "observations": [
+    "Both new resumes appeared in the saved list with the current updated date.",
+    "Neither run exposed a Save action, saved-state indicator, toast, status message, or populated Notifications region after successful saving."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Two fresh-origin repetitions confirm implicit saving works but the required success feedback is absent.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/saved-without-feedback.png",
+      "sha256": "488500b2343113dddac0cc0443b337e3214d1ec9b4ef7b1bd8367f798ab6dcee",
+      "bytes": 18541
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/dom-snapshot.txt",
+      "sha256": "64d01dad3dfccc3ca38cf46aa8b5e5cbbb4510683f3a630be78e54c45198a995",
+      "bytes": 809
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/self-review-saved-without-feedback.png",
+      "sha256": "60a394d4879adc68059748647e6d511ac3fab1fd3601d9bd216e84b663739a42",
+      "bytes": 18796
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/self-review-dom-snapshot.txt",
+      "sha256": "fead7ee7d7c6b7bbeb44f5a2dbf8274ed58df4edceb965774e23d551b648e12d",
+      "bytes": 816
+    }
+  ],
+  "laneId": "lane-1"
+}

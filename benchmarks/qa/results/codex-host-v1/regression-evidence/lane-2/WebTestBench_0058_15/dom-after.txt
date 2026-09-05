@@ -1,0 +1,55 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Record Matcher" [level=1]
+  - paragraph: Search and match records using configurable matching rules
+- navigation:
+  - button "Input & Search":
+    - text: Input & Search
+  - button "History Records":
+    - text: History Records
+  - button "Matching Rule Settings":
+    - text: Matching Rule Settings
+- main:
+  - text: "Active Rule: Default Rule"
+  - generic: Partial Match
+  - generic: "Coverage:"
+  - generic: 1/4 fields
+  - generic: "Potential:"
+  - generic: 25%
+  - heading "Search Fields" [level=3]:
+    - text: Search Fields
+  - text: Name
+  - textbox "Enter name..." [active]: Alice
+  - text: Email
+  - textbox "Enter email..."
+  - text: Address
+  - textbox "Enter address..."
+  - text: Phone
+  - textbox "Enter phone number..."
+  - button "Search Records":
+    - text: Search Records
+  - heading "Results (3 matches) 0 marked" [level=3]:
+    - generic: Results (3 matches)
+    - generic: 0 marked
+  - generic: John Smith
+  - generic: 100% match
+  - generic: 📧 john.smith@email.com
+  - generic: 📱 (555) 123-4567
+  - generic: 📍 123 Main Street, New York, NY 10001
+  - button:
+  - generic: Robert Johnson
+  - generic: 100% match
+  - generic: 📧 r.johnson@business.net
+  - generic: 📱 (555) 345-6789
+  - generic: 📍 789 Pine Road, Chicago, IL 60601
+  - button:
+  - generic: John Williams
+  - generic: 100% match
+  - generic: 📧 john.w@example.com
+  - generic: 📱 (555) 111-2222
+  - generic: 📍 852 Oak Street, Austin, TX 73301
+  - button:
+- contentinfo:
+  - generic: Records are stored in-memory • 2026

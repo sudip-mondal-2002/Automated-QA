@@ -257,6 +257,70 @@ flowchart LR
     class UI ui;
 ```
 
+## QA benchmark — primary
+
+[`benchmarks/qa/`](benchmarks/qa/) is the project's primary benchmark pack. It
+uses the recent open-source [WebTestBench](https://github.com/friedrichor/WebTestBench)
+for candidate-masked test generation and specification-based defect verdicts, plus
+[ReproBreak](https://github.com/rub-sq/ReproBreak) for conservative test
+self-healing. The fixed core track contains 14 generation tasks, 56 balanced
+Pass/Fail regression checks across seven application categories and four QA
+dimensions, and the eight locator breaks in ReproBreak's official reduced set.
+
+```bash
+npm run benchmark:qa:prepare
+npm run benchmark:qa:heal -- --output <result-directory>
+npm run benchmark:qa:score -- --run <run-id>
+npm run benchmark:qa:verify -- --run <run-id>
+```
+
+Candidate and evaluator files are separated and integrity-checked. The
+published composite is zero unless every generated test is judged, every
+regression case is answered, healing preserves every expectation, all healing
+evidence is present, and the false-heal rate is zero. This is a compact derived
+track over public upstream labels—not an official WebTestBench/ReproBreak
+leaderboard score or a secret holdout. See the [protocol and category
+definitions](benchmarks/qa/README.md).
+
+Recorded disclosed run: **78.1% safety-gated composite**—68.6% custom
+checklist-overlap F1, 37/56 WebTestBench-derived defect verdicts correct (61.2%
+Fail F1, 78.6% specificity), and 8/8 safe heals with all 8 matched behavior
+regressions protected on the deterministic healing conformance core. All 263
+generated checks were separately aligned and all 56 defect cases were answered.
+See the [independently re-scoreable report](benchmarks/qa/results/codex-host-v1/report.md).
+
+## Web-agent capability benchmark — secondary
+
+The secondary maintainer suite includes a frozen, exact-scored 21-task track derived
+from [WebForge-Bench](https://github.com/yuandaxia2001/WebForge). This is a
+**web-agent task-completion benchmark, not a QA benchmark**: it measures whether an
+agent can finish requested browser workflows, not whether Autonomous QA can generate
+tests, heal broken tests, or identify regressions. It covers every
+domain × difficulty stratum with non-stochastic operation-code tasks, filters
+fixtures that reference external hosts, pins the upstream code and dataset
+revisions, and verifies every downloaded Git/LFS asset by content digest.
+
+```bash
+npm run benchmark:webforge:prepare
+npm run benchmark:webforge:serve -- --task <task-id> --port 0
+npm run benchmark:webforge:record -- --run <run-id> --task <task-id> \
+  --answer <operation-code> --actions <count> --elapsed <seconds> \
+  --origin <WEBFORGE_ORIGIN> --evidence <run-evidence-path>
+npm run benchmark:webforge:score -- --run <run-id>
+```
+
+See [benchmarks/web-agent/webforge/README.md](benchmarks/web-agent/webforge/README.md) for the blind
+execution protocol, fixed denominator, evidence requirements, provenance, and
+the boundary between this WebForge-derived track and the official 934-task
+leaderboard.
+
+Recorded demonstration result: **18/21 exact completions (85.7%) on the frozen
+WebForge-derived operation-code-only track**, including 7/7 observed Level-2 cases
+and 5/7 observed Level-3 cases. Final-state screenshot files cover all 21 attempts.
+The published submission hashes and expected-hash commitment make the total
+independently auditable. This disclosed track is now retired for future blind runs.
+See the [published report](benchmarks/web-agent/webforge/results/native-chrome-v2/report.md).
+
 ## Repository development
 
 The commands below are for maintainers of the skill package, not application developers:

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0064:4",
+  "appId": "WebTestBench_0064",
+  "candidateSha256": "015d1cf366c891a902a1e8936bdfc459987aa371a55865ccaec09e6be80d4922",
+  "appArchiveSha256": "3b6b47541e635b5f2a4f6942b629e66e4358dfc60e1e55fb4c9b20aff28c6a7b",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:18:05.219Z",
+  "completedAt": "2026-09-05T08:19:05.220Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0064-4.localhost:43194; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Started a review of My Biology Notes.",
+    "Marked one card Don't Know and one Uncertain.",
+    "Started another review and marked cards I Know It."
+  ],
+  "observations": [
+    "The first summary recorded one Uncertain and one Need Review.",
+    "The second summary recorded two Knew."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "All three review dispositions are actionable and recorded in session summaries.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/after-three-responses.png",
+      "sha256": "5d97059044318a7dcd5b76897f5fddb2ee913986c98b4b529b9e02af19fafcf2",
+      "bytes": 12611
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/dom.txt",
+      "sha256": "588613a19a6cc8c9552535030d4ffb239d9d2e9fe51248f00516dce1218a832f",
+      "bytes": 574
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/transition-snapshots.txt",
+      "sha256": "78af1d7c5d635c0557940b60d88bd567b960d488e72eae5bfd7d87a0cd935fde",
+      "bytes": 2760
+    }
+  ],
+  "laneId": "lane-3"
+}

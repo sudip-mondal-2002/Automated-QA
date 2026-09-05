@@ -1,0 +1,2369 @@
+[
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "CT-01",
+    "referenceId": "1",
+    "rationale": "Both require the homepage to display an identifiable collection of intangible-cultural-heritage items.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "dc03e0155f7a8630fe53dcf1e7c710ca167975cd797237411a9ce1125a16a129",
+    "referenceSha256": "19265420a37d076a51d70a68f3602a69df695c917fd4474100192d52d39be04f"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "FT-01",
+    "referenceId": "4",
+    "rationale": "Filtering the project list by an available project attribute is the observable mechanism for browsing the category-organized collection described by the reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "3ff55a8bbcae6772b9a65b40e0b1f651aeccf9b37dfc3bc6508e7f8e3f06f2d8",
+    "referenceSha256": "411d1485b4c4e124cba096bd6d8e00eac82ff98d7f1caa5cf91c1a0e38d88571"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "FT-02",
+    "referenceId": null,
+    "rationale": "No gold item independently requires sorting the heritage-project list.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b44c6552ce8df7acbdde82da4c2c9c683f1b87831c8631c1544798a163014e3d",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "FT-03",
+    "referenceId": null,
+    "rationale": "This candidate opens an intermediate panorama, whereas the superficially related gold item requires navigation to a dedicated details page.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "a1c9dac46a9d8b2fd5c9b003a020deeac65a734e56135e45c7c15ce866b11bea",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-01",
+    "referenceId": null,
+    "rationale": "No gold item tests drag-based panorama rotation.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "5bdc71d5322a6e396154ec19dc04fc9a8de0d93563c91492611ce2d39bf4bc5f",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-02",
+    "referenceId": null,
+    "rationale": "No gold item tests panorama zoom controls.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d2ed474269bd3145d7171c9a5265a0e1e532f140d8ee89bdd029e8f9edfc6893",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "CT-02",
+    "referenceId": null,
+    "rationale": "No gold item checks continuous perspective calculation or hotspot anchoring while zoomed.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "c72b6cdd01a8d08741d27fa3315e59b344b6620781f75a077b7306fa97f1c059",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "FT-04",
+    "referenceId": null,
+    "rationale": "No gold item independently requires a hotspot information overlay to open inside the panorama.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "4d253dfd79b9909464b1e91ebd200ba948928a98e7d1cc7503a27e6a73617d19",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "CT-03",
+    "referenceId": "9",
+    "rationale": "Both check that a displayed heritage item supplies required identifying fields, specifically title, description, and region.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "ec5bf8169469716588e0239d88d015cc03fb312ac71711886d99dde0eb09af9e",
+    "referenceSha256": "1facebf72a50ce354dd2849c5711476506eadb1c0440f9290eb3eb6e5d04f665"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "CT-04",
+    "referenceId": null,
+    "rationale": "No gold item checks that successive hotspot overlays avoid stale cross-project content.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "9291831c1a9904046952ee4f49f68eba0725aa62d6f0c491ace27f0db3b606c0",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "FT-05",
+    "referenceId": "2",
+    "rationale": "Both require activating a heritage item or its details link to open that same project's dedicated detail page.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "dab20d7f9ebd53631b2fd6235b29725286c09ff23f15cd069e9d24fa3a8ca836",
+    "referenceSha256": "dc501bccc78729dce24e4babeddb152413e5b64cddc5fa653adbc46604cd5acc"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "CT-05",
+    "referenceId": "3",
+    "rationale": "Both inspect the selected project's dedicated page for its identity, full descriptive content, and images.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "57b9bb5126bd0069dae5af9a9d9b1cd969fc9971239ddd2820c03ba4c315d540",
+    "referenceSha256": "15a7947a215fcbe06a020392ae507f1500b187325cd33adf161229ead47e7279"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-03",
+    "referenceId": "3",
+    "rationale": "Browsing among the project's images is a distinct interaction subcheck of the reference requirement that users can view complete project details including images.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "af6021a1928c6c6f003efcef28a99f4dcc7bf278da82f080e078fc0d022901c6",
+    "referenceSha256": "15a7947a215fcbe06a020392ae507f1500b187325cd33adf161229ead47e7279"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-04",
+    "referenceId": "5",
+    "rationale": "This is the most direct candidate for the reference's state-retention requirement because it verifies restoration of the panorama and hotspot state after returning from details.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "dc5b8a1432001e937a2f07c81c4368b37f76c4a14dba91acc925e4c637efd792",
+    "referenceSha256": "c13e3d9968bef96d0ac73759491e7afdd9caff173046189fde98517ccb0579c6"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-05",
+    "referenceId": "5",
+    "rationale": "Preserving filter and sort state across project navigation is a distinct operational-state subcheck of the broad requirement that page state not be lost.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "73b12ab16a7d7f09ea2e1de9f35b88a2e0aa539c2e60c5c7bee6b5cb3651d455",
+    "referenceSha256": "c13e3d9968bef96d0ac73759491e7afdd9caff173046189fde98517ccb0579c6"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-06",
+    "referenceId": "5",
+    "rationale": "Retaining panorama orientation and zoom when an overlay closes is another distinct state-preservation case covered by the broad state-retention reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "081f428b425b6cdd4a0a50db11310e70897bf153ee8ce6a7962410e832b823fd",
+    "referenceSha256": "c13e3d9968bef96d0ac73759491e7afdd9caff173046189fde98517ccb0579c6"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-07",
+    "referenceId": "6",
+    "rationale": "Both explicitly require visible feedback while a panorama loads slowly.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b0372aa7cab78904743dba974d13cde894436696801ee9c06fa64ef392c4620d",
+    "referenceSha256": "07e794c0747cf3dd69d4facaefd3993f4c227336bd17fdf4a10219f568cc230f"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-08",
+    "referenceId": "6",
+    "rationale": "Missing anchor data is a distinct panorama-loading problem for which the broad prompt reference requires corresponding user feedback.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "9226ee1d5311fa81c0849eea595339a647bdc925005623ef1b4990a96616b112",
+    "referenceSha256": "07e794c0747cf3dd69d4facaefd3993f4c227336bd17fdf4a10219f568cc230f"
+  },
+  {
+    "taskId": "WebTestBench_0063",
+    "candidateId": "IX-09",
+    "referenceId": "6",
+    "rationale": "Both explicitly cover visible feedback when an image on the project detail page cannot be opened or loaded.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "4cbb9c127c7dc034554323f52488919d67365b4a7ba82ded9914572aef0e4eb2",
+    "referenceSha256": "07e794c0747cf3dd69d4facaefd3993f4c227336bd17fdf4a10219f568cc230f"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "CT-01",
+    "referenceId": "8",
+    "rationale": "Both inspect the documentation library for its displayed collection of documents or articles.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6e97936781adb7f4235f394b64c43f0938804956dfae96f03f027faadd740c9c",
+    "referenceSha256": "ad952626a2aa89b78ad7c6009dc7bb7125b956071699d9c93d26687076eecdbc"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "IX-01",
+    "referenceId": "7",
+    "rationale": "Visible, understandable controls for each view are a distinct presentation subcheck of the reference requirement to trigger view switching through controls.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "cb94b1e2f71528ee6a28e164581b4f238969de7c4ee799ca33905a8551e9f721",
+    "referenceSha256": "68a161246f14a39dac553ee127613d882110d3d7d132c5297b8a290d1f924862"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Both require selecting one document and switching it into Overview mode.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6c9269c793cd806ded7f286208cd64d8593816ce98498b321c03c9f40f823dc2",
+    "referenceSha256": "7579fca9f986e9a6d12ded97be5347e0695bcb15b783e668c2083a7c716b647c"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "CT-02",
+    "referenceId": "5",
+    "rationale": "The title and key points in Overview mode are a distinct content subcheck of viewing the same document's core content across all three modes.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "c78c67925750d60362b92cf0f76913b8ad5387bb412a9decf53f70e3ce79fe82",
+    "referenceSha256": "5dfb89c4b31c629784a84b4700f7ef7cb22e886089e22061e1acaa5212ecc3a7"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "FT-02",
+    "referenceId": "2",
+    "rationale": "Both require selecting one document and switching it into Standard mode.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "2e3aaa788a917bfb1e54d660a9eeedfe463d29c8aeaca655f6f664bc0a315b3e",
+    "referenceSha256": "dd319a26a2f8f9d3e96f64198b83f8d4aa04e1660c1e309ddcffd1b5a9ce95d3"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "CT-03",
+    "referenceId": "5",
+    "rationale": "Full, legibly formatted Standard-mode content is a distinct mode-specific subcheck of the reference covering the same document's content in every mode.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "3f9cd9376cd6e20084199e0cd98ff766912a38a0cfe4a65aabc19d001d580380",
+    "referenceSha256": "5dfb89c4b31c629784a84b4700f7ef7cb22e886089e22061e1acaa5212ecc3a7"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "FT-03",
+    "referenceId": "3",
+    "rationale": "Both require selecting one document and switching it into Detailed mode.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b33a28c31c002f4c5a4dbcbae1bd14d593b4be53e6a990df9692bb241ea0a8c5",
+    "referenceSha256": "fd4ca23b0f9ce7279625933b074cfae36d73d07c73b3f286dc96697e810313b2"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "CT-04",
+    "referenceId": "9",
+    "rationale": "Both inspect Detailed mode for expanded material such as references and code examples.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d058907fea1cad5b842318bf5bb8a8e1be637fe681e6b7ac1aa59869b698ba09",
+    "referenceSha256": "8c8141448f1d3198e1b31842f55b2172468b8f7b4ab36f0c048025a03597081e"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "CT-05",
+    "referenceId": "5",
+    "rationale": "Both traverse Overview, Standard, and Detail for the same selected document and verify that the displayed content remains that document's content.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "bfce2c2ef440e1ae3b667258b638d66f9b3307a6d083ec6698721d0430c98554",
+    "referenceSha256": "5dfb89c4b31c629784a84b4700f7ef7cb22e886089e22061e1acaa5212ecc3a7"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "IX-02",
+    "referenceId": "7",
+    "rationale": "Both exercise the view-switching controls and verify that the requested view change occurs.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b6e0cdba50adba231c40a05652f2bc69edb9081990b5b7ed23f28a931d9d5fbe",
+    "referenceSha256": "68a161246f14a39dac553ee127613d882110d3d7d132c5297b8a290d1f924862"
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "FT-04",
+    "referenceId": null,
+    "rationale": "This candidate persists a preferred layout, while gold item 4 persists the same open document; those are different observable states.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "f322cef1d2590d2786f8719489eec2d22e9ed2fad36bb087d1328b1877663925",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0099",
+    "candidateId": "FT-05",
+    "referenceId": null,
+    "rationale": "No gold item checks replacement of one saved default-view preference by another.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "079decb03d6d34708c3aff905d01cddba3b08dfa0cb339d22d8b9bd8a5fc1cd2",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Searching by decision name is one of the explicit search fields covered by the reference's combined decision-search requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "9cebbe961218f7159e85513ce258a84a4967f88d86a0dcce724d7594bf8c7239",
+    "referenceSha256": "97b63d2bb59750db2a2d4098fba36358f9ee0b706bc5e4a690236025b4817f5b"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-02",
+    "referenceId": "1",
+    "rationale": "Searching by outcome text is a distinct explicit search-field subcheck of the reference's combined decision-search requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "60a152625562eda931b8b043f94891c8952243d0f600626a646436cee13acf31",
+    "referenceSha256": "97b63d2bb59750db2a2d4098fba36358f9ee0b706bc5e4a690236025b4817f5b"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-03",
+    "referenceId": "1",
+    "rationale": "Searching by condition text is a distinct explicit search-field subcheck of the reference's combined decision-search requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "de0a062b2a5e44882c82d2b41c2bd68ba8a48dd08db95cd9ec28a6dc781b81f4",
+    "referenceSha256": "97b63d2bb59750db2a2d4098fba36358f9ee0b706bc5e4a690236025b4817f5b"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "CT-01",
+    "referenceId": "16",
+    "rationale": "Both explicitly require every search result to display the decision name and outcome or result summary.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "e3c056f84ad5c14097f2586b5262576b2d0f2708eea003cf2f65289b7e00ae69",
+    "referenceSha256": "788f653b95d432f4a8e784a1a2ab461815ca40c5fe753b749ec6069be86322a0"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-04",
+    "referenceId": "2",
+    "rationale": "Both require combined multi-dimensional filters to leave only decisions satisfying all selected criteria.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6b7fb6fd5be1d98ec2eb748fe4fbd6f2abec01c3aae7653867d307ed9e5882b9",
+    "referenceSha256": "82df204d058dd9d416cdb3fc75938d0a548894457de7b140c5224ee1a9ef4c31"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "IX-01",
+    "referenceId": "2",
+    "rationale": "Updating results as filter values change or clear is a distinct interaction subcheck of accurate multi-dimensional filtering.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d846e0b29c6cadda9988c80aeb7e0fb8ec438a81714e5472331fa303199abf41",
+    "referenceSha256": "82df204d058dd9d416cdb3fc75938d0a548894457de7b140c5224ee1a9ef4c31"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "IX-02",
+    "referenceId": "1",
+    "rationale": "Returning no stale decisions when a query has no matches is a distinct boundary subcheck of accurate matching-search results.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "afa19d49c867aa9b360edba168ac012d4f5c85f2bf289561a2b35fd3effd604d",
+    "referenceSha256": "97b63d2bb59750db2a2d4098fba36358f9ee0b706bc5e4a690236025b4817f5b"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "CT-02",
+    "referenceId": null,
+    "rationale": "No gold item specifies behavior for a completely blank search.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6f4dab754d9033d5dba4e49e49a3eb90a2659357cd827c3fd1939f839994c5e4",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-05",
+    "referenceId": "16",
+    "rationale": "Opening the selected decision's full detail view is the navigation subcheck explicitly bundled with result-list content in the reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "7358d816b44655bdddc37fe0631977ba7c7a79b31f863627f47b384f3b284cc8",
+    "referenceSha256": "788f653b95d432f4a8e784a1a2ab461815ca40c5fe753b749ec6069be86322a0"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "CT-03",
+    "referenceId": "17",
+    "rationale": "Both inspect a decision detail page for the specific conditions and detailed final result.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d933cdd59a2c3dad50d1ed03234eae89432246edd81efac2176ecacf7a94257f",
+    "referenceSha256": "917712b1b48917fb67aa4d8d2da95c410bfbcda389d3ec8eca6b9617c2c24fe5"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "CT-04",
+    "referenceId": "17",
+    "rationale": "Consistency of the name and outcome between the result and full record is a distinct integrity subcheck of the fields required on the detail page.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "55df0201dcfd0d5fb8a0392e2e4c661e56edc5b85f953fac60ec2cedcfd9f1d9",
+    "referenceSha256": "917712b1b48917fb67aa4d8d2da95c410bfbcda389d3ec8eca6b9617c2c24fe5"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "IX-03",
+    "referenceId": null,
+    "rationale": "No gold item checks restoration of active keyword and filter state after returning from details.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "97f6c453b9e6fe7a537d519ececfc189fc56437fd35dc0dc4efd4a6f8833b031",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-06",
+    "referenceId": "3",
+    "rationale": "Recording a submitted query and showing it in history is a distinct sub-behavior of the combined history recording and reuse requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b13b3b661e0c4cddac31df1dc645446c4029958b2a494595a3ab4b9cbdc8166f",
+    "referenceSha256": "f7ed64f710f90e3ea68952826d919d10327d5c01851d1a341cb7f50fb9c2a1af"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-07",
+    "referenceId": "3",
+    "rationale": "Both require activating a prior history entry to restore and quickly reuse its keyword or filter criteria.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "67df5533dcf7e7681a9097a6ebd04df2ec63d7086452429230419ff3c293d825",
+    "referenceSha256": "f7ed64f710f90e3ea68952826d919d10327d5c01851d1a341cb7f50fb9c2a1af"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-08",
+    "referenceId": "4",
+    "rationale": "Both require adding a decision to a personal favorites or bookmarks collection for later management.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "c1f0f87c54e71326cd9eb98bbba1ca08b73d2218a710756580be10661e963158",
+    "referenceSha256": "b2c165b22f7f12fc008952b6e34289630574876ad6703c3526f61ed31661dcd2"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "CT-05",
+    "referenceId": null,
+    "rationale": "No gold item tests deduplication when the same decision is bookmarked repeatedly.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "9e591cbaa3d07b04057a7a0da66b6d968c92dba6dc5664b4680d7ec40dce48a9",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-09",
+    "referenceId": "4",
+    "rationale": "Removing a saved decision through favorite management is a distinct operation explicitly included in the broad favorites requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "db22e381ca544246983d58a204c6a9cad5913a413341bd5a4436de8c1b261109",
+    "referenceSha256": "b2c165b22f7f12fc008952b6e34289630574876ad6703c3526f61ed31661dcd2"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-10",
+    "referenceId": "8",
+    "rationale": "The candidate's Excel case requires batch upload, parsing, and creation of all contained decision records, matching the Excel-import reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b4159adc6efabd775609c130d7b7cdf5bf7b65b00fed09b46d42a5c80f9f839b",
+    "referenceSha256": "c3632fbaf69d45052655cbf0032339af2b7841fddb9b28fc6ba9be02225dffb5"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "IX-04",
+    "referenceId": "14",
+    "rationale": "Both reject malformed or unsupported import data with a clear error while preventing the invalid import.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "fedac4e37ba05a607d3b8d96ce48b8205a70910e0c81be539832e86614c6e39f",
+    "referenceSha256": "df5b7991caee3241dd571cbb4369fb443042079e8132a270977ad154e07ba4c5"
+  },
+  {
+    "taskId": "WebTestBench_0096",
+    "candidateId": "FT-11",
+    "referenceId": "5",
+    "rationale": "The candidate's Excel case batch-exports selected decisions with recognizable name, result, and condition data, matching the Excel-export reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "c1e86b1c7e00d7006872aa784555e4cb029552ae1cac00477d7f3bbe119e40e9",
+    "referenceSha256": "01767b21f33be2f65e98b7e90dc943237a94842592410c691859d3f77d58bd3f"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-01",
+    "referenceId": null,
+    "rationale": "The gold checklist does not independently require free-text keyword search.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "33dc17d84befd3ac922e6c4f2c1b862575c38dae7b3fd618346d06f9b49dc3e8",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "CT-01",
+    "referenceId": "13",
+    "rationale": "Both require pet search results or cards to identify the shelter associated with each pet.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "23c13ddf02b49198cad10e6371d6838fcab216ed3d9b5f8733e7572c7ecb7b2d",
+    "referenceSha256": "4dcafa5d1e8d47c4fb1f0ea3e5868e3fbd9f73c01778ef16e49d465fcbe82001"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-02",
+    "referenceId": "1",
+    "rationale": "Species is one of the explicit pet-filter dimensions covered by the reference's combined filtering requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "89a4dab32a17f242cecb764b3b901facb6d2a9709fe14f0b4bed8a7c762b3c96",
+    "referenceSha256": "d4e1edcdfe2068f20da695b22287861b4700ac4a6a25b15ff09722aadbe1c421"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-03",
+    "referenceId": "1",
+    "rationale": "Age-range filtering is a distinct filter-dimension subcheck explicitly covered by the broad pet-filtering reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "da088422a0eaf607793b04fc4f4092019a4ae9d38565275cd4ca4ce52935d5c0",
+    "referenceSha256": "d4e1edcdfe2068f20da695b22287861b4700ac4a6a25b15ff09722aadbe1c421"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-04",
+    "referenceId": "1",
+    "rationale": "Size filtering is a distinct filter-dimension subcheck explicitly covered by the broad pet-filtering reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b0517aa3e9106359eca0c784623346a04eba46155bf34fe2d81443a8c1bd47dd",
+    "referenceSha256": "d4e1edcdfe2068f20da695b22287861b4700ac4a6a25b15ff09722aadbe1c421"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-05",
+    "referenceId": "1",
+    "rationale": "Suitability with children is a distinct compatibility-filter subcheck explicitly covered by the broad pet-filtering reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "bdd6f3b3df740c170f59a6cc544da33021ba9f824534da41debb15099ba09cc6",
+    "referenceSha256": "d4e1edcdfe2068f20da695b22287861b4700ac4a6a25b15ff09722aadbe1c421"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-06",
+    "referenceId": "1",
+    "rationale": "Suitability with other pets is a distinct compatibility-filter subcheck explicitly covered by the broad pet-filtering reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "19f2b57fd0f0085a8d4a958eb62e52e883b517e82fb219453af11e9bd8cdd31c",
+    "referenceSha256": "d4e1edcdfe2068f20da695b22287861b4700ac4a6a25b15ff09722aadbe1c421"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-07",
+    "referenceId": "6",
+    "rationale": "Both require results from combined filters to strictly satisfy every active criterion.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "483dfc0beef95223361cd881917b3e7a2bc49c9fd22006de22966812ed8fb9ab",
+    "referenceSha256": "9a3c1deb899c13126b1d99069d1c147b901c969926d633b11814f9ec35c86521"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "IX-01",
+    "referenceId": null,
+    "rationale": "No gold item checks clearing all filters and restoring the broader result set.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "3419f10a0e57bb9224057bebcf55c7dfde63ff704a59714753387bb3616b6c11",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "IX-02",
+    "referenceId": "6",
+    "rationale": "Showing no stale cards for a valid filter combination with zero matches is a distinct boundary subcheck of strict combined-filter accuracy.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "2db9854d4a4fe5de99c3fdd23ef9e4f36a4a39ae9d274d45afb80fec63a2e7ab",
+    "referenceSha256": "9a3c1deb899c13126b1d99069d1c147b901c969926d633b11814f9ec35c86521"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-08",
+    "referenceId": "2",
+    "rationale": "Relevance ordering is one of the two distinct sorting modes explicitly included in the broad sorting reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "8f31a3ab04e9794d1d7b57b1bb37dd9115ec535c61444ecaabcdde7c1a78855f",
+    "referenceSha256": "33587c41546ee9c09a66824f1a65083e9be3b0f6261cc14b66d4a8db9524e829"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-09",
+    "referenceId": "2",
+    "rationale": "Both require sorting matching pets by publication or listing time, and the candidate verifies the resulting chronological order.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "7d84cebd7c63cd35fe81d4f8aad895dd35e6e01f970f7b3618eea3ab8f7bfc0d",
+    "referenceSha256": "33587c41546ee9c09a66824f1a65083e9be3b0f6261cc14b66d4a8db9524e829"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-10",
+    "referenceId": "3",
+    "rationale": "Opening the selected pet's detailed profile is the navigation subcheck explicitly bundled with profile content in the reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "41a59337ec2fd17d2559cd2b0576b15960da1101c55a44506a31b80fee673561",
+    "referenceSha256": "25b444776e9240b8e658d7f31994dc668937771120dc59b3534b29f75e43ff9b"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "CT-02",
+    "referenceId": "3",
+    "rationale": "Both inspect the selected pet's detail profile for pet-specific photos and a detailed descriptive profile.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6862a9530365ff7acdbb05d9a11ba41a3ee1b303fea4234251ed58301471d5db",
+    "referenceSha256": "25b444776e9240b8e658d7f31994dc668937771120dc59b3534b29f75e43ff9b"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-11",
+    "referenceId": "4",
+    "rationale": "Both require saving a selected pet into a personal favorites list for later retrieval.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "7471f732c2fdca43e7de48684a72942b332e0b89a40135213a1acf3b9c5950b5",
+    "referenceSha256": "6ea4d4dc2c4350ba6e8949ff6f68112a470fab802efee0c24589b8fe360854bf"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-12",
+    "referenceId": null,
+    "rationale": "No gold item independently requires removing a pet from favorites.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "dbaa361134664eff03f298eb983fb95a88da4926bf85a32e91f426af4f7d07ad",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "IX-03",
+    "referenceId": "4",
+    "rationale": "The saved pet remaining retrievable after browsing elsewhere is a distinct persistence subcheck of saving pets for quick later retrieval.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d3aa81a21d10c2ccfca7725c7632732ecd76285bf4076c644a36fef7808190c0",
+    "referenceSha256": "6ea4d4dc2c4350ba6e8949ff6f68112a470fab802efee0c24589b8fe360854bf"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "CT-03",
+    "referenceId": "7",
+    "rationale": "Both require validation of required identity and contact fields before an adoption inquiry can be sent.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "81c14ceccefa32774f254bc4e7d61e42c17d8d89819d3d82942ca62d740ae025",
+    "referenceSha256": "e57649075602de5266750d65a1e842f29153104c00afb3584f86cbf1ea6680f0"
+  },
+  {
+    "taskId": "WebTestBench_0037",
+    "candidateId": "FT-13",
+    "referenceId": "5",
+    "rationale": "Both require completing and sending a valid adoption inquiry from the selected pet's detail page.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "4de3432067d28b1c774f598f29b382fd133e07addfc30445277dca80b65928d4",
+    "referenceSha256": "73865dbeede503da06c340555f21c7f0c3aae627f8e8001d273a642555838fd6"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Both require successfully adding a pantry ingredient with its name, quantity, and shelf-life or expiration information.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "fe80ed6c9b930df9888e444c8b84efd6414e0755a2cdbb4973d05f4ea0011486",
+    "referenceSha256": "47f7805c4fcf80db730af114d3dc2825cb35dc2f492540c14b9781caf762a62d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-02",
+    "referenceId": "1",
+    "rationale": "Successfully adding an ingredient without shelf-life information is a distinct subcheck of the reference's optional-expiration requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "0906ae564ecf66f7becd47feb04e6be2abe755c9300294ed058644295c419b67",
+    "referenceSha256": "47f7805c4fcf80db730af114d3dc2825cb35dc2f492540c14b9781caf762a62d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "CT-01",
+    "referenceId": "11",
+    "rationale": "Both validate pantry input and reject nonpositive or otherwise invalid ingredient quantities.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "c02c445fe90bb928db22688657a601bfd44a313e9c7420ce43dccb3b58e3a347",
+    "referenceSha256": "600a093e87f7c444ac698d44b0caf3721f682b60866fe9687ed30f7081b390be"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-03",
+    "referenceId": "1",
+    "rationale": "Editing quantity and expiration values is a distinct pantry-record operation explicitly included in the broad CRUD reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "56f4198954034c3b88a8d64b13ec943223df41fb3a8d9ab65676989455a57aa4",
+    "referenceSha256": "47f7805c4fcf80db730af114d3dc2825cb35dc2f492540c14b9781caf762a62d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-04",
+    "referenceId": "1",
+    "rationale": "Deleting a pantry ingredient is a distinct pantry-record operation explicitly included in the broad CRUD reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "b6f78543d2c90f4f7bd6dedd53f519ba6dce1ba635418c5a8f2566d6d5fa8946",
+    "referenceSha256": "47f7805c4fcf80db730af114d3dc2825cb35dc2f492540c14b9781caf762a62d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-05",
+    "referenceId": "4",
+    "rationale": "Both require automatic generation of a multi-day meal plan from the current pantry state.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "104ef7a9e653cbf0b9ff6d7fa812f2eee9a0f2fa512488a7f53e47c3d55e1d38",
+    "referenceSha256": "8e968a4387866a120700da06ddc81a573cbc793b40af8de81db9d9adb092a771"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "CT-02",
+    "referenceId": "17",
+    "rationale": "Both require each planned recipe or meal to identify its ingredients with precise numeric quantities.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "74aa6a641f19155e231ab43529334393d46d95b3c69dfaffd845df342c092189",
+    "referenceSha256": "19d47cfc00ae01c5a4adc045777e4d4a4448bffb39a620d2012ffd03a0d556d7"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "CT-03",
+    "referenceId": "5",
+    "rationale": "Reconciling recipe demand with pantry stock and representing the exact deficit is a distinct calculation subcheck of the missing-ingredients grocery list requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "20471768b0ebb56acb421219429901360b5b6440ee3dff02a91a47454cdea2de",
+    "referenceSha256": "1cd537abf388b5e1e40a286b4a254e8cf361ecb189ecf62c0f98162f79be9f30"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-06",
+    "referenceId": "4",
+    "rationale": "Prioritizing a sooner-expiring compatible ingredient is the expiration-priority subcheck explicitly included in the broad meal-plan generation requirement.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "641fd7d1fafd0aa8d0d69875bb2a8fe52662a9d6cba945fecd1bc9ea95c7226c",
+    "referenceSha256": "8e968a4387866a120700da06ddc81a573cbc793b40af8de81db9d9adb092a771"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-07",
+    "referenceId": "3",
+    "rationale": "Vegetarian output compliance is a distinct preference-specific subcheck of accurately applying dietary preferences.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "452e3eb692d1207aba0ffbd98470019f83eda2f3d24b72dc8cd5242d2cdac370",
+    "referenceSha256": "53d25afa4be7c0f7afc63fed1855598529a043658264a5a6912602b5d01d5469"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-08",
+    "referenceId": "3",
+    "rationale": "High-protein output compliance is a distinct preference-specific subcheck of accurately applying dietary preferences.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "64e8aa74a0092e4281cc1d1c7b3815ce463a433899009763a3401f1ed1f9c409",
+    "referenceSha256": "53d25afa4be7c0f7afc63fed1855598529a043658264a5a6912602b5d01d5469"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-09",
+    "referenceId": "3",
+    "rationale": "Budget-friendly output compliance is a distinct preference-specific subcheck of accurately applying dietary preferences.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d2dda538fad534706ee3f49d19b39d158d2a18ca00decc3962edcb958d50f1c1",
+    "referenceSha256": "53d25afa4be7c0f7afc63fed1855598529a043658264a5a6912602b5d01d5469"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-10",
+    "referenceId": "3",
+    "rationale": "Both require selected dietary preferences to be applied accurately to generated meals; this candidate additionally verifies combined selections.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6cbdb20a50d0653ce2a400d74d236035f6a08b23ee3f2466154d41f444e54fec",
+    "referenceSha256": "53d25afa4be7c0f7afc63fed1855598529a043658264a5a6912602b5d01d5469"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "FT-11",
+    "referenceId": "5",
+    "rationale": "Both generate a missing-ingredients shopping list from plan requirements and current pantry shortages.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "d4d1f35552ccb67eb81c7ecbc560fb58fb6fcc5c299330275627a689d2e88bab",
+    "referenceSha256": "1cd537abf388b5e1e40a286b4a254e8cf361ecb189ecf62c0f98162f79be9f30"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "CT-04",
+    "referenceId": "5",
+    "rationale": "Excluding fully stocked ingredients is a distinct correctness subcheck explicitly contained in the grocery-list reference.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6bff7c671c97f3aa9ab94f1031bcd0fa84108010efbdfe2dc17063ca96c0bfd9",
+    "referenceSha256": "1cd537abf388b5e1e40a286b4a254e8cf361ecb189ecf62c0f98162f79be9f30"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "IX-01",
+    "referenceId": "6",
+    "rationale": "Both lock selected meals, preserve them during regeneration, and regenerate the remaining unlocked portions.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "ffd172d0a4c19956c043b2d98e3608b24a955167d1f7f0541ba7e07318eccc03",
+    "referenceSha256": "86e8bdfbbd007e336859dcec435eae5f11e782c0ef311901c73e74eee4a18c4d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "IX-02",
+    "referenceId": "13",
+    "rationale": "Both allow an entire date to be locked so all meals on that date remain unaffected by later regeneration or adjustment.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "cf347f7bc7285b15b085444586a92056279c4a996f9ead274e1e5e2b9381d6e8",
+    "referenceSha256": "f10bc06806a26edbd6cf59467e71e5651a1dc979173baba5718d3e09b769da4c"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "IX-03",
+    "referenceId": null,
+    "rationale": "No gold item tests unlocking content and restoring its eligibility for regeneration.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "6c232a1daa652a738b439ae46f47e7bb0107a8755726d7d932801445c7778c90",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "IX-04",
+    "referenceId": "6",
+    "rationale": "Retaining pantry, preference, duration, and lock context while regenerating only the unlocked remainder is a distinct state-continuity subcheck of partial plan regeneration.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "3ded95b867447643b57e63664b0a83a0b6d10c1edf7f0a11a34aca0aaf95c344",
+    "referenceSha256": "86e8bdfbbd007e336859dcec435eae5f11e782c0ef311901c73e74eee4a18c4d"
+  },
+  {
+    "taskId": "WebTestBench_0022",
+    "candidateId": "IX-05",
+    "referenceId": "5",
+    "rationale": "Recalculating missing quantities after recipes change is a distinct dynamic-consistency subcheck of keeping the grocery list based on the current meal plan.",
+    "judge": "independent-judge-1",
+    "candidateSha256": "7bc9867a2755c610808ed207b2fe2063eda5ea7d99c591acbb8d5e8b44be257f",
+    "referenceSha256": "1cd537abf388b5e1e40a286b4a254e8cf361ecb189ecf62c0f98162f79be9f30"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Direct match to searching competency models by job title and returning matching results.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "3d73373b8a319c1e5a238780cb38396ac29aaf16496ae67c6cdcd91c50b76174",
+    "referenceSha256": "6cf184abd2da825226fb3eeb33a2814d9db5bc4366356aceef75446807c9ca6f"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-02",
+    "referenceId": "1",
+    "rationale": "Distinct subcheck of broad gold item 1: this candidate verifies keyword-based search, while FT-01 verifies job-title search.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "8d62735be945e3ce47a1c2f28719718731b3525f28a8f6ae2e5bbcf8e1dda9df",
+    "referenceSha256": "6cf184abd2da825226fb3eeb33a2814d9db5bc4366356aceef75446807c9ca6f"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-03",
+    "referenceId": "2",
+    "rationale": "Direct match to selecting a search result and opening that model's detail page.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4e33870308538e1bdb091cbe35d82e0d41c196654191ef3a6271bb91ed3156ef",
+    "referenceSha256": "71bc14b2336bf8558baa847069a1cd1d39f1b2b8a19b48a7539ae9ec1f1a17c1"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CT-01",
+    "referenceId": "15",
+    "rationale": "Direct match to presenting competencies and directed weighted relationships as a graph on the detail page.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "97a3fd39871c8b31afe3a080bcc800b8f8c120778bc6a36191028be3919ac256",
+    "referenceSha256": "df4bc87e3af380fc37325d0cf4d1e0d866a36871737d39e45fe43535bcf2408a"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CT-02",
+    "referenceId": "15",
+    "rationale": "Distinct correctness subcheck of gold item 15: the directed weighted graph must represent the currently selected model rather than retain another model's nodes and relationships.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4d98863104d00b8c93bae6e63807d66d95c71b84d4b0711a6adaa4ca08a03600",
+    "referenceSha256": "df4bc87e3af380fc37325d0cf4d1e0d866a36871737d39e45fe43535bcf2408a"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-01",
+    "referenceId": null,
+    "rationale": "The candidate changes a competency level with a level control; gold item 3 instead changes graph hierarchy/layout by dragging nodes.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "8b2639f6172c8cf056e8250d98258feaf63e19f4f60a6cfd21fed0b7b9eab055",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-02",
+    "referenceId": "4",
+    "rationale": "Direct match to editing an edge weight and immediately reflecting the changed weight in the graph.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "30e2f1c5a289018ff2e4b9630ebe5d13eb9315dc8a9914127b471969e89bac1e",
+    "referenceSha256": "1aa8486a4fda276f5d4535cc21be75d2e7e8d98188010921bf8edd64933be1fe"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-03",
+    "referenceId": "5",
+    "rationale": "Direct match to disabling and re-enabling competency nodes with visible state changes.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "28cdbc992dabcff536373c78424292dfe5c5a465905080cdb6b1489e0700337b",
+    "referenceSha256": "76950efc4ad6de7032b8eb0d112ec412da4ee5e7f525458c10dce11b162071da"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CS-01",
+    "referenceId": null,
+    "rationale": "No gold item defines or tests an allowed numeric range for competency levels.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "86cfd88f71a3b2bd5e9f57026370ab253cfffdf6c7651ec29fa845bcf6eedaf5",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CS-02",
+    "referenceId": null,
+    "rationale": "No gold item specifically validates nonnumeric or out-of-range relationship weights.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "78367b486ad2c8287b7f76a2f29cf730c40e59029240e342daa2ce88696476f5",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-04",
+    "referenceId": "13",
+    "rationale": "Direct match to real-time competency coverage recalculation after a graph change.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "fbfb654c1330aafc5e86241c54b0ff1d3419d581e28eba29e66707fb93f5d14f",
+    "referenceSha256": "c5a96d8067b3c09e26ed0096fb3eee81b3dd4a3448d64ccf8ca2c61ee0b9fce9"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-05",
+    "referenceId": "16",
+    "rationale": "Direct match to real-time critical-path recalculation after a structural change.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "8c558e535edebf939b1b78f0e008fd3afc0274236700164ab7d639c5e12c1442",
+    "referenceSha256": "508ee1da3abab99c6fa64116dda7f8fcc7413af7175a23ffd98b2a314213c025"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-06",
+    "referenceId": "17",
+    "rationale": "Direct match to real-time risk competency gap analysis after a structural change.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4521b02d164d0433a3a98e75d1a04299b00d0a4fc58cdaecb7b13ee2381b8902",
+    "referenceSha256": "613bdcbdeade1e5597af3e5ea87c64711edc6a771a3677891ee8f00d76a5ecec"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-07",
+    "referenceId": "18",
+    "rationale": "Direct match to immediately showing a problem alert when a graph change creates a problem.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "7efb95736e4b2631973efa1fa69bd5d2d955fd20fca34bcc6c5798fffddc5f75",
+    "referenceSha256": "a0b9cd8f9a5527a9494c10a527f5b1e3087ac850acbceaeaae7e7ae278b2f752"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CS-03",
+    "referenceId": null,
+    "rationale": "This bundles consistency of four derived analyses across sequential edits; no single gold item states that combined behavior and the individual analysis items are matched separately.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "389af04ac2df9d58314fcceddee51fdabe91696d15e1f8bee56d476a095329ba",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-04",
+    "referenceId": "7",
+    "rationale": "Direct match to retrieving a general template and loading its graph as a model for editing.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "0a39128b96510829843240e168f208f9b0fb78b8235d83be7fb9bb621175dcd1",
+    "referenceSha256": "cf0897d45e72902803996077dcf811d6f987aed86b27e03a13180eb7eb453730"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-05",
+    "referenceId": "8",
+    "rationale": "Direct match to saving an edited model as a named custom template and retrieving it from the library.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "656ad6c5a97f4a4b50e9b20bc9325b797ec1b059084850da42ffeb18f5a1bc89",
+    "referenceSha256": "3f2bc0b5d1895f94e9fbab4226b1bb1e08f6e15589bb7e571c9b804a06fdd926"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "CS-04",
+    "referenceId": null,
+    "rationale": "Gold item 8 requires naming a saved template but does not state empty-name validation as a separate observable constraint.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "5130808fb9836ab2112ac4aaef025d18d663a3cfeed93be152f122e583a8eef6",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "FT-06",
+    "referenceId": "9",
+    "rationale": "Direct match to recruitment, training, and promotion simulation modes with distinct scenario results.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "782870f0614415408b8169283667d0044b0c02e48dd7076758749eb9cf107b8b",
+    "referenceSha256": "5fe242152f3fa072f201564e66f9e607252da3fb1d1a660b8e6c0e65bf7cd783"
+  },
+  {
+    "taskId": "WebTestBench_0097",
+    "candidateId": "IX-08",
+    "referenceId": "10",
+    "rationale": "Direct match to rerunning a scenario after model adjustments and showing their changed impact.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "d78204ba883b82212727a272f3cf789a325eba96b58019a61e012ed09818fc55",
+    "referenceSha256": "70741be272381356e611a8a5b3851d3a3573458a960713cda88c9de13428798c"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Distinct subcheck of broad gold item 1: this verifies browsing the restaurant list, separate from opening and inspecting a restaurant detail view.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "6ab988627afc4874351222905e0c8a8771d0ec38dcbfaed1a4a0ff3ba66e7651",
+    "referenceSha256": "6a4f3c485009a6cdfe599994779c08dab4be21b6e48504d29e9b8c15d547734a"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-02",
+    "referenceId": "1",
+    "rationale": "Distinct subcheck of broad gold item 1: this verifies selecting a listed restaurant and opening its detail view.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "f1879dc6599cd77ea7f24381da6c7aa4d0d64fdc686d9fde4b5382bfeec774c0",
+    "referenceSha256": "6a4f3c485009a6cdfe599994779c08dab4be21b6e48504d29e9b8c15d547734a"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CT-01",
+    "referenceId": "1",
+    "rationale": "Strongest match to the gold requirement that restaurant details show cuisine type and average price.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4ce5de7a7c6ab355008ca5676e9aa2aae460252a6a050a33ab88a9fdc68e3171",
+    "referenceSha256": "6a4f3c485009a6cdfe599994779c08dab4be21b6e48504d29e9b8c15d547734a"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-03",
+    "referenceId": "3",
+    "rationale": "Direct match to creating a reservation by selecting date, time, and diner count and receiving a booking result.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "fd09ffc9510323449ec8503b95d2f202ded09a4ef7b884f36cd37fb9430c0988",
+    "referenceSha256": "dc874fe2e5f651094b7f0cc5065e520b184e5c8c388b599fb142ef0fc2d4a48e"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-01",
+    "referenceId": "3",
+    "rationale": "Distinct constraint subcheck of gold item 3: the required date, time, and diner-count selections must be present before the reservation can be submitted.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "89da063d2c08cd8ecf9497d2ef8c6cdf5c168ee006a0020981a6d897f50a59df",
+    "referenceSha256": "dc874fe2e5f651094b7f0cc5065e520b184e5c8c388b599fb142ef0fc2d4a48e"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-02",
+    "referenceId": "7",
+    "rationale": "Direct match to preventing reservations for past dates or times.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "88f967e965d24a93f950cc9b3478176e930d5b26ce041558302e2c03685ea1af",
+    "referenceSha256": "e9c2b5fb99d0488287c50f4513f08d60e43cdea243665de32c091eb29930d8ec"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-03",
+    "referenceId": "12",
+    "rationale": "The beyond-limit case directly tests the gold constraint that a reservation cannot exceed table capacity.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "9add5b0dc435ed2c6af76afb122f6da590969317112004abf3dd8e82acf98508",
+    "referenceSha256": "cb2b7bff2df8318012800b09c2c7f8368182fc5c8674e4be53808a7b2ac9dd7f"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "IX-01",
+    "referenceId": null,
+    "rationale": "No gold item requires availability options to resynchronize when reservation inputs change.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "027f9765890f0a7e18dcc33545ec0f45059a1cf7527790b11e4deb4d08c32b76",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-04",
+    "referenceId": "4",
+    "rationale": "Direct match to viewing an upcoming booking in the user's booking list.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "789b902d3ddb4fe9a84060e86fd3232cba4318db102d5b21a5d799e896f7ffe2",
+    "referenceSha256": "3938fd2ebdbb1960e741481dea926f64040fbc7df71e6369cb0d37f944e94856"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-05",
+    "referenceId": "8",
+    "rationale": "Direct match to modifying a booking and accurately updating its stored information.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "2990c3060301836497cf42e376c3fd6531c1bfb68275dea9f61b3cd4eb2d8aae",
+    "referenceSha256": "56ad08eba2089d03966848e52b3b7e89d8f8b2b6f8efbc1f01cd87d846b22e3a"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-04",
+    "referenceId": null,
+    "rationale": "No gold item checks rollback and validation behavior for an invalid booking modification.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "fa53a79ec84024896da3aa21413a190c73713e4afc77c6fd7fbf402a5f860d3f",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-06",
+    "referenceId": "14",
+    "rationale": "Direct match to choosing Cancel on a booking record and confirming cancellation.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "1c09b53b8e11249c283a1b8dc5a70ec4d9ffadd3c3e1505dd70efbe767bb46a3",
+    "referenceSha256": "0a30613efea0b0bcc5f7d333ef8ade4d29d1777fb4285bfd6ef056bae7c9644b"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "IX-02",
+    "referenceId": "14",
+    "rationale": "Distinct subcheck of gold item 14's cancellation confirmation: declining or dismissing the confirmation must leave the booking uncanceled.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "44a667693faa5297f2e764996733a42d0faae93a805655eb6d7cb70fcad7f5ff",
+    "referenceSha256": "0a30613efea0b0bcc5f7d333ef8ade4d29d1777fb4285bfd6ef056bae7c9644b"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-07",
+    "referenceId": "5",
+    "rationale": "Direct match to rating and reviewing a visited restaurant with the content linked to that restaurant.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "36f8646b914ade93507fafa8ca7a9a1badeb73ab3ec9b8b5911cd366d7cc8a80",
+    "referenceSha256": "95aa7139bb7603b388503fac1e33a2069441f95dd8f9a0a81214c785078eee27"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-05",
+    "referenceId": "5",
+    "rationale": "Distinct negative subcheck of gold item 5: its visited-restaurant condition excludes review submission for restaurants the user has not visited.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "d668dfad69b9e90b372cc6dbeb970cb4177c8a7c613c00016e39b018715ad20f",
+    "referenceSha256": "95aa7139bb7603b388503fac1e33a2069441f95dd8f9a0a81214c785078eee27"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-06",
+    "referenceId": null,
+    "rationale": "No gold item defines rating-scale boundary validation.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "750c0efeeafa798f0866e29406bd77018ada2db6910be947001e8e944e717c72",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "FT-08",
+    "referenceId": "6",
+    "rationale": "Direct match to applying a discount coupon during booking and receiving its price reduction.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "814d750e124be3e6a52cf8c7e32146160aa791caee7e7193ad156b500d5ff083",
+    "referenceSha256": "af271b716ceb517fdb5ddc44eaba0d79b57d373cba5f80d7088852960edb740e"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CS-07",
+    "referenceId": "11",
+    "rationale": "Distinct validity subcheck of gold item 11: an invalid coupon must not produce a discount, while the booking remains possible without that coupon.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "0cef63a1387b2dd3facd48f6fc1997e7370c4904d8011b46d17ec9e7808dfd51",
+    "referenceSha256": "7f313ea08f68226db25457a203c20130604d5698656888894b1b9ef127c2c357"
+  },
+  {
+    "taskId": "WebTestBench_0010",
+    "candidateId": "CT-02",
+    "referenceId": "13",
+    "rationale": "Matches submission-time verification and a booking result consistent with the selected details and applied discount.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "46a236b240837985f1d69736b7339527ace8649754f7b543073515469f11b58a",
+    "referenceSha256": "5a0f0fdec2d556b607dd3c3e8ec35bf14ba63599c37ca22ae557a8bf224d9cee"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Direct match to browsing and comparing multiple subscription plans.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "e2184fffcbae23412c89478d6ceb0486478bf527ae1ebe858fd54e4b9afb34f9",
+    "referenceSha256": "a3900de0df43a6f4d849859dc88edcc08ca2e8c03872680a34f8cf10c792ead9"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CT-01",
+    "referenceId": "15",
+    "rationale": "Direct match to clearly indicating the features included in each package.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "bd8864b468e6770a15ca2aa0e00931158f3908f76d073052be35ef8188ab38bb",
+    "referenceSha256": "89fae2c5a4de415c34172eaec3404037a3ebad36f3ca88def95b43c9e174c32d"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "IX-01",
+    "referenceId": "2",
+    "rationale": "Direct match to switching monthly, quarterly, and annual cadences and observing corresponding price changes.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "6caad7029159827b5e01370a76ee728cd1a685137aaaabd4eda658de55bc440a",
+    "referenceSha256": "7dc0067a944c0dedcf41d7aa6b0183843e990774cc9a6bb8c19fc77c78f1f771"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CT-02",
+    "referenceId": "6",
+    "rationale": "Direct match to keeping amounts and billing periods consistent with billing logic for the chosen cadence.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "1ea83d81dbe304e5f4f05068618aad5ebf280ba82c9066ef97f05336549c8684",
+    "referenceSha256": "a8a0d7f8f265611fed4d7ee7ae06802779c7fc8116948fe4f49d7e0e6c8525bd"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "IX-02",
+    "referenceId": "6",
+    "rationale": "Distinct consistency subcheck of gold item 6: after cadence changes, all displayed amounts and checkout state must correspond to the final selected billing period rather than stale pricing.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "a3f13894734f853e8a9c607e98f5df306b105c596427c68e6bdac05b3e9133cf",
+    "referenceSha256": "a8a0d7f8f265611fed4d7ee7ae06802779c7fc8116948fe4f49d7e0e6c8525bd"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-02",
+    "referenceId": "3",
+    "rationale": "Distinct subcheck of broad gold item 3: this isolates successful account registration within the unified registration-and-subscription checkout flow.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "89e88d42b86dedf728e0f6d1f22ce7938db9f3529f7bbfc23d0d86f4344ac0ca",
+    "referenceSha256": "3ac4b8358a863c56ee881ad8ebed7326d7f997d6545933511378dc6e461fb2e4"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CS-01",
+    "referenceId": "10",
+    "rationale": "Direct match to rejecting account registration when required fields are missing or invalid.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "f719cea5ab7df720173f568185383dad42ffbb69671a28849fed3e3ee7391c64",
+    "referenceSha256": "a7dad05cf1e4a1158a68f22acfcc100fee44acfc46651638731106a6736167c0"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-03",
+    "referenceId": "3",
+    "rationale": "Strongest match to the unified checkout flow that creates an account, supplies payment details, and activates a subscription.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "7b46b26fd392ec0e56d3ea96f84f164b4b43cab7781d4b480c491bfb133a92ff",
+    "referenceSha256": "3ac4b8358a863c56ee881ad8ebed7326d7f997d6545933511378dc6e461fb2e4"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CS-02",
+    "referenceId": null,
+    "rationale": "No gold item explicitly checks field-level rejection of invalid checkout information.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "07c7bc884accc5c8e615ffe423e1632a64c1ac3aba411929fc2c828b6ce9122b",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CT-03",
+    "referenceId": "3",
+    "rationale": "Distinct checkout-integrity subcheck of gold item 3: the unified checkout must carry the selected plan and cadence into the subscription summary correctly.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "89b41dc794a9d67c22ce1b015df3b9e1bddbf17f31724514febcfd9a27f21c51",
+    "referenceSha256": "3ac4b8358a863c56ee881ad8ebed7326d7f997d6545933511378dc6e461fb2e4"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-04",
+    "referenceId": "13",
+    "rationale": "Matches clearly identifying which package is currently active in the account area.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "3f6b924a428a88bc145af8bd731f6929662a72ccf3ba28762af5a763220684d0",
+    "referenceSha256": "923e30d867aaa329c7ead294d3c5d088c51e899dc6158831d4b2d37a70f2d107"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-05",
+    "referenceId": "4",
+    "rationale": "Direct match to displaying next billing date and amount for the current subscription.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "5642d5ad1156afb2e7f583c5b5d66c869ed91afe45fb0864492ccab5d0ca5fb6",
+    "referenceSha256": "989589dc01ee7ea0b666b5c64ab0e8b2d0fc859b1fc96680708d22334d95feab"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CS-03",
+    "referenceId": null,
+    "rationale": "No gold item states signed-out access protection for account subscription details.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "ebe6bb0cd19c7ea1a46a9ee960e4f79fc1c97bdeda6e69bf0723631a26df560c",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-06",
+    "referenceId": "5",
+    "rationale": "Direct match to changing the current package through the personal account area.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "a189b7ff753cc09cb706897646c7dbd465810894b5105b6733304f66ee686402",
+    "referenceSha256": "83f65c413dee694380b2053fed9cdd95fab3aac278d9aaedb60f49a55f8bc951"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "IX-03",
+    "referenceId": "14",
+    "rationale": "Matches immediate refresh of latest billing information after a successful plan modification.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4ad28c93a33d6b65fcba2b2969ac6e2aacafb68c8a459df2ad9346f8405ba310",
+    "referenceSha256": "639b8b11c71f027062ba409d3afc2b8c12432fcb33f9b27fdf93412b91c9a12f"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "IX-04",
+    "referenceId": null,
+    "rationale": "No gold item checks preserving the current plan when a plan-change flow is abandoned.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "9ec9e6466ff4974b7aa1087d59fd3ae14a48000a76c2b419c50cd28d1efb9849",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "FT-07",
+    "referenceId": "8",
+    "rationale": "Direct match to communicating whether cancellation is immediate or access remains through the billing period.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "0a6dbfaa22f451e16edebfd6dd5156de655031dd3ca105424fead5fd10d495aa",
+    "referenceSha256": "d66bfe76af068d0aa289eed318d11a485bf9512693462fc2ff28d2171057b312"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "IX-05",
+    "referenceId": "12",
+    "rationale": "The action necessarily exercises the secondary unsubscribe confirmation and verifies declining it does not cancel service.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "3cf7438a930817a4d0932a13f3822ef4b192a10bcf240d0f683fde3b84270682",
+    "referenceSha256": "6d33a9c8c50949e2d20905d147b00b1f8bee4591472bc24aec9a374e7ef188d9"
+  },
+  {
+    "taskId": "WebTestBench_0038",
+    "candidateId": "CS-04",
+    "referenceId": null,
+    "rationale": "No gold item tests repeated cancellation for duplicate or conflicting state.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "71b4d2d64777a18322765932a624eace12f51037f3a73505e5fc4cae48adf937",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Direct match to viewing the list of submitted annotation tasks.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "916503e4d93aa3c47d55d657bb4b40fdca736d21716f564ba3da4a8b526de2a7",
+    "referenceSha256": "1612d43b9b8063f7c9bb86ca560dee365b15b7f3536797e7c44115d659953652"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-01",
+    "referenceId": "15",
+    "rationale": "Matches displaying identifying metadata that distinguishes annotation tasks in the list.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "51511f8bc975651bf30d9562e676f766a2ef361bcc94596601e77d996efa8f5b",
+    "referenceSha256": "4ccd7b81a11428eeb32d49bc196ef1e9175ef08f3c449bd901823570baf11a9f"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "FT-02",
+    "referenceId": "2",
+    "rationale": "Direct match to opening one annotation task and viewing its detailed annotations.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "7781d665e13920004596675974e501b38e24048988e92e8cbfbd3e36f1a29cf1",
+    "referenceSha256": "981e1a936cf8252a337570b0714c9329558bcbfcd629d05c47b596ae65df5b46"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-02",
+    "referenceId": "3",
+    "rationale": "Direct match to displaying different annotators' submissions side-by-side for the same task.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "8bd8defdd2f8b17f3434e8f40f37c27c6740d8a38826505b107fe22ceaa79dbb",
+    "referenceSha256": "4b7c50fa3860c3534d020bf6bd4eb029c017d228312d00922c49185b5580984b"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-03",
+    "referenceId": "16",
+    "rationale": "Matches keeping each displayed label or value clearly attributed to its corresponding annotator.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "21a564e0902f378844de29202cddb3634979d57db8d2caace7589d71de723607",
+    "referenceSha256": "1023c3dda211179fc0d1c39508f7137aed848eca74c9fea128681b63d8ac937c"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "FT-03",
+    "referenceId": "4",
+    "rationale": "Direct match to marking an annotation task approved.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "84d55a9e10fa8ec3d9d7cf1757d39b494c9e899ceb54139ecbb07ab9686c7bc5",
+    "referenceSha256": "1b77310cc87f7551bf224909fa1f0f163f2c03dc73ab06ea525561136aac0ee7"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "FT-04",
+    "referenceId": "5",
+    "rationale": "Direct match to marking or flagging an annotation task.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "e7b2c65d7c812653e71703f92dccfef1b1c04f04bfc2e940226923e50177ce1a",
+    "referenceSha256": "b201cef3701599253356934b5a360f2a5b229933fcb93d540ce496fe2cd46962"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CS-01",
+    "referenceId": "10",
+    "rationale": "Direct match to preventing an item from simultaneously holding approved and marked states.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "51bd6c1016d2388bc1cb58b21644664ff75281da55726e2fa1de8066cff91084",
+    "referenceSha256": "23de574e7b5553eda7016e40a7b60692c91f7ed11ecf256be3b62e88e6f1cbb3"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "IX-01",
+    "referenceId": null,
+    "rationale": "No gold item specifically checks decision persistence while navigating between tasks.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "1eef13d5bfcd6375b7162950935910e351ba5c05e7a264820422d3dd8cf53eed",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "FT-05",
+    "referenceId": "6",
+    "rationale": "Direct match to opening a summary dashboard that displays annotation statistics.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4b940a7258753289a1431a10bdf1d1777d804d0d8e5c03e13be5c3765ed63e52",
+    "referenceSha256": "1993f614dee2d25d0ebc138b8c614e6bf365751f6290184c7aec5cffa6b3b43f"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-04",
+    "referenceId": "7",
+    "rationale": "Direct match to displaying the disagreement or divergence rate in the summary.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "123fb8ae64ac0771acc3d038117066c8bbedc385a44f66719032144305facc99",
+    "referenceSha256": "f23c3b1e2c588586f9868b43bc62e1cabaa7c8e918593bfb0b5e06e1f0ce14d1"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-05",
+    "referenceId": "8",
+    "rationale": "Direct match to showing the total number of currently flagged or tagged items.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "876c4fa141f1a4d64af1d3b3684507292d50e91d01ba07bca56d1f189e1abc7e",
+    "referenceSha256": "03904b1af60296da51a8aacf99ef39fa65e78dc1860797a37ace5f391926fa47"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CT-06",
+    "referenceId": "9",
+    "rationale": "Direct match to ranking or identifying annotators with the highest inconsistency rate.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "23599b1ecb8fbc13510a0e266fa33abf52cd8284a853c47c4082db58b1c9d4a1",
+    "referenceSha256": "240db279d45db18b9d768a7586a2a4ee5e4a5f519bda4656c53836159145edc2"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "IX-02",
+    "referenceId": "13",
+    "rationale": "Direct match to automatically updating summary statistics after an item is tagged.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "99e2e0ea852dbd446344d09ff431430c8974d5c2faf71e2cbb8932be13397f7e",
+    "referenceSha256": "01d2c71c19dacb679f45eadd062807cd940bbbfd1a440e515472fa806c79bd3f"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "IX-03",
+    "referenceId": "13",
+    "rationale": "Distinct reverse-transition subcheck of gold item 13: removing a tag must automatically decrement the affected summary statistic.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "f8fdb1106bf4439b4a4192b5265b8e1927b3c1021e50f2ae911b70883674f6c0",
+    "referenceSha256": "01d2c71c19dacb679f45eadd062807cd940bbbfd1a440e515472fa806c79bd3f"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "CS-02",
+    "referenceId": "11",
+    "rationale": "Matches excluding tasks without multiple comparable annotations from disagreement-rate calculations.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "32612c0e7093eaf0de33c0c1b80418cde556422b10f3736b010ac142aa023470",
+    "referenceSha256": "92554907e5513a46efcf67ae9bfa411bec1da2b520c2769444c06b9b38d0b427"
+  },
+  {
+    "taskId": "WebTestBench_0066",
+    "candidateId": "IX-04",
+    "referenceId": null,
+    "rationale": "No gold item requires immediate synchronization of review status between list and detail views.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "9de7cef2a5141c47ac7ec0543352e096a6e42e3ec79215817739a166bf5da1b3",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CT-01",
+    "referenceId": "5",
+    "rationale": "Direct match to providing the batch table, add/edit, and expiration-reminder tabs.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "20ce42b03fb1b35728679327216c4ba09a7ffdfb86bf4ecc5f29f530fc5ea54d",
+    "referenceSha256": "79c2e88a21e23e9be01c74396a93e37e056edbf4f16745a9c38e9f7b7da6838c"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "FT-01",
+    "referenceId": "1",
+    "rationale": "Direct match to adding a batch with name, cabinet, shelf, and expiration date.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "17c86ba8251ed9c2e1e62e66e4acb0709a87ca3eff37c3fdb5e93d00f722d9cd",
+    "referenceSha256": "455c171003d09c1265eb573378b4a772809210ed3b53e79b7ce7649284696671"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-01",
+    "referenceId": "6",
+    "rationale": "Direct match to rejecting a new batch when any required batch field is empty.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "8f9ba8f8efbfaa8554e28c836e9dd323e3dd3f513c8e48c3c6fe2b4466d4f7c2",
+    "referenceSha256": "8df9dadc76012b253f473d54daa08d2b20ed3eadde2043ffd2fd07c6904c595a"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-02",
+    "referenceId": null,
+    "rationale": "No gold item specifies an expiration-date display-format validation rule.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "4a4908a12e9f2b9787893bc0778a44dfa6c0fc3b168bd43d800737ae55b36ac9",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-03",
+    "referenceId": null,
+    "rationale": "Gold item 7 rejects past dates, not impossible calendar dates, so the observable validation requirement differs.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "73719e3f7673e598263f9b25150c80847e26e7d1ec58e0ed7bf9975fa89b2372",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-04",
+    "referenceId": null,
+    "rationale": "No gold item prohibits two batches from sharing the same storage location.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "a67e0b6c959e54d8a179b470e67abf3e2e0952426e21fa38018548b8a5674872",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-05",
+    "referenceId": null,
+    "rationale": "No gold item tests whether partially matching cabinet or shelf values are treated as distinct locations.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "5146f07adb02f209576398f1ffe4eabe43ab60ffd22ca7b64cc9d604704f5966",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CT-02",
+    "referenceId": "3",
+    "rationale": "Direct match to displaying every batch in a table with name, location, and expiration date.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "fcbbebf2fdc9ee0651e78b0747aa8c988c94fb4dc169feb55205c08b979f0eac",
+    "referenceSha256": "3cb744361f8090c2c4f3b06b8ffebc99a46ab8d6ce2f9e02c58183fcdc469a97"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "FT-02",
+    "referenceId": "11",
+    "rationale": "Matches accessing the edit operation through a clear table action and populated edit form.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "71c71ba9b9e4f3bc5ba1c42f0f6389a4242fcd2b8d1ddf9a3761ba94e73e1dab",
+    "referenceSha256": "b14784c7376d8c9376ea2e88644329c4f7bfede8753e2281ea31ac50ebdd2833"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "FT-03",
+    "referenceId": "2",
+    "rationale": "Direct match to editing and saving information for an existing sample batch.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "739f9038dafb8195b0dcd34d0e63c2c354389afa125e31db61dfd5a0b6089350",
+    "referenceSha256": "36a05928f588d6c9c6a86c7ecd64703589b77cb198292bbb2114441a7496f9dd"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-06",
+    "referenceId": null,
+    "rationale": "No gold item applies duplicate-location rejection during batch edits.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "3aab8f462101a494197f93f28ccf1ea604a5cb5004019413fcbf93523aa83575",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-01",
+    "referenceId": "12",
+    "rationale": "Distinct synchronization subcheck of broad gold item 12: a newly saved batch must propagate to other applicable page views without manual refresh.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "79a6f2b1e54b8b216c0737e713dfa5af28309b6165e185ea5e14f0caad7732c9",
+    "referenceSha256": "e37b7139cfa0a5082b79a54dbd0d42fb31d94656f34d5ea390ea8345d0f1a23e"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-02",
+    "referenceId": "12",
+    "rationale": "Direct match to automatically synchronizing edited values to other applicable page views.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "10a3389f6771f89de3bace95229b0226352bec4c9d19f735bedd7523af9b2faf",
+    "referenceSha256": "e37b7139cfa0a5082b79a54dbd0d42fb31d94656f34d5ea390ea8345d0f1a23e"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-03",
+    "referenceId": null,
+    "rationale": "No gold item specifically preserves an unsaved draft while switching tabs.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "d3097cd86aca94e64d293b3d33038739ac2ae8bbc8e23e41a1f92fc9dbe73c24",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-04",
+    "referenceId": "13",
+    "rationale": "Distinct UI-state subcheck of broad gold item 13: the current selected tab is part of the page state that should survive refresh.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "e5f1fb3cd7591f43221c5c35b884a08d9b24714c5b3ca4f943980eae2a8936bc",
+    "referenceSha256": "306a7c529ffd05f33fc0f90f7773eaf022c2c546263192c894c4e45f5f1a6603"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-05",
+    "referenceId": "13",
+    "rationale": "Distinct draft-state subcheck of broad gold item 13: identifiable unsaved form state should not be lost when the page refreshes.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "6b9177bc05b08b85c7c5737c88deb050b409022f90dd3cf62bf1b92458868859",
+    "referenceSha256": "306a7c529ffd05f33fc0f90f7773eaf022c2c546263192c894c4e45f5f1a6603"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-06",
+    "referenceId": "13",
+    "rationale": "Direct match to retaining current saved state through a refresh affected by slow or unavailable network conditions.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "f75f4c9ec49575891c2b2d77391027c012539c72eadc9c8e1fc46589d33409c8",
+    "referenceSha256": "306a7c529ffd05f33fc0f90f7773eaf022c2c546263192c894c4e45f5f1a6603"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "FT-04",
+    "referenceId": "4",
+    "rationale": "Direct match to showing soon-to-expire batches in the alert or reminder section.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "a846f6e2cd6faccd121c309d0c2f051cb871f646ad067269a175e58efafdb448",
+    "referenceSha256": "34b24585c238a0ec3e92932fb7cefac058ad08a681dade897c81c95e4a30831c"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "CS-07",
+    "referenceId": "4",
+    "rationale": "Distinct boundary subcheck of gold item 4: an about-to-expire alert section should include urgent batches without misclassifying clearly far-future batches.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "120a836ebd90903956046a3ad8df4ae6899aa65c707e60fbaff08014144948e3",
+    "referenceSha256": "34b24585c238a0ec3e92932fb7cefac058ad08a681dade897c81c95e4a30831c"
+  },
+  {
+    "taskId": "WebTestBench_0059",
+    "candidateId": "IX-07",
+    "referenceId": "10",
+    "rationale": "Direct match to dynamically updating the reminder section after expiration-date edits change urgency.",
+    "judge": "independent-judge-2",
+    "candidateSha256": "bb5642f7642d90aeb7a75901af5db97e0c3eb6e3263f0e05dbc02c5df3e98c1a",
+    "referenceSha256": "79acef9d7df6440ec35c2dfd784cfd70d54ec91c0f1e31230be62fdf02eaeed2"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-01",
+    "referenceId": "1",
+    "rationale": "Directly tests creating and selecting multiple projects, a core subcheck of independent-project management.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "dd4b723cf78aa796d3270ddfad2584101f8e54b49ee589a17fbf7449f59d0d3c",
+    "referenceSha256": "8e4cf36999f351ff8a1c3661a3778f7bf0e1261d3fe52b509d6c925fbe5139ad"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-02",
+    "referenceId": "1",
+    "rationale": "Tests task-board isolation between projects, directly observing the dedicated independent boards required by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "b2d4e30fe20fcc127aabdf131dea5be1e6fb344c4f931f9c2e1b558d81d0eda3",
+    "referenceSha256": "8e4cf36999f351ff8a1c3661a3778f7bf0e1261d3fe52b509d6c925fbe5139ad"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-03",
+    "referenceId": "2",
+    "rationale": "Creates a Kanban task with the required assignee, deadline, and priority attributes.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "59389aceb336db656bfa597e56ba9a6668b051e459d79efb2fdfc7ffef59eaa1",
+    "referenceSha256": "be15e21b8d1ed1bdfa7c78281d8f2b9148ae0fbd062922d957bb4e724f6c5a37"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-04",
+    "referenceId": "3",
+    "rationale": "Directly verifies dragging a task card from one status column to another.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "fe0c79b99851093d1c215306b69f8d47939b5efcb3bf0758837b29b73800338b",
+    "referenceSha256": "187a66fb6c57cad18f04e1b061a80b7c1145930bf5db641afe00cd2283aabf8b"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-05",
+    "referenceId": null,
+    "rationale": "Reload persistence is not the reference behavior of immediate status synchronization to online members, and no gold item requires drag-state persistence across reload.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "f35b9193e74336d4531ab63ab2fcfd8983cb219487f87124baaf0a406683500b",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-06",
+    "referenceId": "4",
+    "rationale": "Status filtering is one of the distinct task-filter dimensions named by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "f86d1c62e96901cc786f2097b2008b96a80ae3c6cecae210ab5bea975bf94ff9",
+    "referenceSha256": "9458f020595c5dd90e062092366eec8c6bd86a54b3ca395d02a1433d480ed144"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-07",
+    "referenceId": "4",
+    "rationale": "Assignee filtering is a distinct subcheck of the reference's task filtering requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "928436f87da5d0e9a2926e513209941afa44f53aabef069e115d75583267f7e9",
+    "referenceSha256": "9458f020595c5dd90e062092366eec8c6bd86a54b3ca395d02a1433d480ed144"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-08",
+    "referenceId": "4",
+    "rationale": "Keyword task search directly matches the keyword-search behavior in the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "7fc6263678678b456a1a7df7acb87afd203585ac8f6246b9594058831bd716c7",
+    "referenceSha256": "9458f020595c5dd90e062092366eec8c6bd86a54b3ca395d02a1433d480ed144"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-09",
+    "referenceId": null,
+    "rationale": "Clearing or resetting search and filters is not specified by any reference item.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "b42a541e6789f754a18297cf7a5a854dd740243f17e6d651110615da15059867",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-10",
+    "referenceId": "5",
+    "rationale": "Directly tests the task-progress update portion of the combined progress-and-summary reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "793038a9aa1328fac0bfc82c9621b15d640668408257529218571c94dbd13303",
+    "referenceSha256": "f9f0df79c273cdff96b00d1020b3888857c547af3bfbefe166cec5b695f0cedb"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-11",
+    "referenceId": null,
+    "rationale": "Persistence of task progress after a page reload is an extra behavior not required by the gold checklist.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "fdfb03f1a29e7124b4f77ea32a0c3c160c030d366bbfa9db3555a7255615d2e5",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-12",
+    "referenceId": "5",
+    "rationale": "Verifies that an overall project progress or status summary is automatically presented, a distinct subcheck of the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "04f86b225953d862941acb0755ab9f3b3cf8165b31349df38d03265ad5d57308",
+    "referenceSha256": "f9f0df79c273cdff96b00d1020b3888857c547af3bfbefe166cec5b695f0cedb"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-13",
+    "referenceId": "12",
+    "rationale": "Checks that the project summary is recalculated when underlying task status changes, which is the observable update behavior required by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "29fd2604845f9b616c48586d0db57ebbc04b2eb0058d0efba943a2cec4269b7a",
+    "referenceSha256": "19918f40f1de11f3baa1df270513d838f111d42e3e8fcd065925a61726dd831c"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-14",
+    "referenceId": "6",
+    "rationale": "Verifies that a project workspace contains its required chat or discussion panel.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "855d297d21dc297099bdd5b9d0c9bd1676c65e86f4284ccc76c2efb3e1ad2b40",
+    "referenceSha256": "bd2eebfc3bc549de3d969b0228b09bc364993611fed3cd0b77bb74642f969737"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-15",
+    "referenceId": "6",
+    "rationale": "Sending a message is a distinct direct check that the per-project chat supports team communication.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "327c60f91e7ef8f36195cf58fff2b5b990d24dfd90e10e056dd025a66133d32b",
+    "referenceSha256": "bd2eebfc3bc549de3d969b0228b09bc364993611fed3cd0b77bb74642f969737"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-16",
+    "referenceId": "6",
+    "rationale": "Cross-session delivery without refresh directly tests the real-time, instant communication aspect of project chat.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "707ef93aa5d3871adb81003cc47e12336f9db4de470342bfda50e133df5d3d6a",
+    "referenceSha256": "bd2eebfc3bc549de3d969b0228b09bc364993611fed3cd0b77bb74642f969737"
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-17",
+    "referenceId": null,
+    "rationale": "Cross-project chat-log isolation is not an observable requirement stated in the gold checklist.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "a5dda693fa218e4ee683b5e19d9d14db46f5928361901054cf49623c92ea7512",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-18",
+    "referenceId": null,
+    "rationale": "The gold content check requires core fields on task cards, including a title and assignee photo; showing a different subset only after opening task details is not the same observable requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "d3de9425197f698919149ce7a44055a863685d267b102887551e57ceddf2a7e0",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0042",
+    "candidateId": "0042-19",
+    "referenceId": "1",
+    "rationale": "Preventing search and filter results from leaking across projects is a distinct observable check of the reference's independent project boards.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "5e9c4269d38a1682fbcd61b9355f9cffe1a0d3a19a4ad949a810148c328e2e9e",
+    "referenceSha256": "8e4cf36999f351ff8a1c3661a3778f7bf0e1261d3fe52b509d6c925fbe5139ad"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-01",
+    "referenceId": "1",
+    "rationale": "Directly verifies creation of a personal wedding planning page with its wedding date and other core details.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "3008ee308f1319465f41b9af0c10d6bd4850e6478428a97e4e8d539be37b123a",
+    "referenceSha256": "4dacc585b02debf837d728937179773d998a2353b9e38f532d1b1536c872f39c"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-02",
+    "referenceId": "2",
+    "rationale": "Directly tests updating the saved date and budget information on the planning page.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "55d055583f81c9f25146352b3025bb24c256af96048e970070154cc1ebfdcea8",
+    "referenceSha256": "52b21adbbfe30e09fc3a8bd090d3367e134f3715b54e740eff68d316202cd881"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-03",
+    "referenceId": "15",
+    "rationale": "Although it adds a reload condition, the expected state directly verifies that all key wedding information remains fully displayed on the planning page.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "f001650118f9e842487842b1d6033e853efd5584c9bc4a0a212e9560524796d7",
+    "referenceSha256": "1d989dd6f3c671667cdebc3367d8b02640baf59ee537726d8bca9991c73e2229"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-04",
+    "referenceId": null,
+    "rationale": "A generic collection of distinguishable venue listings does not verify the required location, price, and offered-service details or another specific gold behavior.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "1625366b0a22def665f8231dc746dfde679c6e460c0c0b2ecc8c00f86835d241",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-05",
+    "referenceId": "16",
+    "rationale": "Displaying each vendor's service type is a distinct subcheck of the required venue or supplier information.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "c7fcb9ae5a592bd636444e900f0161b71d18a001c23ebcb691aef60d932ca052",
+    "referenceSha256": "8020bc49455afbb7d83409681efd2c0fd1990481e64daaddda3337cba56e416d"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-06",
+    "referenceId": "3",
+    "rationale": "Location-type filtering is one of the separate listing filter dimensions required by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "ad07afb8037ace7575a6e9243baccced0593af17f1c1953d6fc207186546a0ec",
+    "referenceSha256": "2486cd116b8363807be622b980790e456e67d8a51d5d73c8d52bb44eb15e1ff2"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-07",
+    "referenceId": "3",
+    "rationale": "Price-range filtering is a distinct subcheck of the broad listing-filter requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "31983f5c8a2625c6e51fc2444ce7949d668ef8d3ff73505375ddd90ab1c65a22",
+    "referenceSha256": "2486cd116b8363807be622b980790e456e67d8a51d5d73c8d52bb44eb15e1ff2"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-08",
+    "referenceId": "3",
+    "rationale": "Vendor service-type filtering directly covers the third filter dimension named by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "56838c58c018a6fb7143ea341c05b33a82460e436671b3c2f1ac0dd76e2a8742",
+    "referenceSha256": "2486cd116b8363807be622b980790e456e67d8a51d5d73c8d52bb44eb15e1ff2"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-09",
+    "referenceId": "4",
+    "rationale": "Directly verifies keyword search for venue and supplier listings.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "a807e1d932388691243c4a1c6bb8648466cd2ed7471b9f38a29bf847bfb9124c",
+    "referenceSha256": "59d30985f0b9fa3a50e4b9c8fdea82d9c60a33d2423eb89ed0284840c603aea7"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-10",
+    "referenceId": null,
+    "rationale": "Resetting filters and search is not required by a gold item; it is not the same as real-time result updates when criteria change.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "46c979ede3ada4d82fc4597b285d156c89e2a181f713c73835aaf9963c6048e5",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-11",
+    "referenceId": "5",
+    "rationale": "Marking a venue or vendor as a favorite for later access directly matches the preferred-listing behavior.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "26aeb5749ff3e599af97deb4203175e3b94ce90d47bc7d5bb5c478baa44b80fa",
+    "referenceSha256": "60270dc8cc9acc35268b53030627b0741593cab2cd8358aa45261c6bd1bae863"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-12",
+    "referenceId": null,
+    "rationale": "Removing an existing favorite is not stated by the gold favorite-creation or persistence checks.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "759387295beb42c079ea9e5ea0605fa502b368e56f20ec7571a2a367e36cd940",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-13",
+    "referenceId": "10",
+    "rationale": "Directly tests that a tagged favorite persists when the site is accessed again.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "b1a1bd1e2b6f67bb9bed8f0a41fd1c6ecc4762f92507c5aec47c1957f13ec386",
+    "referenceSha256": "e656524fdf2b3d8abb4230cad433e1c99201c40a361565f5651908c2c3f745e1"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-14",
+    "referenceId": "6",
+    "rationale": "Browsing and reading planning tips is a distinct subcheck of the site's tips-and-checklists collection.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "c43e627f2716aa117cfa50983c1b1eae8229ea15c4bdf365115017a1c48f5c61",
+    "referenceSha256": "e9096294a20a9a819601776641bab04eb468b7038c77b8f3aece2ab4762f0329"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-15",
+    "referenceId": "6",
+    "rationale": "Browsing a usable planning checklist is the checklist-specific subcheck of the same broad reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "d4af6a917ba3a9f5e3b0a198ff6d7986a95f5620d1e022235915e7091df5cc06",
+    "referenceSha256": "e9096294a20a9a819601776641bab04eb468b7038c77b8f3aece2ab4762f0329"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-16",
+    "referenceId": "7",
+    "rationale": "Directly verifies saving a planning tip or checklist onto the personal dashboard.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "9760c7a249a73de5ee407687bd517f31ab5c29d500a77f5fda5d6d79d50dcf2d",
+    "referenceSha256": "304e922c068e77605599c05890704d3dc3db45f49072517e479e09516dd37500"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-17",
+    "referenceId": "13",
+    "rationale": "Directly verifies marking a planning checklist item complete and observing its updated state.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "15c4c612c4ebcaba2babc8bbc38632578148675353132c928db3b2cc09de6112",
+    "referenceSha256": "6d8c25cfb2d792e648e2ba1263795fc48a7750379228c484c59507722fa8776e"
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-18",
+    "referenceId": null,
+    "rationale": "Persistence of the completion flag after reload is not required; the gold completion item only requires the status to update normally in real time.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "ebe8cfd3b24643daccba1c874589c7bb36dc47b2648ca28bba51a1f33497fcf5",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0004",
+    "candidateId": "0004-19",
+    "referenceId": null,
+    "rationale": "Duplicate prevention for saved resources is an invented invariant with no corresponding gold item.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "51fc2a79b49310ef7a01310a62fb1488841f0a0991d27c37c14d1fdc13b63b4f",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-01",
+    "referenceId": "1",
+    "rationale": "Directly checks that users can browse a selectable template-library list.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "81e47a0a59e88065a76ad578c862cc3dc8c91afff4e9fc1057f94dd4cadc998f",
+    "referenceSha256": "3214473a497401d86bd336317288d4d91114715b74c680036c68220ff1b64353"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-02",
+    "referenceId": "1",
+    "rationale": "Author and description visibility is a distinct metadata subcheck explicitly required for library templates.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "b1e4d9dfb1b876979226f393d11de6ef79f46165f95aed16222cc3ea245f9018",
+    "referenceSha256": "3214473a497401d86bd336317288d4d91114715b74c680036c68220ff1b64353"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-03",
+    "referenceId": "2",
+    "rationale": "Choosing a library entry directly verifies that users can select a template; showing its corresponding form is the expected selection result.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "03e828dcd3470a4e78cf9f64c7817368b35a5804e5b7d43089360f124cc3dfe6",
+    "referenceSha256": "3867f6d3cc5abe811c845a3fcf5926724ff8d8ca7ab180328d4b2b08a4ffec0f"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-04",
+    "referenceId": "4",
+    "rationale": "Directly tests producing a preview from a completed template form.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "94c10bdfbfded2fa570466030bc607a52e4fd5da7eba974e93fc06a4929ea4d3",
+    "referenceSha256": "5404b4fcc37c6b0b2df81a34ea593d915f4f0b46ead9a874fed7445a3643271f"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-05",
+    "referenceId": "19",
+    "rationale": "Directly verifies that an incomplete required field blocks preview generation.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "83c4d452f05ae0f8635f5f68e5ae5e924a7e785cccc9ad758b58b54f22c22840",
+    "referenceSha256": "eef8fa2c33aec27391981f25da1ac681aa9ab6376ecba3fbf262c1212b4566bb"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-06",
+    "referenceId": "17",
+    "rationale": "Directly checks restriction or validation of prohibited formatting-sensitive special characters.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "e1ce463ea005b2a0295bb8d8e76e418dbb90b8cdce672bd8d5a31c7ef4591576",
+    "referenceSha256": "cf25675e6b344c029f232e65b4383465dac1f49df88cae66ecab23ce91a7acc0"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-07",
+    "referenceId": "5",
+    "rationale": "Plain-text submission with template content and metadata is one distinct supported format in the custom-template requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "fb3c7ad470a5a850b77b096063bd6a28efd4f59ed179bc96775879365ec50a16",
+    "referenceSha256": "26a4d9f8922eac7e7acf6bd1652a01cf7cfb87ba663402a75aef741c0c58ea67"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-08",
+    "referenceId": "5",
+    "rationale": "Markdown submission is the second distinct format explicitly supported by the custom-template requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "c600edb80fc4afba0b479647870c590861b3a73f8d9610cd47912a03459f473a",
+    "referenceSha256": "26a4d9f8922eac7e7acf6bd1652a01cf7cfb87ba663402a75aef741c0c58ea67"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-09",
+    "referenceId": "7",
+    "rationale": "Verifies that a submitted template retains and displays its author, description, and type or category metadata.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "5e06c07528d5010e10fb8a1ad293c634426a8a2026e45e10228f5cfce87462cc",
+    "referenceSha256": "671477d78c9292fb9de66c597df3aa18456e27fce55a0893d00adf12635b6660"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-10",
+    "referenceId": "9",
+    "rationale": "Template-type filtering is one distinct dimension in the reference's multidimensional filtering requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "8bd451e4df9036386d2dfebc0e555c7d66bb62b44fa282214e8bdc8d57e0adbf",
+    "referenceSha256": "78a1ac4e2065233ad4df3826b63e218a06b930222cd89304e14b891745621e0a"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-11",
+    "referenceId": "9",
+    "rationale": "Applicable-scenario filtering is a separate explicitly named filter dimension.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "b7905a4d6d097f2599ad55d7aa8122af4774d0df5864403df09b26b6cff062bc",
+    "referenceSha256": "78a1ac4e2065233ad4df3826b63e218a06b930222cd89304e14b891745621e0a"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-12",
+    "referenceId": "9",
+    "rationale": "Popularity filtering or ordering directly covers the popularity dimension in the broad reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "abd6c3384fab91c4da0caf3376343da1a9b04bdcfab3df4f80931cc2c0b56059",
+    "referenceSha256": "78a1ac4e2065233ad4df3826b63e218a06b930222cd89304e14b891745621e0a"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-13",
+    "referenceId": "9",
+    "rationale": "Update-time filtering or ordering directly covers the update-time dimension in the broad reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "c1b0352315a6ff08f4b8cf0b15c64381a06be1bea8a39b500cab37ad99727247",
+    "referenceSha256": "78a1ac4e2065233ad4df3826b63e218a06b930222cd89304e14b891745621e0a"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-14",
+    "referenceId": "9",
+    "rationale": "Combining type and scenario criteria is a distinct executable check of multidimensional filtering rather than a paraphrase of either individual filter.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "0a09a39d14ac911be91bc5259f1474cb84cd1987011f3f82a595e0431759a83c",
+    "referenceSha256": "78a1ac4e2065233ad4df3826b63e218a06b930222cd89304e14b891745621e0a"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-15",
+    "referenceId": "10",
+    "rationale": "A partial or misspelled keyword returning the relevant template directly tests fuzzy keyword matching.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "ea0aa6721c626abf1a2c9e480bfd76fe72e36b44233604f1d1004d48bd1be981",
+    "referenceSha256": "df3a29d266fa7ea187adb45c641fced5abb8732c6008b344817c614a1eea65ea"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-16",
+    "referenceId": "20",
+    "rationale": "Real-time suggestion appearance while typing is one distinct behavior in the associative-suggestion reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "f48cb26e799190549bb42c94e9650c4940fbd7b4fd017751ab675249ab0f5bc3",
+    "referenceSha256": "d1342561426f0c64c6d9ba54b0cce65e574ace0e9335b23015afddf839124930"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-17",
+    "referenceId": "20",
+    "rationale": "Selecting a suggestion and reaching its relevant template or results is the distinct click-through behavior in the same reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "262a34b1d2fddac12f41f7ea83cddcbff4de90976c31117cbd0612c09512d3e9",
+    "referenceSha256": "d1342561426f0c64c6d9ba54b0cce65e574ace0e9335b23015afddf839124930"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-18",
+    "referenceId": "11",
+    "rationale": "Directly verifies saving a template as a favorite.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "ffef6ec76f37240b3618ef3654d5765cd568948eef7ddb4f2c17af757336d9cb",
+    "referenceSha256": "2e5410af9ca7b655f185cd914a1bcfd8d73e0be3d1e62f1803ca1c190c259092"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-19",
+    "referenceId": "12",
+    "rationale": "Directly verifies retrieving and opening a saved template from the collection list.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "4178a91094b0bdbfe59e01a03d45bf5cb5ffe5d0080427cc2ee6e8d55115515c",
+    "referenceSha256": "99db501a74dfad4b9d02cac7eb8dbe8c1e7114a1b4ff38cedabed37746c78931"
+  },
+  {
+    "taskId": "WebTestBench_0089",
+    "candidateId": "0089-20",
+    "referenceId": null,
+    "rationale": "Removing a favorite is not specified by the gold saving, collection-list, or favorite-feedback requirements.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "05d400737be0b90423fad280de0d3aa8fdb6c49e1a52307ab3f8559ff6777d86",
+    "referenceSha256": null
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-01",
+    "referenceId": "1",
+    "rationale": "Directly tests creating a poll with its question, description, multiple choices, and deadline fields.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "0d2e41a679e22afcf56ca14d1334217bc72bb2c676b49c761c12d0a3ea9c30f9",
+    "referenceSha256": "0f37ef0258631ac8240c0e12581f1f4c7c83bb053f4a709cb9cfc3cda21458a1"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-02",
+    "referenceId": "1",
+    "rationale": "Creating a poll with no deadline is a distinct check that the deadline field in the broad creation requirement is optional.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "30d80a2a5d2d0c46de6a468c146bbb8867feb91bedb5fb26c98255ebecae419a",
+    "referenceSha256": "0f37ef0258631ac8240c0e12581f1f4c7c83bb053f4a709cb9cfc3cda21458a1"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-03",
+    "referenceId": "1",
+    "rationale": "Requiring more than one choice is a distinct executable subcheck of the creation requirement's multiple-choice field.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "3b369bef3dd52e3deb457a0f114818cd36e889437d035904614df1f528d36a77",
+    "referenceSha256": "0f37ef0258631ac8240c0e12581f1f4c7c83bb053f4a709cb9cfc3cda21458a1"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-04",
+    "referenceId": "2",
+    "rationale": "Allowing a signed-out visitor to vote directly verifies the anonymous-voting mode.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "8b3db8f67a5fd93fabd5be2d2402cd7cf55cd4945608d022b63f44438011c772",
+    "referenceSha256": "58ce6b99e16ea4c725add05ee72ddddf8ce722b380571fa8dce814224cc7546f"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-05",
+    "referenceId": "2",
+    "rationale": "Blocking a signed-out visitor directly verifies the separate login-required voting mode.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "d6b1cfd37d464865f991946f9278bfd4a3b41bd26ae74ec828d9d66e0c495891",
+    "referenceSha256": "58ce6b99e16ea4c725add05ee72ddddf8ce722b380571fa8dce814224cc7546f"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-06",
+    "referenceId": "3",
+    "rationale": "Directly verifies that the creator's copied share link opens the intended poll for another voter.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "a018fa4b4eb6fd018f2deee6cb8f1919cfac7b3b943ac2940e0ca9cd2e0d173f",
+    "referenceSha256": "9150171bfaecae9ffb3d2acb48bfb51dbd7c82d731c005c516660fbcab07c35a"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-07",
+    "referenceId": "6",
+    "rationale": "Directly tests an eligible voter successfully submitting a poll choice.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "f6b28fe369fedb70ef0fff2f85a4c101898e1f5400970d50cf054d4e58f0c8a9",
+    "referenceSha256": "755a647d47f0372c121d9f001030d3d9b6a1ae858b8773973ae7f0b0f2942f8a"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-08",
+    "referenceId": "15",
+    "rationale": "Verifies the visual chart component of the creator-facing result chart requirement by requiring a bar-style breakdown for each choice.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "70e078558c26de87daa488382e02364f6bc95af20ba58150ba1eedebf0bc5282",
+    "referenceSha256": "4dca7214088af0a3809e1c148129d2af7fd5553de52074f8e1e327a333482e2a"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-09",
+    "referenceId": "16",
+    "rationale": "Directly verifies that a voter immediately sees an updated result chart after submitting a vote.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "39aefa8a14e23acd70d283358124c739aeb3667e80326c4c315b43a831a088fc",
+    "referenceSha256": "78e34d27d06701f93bbe5250abc4034e625a62c507832eec055d267bd02c58c0"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-10",
+    "referenceId": "15",
+    "rationale": "Cross-session result changes without refresh directly test the creator chart's real-time update behavior.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "56e433704d4cd77159f63d4664f03cb93c75a8cde603c05fc9138f64b45f9515",
+    "referenceSha256": "4dca7214088af0a3809e1c148129d2af7fd5553de52074f8e1e327a333482e2a"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-11",
+    "referenceId": "9",
+    "rationale": "Directly verifies that the creator can close an active poll early and that further voting is blocked.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "69d646bda727acbbdabb525ef5a162049e826c89dd0f478d611362a88e147db0",
+    "referenceSha256": "1f921339cd8c2ddb2e5ba7032290f937367d3545be7bff779a08558243ccae21"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-12",
+    "referenceId": "4",
+    "rationale": "Directly verifies reopening a closed poll and restoring voting for eligible voters.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "420838a913957afeaac0c28f238b08bfa9f32d5745a2b075d58547eac076e554",
+    "referenceSha256": "e6b51308734d5de1757fc202020ae7f1880779675979ae9ba51207d71f1ae5ca"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-13",
+    "referenceId": "5",
+    "rationale": "Directly verifies read-only results mode: results remain visible while voting is unavailable.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "548cbcdef13c793a348d7b34355deb6df3e05a38485de8ddca4f3b0f1c540ea4",
+    "referenceSha256": "90877bedb098c0075f217add9e0d035d37c94ac34f59d422a4bef1e9162107e0"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-14",
+    "referenceId": "14",
+    "rationale": "Opening a past-deadline poll and observing that voting has automatically ended directly checks deadline-triggered closure.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "aba9469215da01fd5bd0e59a21e4ec047cbcb64b5c8f530a33977052e1ad6147",
+    "referenceSha256": "2e4366cec559574470cc908eebb7478f13ab6de7fb72851df2fd532aa8ccfae0"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-15",
+    "referenceId": "7",
+    "rationale": "Listing owned polls with title, creation date, and status directly covers the dashboard browsing portion of the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "cc10ef0e14d7e883437da10c369158cb50f0e9a114b05c09ded4131c9ec06546",
+    "referenceSha256": "eb56e9446e05d89389e9c2e774f150a70ecdc058ca4b220497e13dd08e7e6973"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-16",
+    "referenceId": "7",
+    "rationale": "Title search is a distinct dashboard operation explicitly named by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "9528641973cae5ad012342a271200984088362d7a3e46a74badcb12cd39830c5",
+    "referenceSha256": "eb56e9446e05d89389e9c2e774f150a70ecdc058ca4b220497e13dd08e7e6973"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-17",
+    "referenceId": "7",
+    "rationale": "Sorting by title is a separate executable subcheck of the dashboard sorting requirement.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "4e495d0ebcb763c76409ae35484d3639da39e595b672ae110e9d26a44a2a15aa",
+    "referenceSha256": "eb56e9446e05d89389e9c2e774f150a70ecdc058ca4b220497e13dd08e7e6973"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-18",
+    "referenceId": "7",
+    "rationale": "Sorting by creation date directly covers another distinct sort key named by the reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "8c39a34db5a4c45d2ed8a607c8f854260a1fe5b292bb1b43c2cdd6cfb6dd48b7",
+    "referenceSha256": "eb56e9446e05d89389e9c2e774f150a70ecdc058ca4b220497e13dd08e7e6973"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-19",
+    "referenceId": "7",
+    "rationale": "Sorting by poll status directly covers the final distinct sort key in the broad dashboard reference.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "a17f1e2ea86f401d6835df71e00b363ce1304ca55de116109e0f1fefe6a33702",
+    "referenceSha256": "eb56e9446e05d89389e9c2e774f150a70ecdc058ca4b220497e13dd08e7e6973"
+  },
+  {
+    "taskId": "WebTestBench_0015",
+    "candidateId": "0015-20",
+    "referenceId": null,
+    "rationale": "Denying management controls to non-creators is an authorization invariant not stated by the gold creator-action requirements.",
+    "judge": "independent-judge-3",
+    "candidateSha256": "28c6531292837ce52b88b53d37b0fc38a442fd8f17acc72465574c736ba365fd",
+    "referenceSha256": null
+  }
+]

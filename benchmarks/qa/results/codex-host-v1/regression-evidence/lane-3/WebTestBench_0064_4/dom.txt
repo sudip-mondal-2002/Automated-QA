@@ -1,0 +1,27 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link:
+    - /url: /set/4
+    - button:
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Study Session
+  - link:
+    - /url: /set/4
+    - button:
+- progressbar
+- main:
+  - generic: 🎉
+  - heading "Session Complete!" [level=2]
+  - paragraph: Great job reviewing 2 cards!
+  - generic: "2"
+  - generic: Knew
+  - generic: "0"
+  - generic: Uncertain
+  - generic: "0"
+  - generic: Need Review
+  - button "Study Again"
+  - link "Back to Set":
+    - /url: /set/4
+    - button "Back to Set"

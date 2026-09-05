@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0018:17",
+  "appId": "WebTestBench_0018",
+  "candidateSha256": "c9fbd87176fd32280665b259f7e84f9fcbc8e5d7110f29e96773a7ce663b1517",
+  "appArchiveSha256": "ce26fe647e559e0d2642c080c454a0822820ce74c5a3df3045352bb73d87676a",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:57:47.357Z",
+  "completedAt": "2026-09-05T08:15:00.484Z",
+  "isolation": "Primary run used unique origin http://127.0.0.1:47104; independent self-review used new origin http://127.0.0.1:47204. Neither origin had prior case storage. Each Vite process was started fresh and stopped afterward.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Primary run: signed in, entered duration 999999 minutes and distance 123456.7 km, and saved."
+    },
+    {
+      "step": 2,
+      "action": "Verified the exact timeline values and arithmetic in weekly/monthly summaries."
+    },
+    {
+      "step": 3,
+      "action": "Independent self-review on a new origin repeated the same values and save flow."
+    }
+  ],
+  "observations": [
+    "Both independent runs displayed Workout logged! and a timeline card with exactly 999999 min and 123456.7 km.",
+    "Both runs calculated weekly duration 1000222 and monthly distance 123466.4 from the seeded totals.",
+    "No truncation, overflow, or value substitution occurred."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Two fresh-origin repetitions confirm the boundary values are accepted, stored in the active workout list, displayed exactly, and aggregated correctly.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/extreme-workout-saved.png",
+      "sha256": "a00d8b441c953aa00c2709602fa5a6dd9d6ee4428119072a1df3924866e2b10e",
+      "bytes": 56155
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/dom-snapshot.txt",
+      "sha256": "2e5cfde7a2609acefaf1664631658d919358493bcd6df00c160af51d73a94590",
+      "bytes": 2647
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/self-review-extreme-workout.png",
+      "sha256": "7a46802e0f3fad79c84924fc6b937af513e979985fcdd812d45eceba1178a920",
+      "bytes": 54984
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/self-review-dom-snapshot.txt",
+      "sha256": "da2d4580c0c36ed7094eb846ff48458e085804d5efc4364787909b65039846d6",
+      "bytes": 2650
+    }
+  ],
+  "laneId": "lane-1"
+}

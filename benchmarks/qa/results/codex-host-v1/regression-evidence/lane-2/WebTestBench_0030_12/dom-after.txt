@@ -1,0 +1,82 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - heading "Notes" [level=1]
+  - navigation:
+    - button "All Notes 6":
+      - generic: All Notes
+      - generic: "6"
+    - heading "Folders" [level=2]
+    - button:
+    - button "Personal 1":
+      - generic: Personal
+      - generic: "1"
+      - button:
+    - button "Work 2":
+      - generic: Work
+      - generic: "2"
+      - button:
+    - button "Ideas 1":
+      - generic: Ideas
+      - generic: "1"
+      - button:
+    - heading "Tags" [level=2]
+    - button:
+    - button "Important":
+      - generic: Important
+    - generic: "1"
+    - button:
+    - button "To-Do":
+      - generic: To-Do
+    - generic: "2"
+    - button:
+    - button "Reference":
+      - generic: Reference
+    - generic: "2"
+    - button:
+    - button "Idea":
+      - generic: Idea
+    - generic: "1"
+    - button:
+    - button "Meeting":
+      - generic: Meeting
+    - generic: "1"
+    - button:
+- textbox "Search notes..."
+- heading "All Notes" [level=2]
+- button "New":
+  - text: New
+- button "Autosave QA Note Unsaved-looking content that should persist automatically. less than a minute ago":
+  - heading "Autosave QA Note" [level=3]
+  - paragraph: Unsaved-looking content that should persist automatically.
+  - generic: less than a minute ago
+- button "Book Recommendations Books to Read Currently Reading Atomic Habits by James Clear - Excellent insights on building good h... Reference over 2 years ago":
+  - heading "Book Recommendations" [level=3]
+  - paragraph: Books to Read Currently Reading Atomic Habits by James Clear - Excellent insights on building good h...
+  - generic: Reference
+  - generic: over 2 years ago
+- 'button "Weekly Team Standup Team Standup Notes - Week 3 Updates Design Team: Completed new dashboard mockups, ready for review. ... Meeting To-Do over 2 years ago"':
+  - heading "Weekly Team Standup" [level=3]
+  - paragraph: "Team Standup Notes - Week 3 Updates Design Team: Completed new dashboard mockups, ready for review. ..."
+  - generic: Meeting
+  - generic: To-Do
+  - generic: over 2 years ago
+- 'button "App Feature Ideas Feature Ideas for Notes App Some ideas to explore for future versions: Collaboration Share notes wi... Idea over 2 years ago"':
+  - heading "App Feature Ideas" [level=3]
+  - paragraph: "Feature Ideas for Notes App Some ideas to explore for future versions: Collaboration Share notes wi..."
+  - generic: Idea
+  - generic: over 2 years ago
+- 'button "Project Planning Q1 Project Roadmap Key initiatives for this quarter: Phase 1: Research User interviews and surveys ... Important To-Do over 2 years ago"':
+  - heading "Project Planning" [level=3]
+  - paragraph: "Q1 Project Roadmap Key initiatives for this quarter: Phase 1: Research User interviews and surveys ..."
+  - generic: Important
+  - generic: To-Do
+  - generic: over 2 years ago
+- button "Welcome to Notes Welcome to Your Notes App This is your personal space for capturing thoughts, ideas, and important i... Reference over 2 years ago":
+  - heading "Welcome to Notes" [level=3]
+  - paragraph: Welcome to Your Notes App This is your personal space for capturing thoughts, ideas, and important i...
+  - generic: Reference
+  - generic: over 2 years ago
+- paragraph: Select a note to edit
+- paragraph: or create a new one

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0011:14",
+  "appId": "WebTestBench_0011",
+  "candidateSha256": "00da341335e64391a25ad33e7a4d0c2379e7fc230390d2c56fa9fb49f36a8126",
+  "appArchiveSha256": "9cdac661a8072574bda445af31cc5aaf5f01f921ecdce0e31a4a66ff97fe7398",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:19:07.217Z",
+  "completedAt": "2026-09-05T08:20:07.217Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0011-14.localhost:43196; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened the Cash Flow Overview chart.",
+    "Hovered the plotted November point."
+  ],
+  "observations": [
+    "A tooltip appeared for Nov.",
+    "The tooltip showed Income $68,000 and Expenses $45,000."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Hovering a chart point reveals detailed series values.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0011_14/chart-tooltip.png",
+      "sha256": "9d132c75e605aae818de7fc069045a22d31d28dc4722f46a49badea04a902a3f",
+      "bytes": 37041
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0011_14/dom.txt",
+      "sha256": "445bd7de318244574ff2ac52a2279920f4938966d72a867cd21d08e5a8276ef0",
+      "bytes": 2694
+    }
+  ],
+  "laneId": "lane-3"
+}

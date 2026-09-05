@@ -1,0 +1,173 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "CuratedPicks":
+    - /url: /
+    - generic: CuratedPicks
+  - navigation:
+    - link "Home":
+      - /url: /
+    - link "All Products":
+      - /url: /products
+    - link "Tech":
+      - /url: /category/tech
+    - link "Home":
+      - /url: /category/home
+    - link "Fitness":
+      - /url: /category/fitness
+  - searchbox "Search products..."
+  - link:
+    - /url: /admin
+    - button:
+- main:
+  - heading "Admin Panel" [level=1]
+  - paragraph: Manage your product recommendations
+  - heading "Edit Product" [level=3]
+  - text: Product Name *
+  - textbox "Product Name *":
+    - /placeholder: e.g., Sony WH-1000XM5
+    - text: Sony WH-1000XM5
+  - text: Category *
+  - combobox:
+    - generic: Tech Gadgets
+  - combobox
+  - text: Price ($)
+  - spinbutton "Price ($)": "399"
+  - text: Rating (0-5)
+  - spinbutton "Rating (0-5)": "4.8"
+  - text: Image URL
+  - textbox "Image URL":
+    - /placeholder: https://...
+    - text: https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop
+  - text: Affiliate Link
+  - textbox "Affiliate Link":
+    - /placeholder: https://...
+    - text: https://example.com/sony-xm5
+  - text: Tags (comma-separated)
+  - textbox "Tags (comma-separated)":
+    - /placeholder: e.g., wireless, premium, noise-cancelling
+    - text: headphones, wireless, noise-cancelling, premium, lane-three-tag
+  - text: Short Description *
+  - textbox "Short Description *": Industry-leading noise cancellation with exceptional sound quality and all-day comfort.
+  - text: Full Review
+  - textbox "Full Review": The Sony WH-1000XM5 represents the pinnacle of wireless noise-cancelling headphones. With its new 30mm driver units and improved noise-cancelling processor, these headphones deliver an audio experience that's hard to match. The comfort level is exceptional thanks to the soft-fit leather and lighter design. Battery life of 30 hours means you can go days between charges. The multipoint connection allows you to switch seamlessly between devices.
+  - generic: Specifications
+  - button "Add Spec":
+    - text: Add Spec
+  - textbox "Label": Driver Size
+  - textbox "Value": 30mm
+  - button:
+  - textbox "Label": Battery Life
+  - textbox "Value": 30 hours
+  - button:
+  - textbox "Label": Weight
+  - textbox "Value": 250g
+  - button:
+  - textbox "Label": Bluetooth
+  - textbox "Value": "5.2"
+  - button:
+  - textbox "Label": Noise Cancelling
+  - textbox "Value": Yes, Adaptive
+  - button:
+  - switch [checked]
+  - checkbox [checked]
+  - generic: Featured on homepage
+  - button "Save Changes":
+    - text: Save Changes
+  - button "Cancel"
+  - img "Sony WH-1000XM5"
+  - generic: Tech
+  - text: Featured
+  - heading "Sony WH-1000XM5" [level=3]
+  - generic: $399
+  - generic: "4.8"
+  - button "Edit" [active]:
+    - text: Edit
+  - button:
+  - img "Peloton Bike+"
+  - generic: Fitness
+  - text: Featured
+  - heading "Peloton Bike+" [level=3]
+  - generic: $2,495
+  - generic: "4.6"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Dyson V15 Detect"
+  - generic: Home
+  - text: Featured
+  - heading "Dyson V15 Detect" [level=3]
+  - generic: $749
+  - generic: "4.7"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Apple MacBook Pro 14\""
+  - generic: Tech
+  - heading "Apple MacBook Pro 14\"" [level=3]
+  - generic: $1,999
+  - generic: "4.9"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Theragun Pro"
+  - generic: Fitness
+  - heading "Theragun Pro" [level=3]
+  - generic: $599
+  - generic: "4.5"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Philips Hue Starter Kit"
+  - generic: Home
+  - heading "Philips Hue Starter Kit" [level=3]
+  - generic: $199
+  - generic: "4.4"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Samsung Galaxy S24 Ultra"
+  - generic: Tech
+  - heading "Samsung Galaxy S24 Ultra" [level=3]
+  - generic: $1,299
+  - generic: "4.7"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Bowflex SelectTech 552"
+  - generic: Fitness
+  - heading "Bowflex SelectTech 552" [level=3]
+  - generic: $549
+  - generic: "4.6"
+  - button "Edit":
+    - text: Edit
+  - button:
+  - img "Breville Barista Express"
+  - generic: Home
+  - heading "Breville Barista Express" [level=3]
+  - generic: $699
+  - generic: "4.5"
+  - button "Edit":
+    - text: Edit
+  - button:
+- contentinfo:
+  - link "CuratedPicks":
+    - /url: /
+    - generic: CuratedPicks
+  - paragraph: Hand-picked product recommendations across tech, home, and fitness. Every item is personally tested and reviewed to help you make informed decisions.
+  - heading "Categories" [level=3]
+  - list:
+    - link "Tech Gadgets":
+      - /url: /category/tech
+    - link "Home Goods":
+      - /url: /category/home
+    - link "Fitness":
+      - /url: /category/fitness
+  - heading "Quick Links" [level=3]
+  - list:
+    - link "All Products":
+      - /url: /products
+    - link "Admin Panel":
+      - /url: /admin
+  - paragraph: © 2026 CuratedPicks. Affiliate links may earn us a commission.

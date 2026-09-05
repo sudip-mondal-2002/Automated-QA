@@ -1,0 +1,1913 @@
+[
+  {
+    "index": "WebTestBench_0063",
+    "items": [
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Homepage presents multiple identifiable intangible-cultural-heritage projects.",
+        "action": "Open the homepage and inspect every visible project list.",
+        "expected": "Multiple project entries are shown, and each entry has enough identifying content to distinguish it from the others."
+      },
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Project lists can be filtered.",
+        "action": "Select an available filter whose matching and non-matching projects are known.",
+        "expected": "Only projects satisfying the selected filter remain in the result set."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Project lists can be sorted.",
+        "action": "Choose an available sort criterion and direction.",
+        "expected": "All displayed projects are ordered according to the selected criterion and direction."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Selecting a project opens its panoramic scene.",
+        "action": "Click a project in a homepage list.",
+        "expected": "A rotatable 360-degree scene associated with the selected project opens."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Dragging rotates the panorama.",
+        "action": "Drag horizontally and vertically within a loaded panoramic scene.",
+        "expected": "The viewing direction changes continuously in the corresponding directions."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Users can zoom the panoramic scene in and out.",
+        "action": "Apply the provided zoom-in input and then the zoom-out input.",
+        "expected": "The scene magnification increases and then decreases without leaving the panorama."
+      },
+      {
+        "id": "CT-02",
+        "class": "constraint",
+        "description": "Perspective and hotspot anchoring continue updating while zoomed.",
+        "action": "Zoom the scene and, while zoom input is active, rotate across one or more visible hotspots.",
+        "expected": "Perspective updates continue without pausing, and each hotspot remains attached to its intended scene location."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "A panorama hotspot opens an information overlay.",
+        "action": "Click a loaded hotspot.",
+        "expected": "An information overlay opens for the hotspot without navigating away from the scene."
+      },
+      {
+        "id": "CT-03",
+        "class": "content",
+        "description": "Hotspot overlays contain complete, project-specific summary information.",
+        "action": "Open an overlay and compare it with the selected hotspot and project.",
+        "expected": "The overlay identifies the same project and displays its title, at least one image, origin region, brief description, and a View Details link."
+      },
+      {
+        "id": "CT-04",
+        "class": "content",
+        "description": "Different hotspots resolve to their corresponding projects.",
+        "action": "Open two different hotspots in turn.",
+        "expected": "Each overlay shows content corresponding to the hotspot clicked rather than stale content from the other hotspot."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "View Details opens the selected project's dedicated page.",
+        "action": "Open a hotspot overlay and activate View Details.",
+        "expected": "A dedicated detail page for that same project is displayed."
+      },
+      {
+        "id": "CT-05",
+        "class": "content",
+        "description": "The detail page contains the full project presentation.",
+        "action": "Inspect a project's detail page.",
+        "expected": "The page shows the correct project identity, a full introduction, and multiple project images."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Project images can be browsed on the detail page.",
+        "action": "Use the image-browsing controls to move between available images.",
+        "expected": "The displayed image changes to the requested image and remains associated with the current project."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Returning from details restores the panorama state.",
+        "action": "Rotate and zoom a panorama, open a hotspot and its detail page, then return using the site's or browser's back action.",
+        "expected": "The same scene returns with the prior orientation, zoom level, and corresponding hotspot/overlay state restored."
+      },
+      {
+        "id": "IX-05",
+        "class": "interaction",
+        "description": "Homepage list controls retain their state across project navigation.",
+        "action": "Apply a filter and sort, enter a project scene and detail page, then return to the homepage.",
+        "expected": "The selected filter, sort setting, and resulting project list are preserved."
+      },
+      {
+        "id": "IX-06",
+        "class": "interaction",
+        "description": "Closing an overlay does not reset the manipulated panorama.",
+        "action": "Rotate and zoom the scene, open a hotspot overlay, and close it.",
+        "expected": "The overlay closes while the current panorama orientation and zoom remain unchanged."
+      },
+      {
+        "id": "IX-07",
+        "class": "interaction",
+        "description": "Slow panorama loading produces a visible status prompt.",
+        "action": "Throttle the panorama resource so loading remains incomplete for a noticeable interval.",
+        "expected": "A prompt communicates that the panorama is still loading and disappears after successful loading."
+      },
+      {
+        "id": "IX-08",
+        "class": "interaction",
+        "description": "Unavailable hotspot data produces an explicit prompt.",
+        "action": "Load a panorama while preventing its hotspot or anchor data from loading.",
+        "expected": "The page displays a prompt that the anchor points are not loaded or unavailable instead of showing misleading active hotspots."
+      },
+      {
+        "id": "IX-09",
+        "class": "interaction",
+        "description": "Failed detail-page images produce visible failure feedback.",
+        "action": "Prevent one detail-page image resource from loading.",
+        "expected": "A clear image-load failure prompt or fallback appears while the rest of the detail page remains usable."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0099",
+    "items": [
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "The page presents an identifiable library of technical articles.",
+        "action": "Open the documentation library.",
+        "expected": "One or more distinct technical articles are listed with identifiable titles."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "All three article layout controls are clearly labeled.",
+        "action": "Open an article and inspect its view controls.",
+        "expected": "Separate, understandable controls for Overview, Standard, and Detailed modes are visible."
+      },
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Overview mode can be selected.",
+        "action": "Activate the Overview control for an article.",
+        "expected": "The article switches to Overview mode and that control is visibly active."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Overview mode shows the article title and key points.",
+        "action": "View an article in Overview mode.",
+        "expected": "The correct article title and a concise set of its key points are displayed."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Standard mode can be selected.",
+        "action": "Activate the Standard control for the same article.",
+        "expected": "The article switches to Standard mode and that control is visibly active."
+      },
+      {
+        "id": "CT-03",
+        "class": "content",
+        "description": "Standard mode renders full content with basic formatting.",
+        "action": "Inspect an article in Standard mode.",
+        "expected": "The article's full standard content is present and basic structure such as paragraphs, headings, or lists is rendered legibly."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Detailed mode can be selected.",
+        "action": "Activate the Detailed control for the same article.",
+        "expected": "The article switches to Detailed mode and that control is visibly active."
+      },
+      {
+        "id": "CT-04",
+        "class": "content",
+        "description": "Detailed mode includes expanded material.",
+        "action": "Inspect an article in Detailed mode.",
+        "expected": "The full article is shown with additional material including references and code examples."
+      },
+      {
+        "id": "CT-05",
+        "class": "content",
+        "description": "Mode changes do not switch or mix article identity.",
+        "action": "Switch one article through Overview, Standard, and Detailed modes.",
+        "expected": "Every mode continues to show content belonging to the originally selected article."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Mode switching updates content without requiring article reselection.",
+        "action": "Switch directly from Overview to Detailed and then to Standard.",
+        "expected": "Each requested layout appears immediately for the open article without returning to the library."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "The preferred view persists across future visits.",
+        "action": "Select a non-default layout as the preferred view, leave or reload the page, and open an article again.",
+        "expected": "The newly opened article initially uses the saved preferred layout."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "A newly chosen preference replaces the previous saved default.",
+        "action": "After verifying one saved mode, choose a different mode, leave the page, and revisit an article.",
+        "expected": "The latest chosen preferred mode is used instead of the earlier preference."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0096",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Search finds decisions by decision name.",
+        "action": "Enter a distinctive keyword from a known decision name and submit the search.",
+        "expected": "The matching decision appears in the results."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Search finds decisions by outcome text.",
+        "action": "Enter a distinctive keyword appearing in a known outcome and submit the search.",
+        "expected": "The decision with that outcome appears in the results."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Search finds decisions by condition text.",
+        "action": "Enter a distinctive keyword appearing in a known condition and submit the search.",
+        "expected": "The decision containing that condition appears in the results."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Search results show names and outcome summaries.",
+        "action": "Run a query that returns one or more decisions.",
+        "expected": "Every result displays a decision name and a readable summary of its outcome."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Multiple filter dimensions can be combined.",
+        "action": "Apply values in at least two available filter dimensions to a known result set.",
+        "expected": "Every remaining result satisfies all selected filter values."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Changing or clearing filters refreshes results correctly.",
+        "action": "Apply a filter, change its value, and then clear it.",
+        "expected": "The result set updates for each value and returns to the unfiltered query results when cleared."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "A zero-match search has an explicit empty state.",
+        "action": "Search for a string that matches no decision.",
+        "expected": "The page reports that no decisions match and does not display stale prior results."
+      },
+      {
+        "id": "CT-02",
+        "class": "constraint",
+        "description": "Blank searches are handled without creating a misleading query.",
+        "action": "Submit a search containing no keyword and no selected filters.",
+        "expected": "The page either requests search criteria or deliberately shows the full collection, with no error or false match claim."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "A result opens its full decision details.",
+        "action": "Click a decision in the result list.",
+        "expected": "A detail view opens for the selected decision."
+      },
+      {
+        "id": "CT-03",
+        "class": "content",
+        "description": "Decision details include conditions and final results.",
+        "action": "Inspect the detail view of a search result.",
+        "expected": "The selected decision's conditions and final result are both displayed in full."
+      },
+      {
+        "id": "CT-04",
+        "class": "content",
+        "description": "Result summaries and detail records remain consistent.",
+        "action": "Compare a result's name and outcome summary with the opened detail view.",
+        "expected": "The detail view identifies the same decision and does not contradict the result summary."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Returning from a detail preserves the active search.",
+        "action": "Run a keyword search with multiple filters, open a result, and return.",
+        "expected": "The keyword, selected filters, and matching result list are restored."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Submitted searches are recorded in search history.",
+        "action": "Submit a distinctive search query and open the history area.",
+        "expected": "The submitted query appears in the search history."
+      },
+      {
+        "id": "FT-07",
+        "class": "functionality",
+        "description": "A history entry can be used to repeat a search.",
+        "action": "Change the current search, then activate a previous history entry.",
+        "expected": "The recorded search criteria are restored and their results are shown."
+      },
+      {
+        "id": "FT-08",
+        "class": "functionality",
+        "description": "A decision can be bookmarked.",
+        "action": "Bookmark a decision from an available result or detail view and open bookmark management.",
+        "expected": "The selected decision appears once in the bookmarked-decision list."
+      },
+      {
+        "id": "CT-05",
+        "class": "constraint",
+        "description": "Repeated bookmarking does not create duplicate entries.",
+        "action": "Attempt to bookmark the same decision more than once.",
+        "expected": "Bookmark management contains only one entry for that decision."
+      },
+      {
+        "id": "FT-09",
+        "class": "functionality",
+        "description": "Bookmarks can be removed through bookmark management.",
+        "action": "Remove a saved decision from the bookmark-management view.",
+        "expected": "The decision is no longer listed as bookmarked and is shown as unsaved elsewhere."
+      },
+      {
+        "id": "FT-10",
+        "class": "functionality",
+        "description": "Batch import supports Excel, CSV, and PDF inputs.",
+        "action": "Import valid sample files in each advertised Excel, CSV, and PDF format, with each file containing multiple identifiable decisions.",
+        "expected": "Every supported file is accepted and all valid contained decisions become available without silently dropping records."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Invalid imports produce actionable feedback.",
+        "action": "Attempt to import a malformed or unsupported file.",
+        "expected": "The import is rejected with a clear failure message, and existing decision data remains available."
+      },
+      {
+        "id": "FT-11",
+        "class": "functionality",
+        "description": "Batch export produces complete Excel, CSV, and PDF outputs.",
+        "action": "Select multiple identifiable decisions and export them once in each advertised format.",
+        "expected": "Each export completes in the chosen format and contains every selected decision with recognizable decision, condition, and outcome data."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0037",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Keyword search returns matching adoptable pets.",
+        "action": "Search using a distinctive term associated with a known pet.",
+        "expected": "The matching pet appears and unrelated pets are excluded when they do not match."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Search results clearly identify pets and their shelters.",
+        "action": "Run a broad search that returns pets from multiple shelters.",
+        "expected": "Each result is distinguishable and identifies its source shelter; the result set can represent more than one shelter."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Species filtering works.",
+        "action": "Select a species filter.",
+        "expected": "Every displayed pet belongs to the selected species."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Age-range filtering works.",
+        "action": "Select an age range with known matching and non-matching pets.",
+        "expected": "Every displayed pet falls within the selected age range."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Size filtering works.",
+        "action": "Select one available size value.",
+        "expected": "Every displayed pet has the selected size classification."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "Good-with-kids filtering works.",
+        "action": "Enable the good-with-kids filter.",
+        "expected": "Every displayed pet is identified as suitable with children."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Good-with-other-pets filtering works.",
+        "action": "Enable the good-with-other-pets filter.",
+        "expected": "Every displayed pet is identified as suitable with other pets."
+      },
+      {
+        "id": "FT-07",
+        "class": "functionality",
+        "description": "Multiple pet filters use combined criteria.",
+        "action": "Apply species, age, size, and compatibility filters together.",
+        "expected": "Every remaining result satisfies all active criteria."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Clearing filters restores the broader result set.",
+        "action": "Apply several filters and then use the available clear or reset action.",
+        "expected": "All filter selections clear and the unfiltered search result set returns."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "No matching pets produces a clear empty state.",
+        "action": "Choose a valid combination known to have no matches.",
+        "expected": "A no-results message is shown and stale pet cards are absent."
+      },
+      {
+        "id": "FT-08",
+        "class": "functionality",
+        "description": "Results can be sorted by relevance.",
+        "action": "Choose Relevance from the sort controls.",
+        "expected": "Relevance is shown as the active sort and the matching list is rendered in that ordering."
+      },
+      {
+        "id": "FT-09",
+        "class": "functionality",
+        "description": "Results can be sorted by time listed.",
+        "action": "Choose Time Listed and an available direction.",
+        "expected": "Pets are ordered chronologically by their listing times in the indicated direction."
+      },
+      {
+        "id": "FT-10",
+        "class": "functionality",
+        "description": "A pet result opens the corresponding profile.",
+        "action": "Click a pet in the matching list.",
+        "expected": "A detailed profile for that same pet opens."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Pet profiles include photos and a description.",
+        "action": "Inspect an opened pet profile.",
+        "expected": "The profile displays the selected pet's identity, one or more photos, and a descriptive adoption profile."
+      },
+      {
+        "id": "FT-11",
+        "class": "functionality",
+        "description": "A pet can be added to favorites.",
+        "action": "Save a pet as a favorite and open the favorites list.",
+        "expected": "The selected pet appears once in the favorites list."
+      },
+      {
+        "id": "FT-12",
+        "class": "functionality",
+        "description": "A favorite can be removed.",
+        "action": "Remove a saved pet from the favorites list.",
+        "expected": "The pet disappears from favorites and its profile or result card reflects the unsaved state."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Favorites survive ordinary in-site navigation.",
+        "action": "Favorite a pet, browse another result or profile, and return to favorites.",
+        "expected": "The originally saved pet remains in the favorites list."
+      },
+      {
+        "id": "CT-03",
+        "class": "constraint",
+        "description": "Required inquiry data is validated.",
+        "action": "Open the inquiry form on a pet profile and submit it with required information omitted or invalid.",
+        "expected": "The inquiry is not sent and the form identifies the fields that require correction."
+      },
+      {
+        "id": "FT-13",
+        "class": "functionality",
+        "description": "A valid adoption inquiry can be submitted from a pet profile.",
+        "action": "Complete the inquiry form with valid required information and submit it.",
+        "expected": "The form confirms successful submission for the pet whose profile is open and does not report a duplicate send from one submission."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0022",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "An ingredient with a quantity and expiration date can be added.",
+        "action": "Add a named pantry ingredient with a valid quantity and expiration date.",
+        "expected": "The pantry displays the ingredient with the entered quantity and expiration date."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Expiration dates are optional.",
+        "action": "Add a named ingredient with a valid quantity but leave expiration blank.",
+        "expected": "The ingredient is added and is clearly represented without an expiration date."
+      },
+      {
+        "id": "CT-01",
+        "class": "constraint",
+        "description": "Invalid pantry entries are rejected.",
+        "action": "Attempt to add an unnamed ingredient or an ingredient with a zero, negative, or otherwise invalid quantity.",
+        "expected": "The invalid entry is not added and corrective validation feedback is shown."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Existing pantry entries can be edited.",
+        "action": "Change an ingredient's quantity and expiration date and save the edit.",
+        "expected": "The pantry shows the updated values without creating a duplicate ingredient entry."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Pantry ingredients can be removed.",
+        "action": "Remove an existing ingredient.",
+        "expected": "The ingredient no longer appears in the pantry or contributes to a newly generated plan."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "A multi-day meal plan can be generated.",
+        "action": "Populate the pantry, choose a plan duration of multiple days, and generate a plan.",
+        "expected": "A plan is produced for every requested day, with one or more identifiable recipes assigned per day."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Every planned recipe shows exact ingredient usage.",
+        "action": "Inspect each recipe in a generated plan.",
+        "expected": "Each required ingredient has a numeric amount and unit showing exactly how much the recipe will use."
+      },
+      {
+        "id": "CT-03",
+        "class": "constraint",
+        "description": "Ingredient allocation is reconciled with pantry stock.",
+        "action": "Generate a plan containing recipes whose total needs are greater than at least one pantry quantity.",
+        "expected": "The plan does not imply that more pantry stock is available than entered; any deficit is represented as a missing grocery amount."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Near-expiration food is prioritized.",
+        "action": "Add compatible ingredients with different expiration dates, including one expiring soon, and generate a plan.",
+        "expected": "When feasible, the sooner-expiring ingredient is scheduled earlier or used preferentially over equivalent later-expiring stock."
+      },
+      {
+        "id": "FT-07",
+        "class": "functionality",
+        "description": "The vegetarian preference affects generated meals.",
+        "action": "Enable Vegetarian and generate a plan.",
+        "expected": "Every generated meal conforms to the vegetarian preference."
+      },
+      {
+        "id": "FT-08",
+        "class": "functionality",
+        "description": "The high-protein preference affects generated meals.",
+        "action": "Enable High Protein and generate a plan.",
+        "expected": "The generated meals conform to the page's stated high-protein criterion."
+      },
+      {
+        "id": "FT-09",
+        "class": "functionality",
+        "description": "The budget-friendly preference affects generated meals.",
+        "action": "Enable Budget Friendly and generate a plan.",
+        "expected": "The generated meals conform to the page's stated budget-friendly criterion."
+      },
+      {
+        "id": "FT-10",
+        "class": "functionality",
+        "description": "Compatible preferences can be combined.",
+        "action": "Enable two or more compatible preferences and generate a plan.",
+        "expected": "Every generated meal satisfies all selected preferences rather than only the last selection."
+      },
+      {
+        "id": "FT-11",
+        "class": "functionality",
+        "description": "A grocery list is generated for missing ingredients.",
+        "action": "Generate a plan that requires ingredients absent from or insufficiently stocked in the pantry.",
+        "expected": "The grocery list includes every missing ingredient and the amount needed to cover the plan's deficit."
+      },
+      {
+        "id": "CT-04",
+        "class": "constraint",
+        "description": "Fully available ingredients are excluded from the grocery list.",
+        "action": "Generate a plan where one required ingredient is sufficiently stocked and another is missing.",
+        "expected": "Only the missing or deficient amount is listed for purchase; the fully stocked ingredient is not."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Locking a meal preserves that meal during regeneration.",
+        "action": "Lock one meal, record its recipe and quantities, and regenerate the plan with alternatives available.",
+        "expected": "The locked meal and its ingredient amounts remain unchanged while unlocked meals are regenerated."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Locking a day preserves all meals on that day.",
+        "action": "Lock one complete day, record its meals, and regenerate the rest of the plan.",
+        "expected": "Every meal on the locked day remains unchanged while other unlocked days remain eligible for regeneration."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Unlocking restores eligibility for regeneration.",
+        "action": "Unlock a previously locked meal or day and regenerate with an alternative available.",
+        "expected": "The unlocked content is included in regeneration and is no longer guaranteed to retain its previous assignment."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Partial regeneration retains pantry and preference state.",
+        "action": "Set pantry contents and preferences, lock part of a plan, and regenerate the remainder.",
+        "expected": "The pantry entries, selected preferences, requested duration, and lock states remain in effect after regeneration."
+      },
+      {
+        "id": "IX-05",
+        "class": "interaction",
+        "description": "The grocery list is recalculated after plan changes.",
+        "action": "Record the grocery list, then regenerate unlocked meals so their ingredient needs differ.",
+        "expected": "The grocery list updates to match the current plan and contains no obsolete missing-item amounts from the replaced meals."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0097",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Search competency models by job name.",
+        "action": "Enter a job name that matches an available competency model and submit the search.",
+        "expected": "The results list contains the matching job competency model."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Search competency models by competency-related keyword.",
+        "action": "Enter a keyword present in an available model and submit the search.",
+        "expected": "The results list contains each model matching that keyword and excludes unrelated models."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Open a competency model from search results.",
+        "action": "Select one result from the competency-model results list.",
+        "expected": "A detail view for the selected model opens and identifies the same job/model."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Present the competency model as a directed weighted graph.",
+        "action": "Open a model containing multiple competencies and relationships.",
+        "expected": "Competencies appear as distinguishable nodes, relationships show direction, and each relationship exposes its weight."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Keep graph content aligned with the selected model.",
+        "action": "Open two different competency models in succession and compare their displayed graph content.",
+        "expected": "The graph updates to the competencies and relationships of the currently selected model without retaining unrelated content from the previous model."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Adjust a competency level using drag and drop.",
+        "action": "Drag an enabled competency's level control from its current value to another valid value and release it.",
+        "expected": "The competency displays the new level immediately after the drop."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Modify a relationship weight.",
+        "action": "Change an existing graph relationship to a different valid weight and commit the edit.",
+        "expected": "The relationship displays and uses the new weight."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Temporarily disable and re-enable a competency.",
+        "action": "Disable an enabled competency, then enable it again.",
+        "expected": "The graph visibly reflects each state transition, and the competency returns to active participation when re-enabled."
+      },
+      {
+        "id": "CS-01",
+        "class": "constraint",
+        "description": "Reject competency levels outside the supported range.",
+        "action": "Attempt to assign a competency level below or above the limits communicated by the interface.",
+        "expected": "The invalid level is not applied and clear validation feedback is shown."
+      },
+      {
+        "id": "CS-02",
+        "class": "constraint",
+        "description": "Reject invalid relationship weights.",
+        "action": "Attempt to save a nonnumeric or out-of-range relationship weight.",
+        "expected": "The invalid weight is not applied and clear validation feedback identifies the problem."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Recalculate coverage after a competency-level change.",
+        "action": "Record the displayed coverage, then change a level in a way that affects coverage.",
+        "expected": "The displayed coverage recalculates immediately and reflects the changed level."
+      },
+      {
+        "id": "IX-05",
+        "class": "interaction",
+        "description": "Recalculate critical paths after a relationship-weight change.",
+        "action": "Record the displayed critical path, then modify a weight sufficiently to alter path criticality.",
+        "expected": "The critical-path result updates immediately to reflect the new weight."
+      },
+      {
+        "id": "IX-06",
+        "class": "interaction",
+        "description": "Recalculate risk gaps after disabling a competency.",
+        "action": "Disable a competency whose absence creates or worsens a model gap.",
+        "expected": "The risk-gap result updates immediately and identifies the resulting risk."
+      },
+      {
+        "id": "IX-07",
+        "class": "interaction",
+        "description": "Raise and clear structural problem alerts dynamically.",
+        "action": "Make a graph change that creates a reported problem, then reverse or correct that change.",
+        "expected": "A relevant alert appears when the problem is introduced and clears or updates when the problem no longer exists."
+      },
+      {
+        "id": "CS-03",
+        "class": "constraint",
+        "description": "Keep all derived analysis mutually consistent after sequential edits.",
+        "action": "Change a competency level, a relationship weight, and an enabled state in sequence.",
+        "expected": "After every edit, coverage, critical paths, risk gaps, and alerts all correspond to the latest graph state rather than an earlier state."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Build a model from the general template library.",
+        "action": "Open the template library and choose an available general job competency template.",
+        "expected": "A model is created or populated with the selected template's competencies and relationships."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "Save a customized competency model as a template.",
+        "action": "Modify a model, save it as a custom template with a valid distinct name, and return to the template library.",
+        "expected": "The custom template appears in the library and retains the saved graph configuration when opened."
+      },
+      {
+        "id": "CS-04",
+        "class": "constraint",
+        "description": "Require an identifiable custom template name.",
+        "action": "Attempt to save a custom template with its name empty.",
+        "expected": "The template is not saved and the interface requests a valid name."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Run recruitment, training, and promotion simulations.",
+        "action": "Run the same model under each of the recruitment, training, and promotion scenarios.",
+        "expected": "Each scenario produces a clearly labeled simulation result derived from the current model."
+      },
+      {
+        "id": "IX-08",
+        "class": "interaction",
+        "description": "Refresh simulation results after model adjustments.",
+        "action": "Run a scenario, change a relevant competency or relationship, and run or refresh that scenario again.",
+        "expected": "The new simulation result reflects the adjusted model and does not present the previous result as current."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0010",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Browse the restaurant list.",
+        "action": "Open the restaurant-browsing view.",
+        "expected": "A list of available restaurants is displayed and each entry can be selected."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Open restaurant details.",
+        "action": "Select a restaurant from the list.",
+        "expected": "The selected restaurant's detail view opens."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Show required restaurant details.",
+        "action": "Open a restaurant detail view.",
+        "expected": "The view clearly identifies the restaurant and displays its cuisine type and average price."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Create a reservation with valid details.",
+        "action": "Choose a future date, an offered time, and a valid party size, then complete the reservation.",
+        "expected": "The reservation is created and a confirmation shows the selected restaurant, date, time, and party size."
+      },
+      {
+        "id": "CS-01",
+        "class": "constraint",
+        "description": "Require all reservation scheduling fields.",
+        "action": "Attempt to reserve while omitting the date, time, or party size one field at a time.",
+        "expected": "No incomplete reservation is created and the missing field is identified."
+      },
+      {
+        "id": "CS-02",
+        "class": "constraint",
+        "description": "Prevent reservation dates in the past.",
+        "action": "Attempt to reserve a table for a past date.",
+        "expected": "The reservation is rejected and clear date validation feedback is shown."
+      },
+      {
+        "id": "CS-03",
+        "class": "constraint",
+        "description": "Reject invalid party sizes.",
+        "action": "Attempt to reserve with zero, a negative value, a fractional value, or a value beyond any displayed limit.",
+        "expected": "The reservation is not created and party-size validation feedback is shown."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Keep availability choices synchronized with reservation inputs.",
+        "action": "Choose a date and time, then change the date or party size.",
+        "expected": "The selectable time or availability state refreshes for the latest inputs without leaving an invalid stale selection active."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "View upcoming reservations.",
+        "action": "Create a future reservation and open the upcoming-bookings area.",
+        "expected": "The new reservation appears with the correct restaurant, date, time, and party size."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "Modify an upcoming reservation.",
+        "action": "Open an upcoming booking, change at least one reservation field to another valid value, and save.",
+        "expected": "The booking displays the new value and no duplicate booking is created."
+      },
+      {
+        "id": "CS-04",
+        "class": "constraint",
+        "description": "Validate modified reservation details before applying them.",
+        "action": "Enter an invalid date or party size while modifying an existing reservation and attempt to save.",
+        "expected": "The modification is rejected, validation feedback is shown, and the previously valid booking remains unchanged."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Cancel an upcoming reservation.",
+        "action": "Cancel an existing upcoming booking and confirm the cancellation if prompted.",
+        "expected": "The booking is no longer presented as an active upcoming reservation and is clearly shown as canceled if retained in history."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Leave a reservation unchanged when cancellation is abandoned.",
+        "action": "Start canceling a booking, then dismiss or decline the confirmation.",
+        "expected": "The booking remains active with all original details."
+      },
+      {
+        "id": "FT-07",
+        "class": "functionality",
+        "description": "Submit a review and rating for a visited restaurant.",
+        "action": "For a restaurant with a completed visit, enter a valid rating and simple review and submit them.",
+        "expected": "The review is accepted and displayed with the selected rating for the correct restaurant."
+      },
+      {
+        "id": "CS-05",
+        "class": "constraint",
+        "description": "Restrict reviews to restaurants the user has visited.",
+        "action": "Attempt to submit a review for a restaurant with no completed visit.",
+        "expected": "The review is not accepted and the interface explains that only visited restaurants can be reviewed."
+      },
+      {
+        "id": "CS-06",
+        "class": "constraint",
+        "description": "Reject ratings outside the displayed rating scale.",
+        "action": "Attempt to submit a review with a rating below or above the allowed scale.",
+        "expected": "The review is not submitted and rating validation feedback is shown."
+      },
+      {
+        "id": "FT-08",
+        "class": "functionality",
+        "description": "Apply a valid discount coupon during reservation.",
+        "action": "Enter a valid coupon in the reservation flow and apply it before completing the booking.",
+        "expected": "The coupon is accepted and the displayed reservation price or discount summary reflects its benefit."
+      },
+      {
+        "id": "CS-07",
+        "class": "constraint",
+        "description": "Handle invalid coupons without blocking an undiscounted reservation.",
+        "action": "Enter an invalid coupon, attempt to apply it, then remove or ignore it and continue with valid reservation details.",
+        "expected": "The invalid coupon gives clear feedback, no discount is applied, and the reservation can still be completed without a coupon."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Keep reservation totals and confirmation content consistent.",
+        "action": "Complete a reservation after selecting its details and optionally applying a coupon.",
+        "expected": "The final confirmation matches the selected booking details and any displayed discount or total from the checkout step."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0038",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Compare available software plans.",
+        "action": "Open the plan comparison area.",
+        "expected": "Multiple plans are displayed in a form that permits direct comparison."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Show detailed features for every plan.",
+        "action": "Inspect each plan and open any available feature-detail view.",
+        "expected": "Each plan has an identifiable name, price or billing terms, and a detailed description of included features."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Compare monthly, quarterly, and annual billing outcomes.",
+        "action": "Switch the comparison among monthly, quarterly, and annual payment options.",
+        "expected": "All three options produce clearly labeled, visibly updated pricing or billing outcomes for the plans."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Keep cadence pricing internally consistent.",
+        "action": "For a plan, compare the displayed charge amount, billing frequency, and any stated effective-period total under all three cadences.",
+        "expected": "The amounts and periods agree with each other and no cadence is mislabeled."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Prevent stale plan data when changing billing cadence.",
+        "action": "Select one cadence, then rapidly switch to each other cadence.",
+        "expected": "The selected cadence and every displayed price, total, and checkout choice consistently reflect the final selection."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Create a user account.",
+        "action": "Enter valid values in the account-creation flow and submit.",
+        "expected": "An account is created and the user can continue to subscription checkout."
+      },
+      {
+        "id": "CS-01",
+        "class": "constraint",
+        "description": "Reject incomplete or invalid account submissions.",
+        "action": "Submit the account form with each required field missing and with malformed input where a format is specified.",
+        "expected": "The account is not created and clear field-specific validation is shown."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Subscribe through checkout.",
+        "action": "Select a plan and billing cadence, create or use an account, provide valid checkout details, and confirm.",
+        "expected": "The subscription is created for the exact selected plan and cadence and a clear confirmation is displayed."
+      },
+      {
+        "id": "CS-02",
+        "class": "constraint",
+        "description": "Require valid checkout information.",
+        "action": "Attempt to complete checkout with a required checkout field empty or invalid.",
+        "expected": "No subscription is created and the invalid field is identified."
+      },
+      {
+        "id": "CT-03",
+        "class": "content",
+        "description": "Keep checkout terms consistent with plan selection.",
+        "action": "Select a plan and cadence, proceed to checkout, and compare the checkout summary with the comparison-page selection.",
+        "expected": "Plan name, billing cadence, charge, and any stated totals or discounts match the selection."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Display the signed-in user's current plan.",
+        "action": "Sign in as a subscribed user and open the account area.",
+        "expected": "The account area identifies the user's active plan and billing cadence."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "Display upcoming billing information.",
+        "action": "Open billing information for an active subscription.",
+        "expected": "The next billing date and expected charge or billing terms are clearly shown."
+      },
+      {
+        "id": "CS-03",
+        "class": "constraint",
+        "description": "Protect subscription details from unsigned users.",
+        "action": "While signed out, attempt to open the account subscription area.",
+        "expected": "No user-specific subscription or billing information is exposed, and the user is prompted to sign in."
+      },
+      {
+        "id": "FT-06",
+        "class": "functionality",
+        "description": "Change to a different subscription plan.",
+        "action": "From an active subscription, choose a different plan, review its terms, and confirm the change.",
+        "expected": "The account area reflects the newly selected plan and clearly communicates the applicable billing outcome."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Update upcoming billing after a plan or cadence change.",
+        "action": "Change the current plan or payment cadence and return to upcoming billing information.",
+        "expected": "The upcoming billing details update to the confirmed subscription terms without showing stale prior-plan information."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Preserve the current subscription when a plan change is abandoned.",
+        "action": "Start changing plans, then cancel or navigate back before confirming.",
+        "expected": "The original plan and its upcoming billing information remain unchanged."
+      },
+      {
+        "id": "FT-07",
+        "class": "functionality",
+        "description": "Cancel an active subscription.",
+        "action": "Choose subscription cancellation and confirm the action.",
+        "expected": "The account clearly shows that the subscription is canceled or scheduled to end and communicates any remaining service period."
+      },
+      {
+        "id": "IX-05",
+        "class": "interaction",
+        "description": "Preserve an active subscription when cancellation is declined.",
+        "action": "Begin cancellation, then dismiss or decline the confirmation.",
+        "expected": "The subscription remains active with the original plan and billing information."
+      },
+      {
+        "id": "CS-04",
+        "class": "constraint",
+        "description": "Prevent repeated cancellation from producing conflicting state.",
+        "action": "After confirming cancellation, attempt the cancellation action again if it remains available.",
+        "expected": "The subscription remains in one unambiguous canceled state and no duplicate cancellation outcome is created."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0066",
+    "items": [
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Display submitted annotation tasks.",
+        "action": "Open the annotation-review page.",
+        "expected": "A list of submitted annotation tasks is displayed and each listed task can be opened."
+      },
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Identify annotation tasks unambiguously.",
+        "action": "Inspect the task list.",
+        "expected": "Each task provides enough visible identifying information to distinguish it from the other tasks."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Open a task for review.",
+        "action": "Select a task from the list.",
+        "expected": "The selected task opens with its submitted annotations available for review."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Show annotations side-by-side with annotator attribution.",
+        "action": "Open a task submitted by multiple annotators.",
+        "expected": "The annotators' submissions are simultaneously visible in aligned side-by-side sections and each is attributed to the correct annotator."
+      },
+      {
+        "id": "CT-03",
+        "class": "content",
+        "description": "Preserve annotation values exactly in the comparison.",
+        "action": "Compare the annotation values in the task list/detail source with their side-by-side rendering.",
+        "expected": "Labels, selections, or text are shown under the correct annotator without swapping, truncating essential content, or merging different submissions."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Approve an annotation task or review item.",
+        "action": "Open an undecided task or item and mark it approved.",
+        "expected": "Its review status changes to approved and remains visible when returning to the task list and reopening it."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Flag an annotation task or review item.",
+        "action": "Open an undecided task or item and mark it flagged.",
+        "expected": "Its review status changes to flagged and remains visible when returning to the task list and reopening it."
+      },
+      {
+        "id": "CS-01",
+        "class": "constraint",
+        "description": "Keep approved and flagged states mutually unambiguous.",
+        "action": "Mark an item approved and then mark the same item flagged, or perform the reverse transition.",
+        "expected": "The item has one clear current review state, with the latest deliberate choice replacing or otherwise resolving the prior state."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Retain decisions while navigating between tasks.",
+        "action": "Set a review status on one task, open a second task, then return to the first.",
+        "expected": "The first task still displays the previously selected review status."
+      },
+      {
+        "id": "FT-05",
+        "class": "functionality",
+        "description": "Open the annotation-quality summary.",
+        "action": "Navigate to the summary view.",
+        "expected": "The view shows disagreement statistics, the flagged-item count, and annotator inconsistency information."
+      },
+      {
+        "id": "CT-04",
+        "class": "content",
+        "description": "Report disagreement rates accurately.",
+        "action": "For a task or set with manually countable agreements and disagreements, calculate the rate and compare it with the summary.",
+        "expected": "The displayed disagreement rate matches the underlying annotation comparisons and states its scope clearly."
+      },
+      {
+        "id": "CT-05",
+        "class": "content",
+        "description": "Report the flagged-item count accurately.",
+        "action": "Count currently flagged items and compare the count with the summary.",
+        "expected": "The summary's flagged count equals the number of items currently marked flagged."
+      },
+      {
+        "id": "CT-06",
+        "class": "content",
+        "description": "Identify the highest-inconsistency annotators accurately.",
+        "action": "Derive each annotator's inconsistency rate from the available tasks and compare the highest value with the summary.",
+        "expected": "The annotator or tied annotators with the highest derived rate are identified, with no lower-rate annotator presented as uniquely highest."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Update flagged statistics after a review decision changes.",
+        "action": "Record the flagged count, flag one unflagged item, and reopen or refresh the summary.",
+        "expected": "The flagged count increases by one and reflects the new review state."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Update flagged statistics when a flag is removed.",
+        "action": "Change one flagged item to approved, then reopen or refresh the summary.",
+        "expected": "The flagged count decreases by one and the item is no longer counted as flagged."
+      },
+      {
+        "id": "CS-02",
+        "class": "constraint",
+        "description": "Avoid invalid statistics when no comparable annotations exist.",
+        "action": "Open a task or summary scope with fewer than two comparable annotator submissions, if available.",
+        "expected": "The interface shows an explicit unavailable or insufficient-data state rather than a misleading numeric disagreement rate."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Keep task-list and detail statuses synchronized.",
+        "action": "Change a task's status in its detail view and return to the list.",
+        "expected": "The corresponding list entry immediately displays the same current status."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0059",
+    "items": [
+      {
+        "id": "CT-01",
+        "class": "content",
+        "description": "Provide the three required batch-management tabs.",
+        "action": "Open the laboratory sample-batch page.",
+        "expected": "Tabs labeled Batch Table, Add/Edit, and Expiration Reminders are present and selectable."
+      },
+      {
+        "id": "FT-01",
+        "class": "functionality",
+        "description": "Add a valid sample batch.",
+        "action": "In Add/Edit, enter a distinct name, cabinet number, shelf number, and valid future expiration date, then save.",
+        "expected": "The batch is created and appears in the Batch Table with all entered values."
+      },
+      {
+        "id": "CS-01",
+        "class": "constraint",
+        "description": "Require all batch fields.",
+        "action": "Attempt to save a new batch while omitting its name, cabinet number, shelf number, or expiration date one field at a time.",
+        "expected": "No incomplete batch is saved and the missing field is clearly identified."
+      },
+      {
+        "id": "CS-02",
+        "class": "constraint",
+        "description": "Reject an invalid expiration-date format.",
+        "action": "Enter a date that does not follow the format communicated by the page and attempt to save.",
+        "expected": "The batch is not saved and dedicated date-format feedback is displayed."
+      },
+      {
+        "id": "CS-03",
+        "class": "constraint",
+        "description": "Reject a nonexistent calendar date.",
+        "action": "Enter a correctly shaped but impossible date, such as a day that does not exist in its month, and attempt to save.",
+        "expected": "The batch is not saved and the expiration date is identified as invalid."
+      },
+      {
+        "id": "CS-04",
+        "class": "constraint",
+        "description": "Detect duplicate storage locations.",
+        "action": "Create one batch, then attempt to save another batch using the same cabinet-and-shelf combination.",
+        "expected": "The duplicate location is not silently accepted and dedicated duplicate-location feedback identifies the conflict."
+      },
+      {
+        "id": "CS-05",
+        "class": "constraint",
+        "description": "Treat different shelves or cabinets as distinct locations.",
+        "action": "After creating a batch, create another using the same cabinet with a different shelf, and another using the same shelf with a different cabinet.",
+        "expected": "Both nonidentical cabinet-and-shelf combinations can be saved without duplicate-location feedback."
+      },
+      {
+        "id": "CT-02",
+        "class": "content",
+        "description": "Display complete batch data in tabular form.",
+        "action": "Open Batch Table after creating multiple batches.",
+        "expected": "Each batch occupies a distinguishable table entry showing its name, cabinet, shelf, and expiration date under clear headings."
+      },
+      {
+        "id": "FT-02",
+        "class": "functionality",
+        "description": "Load an existing batch for editing.",
+        "action": "Choose an existing batch's edit action from the table.",
+        "expected": "Add/Edit opens with that batch's current name, cabinet, shelf, and expiration date populated."
+      },
+      {
+        "id": "FT-03",
+        "class": "functionality",
+        "description": "Edit batch information.",
+        "action": "Change an existing batch's name, storage location, or expiration date to valid values and save.",
+        "expected": "The existing batch is updated with the new values and no duplicate copy is created."
+      },
+      {
+        "id": "CS-06",
+        "class": "constraint",
+        "description": "Apply duplicate-location validation during edits.",
+        "action": "Edit one batch so that its cabinet-and-shelf combination matches another existing batch and attempt to save.",
+        "expected": "The conflicting edit is rejected with dedicated duplicate-location feedback, and the previously saved location remains intact."
+      },
+      {
+        "id": "IX-01",
+        "class": "interaction",
+        "description": "Synchronize newly added batches across tabs.",
+        "action": "Save a new batch in Add/Edit and switch directly to Batch Table and Expiration Reminders.",
+        "expected": "The new batch is immediately reflected in every applicable tab without a manual refresh."
+      },
+      {
+        "id": "IX-02",
+        "class": "interaction",
+        "description": "Synchronize batch edits across tabs.",
+        "action": "Edit a batch's name, location, or expiration date and inspect the other tabs.",
+        "expected": "Every applicable tab immediately shows the updated values and no stale prior values."
+      },
+      {
+        "id": "IX-03",
+        "class": "interaction",
+        "description": "Retain an in-progress Add/Edit form while switching tabs.",
+        "action": "Enter a partial unsaved batch draft, switch to another tab, then return to Add/Edit.",
+        "expected": "The draft values and editing context remain intact."
+      },
+      {
+        "id": "IX-04",
+        "class": "interaction",
+        "description": "Retain the currently selected tab across a refresh.",
+        "action": "Select a tab other than the initial tab and refresh the page.",
+        "expected": "The page restores the same selected tab."
+      },
+      {
+        "id": "IX-05",
+        "class": "interaction",
+        "description": "Retain an unsaved draft across a refresh.",
+        "action": "Enter identifiable values in an unsaved Add/Edit form and refresh the page.",
+        "expected": "The current draft and whether it represents an add or edit operation are restored without data loss."
+      },
+      {
+        "id": "IX-06",
+        "class": "interaction",
+        "description": "Retain saved batch state during a lagged or interrupted refresh.",
+        "action": "Create or edit a batch, simulate slow or unavailable network conditions, and refresh the page.",
+        "expected": "The saved batch data reappears correctly and is not cleared or rolled back because of the network condition."
+      },
+      {
+        "id": "FT-04",
+        "class": "functionality",
+        "description": "Show samples that are about to expire.",
+        "action": "Create a batch expiring very soon, such as the next day, and open Expiration Reminders.",
+        "expected": "The batch appears in the reminder view with its identifying information and expiration date."
+      },
+      {
+        "id": "CS-07",
+        "class": "constraint",
+        "description": "Exclude clearly non-urgent batches from expiration reminders.",
+        "action": "Create one batch expiring very soon and another expiring far in the future, then open Expiration Reminders.",
+        "expected": "The soon-expiring batch is shown as needing attention while the far-future batch is not incorrectly shown as about to expire."
+      },
+      {
+        "id": "IX-07",
+        "class": "interaction",
+        "description": "Recalculate reminders after an expiration-date edit.",
+        "action": "Change a far-future batch to expire very soon and inspect Expiration Reminders, then change it back to a far-future date.",
+        "expected": "The batch enters the reminder list after the first edit and leaves it after the second edit without requiring a page refresh."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0042",
+    "items": [
+      {
+        "id": "0042-01",
+        "class": "functionality",
+        "description": "Create more than one project.",
+        "action": "Create a project named Alpha and another named Beta, then open the project list.",
+        "expected": "Both Alpha and Beta appear as distinct selectable projects."
+      },
+      {
+        "id": "0042-02",
+        "class": "constraint",
+        "description": "Keep each project's kanban tasks isolated.",
+        "action": "Create a task named Alpha-only on Alpha's board, switch to Beta, and inspect Beta's board.",
+        "expected": "Alpha-only is present on Alpha's board and absent from Beta's board."
+      },
+      {
+        "id": "0042-03",
+        "class": "functionality",
+        "description": "Create a task with all requested planning attributes.",
+        "action": "On a project board, create a task with a title, due date, priority, and assignee.",
+        "expected": "The new task appears on the board with the entered due date, priority, and assignee."
+      },
+      {
+        "id": "0042-04",
+        "class": "interaction",
+        "description": "Move a task between kanban columns by dragging it.",
+        "action": "Drag an existing task card from its current column to a different column.",
+        "expected": "The card is removed from the source column and appears in the destination column."
+      },
+      {
+        "id": "0042-05",
+        "class": "constraint",
+        "description": "Persist a dragged task's new status.",
+        "action": "After dragging a task to another column, reload the project page and locate the task.",
+        "expected": "The task remains in the destination column after reload."
+      },
+      {
+        "id": "0042-06",
+        "class": "functionality",
+        "description": "Filter tasks by status.",
+        "action": "Create or identify tasks in different columns, apply a filter for one status, and inspect the visible cards.",
+        "expected": "Only tasks with the selected status are shown."
+      },
+      {
+        "id": "0042-07",
+        "class": "functionality",
+        "description": "Filter tasks by assignee.",
+        "action": "Create or identify tasks assigned to different people, select one assignee filter, and inspect the visible cards.",
+        "expected": "Every visible task is assigned to the selected person and other assignees' tasks are hidden."
+      },
+      {
+        "id": "0042-08",
+        "class": "functionality",
+        "description": "Search tasks by keyword.",
+        "action": "Enter a distinctive word from one task's title or content into the task search box.",
+        "expected": "The matching task is shown and nonmatching tasks are hidden."
+      },
+      {
+        "id": "0042-09",
+        "class": "interaction",
+        "description": "Clear task filtering and search state.",
+        "action": "Apply a task filter and keyword search, then use the available clear or reset controls.",
+        "expected": "The full project board task set is visible again."
+      },
+      {
+        "id": "0042-10",
+        "class": "functionality",
+        "description": "Record progress on a task.",
+        "action": "Open a task and change its progress from its initial value to a different available value, then save.",
+        "expected": "The task displays the newly selected progress value."
+      },
+      {
+        "id": "0042-11",
+        "class": "constraint",
+        "description": "Persist task progress updates.",
+        "action": "Update a task's progress, reload the project page, and reopen the task.",
+        "expected": "The updated progress value is retained after reload."
+      },
+      {
+        "id": "0042-12",
+        "class": "content",
+        "description": "Show a concise overall project status summary.",
+        "action": "Open a project containing tasks in at least two statuses and inspect its summary area.",
+        "expected": "A compact summary reports the project's overall task status or progress rather than requiring every card to be opened."
+      },
+      {
+        "id": "0042-13",
+        "class": "functionality",
+        "description": "Update the project summary when task status changes.",
+        "action": "Note the summary, move a task to a different status, and inspect the summary again.",
+        "expected": "The summary changes to reflect the task's new status."
+      },
+      {
+        "id": "0042-14",
+        "class": "content",
+        "description": "Attach a discussion panel to each project.",
+        "action": "Open a project and inspect its project workspace.",
+        "expected": "A chat or discussion panel for that project is available from the workspace."
+      },
+      {
+        "id": "0042-15",
+        "class": "functionality",
+        "description": "Send a project chat message.",
+        "action": "Enter a unique message in a project's chat panel and submit it.",
+        "expected": "The submitted message appears in that project's conversation."
+      },
+      {
+        "id": "0042-16",
+        "class": "interaction",
+        "description": "Deliver new chat messages in real time.",
+        "action": "Open the same project's chat in two team-member sessions and send a unique message from the first session without refreshing the second.",
+        "expected": "The message appears in the second session without a manual page reload."
+      },
+      {
+        "id": "0042-17",
+        "class": "constraint",
+        "description": "Keep project chats isolated.",
+        "action": "Send a unique message in Alpha's chat, then open Beta's chat.",
+        "expected": "The Alpha message remains in Alpha's chat and does not appear in Beta's chat."
+      },
+      {
+        "id": "0042-18",
+        "class": "content",
+        "description": "Expose due date, priority, and assignee on task details.",
+        "action": "Open a task created with a due date, priority, and assignee.",
+        "expected": "All three saved attributes are visibly labeled or otherwise unambiguous."
+      },
+      {
+        "id": "0042-19",
+        "class": "constraint",
+        "description": "Limit task search and filters to the active project.",
+        "action": "Create similarly named tasks in two projects, open one project, and search or filter for the matching task.",
+        "expected": "Results contain only tasks belonging to the active project."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0004",
+    "items": [
+      {
+        "id": "0004-01",
+        "class": "functionality",
+        "description": "Create a wedding planning dashboard with core details.",
+        "action": "Enter a wedding date, budget, and guest count in a new planning dashboard and save it.",
+        "expected": "The dashboard displays the saved wedding date, budget, and guest count."
+      },
+      {
+        "id": "0004-02",
+        "class": "functionality",
+        "description": "Update wedding dashboard details.",
+        "action": "Change the saved wedding date, budget, and guest count and save the update.",
+        "expected": "The dashboard shows the new values instead of the previous values."
+      },
+      {
+        "id": "0004-03",
+        "class": "constraint",
+        "description": "Persist wedding dashboard changes.",
+        "action": "Save dashboard details, reload the page, and return to the dashboard.",
+        "expected": "The most recently saved date, budget, and guest count remain visible."
+      },
+      {
+        "id": "0004-04",
+        "class": "content",
+        "description": "Provide browsable venue listings.",
+        "action": "Open the venue browsing area without entering a search term.",
+        "expected": "Multiple venue listings are displayed with enough identifying information to distinguish them."
+      },
+      {
+        "id": "0004-05",
+        "class": "content",
+        "description": "Provide browsable vendor listings.",
+        "action": "Open the vendor browsing area without entering a search term.",
+        "expected": "Multiple vendor listings are displayed with their service type or category identifiable."
+      },
+      {
+        "id": "0004-06",
+        "class": "functionality",
+        "description": "Filter listings by location type.",
+        "action": "Select one available location-type filter for applicable listings.",
+        "expected": "Every visible result matches the selected location type."
+      },
+      {
+        "id": "0004-07",
+        "class": "functionality",
+        "description": "Filter listings by price range.",
+        "action": "Select one available price range in the venue or vendor listings.",
+        "expected": "Every visible result falls within or is labeled with the selected price range."
+      },
+      {
+        "id": "0004-08",
+        "class": "functionality",
+        "description": "Filter vendors by service type.",
+        "action": "Select one vendor service type such as catering, photography, or another offered category.",
+        "expected": "Every visible vendor result belongs to the selected service type."
+      },
+      {
+        "id": "0004-09",
+        "class": "functionality",
+        "description": "Search venue and vendor listings by keyword.",
+        "action": "Search using a distinctive venue or vendor name or listing keyword.",
+        "expected": "Matching listings are returned and unrelated listings are excluded."
+      },
+      {
+        "id": "0004-10",
+        "class": "interaction",
+        "description": "Reset listing filters and search.",
+        "action": "Apply a listing filter and search term, then clear or reset them.",
+        "expected": "The unfiltered listing collection is shown again."
+      },
+      {
+        "id": "0004-11",
+        "class": "functionality",
+        "description": "Favorite a venue or vendor.",
+        "action": "Mark an unfavorited listing as a favorite and open the favorites area.",
+        "expected": "The selected listing is visibly favorited and appears in the favorites area."
+      },
+      {
+        "id": "0004-12",
+        "class": "functionality",
+        "description": "Remove a venue or vendor from favorites.",
+        "action": "Unfavorite a listing that is currently in the favorites area.",
+        "expected": "The listing is no longer marked as a favorite and is removed from the favorites area."
+      },
+      {
+        "id": "0004-13",
+        "class": "constraint",
+        "description": "Persist favorite listings for later retrieval.",
+        "action": "Favorite a listing, reload or revisit the site, and open favorites.",
+        "expected": "The favorited listing remains in the favorites area."
+      },
+      {
+        "id": "0004-14",
+        "class": "content",
+        "description": "Offer a collection of planning tips.",
+        "action": "Open the planning tips section and view an available tip.",
+        "expected": "A collection of tips is available and the selected tip's useful planning content can be read."
+      },
+      {
+        "id": "0004-15",
+        "class": "content",
+        "description": "Offer usable planning checklists.",
+        "action": "Open the planning checklist section and inspect a checklist.",
+        "expected": "The checklist presents distinct planning items that can be acted on or tracked."
+      },
+      {
+        "id": "0004-16",
+        "class": "functionality",
+        "description": "Save a planning tip or checklist to the dashboard.",
+        "action": "Choose an unsaved tip or checklist, save it, and return to the planning dashboard.",
+        "expected": "The selected item appears in a saved planning section on the dashboard."
+      },
+      {
+        "id": "0004-17",
+        "class": "functionality",
+        "description": "Mark a saved planning item as completed.",
+        "action": "On the dashboard, mark one saved checklist item as completed.",
+        "expected": "The item visibly changes to a completed state."
+      },
+      {
+        "id": "0004-18",
+        "class": "constraint",
+        "description": "Persist planning-item completion state.",
+        "action": "Mark a saved checklist item completed, reload the dashboard, and inspect that item.",
+        "expected": "The item remains marked completed after reload."
+      },
+      {
+        "id": "0004-19",
+        "class": "constraint",
+        "description": "Avoid duplicating the same saved planning resource.",
+        "action": "Save the same tip or checklist to the dashboard twice.",
+        "expected": "The dashboard contains one saved entry for that resource or clearly prevents the duplicate save."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0089",
+    "items": [
+      {
+        "id": "0089-01",
+        "class": "content",
+        "description": "Display a library of reusable text templates.",
+        "action": "Open the template library and browse its available entries.",
+        "expected": "Multiple selectable text templates are listed, including identifiable template types or categories."
+      },
+      {
+        "id": "0089-02",
+        "class": "content",
+        "description": "Show template author and description.",
+        "action": "Open a template's card or detail view.",
+        "expected": "The template's author and description are both visible."
+      },
+      {
+        "id": "0089-03",
+        "class": "functionality",
+        "description": "Select a template and expose its fill-in form.",
+        "action": "Choose a template from the library.",
+        "expected": "A simple form containing fields relevant to the selected template is displayed."
+      },
+      {
+        "id": "0089-04",
+        "class": "functionality",
+        "description": "Generate a preview from entered form values.",
+        "action": "Fill every required field in a selected template with distinctive valid values and request a preview.",
+        "expected": "A preview is produced and includes the entered values in the template's intended structure."
+      },
+      {
+        "id": "0089-05",
+        "class": "constraint",
+        "description": "Block generation when a required field is empty.",
+        "action": "Leave one field marked required empty, complete the other fields, and attempt to generate or preview.",
+        "expected": "Generation is prevented and the missing required field is clearly identified."
+      },
+      {
+        "id": "0089-06",
+        "class": "constraint",
+        "description": "Reject restricted special characters in form input.",
+        "action": "Enter disallowed formatting-sensitive special characters into a template input and attempt to generate.",
+        "expected": "The invalid characters are rejected or validation blocks generation with a clear field-level message."
+      },
+      {
+        "id": "0089-07",
+        "class": "functionality",
+        "description": "Submit a plain-text template.",
+        "action": "Submit a new template in plain-text format with a unique title, author, description, category information, and body.",
+        "expected": "The submission succeeds and the new template appears in the library."
+      },
+      {
+        "id": "0089-08",
+        "class": "functionality",
+        "description": "Submit a Markdown template.",
+        "action": "Submit a different new template in Markdown format with recognizable Markdown syntax and complete metadata.",
+        "expected": "The submission succeeds and the Markdown template appears in the library with its content preserved or rendered correctly."
+      },
+      {
+        "id": "0089-09",
+        "class": "content",
+        "description": "Retain submitted template metadata.",
+        "action": "Open a newly submitted template from the library.",
+        "expected": "Its displayed author, description, type or category, and body correspond to the submitted values."
+      },
+      {
+        "id": "0089-10",
+        "class": "functionality",
+        "description": "Filter templates by template type.",
+        "action": "Select one available template-type filter.",
+        "expected": "Every visible result belongs to the selected template type."
+      },
+      {
+        "id": "0089-11",
+        "class": "functionality",
+        "description": "Filter templates by applicable scenario.",
+        "action": "Select one available applicable-scenario filter.",
+        "expected": "Every visible result is associated with the selected scenario."
+      },
+      {
+        "id": "0089-12",
+        "class": "functionality",
+        "description": "Filter or order templates by popularity.",
+        "action": "Apply the available popularity criterion to the library.",
+        "expected": "The visible results satisfy the selected popularity range or are ordered by popularity as indicated by the control."
+      },
+      {
+        "id": "0089-13",
+        "class": "functionality",
+        "description": "Filter or order templates by update time.",
+        "action": "Apply the available update-time criterion to the library.",
+        "expected": "The visible results satisfy the selected update period or are ordered by update time as indicated by the control."
+      },
+      {
+        "id": "0089-14",
+        "class": "constraint",
+        "description": "Combine multiple template search dimensions.",
+        "action": "Apply a template type and an applicable scenario that have at least one known common result.",
+        "expected": "Every visible result satisfies both selected criteria."
+      },
+      {
+        "id": "0089-15",
+        "class": "functionality",
+        "description": "Fuzzy-match template keywords.",
+        "action": "Search with a minor misspelling or partial variant of a known template keyword.",
+        "expected": "The relevant template is returned despite the inexact keyword."
+      },
+      {
+        "id": "0089-16",
+        "class": "interaction",
+        "description": "Show associative search suggestions in real time.",
+        "action": "Type the first few characters of a known template title or keyword and pause without submitting the search.",
+        "expected": "Relevant suggestions appear while typing, without requiring explicit search submission."
+      },
+      {
+        "id": "0089-17",
+        "class": "interaction",
+        "description": "Use an associative suggestion to open or run a search.",
+        "action": "Select one suggestion displayed beneath the template search box.",
+        "expected": "The chosen suggestion populates or executes the search and shows the corresponding relevant result."
+      },
+      {
+        "id": "0089-18",
+        "class": "functionality",
+        "description": "Add a template to favorites.",
+        "action": "Favorite an unfavorited template and open the favorites list.",
+        "expected": "The template is visibly favorited and appears in the favorites list."
+      },
+      {
+        "id": "0089-19",
+        "class": "functionality",
+        "description": "Retrieve and use a template from favorites.",
+        "action": "From the favorites list, select a saved template.",
+        "expected": "The selected template opens with its details and fill-in form available."
+      },
+      {
+        "id": "0089-20",
+        "class": "functionality",
+        "description": "Remove a template from favorites.",
+        "action": "Unfavorite a template currently shown in the favorites list.",
+        "expected": "The template loses its favorite state and no longer appears in the favorites list."
+      }
+    ]
+  },
+  {
+    "index": "WebTestBench_0015",
+    "items": [
+      {
+        "id": "0015-01",
+        "class": "functionality",
+        "description": "Create a detailed poll while signed in.",
+        "action": "As a registered signed-in user, create a poll with a question, description, at least three choices, and a valid future deadline.",
+        "expected": "The poll is created and displays the entered question, description, choices, and deadline."
+      },
+      {
+        "id": "0015-02",
+        "class": "constraint",
+        "description": "Support polls without a voting deadline.",
+        "action": "Create a second poll while leaving the optional deadline empty.",
+        "expected": "The poll is created successfully and does not show an unintended deadline."
+      },
+      {
+        "id": "0015-03",
+        "class": "constraint",
+        "description": "Require multiple choices when creating a poll.",
+        "action": "Attempt to create a poll with only one voting choice.",
+        "expected": "Creation is blocked and the user is prompted to provide multiple choices."
+      },
+      {
+        "id": "0015-04",
+        "class": "functionality",
+        "description": "Create an anonymous-voting poll.",
+        "action": "Create a poll with anonymous voting selected and open its share link in a signed-out session.",
+        "expected": "The signed-out visitor can access the choices and submit a vote without signing in."
+      },
+      {
+        "id": "0015-05",
+        "class": "constraint",
+        "description": "Enforce sign-in for a sign-in-required poll.",
+        "action": "Create a poll that requires voters to sign in and open its share link in a signed-out session.",
+        "expected": "Voting is blocked until the visitor signs in."
+      },
+      {
+        "id": "0015-06",
+        "class": "functionality",
+        "description": "Provide a shareable poll link.",
+        "action": "Use the creator's share control, copy the resulting link, and open it in another browser session.",
+        "expected": "The link opens the intended poll rather than the dashboard or a different poll."
+      },
+      {
+        "id": "0015-07",
+        "class": "functionality",
+        "description": "Submit a vote for one poll choice.",
+        "action": "Open an active poll, select one choice, and submit the vote.",
+        "expected": "The vote is accepted and a success state or results view is shown."
+      },
+      {
+        "id": "0015-08",
+        "class": "content",
+        "description": "Show bar-style visual poll results.",
+        "action": "View the results of a poll that has votes for at least two choices.",
+        "expected": "Each choice has a bar-style visual breakdown with an understandable vote count, percentage, or equivalent magnitude."
+      },
+      {
+        "id": "0015-09",
+        "class": "interaction",
+        "description": "Show live results to a voter immediately after voting.",
+        "action": "Record the displayed results, cast a vote, and observe the results view without manually refreshing.",
+        "expected": "The results become visible after submission and the selected choice's result increases accordingly."
+      },
+      {
+        "id": "0015-10",
+        "class": "interaction",
+        "description": "Update results in another open session as votes arrive.",
+        "action": "Keep the poll results open in one session and cast a vote from another session without refreshing the first.",
+        "expected": "The first session's visual results update to include the new vote."
+      },
+      {
+        "id": "0015-11",
+        "class": "functionality",
+        "description": "Close an active poll early.",
+        "action": "As the poll creator, close an active poll before its deadline and revisit its voting page.",
+        "expected": "The poll status is closed and new votes cannot be submitted."
+      },
+      {
+        "id": "0015-12",
+        "class": "functionality",
+        "description": "Reopen a closed poll.",
+        "action": "As the creator, reopen a previously closed poll and open its voting page.",
+        "expected": "The poll returns to an active state and an eligible voter can submit a vote."
+      },
+      {
+        "id": "0015-13",
+        "class": "functionality",
+        "description": "Switch a poll to read-only results mode.",
+        "action": "As the creator, set an active poll to read-only results and open its public page.",
+        "expected": "Results remain visible but voting controls are disabled or unavailable."
+      },
+      {
+        "id": "0015-14",
+        "class": "constraint",
+        "description": "Prevent voting after the deadline.",
+        "action": "Open a poll whose voting deadline has passed and attempt to vote.",
+        "expected": "The poll indicates voting has ended and rejects the vote."
+      },
+      {
+        "id": "0015-15",
+        "class": "content",
+        "description": "List the creator's polls on a dashboard.",
+        "action": "Create multiple polls, including polls in different statuses, and open the creator dashboard.",
+        "expected": "The user's polls are listed with enough title, creation-date, and status information to identify and manage them."
+      },
+      {
+        "id": "0015-16",
+        "class": "functionality",
+        "description": "Search the poll dashboard by title.",
+        "action": "Enter a distinctive substring from one owned poll's title into dashboard search.",
+        "expected": "The matching poll is shown and nonmatching titled polls are excluded."
+      },
+      {
+        "id": "0015-17",
+        "class": "functionality",
+        "description": "Sort dashboard polls by title.",
+        "action": "Select title sorting and compare the order of at least three differently titled polls.",
+        "expected": "Polls appear in the title order indicated by the sort control."
+      },
+      {
+        "id": "0015-18",
+        "class": "functionality",
+        "description": "Sort dashboard polls by creation date.",
+        "action": "Select creation-date sorting for polls created at different times.",
+        "expected": "Polls appear in the chronological direction indicated by the sort control."
+      },
+      {
+        "id": "0015-19",
+        "class": "functionality",
+        "description": "Sort dashboard polls by status.",
+        "action": "Select status sorting while the dashboard contains polls with at least two statuses.",
+        "expected": "Polls are grouped or ordered by status as indicated by the sort control."
+      },
+      {
+        "id": "0015-20",
+        "class": "constraint",
+        "description": "Restrict poll management actions to the creator.",
+        "action": "Open another user's poll while signed in as a non-creator and inspect or attempt its management controls.",
+        "expected": "Close, reopen, and read-only management actions are unavailable or denied to the non-creator."
+      }
+    ]
+  }
+]

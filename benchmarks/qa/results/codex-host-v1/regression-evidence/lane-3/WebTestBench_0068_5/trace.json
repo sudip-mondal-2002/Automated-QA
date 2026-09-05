@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0068:5",
+  "appId": "WebTestBench_0068",
+  "candidateSha256": "16828e0ad9f2fccf32d70aec4afbba15f4ef842b591e1644cebfecd535fd4546",
+  "appArchiveSha256": "e3fd9f29b04c140a76027cb40878ee5681bb1341e03845cda665fd4efc818584",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:19:38.377Z",
+  "completedAt": "2026-09-05T08:20:38.379Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0068-5.localhost:43197; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Selected the Beaker in Basic Heat Transfer.",
+    "Raised Initial Temp from 25°C to 30°C.",
+    "Started the simulation."
+  ],
+  "observations": [
+    "The Beaker parameter changed immediately to 30°C.",
+    "The linked thermometer/result rendered 30.0°C while the scene was Simulating."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Changing the component state propagates to the linked temperature result.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/after-linked-temperature-change.png",
+      "sha256": "4524df5a3905b985771b4d6e46da6dc0aa3892b7667497398f96186114648048",
+      "bytes": 74349
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/dom.txt",
+      "sha256": "85b51e1e82a2639833668d98787762a2c68f24d030ddf5ff80c99b6895482131",
+      "bytes": 1800
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/transitions.txt",
+      "sha256": "df8f4099aa3488ee3272958d26fba018a043ad53678642c6c8d315b07e9ca22e",
+      "bytes": 6188
+    }
+  ],
+  "laneId": "lane-3"
+}

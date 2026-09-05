@@ -1,0 +1,57 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "ReVive":
+    - /url: /
+    - generic: ReVive
+  - navigation:
+    - link "Browse":
+      - /url: /
+    - link "Categories":
+      - /url: /categories
+    - link "About":
+      - /url: /about
+  - button:
+  - button "Sell":
+    - text: Sell
+  - button:
+  - button "Emma Green":
+    - img "Emma Green"
+- heading "Create a Listing" [level=1]
+- paragraph: Share your item with the community
+- text: Photos
+- button:
+- button "Add Photo":
+  - generic: Add Photo
+- paragraph: Click to add sample images (up to 4)
+- text: Title *
+- textbox "Title *":
+  - /placeholder: What are you selling?
+  - text: Lane 3 invalid price item
+- text: Description *
+- textbox "Description *":
+  - /placeholder: Describe your item in detail...
+  - text: Testing non-negative price validation
+- text: Price ($) *
+- spinbutton "Price ($) *" [active]: "-5"
+- text: Category *
+- combobox:
+  - generic: Furniture
+- combobox
+- text: Condition *
+- combobox:
+  - generic: Good
+- combobox
+- text: Location *
+- textbox "Location *":
+  - /placeholder: City, State
+  - text: Brooklyn, NY
+- paragraph: Upcycled Item
+- paragraph: This item was made from recycled materials
+- switch
+- checkbox
+- button "Cancel"
+- button "Create Listing"
+
+INPUT min=0; current URL=http://wtb0023-15.localhost:43187/create-listing

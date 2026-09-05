@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0023:8",
+  "appId": "WebTestBench_0023",
+  "candidateSha256": "fb148a132c36da72d5dba403e0393a9021f46dcda02886c0dfb84e2ce8de7852",
+  "appArchiveSha256": "36506b2097bf0d26013c61b6df97dd72643729b12b5798213b1dc752a91a64f9",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:14:14.246Z",
+  "completedAt": "2026-09-05T08:15:14.247Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0023-8.localhost:43188; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened Reclaimed Wood Bookshelf and attempted Add to Cart.",
+    "Logged in with a displayed demo buyer when prompted.",
+    "Returned to the item, added it, and opened the cart."
+  ],
+  "observations": [
+    "Added to cart appeared and the cart badge became 1.",
+    "Your Cart showed one Reclaimed Wood Bookshelf at $320 and a $320.00 total."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "An authenticated buyer can add an item and retrieve it from the cart.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_8/cart-with-item.png",
+      "sha256": "27ee79ad359da00986d37c7bb444c2edac21e4103ab3265f6ef1a0f4c80432a7",
+      "bytes": 15596
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_8/dom.txt",
+      "sha256": "cfcd74fb553b46a59eb92d9961e3efde2e89f420ec5669f0eebd9654b010e95a",
+      "bytes": 2089
+    }
+  ],
+  "laneId": "lane-3"
+}

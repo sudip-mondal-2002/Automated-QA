@@ -1,0 +1,1923 @@
+{
+  "schemaVersion": 1,
+  "trackId": "qa-core-v1",
+  "runId": "codex-host-v1",
+  "officialLeaderboardComparable": false,
+  "disclosure": "Derived, public-label protocol track; not an official WebTestBench or ReproBreak score.",
+  "generation": {
+    "tasks": 14,
+    "submittedTasks": 14,
+    "predicted": 263,
+    "gold": 237,
+    "matched": 215,
+    "coveredGold": 140,
+    "judgedPredictions": 263,
+    "judgmentCoverage": 1,
+    "precision": 0.8174904942965779,
+    "recall": 0.5907172995780591,
+    "f1": 0.6858444887496439,
+    "coverage": 0.6103449246831599
+  },
+  "regression": {
+    "total": 56,
+    "answered": 56,
+    "correct": 37,
+    "incorrect": 19,
+    "truePositive": 15,
+    "falsePositive": 6,
+    "trueNegative": 22,
+    "falseNegative": 13,
+    "abstainedPositive": 0,
+    "abstainedNegative": 0,
+    "precision": 0.7142857142857143,
+    "recall": 0.5357142857142857,
+    "f1": 0.6122448979591837,
+    "specificity": 0.7857142857142857,
+    "balancedAccuracy": 0.6607142857142857,
+    "accuracy": 0.6607142857142857,
+    "coverage": 1,
+    "byCategory": {
+      "Commerce": {
+        "total": 8,
+        "correct": 7,
+        "accuracy": 0.875,
+        "f1": 0.8571428571428571,
+        "specificity": 1
+      },
+      "Data Management": {
+        "total": 8,
+        "correct": 8,
+        "accuracy": 1,
+        "f1": 1,
+        "specificity": 1
+      },
+      "Presentation": {
+        "total": 8,
+        "correct": 5,
+        "accuracy": 0.625,
+        "f1": 0.4,
+        "specificity": 1
+      },
+      "Search": {
+        "total": 8,
+        "correct": 6,
+        "accuracy": 0.75,
+        "f1": 0.75,
+        "specificity": 0.75
+      },
+      "Tool": {
+        "total": 8,
+        "correct": 4,
+        "accuracy": 0.5,
+        "f1": 0.5,
+        "specificity": 0.5
+      },
+      "User-Generated Content": {
+        "total": 8,
+        "correct": 4,
+        "accuracy": 0.5,
+        "f1": 0.3333333333333333,
+        "specificity": 0.75
+      },
+      "Workflow": {
+        "total": 8,
+        "correct": 3,
+        "accuracy": 0.375,
+        "f1": 0.28571428571428575,
+        "specificity": 0.5
+      }
+    },
+    "byDimension": {
+      "constraint": {
+        "total": 14,
+        "correct": 10,
+        "accuracy": 0.7142857142857143,
+        "f1": 0.6666666666666666,
+        "specificity": 0.8571428571428571
+      },
+      "content": {
+        "total": 14,
+        "correct": 9,
+        "accuracy": 0.6428571428571429,
+        "f1": 0.6153846153846153,
+        "specificity": 0.7142857142857143
+      },
+      "functionality": {
+        "total": 14,
+        "correct": 8,
+        "accuracy": 0.5714285714285714,
+        "f1": 0.5,
+        "specificity": 0.7142857142857143
+      },
+      "interaction": {
+        "total": 14,
+        "correct": 10,
+        "accuracy": 0.7142857142857143,
+        "f1": 0.6666666666666666,
+        "specificity": 0.8571428571428571
+      }
+    }
+  },
+  "healing": {
+    "total": 8,
+    "submitted": 8,
+    "controlSubmitted": 8,
+    "claimedHeals": 8,
+    "safeHeals": 8,
+    "invalidHealClaims": 0,
+    "falseHeals": 0,
+    "correctRegressions": 8,
+    "healRecall": 1,
+    "claimPrecision": 1,
+    "invalidHealClaimRate": 0,
+    "falseHealRate": 0,
+    "trueRegressionDetection": 1,
+    "controlCoverage": 1,
+    "unchangedExpectations": 1,
+    "evidenceCompleteness": 1,
+    "evidenceConsistency": 1,
+    "equivalenceVerification": 1,
+    "breakReproduction": 1,
+    "safetyScore": 1
+  },
+  "composite": {
+    "eligible": true,
+    "score": 0.7806209246106739,
+    "rawScore": 0.7806209246106739,
+    "laneScores": {
+      "generation": 0.6858444887496439,
+      "regression": 0.6935773660394461,
+      "healing": 1
+    },
+    "gates": [
+      {
+        "id": "all-generated-tests-judged",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "no-regression-abstentions",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "no-false-heals",
+        "passed": true,
+        "value": 0,
+        "required": 0
+      },
+      {
+        "id": "no-invalid-heal-claims",
+        "passed": true,
+        "value": 0,
+        "required": 0
+      },
+      {
+        "id": "all-healing-controls-submitted",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "all-true-regressions-protected",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "expectations-unchanged",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "complete-healing-evidence",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      },
+      {
+        "id": "consistent-healing-evidence",
+        "passed": true,
+        "value": 1,
+        "required": 1
+      }
+    ]
+  },
+  "preparedManifest": {
+    "sha256": "a42995b826f65cae4e0343b32734da89e51fe39faae677e924457f956f4f0844",
+    "counts": {
+      "generation": 14,
+      "regression": 56,
+      "healing": 8
+    }
+  },
+  "healingRunner": {
+    "summary": {
+      "file": "healing-core/summary.json",
+      "bytes": 23926,
+      "sha256": "386ba3176e75865a28f95c7bb7798f2306e7f0fcbcc52c584eff82f0d0bbfc54"
+    },
+    "sourceCases": {
+      "file": "healing-core/source-cases.json",
+      "bytes": 9827,
+      "sha256": "c9c94b043ac6e6ab951a671d5aa6d148f8baa77bb9825e571c2daea26445dc7c"
+    },
+    "submission": {
+      "file": "healing-core/submission.json",
+      "bytes": 31051,
+      "sha256": "e5e4c25b85a5928561214bb0c561e0ca8f9e8ff013367af99b51b236035737f4"
+    }
+  },
+  "appArchiveManifest": {
+    "file": "webtestbench-app-archives.json",
+    "bytes": 8830,
+    "sha256": "891b830a9d72f3d1caee6cd9461d233fdb95adf05ea0f090e69d945c4a4fe511",
+    "apps": 40
+  },
+  "inputHashes": {
+    "run.json": {
+      "bytes": 6362,
+      "sha256": "9bfa985b41f53ca83a3500e3dbda8972f1098a04edab7e485aa18f45ffac0a4e"
+    },
+    "generation.json": {
+      "bytes": 91919,
+      "sha256": "a3f9a3b380cc3edacf0c8648e0d8608c6fc2acb42b06bf06d857889120e33663"
+    },
+    "generation-mappings.json": {
+      "bytes": 112887,
+      "sha256": "fb6f6865d896d47b3dc389588903bde8bf99c03482f434e2e8b7b7752d2d8c8d"
+    },
+    "regression.json": {
+      "bytes": 32882,
+      "sha256": "83292d9730996af0c570177c668ac8b143b803d63a5504526a854ff7699cc503"
+    },
+    "healing.json": {
+      "bytes": 31675,
+      "sha256": "ec9327bd5e2823aa91644470df667e71f2b077b03cc57e5f0372e70157ad066a"
+    }
+  },
+  "evidence": [
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/result.json",
+      "owner": "healing:reprobreak-5609:regression-control",
+      "kind": "execution-json",
+      "bytes": 4428,
+      "sha256": "b34482955280ea06d7adc02acf39d310387cc97d7b0dcaa15b41b74958343999"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-5609:regression-control",
+      "kind": "png",
+      "bytes": 33233,
+      "sha256": "47440fda32902db896dfa417dc7e2f520fd7d09cca19fbfe2366985e6cd96d40"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120000_f37e8ca51ffcf469cf65aef4/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-5609:regression-control",
+      "kind": "png",
+      "bytes": 34511,
+      "sha256": "d2c6db298c09a1fd20c06d83911f1478b7dc33b0d5d39ed9b6d19fc147ae9405"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/result.json",
+      "owner": "healing:reprobreak-3316:drift",
+      "kind": "execution-json",
+      "bytes": 4501,
+      "sha256": "28c229e50cb32dd5f7c11a034f3eba5db1c313e00d142bb7417228165d7669df"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-3316:drift",
+      "kind": "png",
+      "bytes": 44462,
+      "sha256": "11e85c3fd8c14eea0d180dc395a5f099cbd89a412a041197ecd464549f34392d"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120001_7c2a4dadfb724560b356e946/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-3316:drift",
+      "kind": "png",
+      "bytes": 40660,
+      "sha256": "07bdb9271e073f9e69d9473faabfedd4b2b87f8afc1244ff7f9c5f92e5e8040a"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/result.json",
+      "owner": "healing:reprobreak-619:regression-control",
+      "kind": "execution-json",
+      "bytes": 4440,
+      "sha256": "a2c5564aed61dbfe550cf3d340edd62ad5cade5b5e2b1b933e9f3937ebea7b35"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-619:regression-control",
+      "kind": "png",
+      "bytes": 37947,
+      "sha256": "46d669da4b6fc24e59f193483d9e0659a9d22464a453f2d52eaf879227b8216b"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120002_36671e6cd8881386a0de3b4a/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-619:regression-control",
+      "kind": "png",
+      "bytes": 39326,
+      "sha256": "d37fdf75997d15ab949f0cde2cb60f33b748bf886ab5ced6b4353e8fc1808451"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/result.json",
+      "owner": "healing:reprobreak-3318:regression-control",
+      "kind": "execution-json",
+      "bytes": 4473,
+      "sha256": "aefae9323e405ab5b809df01e7b2bfa2941961123baf200bf96ab37b8c2e8d5e"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-3318:regression-control",
+      "kind": "png",
+      "bytes": 46327,
+      "sha256": "fef5bdc3f4c0cdc602368844b95b7744970137be9ea8febb30e562b8681ca537"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120003_69b0c691b1b06b2e082ab9e4/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-3318:regression-control",
+      "kind": "png",
+      "bytes": 47632,
+      "sha256": "c81c0952a2299b734faeddebd6fa4a831f735078520f5bd520fedfbb89a307dc"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/result.json",
+      "owner": "healing:reprobreak-1224:drift",
+      "kind": "execution-json",
+      "bytes": 4542,
+      "sha256": "7aa777acc17c00157ee96c67c9d697cc29cfa90a385710d589af00beb8d0eb03"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-1224:drift",
+      "kind": "png",
+      "bytes": 49082,
+      "sha256": "3518d797d10515c701b0295f084dda6c3012e6be54790c7f902c6d59a8d67a0b"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120004_d077cc5a3e7d37b0451968f2/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-1224:drift",
+      "kind": "png",
+      "bytes": 50984,
+      "sha256": "6c93bbbaa3eef9de4e0b9f871fc420798b4bd36575713bfc3a691027d3c94d4d"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/result.json",
+      "owner": "healing:reprobreak-1225:drift",
+      "kind": "execution-json",
+      "bytes": 4534,
+      "sha256": "316e3397a507ca205ed45f221deb340d1c8de05407d245b3ef9ecac0e9992af7"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-1225:drift",
+      "kind": "png",
+      "bytes": 48136,
+      "sha256": "d4ce45a19837537a9ddc2a1ced3a81aa79550ca2353145a4f16913218e246f06"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120005_1446e087d0142cec0a4e77b5/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-1225:drift",
+      "kind": "png",
+      "bytes": 49659,
+      "sha256": "ce5f24daa853a914d72122509f89a8c3f5d1ecd72dab846e11c98abce078df09"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/result.json",
+      "owner": "healing:reprobreak-1224:regression-control",
+      "kind": "execution-json",
+      "bytes": 5152,
+      "sha256": "914108b302c36e03b729fc49a6f124f621da77537982f5465c2d34b6df318adb"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-1224:regression-control",
+      "kind": "png",
+      "bytes": 49209,
+      "sha256": "8bc4728f1667f0fa49df93b5f40279ce9e967c388ad1ea1063c7ae1f2aa6d69b"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120006_883440a2e46b530b2d699c2d/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-1224:regression-control",
+      "kind": "png",
+      "bytes": 63601,
+      "sha256": "c17706d66466dbe3ca9316ff7ad9cc10cc75fdf28f6017011adee83e2c8865aa"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/result.json",
+      "owner": "healing:reprobreak-619:drift",
+      "kind": "execution-json",
+      "bytes": 4545,
+      "sha256": "bdedc7693b572c8a8656313187ae91cf3df774fd1f3c849e356aa4e212128ae0"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-619:drift",
+      "kind": "png",
+      "bytes": 36046,
+      "sha256": "297c257a7b27c7afc8e52f6dad4df87700d4be33d2717e8cdde783d8d87320bb"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120007_739ae9d4ed6d6c849c0ed54c/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-619:drift",
+      "kind": "png",
+      "bytes": 38390,
+      "sha256": "386c2908dce2f92e1c549b7714ecd4378939c031faf61885e99c8da7ef114d3e"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/result.json",
+      "owner": "healing:reprobreak-3316:regression-control",
+      "kind": "execution-json",
+      "bytes": 4408,
+      "sha256": "7bef6a9a4021ecb6334e5ce5bcfdc6cf71f73a65e0b244b62877eb3450489911"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-3316:regression-control",
+      "kind": "png",
+      "bytes": 44462,
+      "sha256": "11e85c3fd8c14eea0d180dc395a5f099cbd89a412a041197ecd464549f34392d"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120008_53629caa1ba3800206a52b4c/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-3316:regression-control",
+      "kind": "png",
+      "bytes": 45674,
+      "sha256": "e37979c3b33219d1ef818004157706b9902fa1b2b90287eca47efa898bc4dd04"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/result.json",
+      "owner": "healing:reprobreak-616:regression-control",
+      "kind": "execution-json",
+      "bytes": 4402,
+      "sha256": "64cc226a72c8edd65e88e34019dd36ea8978add531bae45d1a00a45e8f8b1c07"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-616:regression-control",
+      "kind": "png",
+      "bytes": 36318,
+      "sha256": "4db481538ee930e45b5692e8caad87e310803f0f5a55422d15c440c83997d424"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120009_240eb5abfe84e537b1c0b641/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-616:regression-control",
+      "kind": "png",
+      "bytes": 37697,
+      "sha256": "f97823ffdc83052bf8406884e6440208a9bdde698a6b73fee4d04ac452db6359"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/result.json",
+      "owner": "healing:reprobreak-5609:drift",
+      "kind": "execution-json",
+      "bytes": 4420,
+      "sha256": "254c62d6641ddafc566e61ee1369b36c82c80db374a2e47d89cbee801c15fc7a"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-5609:drift",
+      "kind": "png",
+      "bytes": 33233,
+      "sha256": "47440fda32902db896dfa417dc7e2f520fd7d09cca19fbfe2366985e6cd96d40"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120010_fc5fbff0d53681fb56138432/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-5609:drift",
+      "kind": "png",
+      "bytes": 37642,
+      "sha256": "1616083f208ac9fb6ce75c20875288e66c0a957bf1c2a43c3e05f2a05bbc428b"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/result.json",
+      "owner": "healing:reprobreak-5620:drift",
+      "kind": "execution-json",
+      "bytes": 4408,
+      "sha256": "7b364b0f0698eede264f24c4369c31ad244399892f0da08267b80077d0ec39d9"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-5620:drift",
+      "kind": "png",
+      "bytes": 35749,
+      "sha256": "afd0472cc060e19f42e10ad59c5eb5d845cb788ba4c6e5193f7e82e1360ecb82"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120011_c2f7e84e174769b5bcafd928/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-5620:drift",
+      "kind": "png",
+      "bytes": 38510,
+      "sha256": "9bb0876b17bb8fb90708553428fb518c2f9e6ce4b0b1ac8f7213ed0abb4bb6ff"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/result.json",
+      "owner": "healing:reprobreak-5620:regression-control",
+      "kind": "execution-json",
+      "bytes": 4260,
+      "sha256": "7f64803735d04ae0201ce1c35e15251fe2eca000b59bda94c43eb6476fd8953f"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-5620:regression-control",
+      "kind": "png",
+      "bytes": 35749,
+      "sha256": "afd0472cc060e19f42e10ad59c5eb5d845cb788ba4c6e5193f7e82e1360ecb82"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120012_b0682eb78d83614961fcf7fd/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-5620:regression-control",
+      "kind": "png",
+      "bytes": 36536,
+      "sha256": "356f39c7fcefbcd97d3ae86ee505642e8ea586a4ae194f99fe7a21d5519ebead"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/result.json",
+      "owner": "healing:reprobreak-3318:drift",
+      "kind": "execution-json",
+      "bytes": 4497,
+      "sha256": "c115419001260cd64b00a9b9060dc73bc8c5047f7bec85bc283a43149f48a28f"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-3318:drift",
+      "kind": "png",
+      "bytes": 46327,
+      "sha256": "fef5bdc3f4c0cdc602368844b95b7744970137be9ea8febb30e562b8681ca537"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120013_b17a83c9dc8a51bc3eef0bc7/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-3318:drift",
+      "kind": "png",
+      "bytes": 41349,
+      "sha256": "a1ee0977e84b41f1e1af785a93da238cf47d2b54241c1951f4090974911472ca"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120014_767e9625173428973b46fb1e/result.json",
+      "owner": "healing:reprobreak-616:drift",
+      "kind": "execution-json",
+      "bytes": 4507,
+      "sha256": "b75519039e28ccfd7daec7a3beaef66d64fe3ee1de02b07aaf163f2b3b13f298"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120014_767e9625173428973b46fb1e/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-616:drift",
+      "kind": "png",
+      "bytes": 34431,
+      "sha256": "cad769c2cb717c6070429dde4c45fbb292acd1e065d001d4c895e9012359a740"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120014_767e9625173428973b46fb1e/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-616:drift",
+      "kind": "png",
+      "bytes": 36767,
+      "sha256": "8fb0e37dfb6745365c52444374f61264df782a762985d7f4c316baa08276398d"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/result.json",
+      "owner": "healing:reprobreak-1225:regression-control",
+      "kind": "execution-json",
+      "bytes": 5146,
+      "sha256": "81a67f853c138265170fe4841f6cbbda4f104951a8310fc7c07da71837c229f9"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/screenshots/005-healing-before-step-1.png",
+      "owner": "healing:reprobreak-1225:regression-control",
+      "kind": "png",
+      "bytes": 48964,
+      "sha256": "7486dea9635fc994a03ab6884e6630b232b83f22a79fdaa49dcf91c004922478"
+    },
+    {
+      "file": "healing-core/.qa/runs/run_20260905_120015_f4ce95630b0366ce2f0a36ac/screenshots/006-healing-after-step-1.png",
+      "owner": "healing:reprobreak-1225:regression-control",
+      "kind": "png",
+      "bytes": 62001,
+      "sha256": "2b6b0274c0d8709d7ed70af80fe1b876f4dcee42bdee006a025b97491c576767"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0005:14",
+      "kind": "semantic-text",
+      "bytes": 809,
+      "sha256": "64d01dad3dfccc3ca38cf46aa8b5e5cbbb4510683f3a630be78e54c45198a995"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/saved-without-feedback.png",
+      "owner": "regression:WebTestBench_0005:14",
+      "kind": "jpeg",
+      "bytes": 18541,
+      "sha256": "488500b2343113dddac0cc0443b337e3214d1ec9b4ef7b1bd8367f798ab6dcee"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/self-review-dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0005:14",
+      "kind": "semantic-text",
+      "bytes": 816,
+      "sha256": "fead7ee7d7c6b7bbeb44f5a2dbf8274ed58df4edceb965774e23d551b648e12d"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/self-review-saved-without-feedback.png",
+      "owner": "regression:WebTestBench_0005:14",
+      "kind": "jpeg",
+      "bytes": 18796,
+      "sha256": "60a394d4879adc68059748647e6d511ac3fab1fd3601d9bd216e84b663739a42"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_14/trace.json",
+      "owner": "regression:WebTestBench_0005:14",
+      "kind": "execution-json",
+      "bytes": 2592,
+      "sha256": "fcd672253a84e6017c963981846c55dfc067329817968819f95809f84518018e"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_9/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0005:9",
+      "kind": "semantic-text",
+      "bytes": 3834,
+      "sha256": "82ebc63788536f6e8e868913c2bc3e15bcc95adce2fc0e3ce67cd910ae6daf9d"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_9/reversed-work-period.png",
+      "owner": "regression:WebTestBench_0005:9",
+      "kind": "jpeg",
+      "bytes": 55971,
+      "sha256": "e51c95453af1348ae61d1ef4c20d9e505e14844d6a068588bc29b9ff5444de7d"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0005_9/trace.json",
+      "owner": "regression:WebTestBench_0005:9",
+      "kind": "execution-json",
+      "bytes": 1846,
+      "sha256": "4f1fd3708d3412acd1ff9db1fa2f0e821844287bfd3a942ea1873841784b58cf"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0012_16/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0012:16",
+      "kind": "semantic-text",
+      "bytes": 1128,
+      "sha256": "0c3f56147ad917d4ee4761a491828806126799a7d5ae06a2e86e87e4890c8392"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0012_16/trace.json",
+      "owner": "regression:WebTestBench_0012:16",
+      "kind": "execution-json",
+      "bytes": 2093,
+      "sha256": "2aaf2e8e6ae678668d2452307625dbab427271c5de0960931c92d1c146b8408d"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0012_16/updated-member-list.png",
+      "owner": "regression:WebTestBench_0012:16",
+      "kind": "jpeg",
+      "bytes": 20547,
+      "sha256": "cfd916937b00e4063921ac08f75b64a7ecdcc715c2f5c25587f280d706147f28"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0018:17",
+      "kind": "semantic-text",
+      "bytes": 2647,
+      "sha256": "2e5cfde7a2609acefaf1664631658d919358493bcd6df00c160af51d73a94590"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/extreme-workout-saved.png",
+      "owner": "regression:WebTestBench_0018:17",
+      "kind": "jpeg",
+      "bytes": 56155,
+      "sha256": "a00d8b441c953aa00c2709602fa5a6dd9d6ee4428119072a1df3924866e2b10e"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/self-review-dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0018:17",
+      "kind": "semantic-text",
+      "bytes": 2650,
+      "sha256": "da2d4580c0c36ed7094eb846ff48458e085804d5efc4364787909b65039846d6"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/self-review-extreme-workout.png",
+      "owner": "regression:WebTestBench_0018:17",
+      "kind": "jpeg",
+      "bytes": 54984,
+      "sha256": "7a46802e0f3fad79c84924fc6b937af513e979985fcdd812d45eceba1178a920"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0018_17/trace.json",
+      "owner": "regression:WebTestBench_0018:17",
+      "kind": "execution-json",
+      "bytes": 2666,
+      "sha256": "254894cf07be0a160a6c416bfc40d511f8d508fdcaae9b7762212457a185e6c4"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0022_11/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0022:11",
+      "kind": "semantic-text",
+      "bytes": 2633,
+      "sha256": "6ae7c2696d7cbbabd25c59888e9f84bcd088820ecb91251f9ce3625c4020970c"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0022_11/negative-quantity-accepted.png",
+      "owner": "regression:WebTestBench_0022:11",
+      "kind": "jpeg",
+      "bytes": 30585,
+      "sha256": "ed07a8c351340a5cf2fcdd634c06c9d228274b6d058581618d278a2ec4253438"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0022_11/trace.json",
+      "owner": "regression:WebTestBench_0022:11",
+      "kind": "execution-json",
+      "bytes": 1806,
+      "sha256": "134f9ebfa162cae0c5f3b3b16cae293174deb3fbbf859a48d9d00b74fbffa02b"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0029_19/completed-book-progress-editable.png",
+      "owner": "regression:WebTestBench_0029:19",
+      "kind": "jpeg",
+      "bytes": 41158,
+      "sha256": "0f39559cfadf3f8f4fa359970f7b518d496fe9bcae2698febaa45e3d4219fbd1"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0029_19/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0029:19",
+      "kind": "semantic-text",
+      "bytes": 4598,
+      "sha256": "7e90689f7cc65d88c4cad298fc467fcab8d74ce380ddb5988e12d1b72d8ec0ae"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0029_19/trace.json",
+      "owner": "regression:WebTestBench_0029:19",
+      "kind": "execution-json",
+      "bytes": 1920,
+      "sha256": "f2941dd476f3282ea3007e93093aa919f02f21356083c86f9a24dbb649ad9848"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_16/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0040:16",
+      "kind": "semantic-text",
+      "bytes": 3008,
+      "sha256": "374372201fce89b59ded0682502c53ae59d48d770b27aaec4a7d512934764355"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_16/trace.json",
+      "owner": "regression:WebTestBench_0040:16",
+      "kind": "execution-json",
+      "bytes": 1930,
+      "sha256": "cbde4595fe5d6e845ffd8d34a6e6896b2734c4d5b3d141193f252340e6c6a3c6"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_16/updates-oldest-first.png",
+      "owner": "regression:WebTestBench_0040:16",
+      "kind": "jpeg",
+      "bytes": 19153,
+      "sha256": "53f3d52cc08105cd95f6d5bb1f03901e5f61f33fced432bfa63cfbfcb0afe8b8"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_7/after-reload.png",
+      "owner": "regression:WebTestBench_0040:7",
+      "kind": "jpeg",
+      "bytes": 24702,
+      "sha256": "09d12fc3846312cb228ecbc78b3c544b88a1c26f74f613ffd8d7b50865d9d2a8"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_7/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0040:7",
+      "kind": "semantic-text",
+      "bytes": 2240,
+      "sha256": "3ea9a13da71b4974b14b7570e96ed2bc1e7cfaa3673735086efc6558aaea4199"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_7/trace.json",
+      "owner": "regression:WebTestBench_0040:7",
+      "kind": "execution-json",
+      "bytes": 1955,
+      "sha256": "732955f6dc9ce08e659f78cdb7161aa843a193339012ff6d4f7acf37e4bbfcac"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0043_8/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0043:8",
+      "kind": "semantic-text",
+      "bytes": 1744,
+      "sha256": "f9b772340f13f5f5993a1e2a1bc308c7fa8ac41b5cb61d81a6f95d6673b946a1"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0043_8/python-intelligent-tags.png",
+      "owner": "regression:WebTestBench_0043:8",
+      "kind": "jpeg",
+      "bytes": 34391,
+      "sha256": "45479d982d1aa7a27f47a86d6d2c41d9c999b973adc889545aa79e96944316e9"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0043_8/trace.json",
+      "owner": "regression:WebTestBench_0043:8",
+      "kind": "execution-json",
+      "bytes": 1960,
+      "sha256": "95538a668acb04048e1b7d3141dbdd263bd19b8b74193af6358ae0228923c716"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0057:12",
+      "kind": "semantic-text",
+      "bytes": 2833,
+      "sha256": "44ffc3a7beeb3ea9888a84f118acb335841ca5fa2e7747396c31d8423b6359c8"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/experience-detail-open.png",
+      "owner": "regression:WebTestBench_0057:12",
+      "kind": "jpeg",
+      "bytes": 68648,
+      "sha256": "f6592447b40b62a42eafa0da61b447cf10b5ae47b28638f462e0df172437b6d3"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/self-review-dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0057:12",
+      "kind": "semantic-text",
+      "bytes": 2833,
+      "sha256": "44ffc3a7beeb3ea9888a84f118acb335841ca5fa2e7747396c31d8423b6359c8"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/self-review-inline-details-only.png",
+      "owner": "regression:WebTestBench_0057:12",
+      "kind": "jpeg",
+      "bytes": 68689,
+      "sha256": "ec9516475f858b01f5d3a3c4e957de7919b7b7ee3f8f3583cd71b85417a20a9b"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/trace.json",
+      "owner": "regression:WebTestBench_0057:12",
+      "kind": "execution-json",
+      "bytes": 2641,
+      "sha256": "0a1945f35255ad99ca8806d87795d5016a523eb2b750a3f82048eeade3262a08"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0073_3/claims-with-statuses.png",
+      "owner": "regression:WebTestBench_0073:3",
+      "kind": "jpeg",
+      "bytes": 27116,
+      "sha256": "89aba66e504bf3fae1e8f395985a3fa02873d2a41410928775d5ee85a4b7e38f"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0073_3/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0073:3",
+      "kind": "semantic-text",
+      "bytes": 2432,
+      "sha256": "d84b0491fa3d0f966464c0a9c4e8bef17a8a007e3ab5f8340cfbfc6b5a85d9cb"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0073_3/trace.json",
+      "owner": "regression:WebTestBench_0073:3",
+      "kind": "execution-json",
+      "bytes": 1717,
+      "sha256": "b2a46997efdf3b199b58e95da94a52bcb44065bf68c85caa1b54f18d8d687979"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0082_12/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0082:12",
+      "kind": "semantic-text",
+      "bytes": 1366,
+      "sha256": "57c5b111d8d69b778369ce9d8adaf30377862cd795e44b79fb84519ef8557fa3"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0082_12/parameter-set-list.png",
+      "owner": "regression:WebTestBench_0082:12",
+      "kind": "jpeg",
+      "bytes": 23741,
+      "sha256": "88358f21c4824c09a51c551c50b8934a0aee1a192c5b8e7c71134f6386f65e19"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0082_12/trace.json",
+      "owner": "regression:WebTestBench_0082:12",
+      "kind": "execution-json",
+      "bytes": 1753,
+      "sha256": "9f3f8d2687ef954b11f924e9a24cb4c64382e30c79326106202000035368ff86"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_10/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0084:10",
+      "kind": "semantic-text",
+      "bytes": 2402,
+      "sha256": "ac39937b3490c6232b51d88bb41b737b3aa48207a85b6f050688f7c4747f9335"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_10/meeting-sent-without-form.png",
+      "owner": "regression:WebTestBench_0084:10",
+      "kind": "jpeg",
+      "bytes": 36988,
+      "sha256": "7eb350f3beb607b907dc691c5247c8e6186fcddbcc49d778f9c3731f31887d8e"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_10/trace.json",
+      "owner": "regression:WebTestBench_0084:10",
+      "kind": "execution-json",
+      "bytes": 1767,
+      "sha256": "508527e531b63e5de77e053c576d1b3e1b0bf44174285bd3fd823300ceb321f9"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_12/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0084:12",
+      "kind": "semantic-text",
+      "bytes": 7714,
+      "sha256": "93d6130edf7224696f888939498629edd04b1caa53cd2b27f51e692b485d8f5e"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_12/favorite-selected.png",
+      "owner": "regression:WebTestBench_0084:12",
+      "kind": "jpeg",
+      "bytes": 73592,
+      "sha256": "b6aa493f2e15c63dba01000935b692ee6b3b399ab4f58994abbfbb1a177be8de"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_12/trace.json",
+      "owner": "regression:WebTestBench_0084:12",
+      "kind": "execution-json",
+      "bytes": 1774,
+      "sha256": "206b7289ef3e6f35eb4995f9567375f7b8e8c5770beec68ea829946416f26bee"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_3/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0084:3",
+      "kind": "semantic-text",
+      "bytes": 774,
+      "sha256": "5c8688eb3ab280c8e5456a4f13432457a4dedcfcda93b852812d6a6741a5ef5f"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_3/favorites-lost-after-reload.png",
+      "owner": "regression:WebTestBench_0084:3",
+      "kind": "jpeg",
+      "bytes": 14456,
+      "sha256": "172507734a85f5d4dac2fac95418e7703344a7b86b0abebe89a1ae59a6d46f81"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_3/trace.json",
+      "owner": "regression:WebTestBench_0084:3",
+      "kind": "execution-json",
+      "bytes": 1902,
+      "sha256": "5cf7c0c29f394f6eb48d0a66329eb4e7b475f255b409523cb675c39c128d6c3c"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0084:8",
+      "kind": "semantic-text",
+      "bytes": 6713,
+      "sha256": "5fd30a50e7ddce38587df8e46df4ebcb1e75b0e312a6e3b5134551b13f8cd250"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/floor-map.png",
+      "owner": "regression:WebTestBench_0084:8",
+      "kind": "jpeg",
+      "bytes": 27585,
+      "sha256": "ecb156442cd616d950a30e5d9d081818ad0250f64275043b1fc946e5e6a8376b"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/h205-matching-detail.png",
+      "owner": "regression:WebTestBench_0084:8",
+      "kind": "jpeg",
+      "bytes": 35397,
+      "sha256": "c9b23b445cb88516c270916e8919a4d78f9dbbc06ab4552b83b2b2184c32cabe"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/trace.json",
+      "owner": "regression:WebTestBench_0084:8",
+      "kind": "execution-json",
+      "bytes": 2236,
+      "sha256": "6598662d4491240b1a8a7602fc57ba0f79319487e427e15d63b2ed77e8747557"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-advanced.png",
+      "owner": "regression:WebTestBench_0085:5",
+      "kind": "jpeg",
+      "bytes": 62164,
+      "sha256": "99a816bcf92c2307da655d8d1fb1b41f8cc407dad485735d4c833b017018d8a7"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-dom.txt",
+      "owner": "regression:WebTestBench_0085:5",
+      "kind": "semantic-text",
+      "bytes": 5410,
+      "sha256": "0ca8fb2de0ebd0ea91bd497dde1f15607bfffd629e9fe4bc671e93aed9c5db63"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_5/trace.json",
+      "owner": "regression:WebTestBench_0085:5",
+      "kind": "execution-json",
+      "bytes": 2018,
+      "sha256": "b3066c5261284c4fa88742de7efae667d690fb3eb38b190736ceb04fa42d46b2"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-beginner-intermediate.png",
+      "owner": "regression:WebTestBench_0085:7",
+      "kind": "jpeg",
+      "bytes": 67961,
+      "sha256": "60d951b4842f2d3cf7c3ea2a76e6cc8be6dd5db96017f02b13445fe95cca861a"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-paths-dom.txt",
+      "owner": "regression:WebTestBench_0085:7",
+      "kind": "semantic-text",
+      "bytes": 5437,
+      "sha256": "eb1c63ccc2072103adbce3dd333baa6c3d0fa62234223291f0b8a7c04d34a9b8"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_7/trace.json",
+      "owner": "regression:WebTestBench_0085:7",
+      "kind": "execution-json",
+      "bytes": 1922,
+      "sha256": "05031d0bdc9822ffb41294bbf24009b5c12ea957ff2f1e3a58473961584f7877"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0093_17/after-business-scenario.png",
+      "owner": "regression:WebTestBench_0093:17",
+      "kind": "jpeg",
+      "bytes": 166528,
+      "sha256": "df9fd9d3c5e2b0d0cdb7bd3505a9acb6874c3ef80e6d5e0a0a28d7ef6b8a6f90"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0093_17/dom-snapshot.txt",
+      "owner": "regression:WebTestBench_0093:17",
+      "kind": "semantic-text",
+      "bytes": 7030,
+      "sha256": "282d6924fd08cea2ae9a04550272d11fd2588a12d7f54b467b97fbe8fd15ff7d"
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0093_17/trace.json",
+      "owner": "regression:WebTestBench_0093:17",
+      "kind": "execution-json",
+      "bytes": 2061,
+      "sha256": "ebc97c3eb9ac3bcc01ec0e7acd96298f562e1b53d913d8b6abf6b968559ee2e6"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0004_14/after.png",
+      "owner": "regression:WebTestBench_0004:14",
+      "kind": "jpeg",
+      "bytes": 25185,
+      "sha256": "95af8c5fa7f8c5b6dc52e1503adabc1119a1d2fab39cc7c0df99fbd2920b6887"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0004_14/dom-after.txt",
+      "owner": "regression:WebTestBench_0004:14",
+      "kind": "semantic-text",
+      "bytes": 1781,
+      "sha256": "d21598eb680007a143b927329024ccc5ca6d3ef5cf202bcb7c255a1ff3a3415d"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0004_14/trace.json",
+      "owner": "regression:WebTestBench_0004:14",
+      "kind": "execution-json",
+      "bytes": 1831,
+      "sha256": "92909cc8ef9d952973b84d833b57bc7167598acb8ab21c5135b075db741dc9dd"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0008_14/after.png",
+      "owner": "regression:WebTestBench_0008:14",
+      "kind": "jpeg",
+      "bytes": 24684,
+      "sha256": "f722178b3f9559e8c7dee7098b999102b768ad8c09ae098109dcd9ad33a229ad"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0008_14/dom-after.txt",
+      "owner": "regression:WebTestBench_0008:14",
+      "kind": "semantic-text",
+      "bytes": 1629,
+      "sha256": "6c336db96c9c43e1a708e3dd76c974d2c4ee230e16ea535f08c39ff91343b9a6"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0008_14/trace.json",
+      "owner": "regression:WebTestBench_0008:14",
+      "kind": "execution-json",
+      "bytes": 1838,
+      "sha256": "eb712bc6630e479bb84daccb1929f71082ea431df38326a0a7d3eda4040f3ca2"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_15/after.png",
+      "owner": "regression:WebTestBench_0010:15",
+      "kind": "jpeg",
+      "bytes": 19608,
+      "sha256": "110029290907a09190365e878e9d59427e5a4766043f2122c3fa1612a14d4e54"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_15/dom-after.txt",
+      "owner": "regression:WebTestBench_0010:15",
+      "kind": "semantic-text",
+      "bytes": 752,
+      "sha256": "e922393b128e35a3a2f80f87dca663cf2cb9eab9b6c47827ca41705f74f2c25b"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_15/trace.json",
+      "owner": "regression:WebTestBench_0010:15",
+      "kind": "execution-json",
+      "bytes": 2198,
+      "sha256": "1ba4c5131aafb2f0308a8cf354668ef66f6bd804af0bdf1c6e9a3ac837285e2c"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_16/after.png",
+      "owner": "regression:WebTestBench_0010:16",
+      "kind": "jpeg",
+      "bytes": 12990,
+      "sha256": "e314695ae516bcf94ece2a7e0132f69a89bddc059515e2630fc6128579e80af5"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_16/dom-after.txt",
+      "owner": "regression:WebTestBench_0010:16",
+      "kind": "semantic-text",
+      "bytes": 607,
+      "sha256": "44b636dabad20a14d684a985be41fd3d9605ff376a82762ef1e8278d8f49c694"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_16/trace.json",
+      "owner": "regression:WebTestBench_0010:16",
+      "kind": "execution-json",
+      "bytes": 2083,
+      "sha256": "b7f3c71cf761be3874a50a3b23b9c63f36350de852353474a0f6958da41381b2"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_6/after.png",
+      "owner": "regression:WebTestBench_0010:6",
+      "kind": "jpeg",
+      "bytes": 65815,
+      "sha256": "3137bd7cb8ba35208963407fdba8b156468aac378aa34a5fbe687a9ba5590dff"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_6/dom-after.txt",
+      "owner": "regression:WebTestBench_0010:6",
+      "kind": "semantic-text",
+      "bytes": 1943,
+      "sha256": "cb0758e112dd36a4600d6c3460c07da68b0e742771d1cc2eb11572d374d9e12e"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0010_6/trace.json",
+      "owner": "regression:WebTestBench_0010:6",
+      "kind": "execution-json",
+      "bytes": 1824,
+      "sha256": "7c14b67949c58b0a9189567bdebde71f108bd6882d9701e8a6ebeab6798294f0"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0013_2/after.png",
+      "owner": "regression:WebTestBench_0013:2",
+      "kind": "jpeg",
+      "bytes": 30100,
+      "sha256": "79ecabedcf19f7d51ffb4b746b933708ecdb43a6432ea5e1d34614ab62c52183"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0013_2/dom-after.txt",
+      "owner": "regression:WebTestBench_0013:2",
+      "kind": "semantic-text",
+      "bytes": 2260,
+      "sha256": "763fca647c8485423a0273ad3a152ab9c18b345795f7a9e65112cbf3dc8342dd"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0013_2/trace.json",
+      "owner": "regression:WebTestBench_0013:2",
+      "kind": "execution-json",
+      "bytes": 2189,
+      "sha256": "7e52ca4e99f8645c79e1b35e334f10a84ca48fa7b52a5f6b1bd35563c8fc30b4"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0020_14/after.png",
+      "owner": "regression:WebTestBench_0020:14",
+      "kind": "jpeg",
+      "bytes": 36507,
+      "sha256": "e07aef3de97d74961ec883024363789bb5679f68050e0745dde3eb503fad3bb8"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0020_14/dom-after.txt",
+      "owner": "regression:WebTestBench_0020:14",
+      "kind": "semantic-text",
+      "bytes": 4405,
+      "sha256": "35d9064f9be6943e3d974c5124df4dc93a06d92b8af7b6adc997d5112d67733c"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0020_14/trace.json",
+      "owner": "regression:WebTestBench_0020:14",
+      "kind": "execution-json",
+      "bytes": 2077,
+      "sha256": "9be71223572f18dbb82adaf7bfa0151d0157819212391b4efad43452ec4d16ad"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0024_14/after.png",
+      "owner": "regression:WebTestBench_0024:14",
+      "kind": "jpeg",
+      "bytes": 119916,
+      "sha256": "9284eaabce511744178874421588943f6f4d7eda504351e65ec40078c0519e82"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0024_14/dom-after.txt",
+      "owner": "regression:WebTestBench_0024:14",
+      "kind": "semantic-text",
+      "bytes": 5558,
+      "sha256": "8bee0013ae476b1c401739912f3457b6fd23c95b4088041dcbad2ae0a182ce3a"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0024_14/trace.json",
+      "owner": "regression:WebTestBench_0024:14",
+      "kind": "execution-json",
+      "bytes": 1760,
+      "sha256": "95e0a6c88847d20b9d1c407c42ab7a78ab4246e2b9b09f96db56206b79e1483d"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0030_12/after.png",
+      "owner": "regression:WebTestBench_0030:12",
+      "kind": "jpeg",
+      "bytes": 18848,
+      "sha256": "b86451ac0862a65d1d10bbf95cec354df45501d6d8e75dfa84536d4248c2041c"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0030_12/dom-after.txt",
+      "owner": "regression:WebTestBench_0030:12",
+      "kind": "semantic-text",
+      "bytes": 3311,
+      "sha256": "c4d24dc24c010b93a2f2044a69b2348c51c2285e283bb6a87ee5a8f92fc88866"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0030_12/trace.json",
+      "owner": "regression:WebTestBench_0030:12",
+      "kind": "execution-json",
+      "bytes": 1953,
+      "sha256": "27f366fbdbc48e1040dc89c8df3fadaa3da23e57dd14e189e8dd9c4bd6e65e6b"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_15/after.png",
+      "owner": "regression:WebTestBench_0044:15",
+      "kind": "jpeg",
+      "bytes": 18732,
+      "sha256": "962df4d23b2898819c3173ffbcc790a4a2dc32cc1e8cd77847cdaa50870a0daa"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_15/dom-after.txt",
+      "owner": "regression:WebTestBench_0044:15",
+      "kind": "semantic-text",
+      "bytes": 1730,
+      "sha256": "72ac54dfdf268aa397c3016f644659c57b77737d7f9a3db67c5a2c4ee7cdc298"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_15/trace.json",
+      "owner": "regression:WebTestBench_0044:15",
+      "kind": "execution-json",
+      "bytes": 2002,
+      "sha256": "1fa68809fe12636632ff62197203e46f0e3131b6de8fe5b99817e81b61616fd5"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_17/after.png",
+      "owner": "regression:WebTestBench_0044:17",
+      "kind": "jpeg",
+      "bytes": 18451,
+      "sha256": "8ea4521b5edc1fde7f787ac9a19d5db5065041abb4e67e55a7063f34dfb5a9a8"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_17/dom-after.txt",
+      "owner": "regression:WebTestBench_0044:17",
+      "kind": "semantic-text",
+      "bytes": 1853,
+      "sha256": "51f5a6a6c48e30753844e8c01485ee145d93770e1062290f32b9385d44d445ab"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_17/trace.json",
+      "owner": "regression:WebTestBench_0044:17",
+      "kind": "execution-json",
+      "bytes": 1870,
+      "sha256": "77b20f46f3d91d7d1f881ef28f986c7b289b5c60b91e569f814f5e58d873c0f3"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0049_17/after.png",
+      "owner": "regression:WebTestBench_0049:17",
+      "kind": "jpeg",
+      "bytes": 43067,
+      "sha256": "a0f80ee0179640ee9e3645a6006e8df8046619ac007fe0b1070497c2adc0c517"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0049_17/dom-after.txt",
+      "owner": "regression:WebTestBench_0049:17",
+      "kind": "semantic-text",
+      "bytes": 3324,
+      "sha256": "2f2d9cca8f2e597ede3eed71bf1a33f8b764f8ca6a916e3a0aaaadcf6c918d3a"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0049_17/trace.json",
+      "owner": "regression:WebTestBench_0049:17",
+      "kind": "execution-json",
+      "bytes": 1773,
+      "sha256": "8331472a3ede8c26e7a2fbefc6bf95e199d32b04fd396ad27991d8601a9d5f15"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0058_15/after.png",
+      "owner": "regression:WebTestBench_0058:15",
+      "kind": "jpeg",
+      "bytes": 34151,
+      "sha256": "35c19e4e5b7660d33f00695616ee84ed49abed250646437c49ad100c140e0ff6"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0058_15/dom-after.txt",
+      "owner": "regression:WebTestBench_0058:15",
+      "kind": "semantic-text",
+      "bytes": 1622,
+      "sha256": "c9f526cb370f20b13d92883a9a718525e5f3b4394b49c40c03af40e218142508"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0058_15/trace.json",
+      "owner": "regression:WebTestBench_0058:15",
+      "kind": "execution-json",
+      "bytes": 2310,
+      "sha256": "5d5241fed227dbd2208426a49477fd597323e2422acf34f55c2f44b81d66e6fe"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_11/after.png",
+      "owner": "regression:WebTestBench_0071:11",
+      "kind": "jpeg",
+      "bytes": 122300,
+      "sha256": "b6510fd3fc0621e2ac71048531c43c1d00bf77fc85a68d18b1f1788cf6f24aa1"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_11/dom-after.txt",
+      "owner": "regression:WebTestBench_0071:11",
+      "kind": "semantic-text",
+      "bytes": 7705,
+      "sha256": "435914841ed5fd555e3b5a3887ede9fd4ceccb43dcee08881c0f94e0eff3a930"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_11/trace.json",
+      "owner": "regression:WebTestBench_0071:11",
+      "kind": "execution-json",
+      "bytes": 2016,
+      "sha256": "dd304f43c61d043beba99952dedc42a12d3e3fe9a65589047fa229dda50e602d"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_12/after.png",
+      "owner": "regression:WebTestBench_0071:12",
+      "kind": "jpeg",
+      "bytes": 122290,
+      "sha256": "a103e60f3330216a170bfa30210414011524646365cb7ccc935eea8d478afc9f"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_12/dom-after.txt",
+      "owner": "regression:WebTestBench_0071:12",
+      "kind": "semantic-text",
+      "bytes": 7599,
+      "sha256": "f79c791840e49bfdf4bd4c33537afa3e09c0a0a8fb90b0e690ec7b3963ebd4cd"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_12/trace.json",
+      "owner": "regression:WebTestBench_0071:12",
+      "kind": "execution-json",
+      "bytes": 1824,
+      "sha256": "c1fccf65eba81b824e7f4984e0f0696079f5793597ffaf8ca164d707e1c83236"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_4/after.png",
+      "owner": "regression:WebTestBench_0071:4",
+      "kind": "jpeg",
+      "bytes": 558058,
+      "sha256": "ef7daf3d693298648ff98fb9c04a39561df1bae2b2bc34fe19cacdaa304535da"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_4/dom-after.txt",
+      "owner": "regression:WebTestBench_0071:4",
+      "kind": "semantic-text",
+      "bytes": 8483,
+      "sha256": "eaf479fbb08b3a1e4635c490b580968bcc6060584ca90c77c1fffb5acc698b9d"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0071_4/trace.json",
+      "owner": "regression:WebTestBench_0071:4",
+      "kind": "execution-json",
+      "bytes": 2410,
+      "sha256": "72410bea011c45911a82494af2d1cd01ad86d46059bb0bce16ba3d72bba79d76"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0078_17/after.png",
+      "owner": "regression:WebTestBench_0078:17",
+      "kind": "jpeg",
+      "bytes": 28557,
+      "sha256": "3b68e5248f9a0fc14200035454c554967315b35271a899239e9c9265424b940f"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0078_17/dom-after.txt",
+      "owner": "regression:WebTestBench_0078:17",
+      "kind": "semantic-text",
+      "bytes": 1561,
+      "sha256": "9f77f685ef080644f75ed516f86c9f5f3f441496e2a9716cce46f61a59c62395"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0078_17/trace.json",
+      "owner": "regression:WebTestBench_0078:17",
+      "kind": "execution-json",
+      "bytes": 2031,
+      "sha256": "1573048a27a2f044e5cb34b8612431f00c09956ef8cc0ce0aa725b00c70f7977"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0083_13/after.png",
+      "owner": "regression:WebTestBench_0083:13",
+      "kind": "jpeg",
+      "bytes": 15041,
+      "sha256": "d5144d32e5099a710495b1fc9fcdac561e878c033e06885214d0b4753934b6b9"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0083_13/dom-after.txt",
+      "owner": "regression:WebTestBench_0083:13",
+      "kind": "semantic-text",
+      "bytes": 906,
+      "sha256": "84020df19a92401cd68f602f529c6cc3b216807fc4b8ca04f4c8c9ea3b19bfa7"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0083_13/trace.json",
+      "owner": "regression:WebTestBench_0083:13",
+      "kind": "execution-json",
+      "bytes": 1987,
+      "sha256": "d44a76b19c08e4c795a9fefd57ca849c4681a3ac9b479031269b2d74c2fb92f4"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0094_15/after.png",
+      "owner": "regression:WebTestBench_0094:15",
+      "kind": "jpeg",
+      "bytes": 132404,
+      "sha256": "02d631ac94937c434449a1f59e6429c85c09f9910f07ee00ecf6682d30739538"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0094_15/dom-after.txt",
+      "owner": "regression:WebTestBench_0094:15",
+      "kind": "semantic-text",
+      "bytes": 9013,
+      "sha256": "013af4f3512be65c7e53680917538da5ba07ae0192fd82bd738e928a5651d857"
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0094_15/trace.json",
+      "owner": "regression:WebTestBench_0094:15",
+      "kind": "execution-json",
+      "bytes": 2079,
+      "sha256": "3267cebfd099dd212ee65a5ae419a0d5371f4f24841ca42d778d620beacabe48"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_16/dom.txt",
+      "owner": "regression:WebTestBench_0001:16",
+      "kind": "semantic-text",
+      "bytes": 3522,
+      "sha256": "e9686b17f841f300862ad2769b6cb20c12bd883b44c2a14b53675e78a57ac9eb"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_16/product-detail.png",
+      "owner": "regression:WebTestBench_0001:16",
+      "kind": "jpeg",
+      "bytes": 97619,
+      "sha256": "b86f24007a4a9e025ebeae26b6fc14483f546e656b732702469f84cbdb3cc14a"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_16/trace.json",
+      "owner": "regression:WebTestBench_0001:16",
+      "kind": "execution-json",
+      "bytes": 1532,
+      "sha256": "20ae19e4522ca5878beadb1866a159ddd8bf32ee57ac822b4deb1fe88d12abd8"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_4/after-tag-persistence.png",
+      "owner": "regression:WebTestBench_0001:4",
+      "kind": "jpeg",
+      "bytes": 147646,
+      "sha256": "a734e724964d892471ea18a0d29a43f9cb055182c0746b408b5723475097a6f2"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_4/dom.txt",
+      "owner": "regression:WebTestBench_0001:4",
+      "kind": "semantic-text",
+      "bytes": 5024,
+      "sha256": "3128f2f1cf0ac0e0aa40f23302c9db386b5d5871d20d9a5c7988681319499221"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_4/trace.json",
+      "owner": "regression:WebTestBench_0001:4",
+      "kind": "execution-json",
+      "bytes": 1510,
+      "sha256": "fee9d139c0cc9cd9b9b17b5b960befc72b3af6de96b6d2512f048d1a4a28affd"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0011_14/chart-tooltip.png",
+      "owner": "regression:WebTestBench_0011:14",
+      "kind": "jpeg",
+      "bytes": 37041,
+      "sha256": "9d132c75e605aae818de7fc069045a22d31d28dc4722f46a49badea04a902a3f"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0011_14/dom.txt",
+      "owner": "regression:WebTestBench_0011:14",
+      "kind": "semantic-text",
+      "bytes": 2694,
+      "sha256": "445bd7de318244574ff2ac52a2279920f4938966d72a867cd21d08e5a8276ef0"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0011_14/trace.json",
+      "owner": "regression:WebTestBench_0011:14",
+      "kind": "execution-json",
+      "bytes": 1446,
+      "sha256": "86e1abf3e0ff7ce767cc8f138641b2681b343f0c16594fcbb95b02787a434f9f"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/creator-share-link.png",
+      "owner": "regression:WebTestBench_0015:3",
+      "kind": "jpeg",
+      "bytes": 26765,
+      "sha256": "a078ec0890a96d6ae20995834095e647c185a2dbf287e6b146309a42e6451560"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/dom.txt",
+      "owner": "regression:WebTestBench_0015:3",
+      "kind": "semantic-text",
+      "bytes": 1648,
+      "sha256": "b0a6f30806188ca8f6bb586358a138f4868d719a1a63388c243a618c864debbd"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/target-voter-not-found.png",
+      "owner": "regression:WebTestBench_0015:3",
+      "kind": "jpeg",
+      "bytes": 9859,
+      "sha256": "2dd9e6eb7b33b85d91195cf3d079540d4b8fa65d1d567b01a0052777536aa805"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/trace.json",
+      "owner": "regression:WebTestBench_0015:3",
+      "kind": "execution-json",
+      "bytes": 1916,
+      "sha256": "a32930ec41fe62fdb9be60950614fd7c9a2e9cf0543e709367b3cc1ceee2fe65"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0021_9/dom.txt",
+      "owner": "regression:WebTestBench_0021:9",
+      "kind": "semantic-text",
+      "bytes": 5219,
+      "sha256": "6e7439d19580aac2a0585305dbba300c87ff249dbea75ae5d108733e929ba5f1"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0021_9/reports-no-export.png",
+      "owner": "regression:WebTestBench_0021:9",
+      "kind": "jpeg",
+      "bytes": 36182,
+      "sha256": "9f028c13d3ac3edde50a4439b728a53b7a9e211a77e0a1e2e1f1859721bbc866"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0021_9/trace.json",
+      "owner": "regression:WebTestBench_0021:9",
+      "kind": "execution-json",
+      "bytes": 1652,
+      "sha256": "d4a01a3f22e3746e96bf2ae11a72e1af0bdad9e320114d5d91171bd01bbc49cb"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_15/dom.txt",
+      "owner": "regression:WebTestBench_0023:15",
+      "kind": "semantic-text",
+      "bytes": 1361,
+      "sha256": "c7a36bf7800df00098dda84f441f1bd2d60fdc8f209020b49119dcd0af5cff0d"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_15/negative-price-rejected.png",
+      "owner": "regression:WebTestBench_0023:15",
+      "kind": "jpeg",
+      "bytes": 23719,
+      "sha256": "1a5e4b22a50b942a71a649a0e2f67077f68d2730b4e8f994291a15847b3e8c2f"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_15/trace.json",
+      "owner": "regression:WebTestBench_0023:15",
+      "kind": "execution-json",
+      "bytes": 1599,
+      "sha256": "78b2a30d220f46b15341ba6ee6cfcf0720900f5e313b2c8b09610455b6808024"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_8/cart-with-item.png",
+      "owner": "regression:WebTestBench_0023:8",
+      "kind": "jpeg",
+      "bytes": 15596,
+      "sha256": "27ee79ad359da00986d37c7bb444c2edac21e4103ab3265f6ef1a0f4c80432a7"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_8/dom.txt",
+      "owner": "regression:WebTestBench_0023:8",
+      "kind": "semantic-text",
+      "bytes": 2089,
+      "sha256": "cfcd74fb553b46a59eb92d9961e3efde2e89f420ec5669f0eebd9654b010e95a"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0023_8/trace.json",
+      "owner": "regression:WebTestBench_0023:8",
+      "kind": "execution-json",
+      "bytes": 1600,
+      "sha256": "b4705d240685e156df5934b91d416b4c318da25d02f89b06b4b99f1c6b9cad7c"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0027_7/deep-dive-layer.png",
+      "owner": "regression:WebTestBench_0027:7",
+      "kind": "jpeg",
+      "bytes": 69418,
+      "sha256": "306695ba2fe183485727f8ff5214191e2cd12ed5d4bcf87d156d19a707755d3d"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0027_7/dom.txt",
+      "owner": "regression:WebTestBench_0027:7",
+      "kind": "semantic-text",
+      "bytes": 3952,
+      "sha256": "f79d6d466aec32c7f8dc719f6ccd054293212c1386630459505d0242122951c0"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0027_7/trace.json",
+      "owner": "regression:WebTestBench_0027:7",
+      "kind": "execution-json",
+      "bytes": 1624,
+      "sha256": "9133235fab14adef79280bcfa96536fa49ece9e3af0d5d6678e05770c9a68857"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0032_4/after-eur-conversion.png",
+      "owner": "regression:WebTestBench_0032:4",
+      "kind": "jpeg",
+      "bytes": 70015,
+      "sha256": "1f84788964343013986531fbc9aec5798d0315da193b040d6225cb15532b52e4"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0032_4/dom.txt",
+      "owner": "regression:WebTestBench_0032:4",
+      "kind": "semantic-text",
+      "bytes": 5579,
+      "sha256": "dcdb7e29d1b9914086e1c7efc7ee2b2e7b5e4fe98038a1daccf9bff4d8b3b78c"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0032_4/trace.json",
+      "owner": "regression:WebTestBench_0032:4",
+      "kind": "execution-json",
+      "bytes": 1619,
+      "sha256": "6faf25c9544ca7c6cefe7b79df71e427faa8fa7c373de5ae25fb2550a3dc2136"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/all-categories-nonempty.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 272014,
+      "sha256": "b957f60794c5b0880dc837c21736d71748d9d478365a805581879b44fc39ce31"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-accessories.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 63432,
+      "sha256": "31296cf47d5a57b0961df5d7072fafa315eeb26ef438cdf80718fe8524b78ca3"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-apparel.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 58053,
+      "sha256": "a990d1437d991ab1c60f00f3ca1276e1aad6aaa75f84abeadbf101aad867bfa9"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-electronics.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 105730,
+      "sha256": "b63d2cf3662925629528512b99fb9ba2c142b228fff14ede47160d36b76f5c64"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-home-office.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 54566,
+      "sha256": "e62b361a74252fd756249c18d229d2002c4a7bed691f98c0ded7829ec075f3af"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/category-wellness.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 58032,
+      "sha256": "3f18c791d5d8efe90e9b0efbcf772d65748e346bf3b09ea3b095584219505323"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/dom.txt",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "semantic-text",
+      "bytes": 24726,
+      "sha256": "7a057aca136a95014e5eac66c0b7999edc2a8a567cf77ee4c1389be0ddec3a2a"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/sort-high-to-low.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 229681,
+      "sha256": "bd52ce16e8a36c0635499abeeba6f74284638630dd5be6f7ff27cc29a3637ef9"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/sort-low-to-high.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 216557,
+      "sha256": "660d87e9ec5890a7e76eb0c7bb2216003b0fef406ba00834fec0e214bb68ad99"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/state-all-final.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 205262,
+      "sha256": "867abc6b17e83e0cbf5dfd0b4f3b14b9dcdf562cd7a8446aa1edda82c3d0091b"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/state-all.png",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "jpeg",
+      "bytes": 272390,
+      "sha256": "ded45bf23137fa1a8d1e62698aa2e4232042d70ddc24ba2019cb3699798352e9"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0053_14/trace.json",
+      "owner": "regression:WebTestBench_0053:14",
+      "kind": "execution-json",
+      "bytes": 4247,
+      "sha256": "9e1a3402b7be7ef142bbdaddf600a319eb7fec8bcf1437ea6608912f08b1aced"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_11/after-empty-set-attempt.png",
+      "owner": "regression:WebTestBench_0064:11",
+      "kind": "jpeg",
+      "bytes": 19911,
+      "sha256": "6691f480c36c829188cf939e364a40daab4fa19702b62cc63ccd73fe0a5f0396"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_11/dom.txt",
+      "owner": "regression:WebTestBench_0064:11",
+      "kind": "semantic-text",
+      "bytes": 1286,
+      "sha256": "e57feb7ee1a36b32e6d5fa368dd4b49fb9148af3f999971c83ae69266003f9f8"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_11/trace.json",
+      "owner": "regression:WebTestBench_0064:11",
+      "kind": "execution-json",
+      "bytes": 1537,
+      "sha256": "844e339b07ef595d26c605a18fb93696e57954b1fb75e162e88df7fe99c88cfe"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_16/after-created-card.png",
+      "owner": "regression:WebTestBench_0064:16",
+      "kind": "jpeg",
+      "bytes": 26385,
+      "sha256": "d4dfc786f77f551364dd603b0da73277239cabd4648ec56e0310327a5d3e3577"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_16/dom.txt",
+      "owner": "regression:WebTestBench_0064:16",
+      "kind": "semantic-text",
+      "bytes": 1871,
+      "sha256": "c8feb32b8b96a4aa213fc6520a78c4019e1681592104cd0fa824354a2a6ea57e"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_16/trace.json",
+      "owner": "regression:WebTestBench_0064:16",
+      "kind": "execution-json",
+      "bytes": 1593,
+      "sha256": "4cb3a9f555bf39edd9efaa92e969e7ef8c10bf9b00033cdb18dfb65f38fdbf83"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/after-three-responses.png",
+      "owner": "regression:WebTestBench_0064:4",
+      "kind": "jpeg",
+      "bytes": 12611,
+      "sha256": "5d97059044318a7dcd5b76897f5fddb2ee913986c98b4b529b9e02af19fafcf2"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/dom.txt",
+      "owner": "regression:WebTestBench_0064:4",
+      "kind": "semantic-text",
+      "bytes": 574,
+      "sha256": "588613a19a6cc8c9552535030d4ffb239d9d2e9fe51248f00516dce1218a832f"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/trace.json",
+      "owner": "regression:WebTestBench_0064:4",
+      "kind": "execution-json",
+      "bytes": 1765,
+      "sha256": "8088382561b1318d80bdfd633aab18b68c7aa9f379eba2ced5a095cb9a4531aa"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0064_4/transition-snapshots.txt",
+      "owner": "regression:WebTestBench_0064:4",
+      "kind": "semantic-text",
+      "bytes": 2760,
+      "sha256": "78af1d7c5d635c0557940b60d88bd567b960d488e72eae5bfd7d87a0cd935fde"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/after-30c-chart.png",
+      "owner": "regression:WebTestBench_0068:16",
+      "kind": "jpeg",
+      "bytes": 21835,
+      "sha256": "a6537e034c1602792d2882d83ea9141492c8d5dc96e521f45c3b277c15517ffb"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/before-25c-chart.png",
+      "owner": "regression:WebTestBench_0068:16",
+      "kind": "jpeg",
+      "bytes": 39046,
+      "sha256": "863e05944309d8df25702d8754c40ac278ccebf8f738dbab08504800a9af79b2"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/dom.txt",
+      "owner": "regression:WebTestBench_0068:16",
+      "kind": "semantic-text",
+      "bytes": 835,
+      "sha256": "200c8ae474a3fe0dfb8613d59aca8e0d802213da6f9ecf6f8bba59e4815a2647"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/trace.json",
+      "owner": "regression:WebTestBench_0068:16",
+      "kind": "execution-json",
+      "bytes": 2078,
+      "sha256": "6f00d540426e6ec407e9db543d277e04737fedabe72b12f05c074445aa354aae"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_16/transitions.txt",
+      "owner": "regression:WebTestBench_0068:16",
+      "kind": "semantic-text",
+      "bytes": 3917,
+      "sha256": "3f6d3ee7d0a1a058fb203fdd5d3bf3ef0196d5ad459bcdbc8af089eb35d496fb"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/after-linked-temperature-change.png",
+      "owner": "regression:WebTestBench_0068:5",
+      "kind": "jpeg",
+      "bytes": 74349,
+      "sha256": "4524df5a3905b985771b4d6e46da6dc0aa3892b7667497398f96186114648048"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/dom.txt",
+      "owner": "regression:WebTestBench_0068:5",
+      "kind": "semantic-text",
+      "bytes": 1800,
+      "sha256": "85b51e1e82a2639833668d98787762a2c68f24d030ddf5ff80c99b6895482131"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/trace.json",
+      "owner": "regression:WebTestBench_0068:5",
+      "kind": "execution-json",
+      "bytes": 1765,
+      "sha256": "66be548f3d79440974909732eb6c5ba5806b56cb2d9d19f0d3445747a684e308"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0068_5/transitions.txt",
+      "owner": "regression:WebTestBench_0068:5",
+      "kind": "semantic-text",
+      "bytes": 6188,
+      "sha256": "df8f4099aa3488ee3272958d26fba018a043ad53678642c6c8d315b07e9ca22e"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0070_9/after-spaces.png",
+      "owner": "regression:WebTestBench_0070:9",
+      "kind": "jpeg",
+      "bytes": 17034,
+      "sha256": "1184e5f0486d86b244d7b2c80e5b5b9a21722f3480e8cdb0d88380503e578ab9"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0070_9/dom.txt",
+      "owner": "regression:WebTestBench_0070:9",
+      "kind": "semantic-text",
+      "bytes": 719,
+      "sha256": "1ed188d2137559f608ca25a2237d5155cb2624ebf01ddb372b7656707183a7a7"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0070_9/trace.json",
+      "owner": "regression:WebTestBench_0070:9",
+      "kind": "execution-json",
+      "bytes": 1414,
+      "sha256": "7123b873c59be9db02cd17b2e929dfc360df795d7b419f5d868306469b03e824"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0080_18/dom.txt",
+      "owner": "regression:WebTestBench_0080:18",
+      "kind": "semantic-text",
+      "bytes": 413,
+      "sha256": "e597f7453dda1dfa93cd4b45463242e604def80efaf5b1ed54d330deb7fb1254"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0080_18/no-result-message.png",
+      "owner": "regression:WebTestBench_0080:18",
+      "kind": "jpeg",
+      "bytes": 13046,
+      "sha256": "aa500e937fc2f8fb040faff6190832526c95c9da8b525558235dcc66cae88a9d"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0080_18/trace.json",
+      "owner": "regression:WebTestBench_0080:18",
+      "kind": "execution-json",
+      "bytes": 1575,
+      "sha256": "34550dd3c3da521b79419f35c4a0fd984bac56526a145453d2b072fed0c3916b"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0089_23/after-special-character.png",
+      "owner": "regression:WebTestBench_0089:23",
+      "kind": "jpeg",
+      "bytes": 32322,
+      "sha256": "94adc2df77228da07f68592c8e0e7090e6391cb91f124fed5b12bc67c48b2c50"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0089_23/dom.txt",
+      "owner": "regression:WebTestBench_0089:23",
+      "kind": "semantic-text",
+      "bytes": 4825,
+      "sha256": "4711c06c4c82e163775c3c7eb8c832774121bd95eb46109ce3e9d0566f499aca"
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0089_23/trace.json",
+      "owner": "regression:WebTestBench_0089:23",
+      "kind": "execution-json",
+      "bytes": 1591,
+      "sha256": "dce2d148ee38139a114e9fa4c07ead3cd22ff3d1132df0c1813da17dfdf53c84"
+    }
+  ]
+}

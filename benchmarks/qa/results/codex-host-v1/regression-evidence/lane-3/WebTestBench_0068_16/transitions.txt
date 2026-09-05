@@ -1,0 +1,138 @@
+BASELINE 25C
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "LabSim" [level=1]
+  - paragraph: Interactive Lab Platform
+  - navigation:
+    - button "Experiment Editor":
+      - generic: Experiment Editor
+    - button "Multi-Instance Comparison":
+      - generic: Multi-Instance Comparison
+    - button "Historical Scenarios":
+      - generic: Historical Scenarios
+  - generic: System Ready
+- main:
+  - heading "Multi-Instance Comparison" [level=2]
+  - paragraph: Run experiments side by side and compare results
+  - button "Add Current Scene":
+    - text: Add Current Scene
+  - 'heading "Basic Heat Transfer #1" [level=3]'
+  - paragraph: 3 items
+  - button [active]:
+  - button:
+  - generic: 0:00
+  - paragraph: Avg Temp
+  - paragraph: 25.0°C
+  - paragraph: Status
+  - paragraph: Running
+- generic: 0s
+
+EDITOR 30C
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "LabSim" [level=1]
+  - paragraph: Interactive Lab Platform
+  - navigation:
+    - button "Experiment Editor":
+      - generic: Experiment Editor
+    - button "Multi-Instance Comparison":
+      - generic: Multi-Instance Comparison
+    - button "Historical Scenarios":
+      - generic: Historical Scenarios
+  - generic: System Ready
+- main:
+  - heading "Equipment" [level=3]
+  - button "Bunsen Burner Adjustable heat source for experiments":
+    - paragraph: Bunsen Burner
+    - paragraph: Adjustable heat source for experiments
+  - button "Beaker Container for liquids with volume markings":
+    - paragraph: Beaker
+    - paragraph: Container for liquids with volume markings
+  - button "Thermometer Measures temperature of connected equipment":
+    - paragraph: Thermometer
+    - paragraph: Measures temperature of connected equipment
+  - button "Erlenmeyer Flask Conical flask for mixing and heating":
+    - paragraph: Erlenmeyer Flask
+    - paragraph: Conical flask for mixing and heating
+  - button "Condenser Cools vapor back into liquid":
+    - paragraph: Condenser
+    - paragraph: Cools vapor back into liquid
+  - button "Magnetic Stirrer Stirs liquids at variable speeds":
+    - paragraph: Magnetic Stirrer
+    - paragraph: Stirs liquids at variable speeds
+  - paragraph: Click to add equipment to the canvas
+  - button "New":
+    - text: New
+  - button "Save":
+    - text: Save
+  - button "Add to Comparison":
+    - text: Add to Comparison
+  - button "Reset":
+    - text: Reset
+  - button "Simulate":
+    - text: Simulate
+  - generic: Basic Heat Transfer
+  - generic: 3 items
+  - generic: "ID: scene-1"
+  - heading "Properties" [level=3]
+  - button:
+  - text: Name
+  - textbox: Beaker
+  - heading "Transform" [level=4]:
+    - text: Transform
+  - generic: Rotation
+  - generic: 0°
+  - slider
+  - generic: Scale
+  - generic: 1.0x
+  - slider
+  - heading "Parameters" [level=4]:
+    - text: Parameters
+  - generic: Volume
+  - generic: 400ml
+  - slider
+  - generic: Initial Temp
+  - generic: 30°C
+  - slider [active]
+  - text: Liquid Color
+  - textbox: "#00d4ff"
+  - textbox: "#00d4ff"
+- generic: 0s
+
+UPDATED COMPARISON
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "LabSim" [level=1]
+  - paragraph: Interactive Lab Platform
+  - navigation:
+    - button "Experiment Editor":
+      - generic: Experiment Editor
+    - button "Multi-Instance Comparison" [active]:
+      - generic: Multi-Instance Comparison
+    - button "Historical Scenarios":
+      - generic: Historical Scenarios
+  - generic: System Ready
+- main:
+  - heading "Multi-Instance Comparison" [level=2]
+  - paragraph: Run experiments side by side and compare results
+  - button "Add Current Scene":
+    - text: Add Current Scene
+  - 'heading "Basic Heat Transfer #1" [level=3]'
+  - paragraph: 3 items
+  - button:
+  - button:
+  - generic: 0:00
+  - paragraph: Avg Temp
+  - paragraph: 30.0°C
+  - paragraph: Status
+  - paragraph: Running
+- generic: 0s

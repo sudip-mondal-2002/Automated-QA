@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0024:14",
+  "appId": "WebTestBench_0024",
+  "candidateSha256": "12bc97bce1689b8cc14e87c6950aad8e0ae1baf31b5c4271465a6086ee92c53f",
+  "appArchiveSha256": "fd99a8975a129d6041bc704c927efa2d97ad1b8becb139463fbc7420c001b416",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T07:56:33.565Z",
+  "actions": [
+    {
+      "action": "Opened 'The Ancient Roman Baths' story",
+      "result": "Detailed story page displayed a three-image Gallery."
+    },
+    {
+      "action": "Clicked gallery Image 2",
+      "result": "A large Image 2 lightbox/zoom view and overlay controls appeared."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Clicking a photo zooms it for viewing",
+      "observed": "The selected gallery thumbnail opened as an enlarged image overlay while the thumbnail remained active."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "Gallery photo zoom was verified by opening the second image and observing the enlarged overlay.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0024_14/after.png",
+      "sha256": "9284eaabce511744178874421588943f6f4d7eda504351e65ec40078c0519e82",
+      "bytes": 119916
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0024_14/dom-after.txt",
+      "sha256": "8bee0013ae476b1c401739912f3457b6fd23c95b4088041dcbad2ae0a182ce3a",
+      "bytes": 5558
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4722; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

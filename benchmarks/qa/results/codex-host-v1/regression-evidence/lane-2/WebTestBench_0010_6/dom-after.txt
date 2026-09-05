@@ -1,0 +1,67 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TableSpot":
+    - /url: /
+    - generic: TableSpot
+  - navigation:
+    - link "Restaurants":
+      - /url: /
+    - link "My Reservations":
+      - /url: /reservations
+- img "The Golden Fork"
+- link "Back":
+  - /url: /
+  - text: Back
+- heading "The Golden Fork" [level=1]
+- paragraph: French
+- generic: "4.5"
+- generic: (2)
+- generic: 142 Grand Avenue, Downtown
+- generic: $$$$
+- paragraph: An elegant French dining experience featuring classic techniques with modern flair. Our chef creates seasonal menus that celebrate the finest local ingredients.
+- text: Private Dining
+- text: Wine Pairing
+- text: Tasting Menu
+- tablist:
+  - tab "Reviews (2)" [selected]
+  - tab "Write a Review"
+- tabpanel "Reviews (2)":
+  - generic: S
+  - paragraph: Sarah M.
+  - paragraph: Visited Jan 10, 2024
+  - paragraph: Absolutely exceptional dining experience. The tasting menu was a journey through flavors I've never experienced before. Worth every penny.
+  - generic: J
+  - paragraph: James L.
+  - paragraph: Visited Jan 5, 2024
+  - paragraph: Beautiful ambiance and excellent food. The service was attentive without being intrusive. Will definitely return.
+- heading "Make a Reservation" [level=2]
+- text: Date
+- button "Select date"
+- text: Time
+- combobox:
+  - generic: Select time
+- combobox
+- text: Party Size
+- combobox:
+  - generic: 2 Guests
+- combobox
+- text: Name *
+- textbox "Name *":
+  - /placeholder: John Doe
+- text: Email *
+- textbox "Email *":
+  - /placeholder: john@example.com
+- text: Phone *
+- textbox "Phone *":
+  - /placeholder: +1 (555) 000-0000
+- text: Special Requests
+- textbox "Special Requests":
+  - /placeholder: Allergies, celebrations, seating preferences...
+- text: Discount Coupon
+- generic: WELCOME10
+- generic: "- 10% off"
+- button [active]:
+- paragraph: "Try: WELCOME10, GROUP15 (6+ guests), WEEKEND20"
+- button "Confirm Reservation"

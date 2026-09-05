@@ -1,0 +1,29 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "ResumeBuilder" [level=1]
+  - button "New Resume":
+    - text: New Resume
+- main:
+  - heading "Your Resumes" [level=2]
+  - paragraph: Create, customize, and manage your professional resumes
+  - textbox "Search resumes..."
+  - combobox:
+    - generic: Newest First
+  - button:
+  - heading "QA Resume Review" [level=3]
+  - paragraph: Updated Sep 5, 2026
+  - generic: modern
+  - button:
+  - heading "Product Designer Resume" [level=3]
+  - paragraph: Updated Feb 25, 2024
+  - generic: minimal
+  - button:
+  - heading "Marketing Manager Resume" [level=3]
+  - paragraph: Updated Feb 10, 2024
+  - generic: classic
+  - button:
+  - heading "Software Engineer Resume" [level=3]
+  - paragraph: Updated Jan 20, 2024
+  - generic: modern

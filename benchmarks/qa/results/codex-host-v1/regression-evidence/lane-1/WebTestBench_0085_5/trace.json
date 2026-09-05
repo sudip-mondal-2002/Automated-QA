@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0085:5",
+  "appId": "WebTestBench_0085",
+  "candidateSha256": "5f7e93b643d8addb575f73e19ab268e89be95ea0a3f28d2d13a27c69d65e5cdb",
+  "appArchiveSha256": "c24ddb94febe4c6f0bf5f3fa9ce9e1363939357355b8e439a9fca61ebdfbcbea",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Google Chrome",
+    "version": "152.0.7977.76",
+    "surface": "Chrome extension"
+  },
+  "startedAt": "2026-09-05T08:21:28.691Z",
+  "completedAt": "2026-09-05T08:21:39.312Z",
+  "isolation": "Fresh re-execution used unique origin http://127.0.0.1:47305 with no prior case cookies/localStorage. Vite was started solely for this case and stopped afterward.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Loaded the course outline on the fresh origin and enumerated all rendered buttons."
+    },
+    {
+      "step": 2,
+      "action": "Selected the predefined Advanced pathway."
+    },
+    {
+      "step": 3,
+      "action": "Re-inspected the complete rendered control inventory for any create, name, topic-selection, or save-custom-path action."
+    }
+  ],
+  "observations": [
+    "The only top-level pathway controls were the predefined Beginner, Intermediate, and Advanced buttons.",
+    "Advanced changed to Active, while all remaining buttons were topic disclosures.",
+    "No control exists to create, name, configure, or save a custom path."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The fresh case-specific run confirms preset highlighting works but custom-path creation is absent.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-advanced.png",
+      "sha256": "99a816bcf92c2307da655d8d1fb1b41f8cc407dad485735d4c833b017018d8a7",
+      "bytes": 62164
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-dom.txt",
+      "sha256": "0ca8fb2de0ebd0ea91bd497dde1f15607bfffd629e9fe4bc671e93aed9c5db63",
+      "bytes": 5410
+    }
+  ],
+  "laneId": "lane-1"
+}

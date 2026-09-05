@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120004_d077cc5a3e7d37b0451968f2",
+  "specId": "reprobreak-1224",
+  "environment": "local",
+  "classification": "healed",
+  "startedAt": "2026-09-05T12:00:04.000Z",
+  "completedAt": "2026-09-05T12:00:04.130Z",
+  "explanation": "Recovered 1 interaction and verified every original expectation unchanged",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Inspect the Title column header menu for the descending-sort command",
+      "status": "passed",
+      "expectations": [
+        {
+          "expectation": "The Title column header menu contains Sort Descending",
+          "status": "passed",
+          "observation": "Recovered command text Sort Descending"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "command list \"Title column commands\" nested in the failed menu root",
+        "role": "list",
+        "name": "Title column commands"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "healed",
+        "originalFailure": "The old menu root cannot reach command items after the command-list wrapper was introduced: cy.get('.slick-header-menu'). Previous target: cy.get('.slick-header-menu')",
+        "replacement": "command list \"Title column commands\" nested in the failed menu root",
+        "verification": "The original expectations passed unchanged after recovery",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-checkpoint-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:04.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-1224"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:04.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:04.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Inspect the Title column header menu for the descending-sort command"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:04.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The old menu root cannot reach command items after the command-list wrapper was introduced: cy.get('.slick-header-menu'). Previous target: cy.get('.slick-header-menu')"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:04.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:04.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:04.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "command list \"Title column commands\" nested in the failed menu root: The original expectations passed unchanged after recovery"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:04.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-checkpoint-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:04.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "Expectations passed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:04.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:04.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:04.120Z",
+      "type": "run_completed",
+      "status": "passed",
+      "message": "Recovered 1 interaction and verified every original expectation unchanged"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0043:8",
+  "appId": "WebTestBench_0043",
+  "candidateSha256": "77e12ff3e5476a850139e905ee6f147426fa121e4579881db1e7a5d96c7e59ee",
+  "appArchiveSha256": "7b69cd3ff95655165fce2ab2f8037115cfb9114e0fb091745ee507ded31cb227",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:04:42.237Z",
+  "completedAt": "2026-09-05T08:05:24.529Z",
+  "isolation": "Unique loopback origin 47112 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Signed into the provided local demo account and opened Write."
+    },
+    {
+      "step": 2,
+      "action": "Entered a Python/Flask-focused title and body with repeated Python terms and a Python code block."
+    },
+    {
+      "step": 3,
+      "action": "Inspected auto-detected intelligent tags."
+    }
+  ],
+  "observations": [
+    "Suggested tags included Python, Backend Development, Tutorial, and Code Examples.",
+    "The core Python tag directly matched the actual article content."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The extraction demonstrated the required basic relevance for an unambiguous Python article.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0043_8/python-intelligent-tags.png",
+      "sha256": "45479d982d1aa7a27f47a86d6d2c41d9c999b973adc889545aa79e96944316e9",
+      "bytes": 34391
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0043_8/dom-snapshot.txt",
+      "sha256": "f9b772340f13f5f5993a1e2a1bc308c7fa8ac41b5cb61d81a6f95d6673b946a1",
+      "bytes": 1744
+    }
+  ],
+  "laneId": "lane-1"
+}

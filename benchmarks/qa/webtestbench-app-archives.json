@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "source": "friedrichor/WebTestBench",
+  "datasetRevision": "2feeec346c71f7adb30dff9c64e185bb4cdfc0fe",
+  "scope": "Runnable archives for the frozen 56-case defect-classification subset",
+  "apps": [
+    {
+      "appId": "WebTestBench_0001",
+      "path": "web_applications_zip/WebTestBench_0001.zip",
+      "bytes": 219848,
+      "sha256": "2ebdb5a9e8a2262cf232971aac91eccdc898a56888650768e69ecda722fe3fef"
+    },
+    {
+      "appId": "WebTestBench_0004",
+      "path": "web_applications_zip/WebTestBench_0004.zip",
+      "bytes": 514084,
+      "sha256": "0560a09f34e202645982c32cf0c34b49d3d91a3caa503d9d9fcc35f0e4a9059c"
+    },
+    {
+      "appId": "WebTestBench_0005",
+      "path": "web_applications_zip/WebTestBench_0005.zip",
+      "bytes": 220760,
+      "sha256": "56f717bb5728bfbecdbe39be2d36264e630ec8815c819660995fa9e90296b719"
+    },
+    {
+      "appId": "WebTestBench_0008",
+      "path": "web_applications_zip/WebTestBench_0008.zip",
+      "bytes": 216251,
+      "sha256": "dcc04ed4355036772d53c189fe8f56752fd99fa666d4a77787fa8bde484868db"
+    },
+    {
+      "appId": "WebTestBench_0010",
+      "path": "web_applications_zip/WebTestBench_0010.zip",
+      "bytes": 214568,
+      "sha256": "939bcd589ad019edfe09912922efa8150f48cb4e68d0d8fdf86fc3b814266027"
+    },
+    {
+      "appId": "WebTestBench_0011",
+      "path": "web_applications_zip/WebTestBench_0011.zip",
+      "bytes": 222282,
+      "sha256": "9cdac661a8072574bda445af31cc5aaf5f01f921ecdce0e31a4a66ff97fe7398"
+    },
+    {
+      "appId": "WebTestBench_0012",
+      "path": "web_applications_zip/WebTestBench_0012.zip",
+      "bytes": 222120,
+      "sha256": "b8c0a8583e87f99d66ade4d6c8a28255ff3b22536e8d6d2e056af42ffdfec5eb"
+    },
+    {
+      "appId": "WebTestBench_0013",
+      "path": "web_applications_zip/WebTestBench_0013.zip",
+      "bytes": 218249,
+      "sha256": "d33af275eec3dbd430ced70be6959d69954f1dc0baf1ab7820f5c09b87517ff5"
+    },
+    {
+      "appId": "WebTestBench_0015",
+      "path": "web_applications_zip/WebTestBench_0015.zip",
+      "bytes": 201411,
+      "sha256": "dfb526c02575ade03605048dca2d77edee552df4b406099edc9f151f28ae5c3e"
+    },
+    {
+      "appId": "WebTestBench_0018",
+      "path": "web_applications_zip/WebTestBench_0018.zip",
+      "bytes": 192066,
+      "sha256": "ce26fe647e559e0d2642c080c454a0822820ce74c5a3df3045352bb73d87676a"
+    },
+    {
+      "appId": "WebTestBench_0020",
+      "path": "web_applications_zip/WebTestBench_0020.zip",
+      "bytes": 199835,
+      "sha256": "1627d2452a0849fc93efeba2906cdf038b92839067b87b206a35074ee602481e"
+    },
+    {
+      "appId": "WebTestBench_0021",
+      "path": "web_applications_zip/WebTestBench_0021.zip",
+      "bytes": 219699,
+      "sha256": "91f93d3f6f6a5e6fb3d6e1b90d07d3a2ac19accfd3345a13dac15eb02541ae3c"
+    },
+    {
+      "appId": "WebTestBench_0022",
+      "path": "web_applications_zip/WebTestBench_0022.zip",
+      "bytes": 211301,
+      "sha256": "971448f527ece98d889bfd2173d6b6cc2478c7da951d73c641be720db397f66b"
+    },
+    {
+      "appId": "WebTestBench_0023",
+      "path": "web_applications_zip/WebTestBench_0023.zip",
+      "bytes": 224377,
+      "sha256": "36506b2097bf0d26013c61b6df97dd72643729b12b5798213b1dc752a91a64f9"
+    },
+    {
+      "appId": "WebTestBench_0024",
+      "path": "web_applications_zip/WebTestBench_0024.zip",
+      "bytes": 224505,
+      "sha256": "fd99a8975a129d6041bc704c927efa2d97ad1b8becb139463fbc7420c001b416"
+    },
+    {
+      "appId": "WebTestBench_0027",
+      "path": "web_applications_zip/WebTestBench_0027.zip",
+      "bytes": 222040,
+      "sha256": "4e2e78cdf70550d8cf524b43b53ff9350ad22206d46282b74dcaf1fcfa514ea9"
+    },
+    {
+      "appId": "WebTestBench_0029",
+      "path": "web_applications_zip/WebTestBench_0029.zip",
+      "bytes": 211821,
+      "sha256": "791f3c0711fad32c41a24b96fa16cebdf00b39a775cd87cf97d80991ab78e0be"
+    },
+    {
+      "appId": "WebTestBench_0030",
+      "path": "web_applications_zip/WebTestBench_0030.zip",
+      "bytes": 216431,
+      "sha256": "7acc25e7843819a7eb05964ef6b1fdfd89235221321f4d748ee1888b77d227d6"
+    },
+    {
+      "appId": "WebTestBench_0032",
+      "path": "web_applications_zip/WebTestBench_0032.zip",
+      "bytes": 209299,
+      "sha256": "7a6196867229acb6b0ad87019cfba3a561732d85296739ca7a7471c39ae5829b"
+    },
+    {
+      "appId": "WebTestBench_0040",
+      "path": "web_applications_zip/WebTestBench_0040.zip",
+      "bytes": 210396,
+      "sha256": "8651119f6929decf9e82779e674df0068448d366934dfc6745e3a4e57f767ace"
+    },
+    {
+      "appId": "WebTestBench_0043",
+      "path": "web_applications_zip/WebTestBench_0043.zip",
+      "bytes": 243541,
+      "sha256": "7b69cd3ff95655165fce2ab2f8037115cfb9114e0fb091745ee507ded31cb227"
+    },
+    {
+      "appId": "WebTestBench_0044",
+      "path": "web_applications_zip/WebTestBench_0044.zip",
+      "bytes": 203188,
+      "sha256": "623ebb4d9aa811eeed9e647efb9f2c560b01dc5e2d3d83c261501b4e42627284"
+    },
+    {
+      "appId": "WebTestBench_0049",
+      "path": "web_applications_zip/WebTestBench_0049.zip",
+      "bytes": 202975,
+      "sha256": "10dd8353bc63d48d580d26c6bcc1b42d9fb2ebecf6f314bc4633d5ecd67503ca"
+    },
+    {
+      "appId": "WebTestBench_0053",
+      "path": "web_applications_zip/WebTestBench_0053.zip",
+      "bytes": 209484,
+      "sha256": "af3221be0290c95e0fdef9be944c774038b6a11a1bf78bccc0707ef7d22bf33a"
+    },
+    {
+      "appId": "WebTestBench_0057",
+      "path": "web_applications_zip/WebTestBench_0057.zip",
+      "bytes": 210804,
+      "sha256": "a86737732a55670fa8ab283ee4b6525856e28f9a10df475eedc9e859c42b6440"
+    },
+    {
+      "appId": "WebTestBench_0058",
+      "path": "web_applications_zip/WebTestBench_0058.zip",
+      "bytes": 209466,
+      "sha256": "f2725079a73e49bc304d6eb71511061ce8e1464e0587789ae41f80f01ff491c4"
+    },
+    {
+      "appId": "WebTestBench_0064",
+      "path": "web_applications_zip/WebTestBench_0064.zip",
+      "bytes": 220671,
+      "sha256": "3b6b47541e635b5f2a4f6942b629e66e4358dfc60e1e55fb4c9b20aff28c6a7b"
+    },
+    {
+      "appId": "WebTestBench_0068",
+      "path": "web_applications_zip/WebTestBench_0068.zip",
+      "bytes": 218154,
+      "sha256": "e3fd9f29b04c140a76027cb40878ee5681bb1341e03845cda665fd4efc818584"
+    },
+    {
+      "appId": "WebTestBench_0070",
+      "path": "web_applications_zip/WebTestBench_0070.zip",
+      "bytes": 206868,
+      "sha256": "fbb9351f2a7c671db26cc4e013a6be4f3b48dc04830f9e57d2bb0be8b72b2811"
+    },
+    {
+      "appId": "WebTestBench_0071",
+      "path": "web_applications_zip/WebTestBench_0071.zip",
+      "bytes": 219277,
+      "sha256": "9dc3bafd6623b0badc5496566b7300251dc1c2f23e3c3fdc6408a6be35760c05"
+    },
+    {
+      "appId": "WebTestBench_0073",
+      "path": "web_applications_zip/WebTestBench_0073.zip",
+      "bytes": 229566,
+      "sha256": "cb5bbc65677322ed12f38ae5653c0875d82f8ba264ea86392687f9143b204240"
+    },
+    {
+      "appId": "WebTestBench_0078",
+      "path": "web_applications_zip/WebTestBench_0078.zip",
+      "bytes": 210061,
+      "sha256": "8d3e2f34e6a164ea81c711bac88119ed0a0525ebc076639913861a0651a03e75"
+    },
+    {
+      "appId": "WebTestBench_0080",
+      "path": "web_applications_zip/WebTestBench_0080.zip",
+      "bytes": 209895,
+      "sha256": "e86b46fa963da043889524b7f6fa5419f79104bbd5b9e40c3f91335fdfc2ca71"
+    },
+    {
+      "appId": "WebTestBench_0082",
+      "path": "web_applications_zip/WebTestBench_0082.zip",
+      "bytes": 208866,
+      "sha256": "e0a2eabb7ed28521c92c7a0ce2d98291c0e9e256e50525ec4c5127e5d320d640"
+    },
+    {
+      "appId": "WebTestBench_0083",
+      "path": "web_applications_zip/WebTestBench_0083.zip",
+      "bytes": 215629,
+      "sha256": "56c383cb7a53f7dbaeb36f7ac3c147581ecabe316d09ef659798eb2ef237236c"
+    },
+    {
+      "appId": "WebTestBench_0084",
+      "path": "web_applications_zip/WebTestBench_0084.zip",
+      "bytes": 244079,
+      "sha256": "1313b6fefb9a5692e0f4233635b1a0d92c5832e07505ee5abdb94596c377d0f2"
+    },
+    {
+      "appId": "WebTestBench_0085",
+      "path": "web_applications_zip/WebTestBench_0085.zip",
+      "bytes": 204479,
+      "sha256": "c24ddb94febe4c6f0bf5f3fa9ce9e1363939357355b8e439a9fca61ebdfbcbea"
+    },
+    {
+      "appId": "WebTestBench_0089",
+      "path": "web_applications_zip/WebTestBench_0089.zip",
+      "bytes": 253872,
+      "sha256": "be24cc40ed0ba72e21b9334a9e8b3f7006b02d7f7d35b5d573879a32e83291de"
+    },
+    {
+      "appId": "WebTestBench_0093",
+      "path": "web_applications_zip/WebTestBench_0093.zip",
+      "bytes": 229571,
+      "sha256": "ce0ad9261878b6f53a0cf2724cef9bc86b99070677f9a810bd9c1c9c764325dd"
+    },
+    {
+      "appId": "WebTestBench_0094",
+      "path": "web_applications_zip/WebTestBench_0094.zip",
+      "bytes": 227888,
+      "sha256": "754a0c8d61776d46bac6307d7daad51920e6e398b6c492d7499494e282ccc337"
+    }
+  ]
+}

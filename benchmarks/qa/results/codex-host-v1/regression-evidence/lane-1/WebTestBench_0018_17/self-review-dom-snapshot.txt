@@ -1,0 +1,110 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T":
+  - list:
+    - generic: Workout logged!
+- banner:
+  - generic: FITTRACK
+  - generic: A
+  - generic: Alex Runner
+  - button:
+- main:
+  - heading "Your Stats" [level=2]
+  - button "Log Workout" [active]:
+    - text: Log Workout
+  - paragraph: This Week
+  - paragraph: "6"
+  - paragraph: workouts
+  - paragraph: Week Duration
+  - paragraph: "1000222"
+  - paragraph: minutes
+  - paragraph: This Month
+  - paragraph: "5"
+  - paragraph: workouts
+  - paragraph: Total Distance
+  - paragraph: "123466.4"
+  - paragraph: km this month
+  - heading "Recent Workouts" [level=2]
+  - heading "Running" [level=3]
+  - generic: Today
+  - generic: Moderate
+  - text: 999999 min
+  - text: 123456.7 km
+  - paragraph: Boundary value rerun
+  - button:
+  - heading "Running" [level=3]
+  - generic: Today
+  - generic: Moderate
+  - text: 35 min
+  - text: 5.2 km
+  - paragraph: Morning jog in the park. Felt great!
+  - button:
+  - heading "Weight Training" [level=3]
+  - generic: Yesterday
+  - generic: High
+  - text: 55 min
+  - paragraph: Upper body day - bench, rows, shoulder press
+  - button:
+  - heading "Running" [level=3]
+  - generic: Sep 3
+  - generic: High
+  - text: 28 min
+  - text: 4.5 km
+  - paragraph: Interval training - 8x400m
+  - button:
+  - heading "Yoga" [level=3]
+  - generic: Sep 2
+  - generic: Low
+  - text: 45 min
+  - paragraph: Recovery yoga session
+  - button:
+  - heading "Cycling" [level=3]
+  - generic: Aug 31
+  - generic: Moderate
+  - text: 60 min
+  - text: 25 km
+  - paragraph: Scenic route along the river
+  - button:
+  - heading "Running" [level=3]
+  - generic: Aug 29
+  - generic: Moderate
+  - text: 42 min
+  - text: 7 km
+  - paragraph: Long easy run
+  - button:
+  - heading "HIIT" [level=3]
+  - generic: Aug 28
+  - generic: Maximum
+  - text: 25 min
+  - paragraph: Brutal but effective
+  - button:
+  - heading "Swimming" [level=3]
+  - generic: Aug 26
+  - generic: Moderate
+  - text: 40 min
+  - text: 1.5 km
+  - paragraph: Lap swimming at the community pool
+  - button:
+  - heading "Goals" [level=2]
+  - button "Add Goal":
+    - text: Add Goal
+  - heading "Run 3 times a week" [level=3]
+  - paragraph: weekly goal
+  - button:
+  - generic: Progress
+  - generic: 3 / 3 times
+  - progressbar
+  - generic: 🎉 Goal achieved!
+  - heading "Exercise 150 minutes per week" [level=3]
+  - paragraph: weekly goal
+  - button:
+  - generic: Progress
+  - generic: 1000222 / 150 min
+  - progressbar
+  - generic: 🎉 Goal achieved!
+  - heading "Strength training twice a week" [level=3]
+  - paragraph: weekly goal
+  - button:
+  - generic: Progress
+  - generic: 1 / 2 times
+  - progressbar

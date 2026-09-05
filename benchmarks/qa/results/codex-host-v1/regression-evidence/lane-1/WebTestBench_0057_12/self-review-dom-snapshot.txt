@@ -1,0 +1,74 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Interview Stories" [level=1]
+  - paragraph: Share and learn from real interview experiences
+- navigation:
+  - button "Create Post":
+    - generic: Create Post
+  - button "Browse Posts":
+    - generic: Browse Posts
+  - button "My Favorites":
+    - generic: My Favorites
+- main:
+  - heading "Browse Experiences" [level=2]
+  - paragraph: 3 interview stories shared
+  - textbox "Search companies, positions, or questions..."
+  - combobox:
+    - generic: All
+  - combobox:
+    - generic: All
+  - article:
+    - generic: Big Tech
+    - generic: Offer Received
+    - heading "Google" [level=3]
+    - paragraph: Senior Software Engineer
+    - text: 3 rounds
+    - text: December 15, 2025
+    - generic: By Alex Chen
+    - button "Hide Details" [active]:
+      - generic: Hide Details
+    - 'heading "Round 1: Phone Screen" [level=4]'
+    - list:
+      - paragraph: Tell me about yourself and your experience with distributed systems.
+      - paragraph: I discussed my 5 years of experience building microservices at scale.
+      - button "Add to favorites":
+      - paragraph: Design a URL shortening service like bit.ly.
+      - paragraph: Covered hash generation, database design, and caching strategies.
+      - button "Add to favorites":
+    - 'heading "Round 2: Technical Interview" [level=4]'
+    - list:
+      - paragraph: Implement an LRU cache with O(1) operations.
+      - paragraph: Used HashMap with doubly linked list approach.
+      - button "Add to favorites":
+      - paragraph: Find the median of two sorted arrays.
+      - paragraph: Binary search solution with O(log(min(m,n))) complexity.
+      - button "Add to favorites":
+    - 'heading "Round 3: System Design" [level=4]'
+    - list:
+      - paragraph: Design Google Maps navigation system.
+      - paragraph: Discussed graph algorithms, real-time traffic, and tile rendering.
+      - button "Add to favorites":
+    - heading "Personal Reflection" [level=4]
+    - paragraph: The interviews were challenging but fair. The interviewers were very supportive and gave helpful hints when I got stuck. I recommend practicing system design extensively and being prepared to discuss trade-offs.
+  - article:
+    - generic: Startup
+    - generic: Pending
+    - heading "Stripe" [level=3]
+    - paragraph: Backend Engineer
+    - text: 2 rounds
+    - text: November 28, 2025
+    - generic: By Sarah Johnson
+    - button "Show Interview Details":
+      - generic: Show Interview Details
+  - article:
+    - generic: Finance
+    - generic: Rejected
+    - heading "Goldman Sachs" [level=3]
+    - paragraph: Quantitative Developer
+    - text: 2 rounds
+    - text: October 10, 2025
+    - generic: By Michael Park
+    - button "Show Interview Details":
+      - generic: Show Interview Details

@@ -1,0 +1,217 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- main:
+  - navigation:
+    - list:
+      - button "Go to Year in Review" [active]:
+        - generic: Year in Review
+      - button "Go to Our Programs"
+      - button "Go to Global Impact"
+      - button "Go to Financial Stewardship"
+      - button "Go to Stories of Change"
+      - button "Go to Looking Ahead"
+  - paragraph: Annual Impact Report
+  - heading "2024" [level=1]
+  - heading "Green Horizons Foundation" [level=2]
+  - paragraph: Building sustainable futures for communities worldwide
+  - generic: 2.4M+
+  - generic: Lives Impacted
+  - generic: "47"
+  - generic: Countries Reached
+  - generic: "156"
+  - generic: Projects Completed
+  - generic: $18.2M
+  - generic: Funds Raised
+  - button "Scroll to content":
+  - text: Chapter 01
+  - heading "Year in Review" [level=2]
+  - paragraph: 2024 marked our most impactful year yet, with unprecedented growth across all programs and regions.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - generic: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Dismiss"
+  - heading "A Decade of Growth" [level=3]
+  - paragraph: Since our founding in 2015, we've grown from a small team of 12 volunteers to a global network of nearly 9,000 dedicated individuals. This year alone, we welcomed 1,800 new volunteers and expanded our reach to 8 additional countries.
+  - generic: 650%
+  - generic: 5-Year Growth
+  - generic: 8,900
+  - generic: Active Volunteers
+  - generic: "156"
+  - generic: Projects This Year
+  - heading "Beneficiaries Reached Over Time" [level=3]
+  - paragraph: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Retry":
+    - text: Retry
+  - text: Chapter 02
+  - heading "Our Programs" [level=2]
+  - paragraph: Five core initiatives working together to create lasting change in communities worldwide.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - generic: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Dismiss"
+  - heading "Clean Water Initiative" [level=3]
+  - generic: 28%
+  - paragraph: Providing access to safe drinking water in underserved communities
+  - generic: 680,000 reached
+  - heading "Education for All" [level=3]
+  - generic: 22%
+  - paragraph: Building schools and training teachers in rural areas
+  - generic: 520,000 reached
+  - heading "Sustainable Agriculture" [level=3]
+  - generic: 19%
+  - paragraph: Teaching farming techniques that protect the environment
+  - generic: 450,000 reached
+  - heading "Healthcare Access" [level=3]
+  - generic: 16%
+  - paragraph: Mobile clinics and health education programs
+  - generic: 380,000 reached
+  - heading "Women's Empowerment" [level=3]
+  - generic: 15%
+  - paragraph: Microfinance and skills training for women entrepreneurs
+  - generic: 370,000 reached
+  - heading "Impact Distribution by Program" [level=3]
+  - paragraph: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Retry":
+    - text: Retry
+  - generic: Clean
+  - generic: Education
+  - generic: Sustainable
+  - generic: Healthcare
+  - generic: Women's
+  - text: Chapter 03
+  - heading "Global Impact" [level=2]
+  - paragraph: From villages in sub-Saharan Africa to urban communities in South Asia, our work spans continents and transforms lives.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - generic: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Dismiss"
+  - generic: "47"
+  - generic: Countries Reached
+  - generic: "312"
+  - generic: Active Communities
+  - generic: "5"
+  - generic: Regions
+  - generic: Global Coverage
+  - heading "Regional Impact Breakdown" [level=3]
+  - paragraph: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Retry":
+    - text: Retry
+  - heading "Sub-Saharan Africa" [level=4]
+  - paragraph: 18 countries • 920,000 people reached
+  - generic: 38%
+  - heading "South Asia" [level=4]
+  - paragraph: 8 countries • 650,000 people reached
+  - generic: 27%
+  - heading "Southeast Asia" [level=4]
+  - paragraph: 7 countries • 420,000 people reached
+  - generic: 18%
+  - heading "Latin America" [level=4]
+  - paragraph: 9 countries • 280,000 people reached
+  - generic: 12%
+  - heading "Middle East" [level=4]
+  - paragraph: 5 countries • 130,000 people reached
+  - generic: 5%
+  - text: Chapter 04
+  - heading "Financial Stewardship" [level=2]
+  - paragraph: Transparency in how we manage donor contributions, with 80% going directly to programs.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - generic: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Dismiss"
+  - paragraph: Total Revenue 2024
+  - generic: $18.2M
+  - heading "How We Spend" [level=3]
+  - paragraph: "Data loading error: Reverse operation not permitted. Please reload the chapter."
+  - button "Retry":
+    - text: Retry
+  - generic: Program Services
+  - generic: 80%
+  - generic: $14.6M
+  - generic: Administrative
+  - generic: 10%
+  - generic: $1.8M
+  - generic: Fundraising
+  - generic: 10%
+  - generic: $1.8M
+  - paragraph: 80¢ of every dollar goes directly to our programs and the communities we serve.
+  - heading "Where Our Funding Comes From" [level=3]
+  - generic: Individual Donors
+  - generic: $7.3M
+  - paragraph: 40% of total
+  - generic: Foundation Grants
+  - generic: $5.5M
+  - paragraph: 30% of total
+  - generic: Corporate Partners
+  - generic: $3.6M
+  - paragraph: 20% of total
+  - generic: Government Grants
+  - generic: $1.8M
+  - paragraph: 10% of total
+  - text: Chapter 05
+  - heading "Stories of Change" [level=2]
+  - paragraph: Behind every number is a person whose life has been transformed. Here are some of their stories.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - generic: Sustainable Agriculture
+  - blockquote: "\"The training changed everything. My family now has food security, and I sell the surplus at the local market. For the first time, my children can focus on school instead of worrying about the next meal.\""
+  - heading "Maria Santos" [level=4]
+  - paragraph: Guatemala
+  - paragraph: "Impact: Increased farm yield by 300%"
+  - generic: Clean Water Initiative
+  - blockquote: "\"Before the well, my daughter walked 3 hours each day for water. Now she attends school full-time and dreams of becoming a doctor.\""
+  - heading "Kwame Asante" [level=4]
+  - paragraph: Ghana
+  - paragraph: "Impact: Saved 6 hours daily for education"
+  - generic: Women's Empowerment
+  - blockquote: "\"The microloan helped me start my tailoring business. Today, I employ four other women from my village. We are not just surviving anymore—we are thriving.\""
+  - heading "Priya Sharma" [level=4]
+  - paragraph: India
+  - paragraph: "Impact: Created 5 local jobs"
+  - text: Chapter 06
+  - heading "Looking Ahead" [level=2]
+  - paragraph: Our vision for the future is ambitious, but with your continued support, we know it's achievable.
+  - button "Save":
+    - text: Save
+  - button "Export":
+    - text: Export
+  - heading "Reach 5 million beneficiaries" [level=3]
+  - paragraph: "Target Year: 2026"
+  - generic: Progress
+  - generic: 48%
+  - heading "Expand to 60 countries" [level=3]
+  - paragraph: "Target Year: 2025"
+  - generic: Progress
+  - generic: 78%
+  - heading "Train 15,000 volunteers" [level=3]
+  - paragraph: "Target Year: 2025"
+  - generic: Progress
+  - generic: 59%
+  - heading "Achieve carbon neutrality" [level=3]
+  - paragraph: "Target Year: 2027"
+  - generic: Progress
+  - generic: 35%
+  - heading "Join Us in Making a Difference" [level=3]
+  - paragraph: Every contribution, no matter the size, helps us move closer to our goals. Together, we can build a more sustainable and equitable world.
+  - button "Donate Now":
+    - text: Donate Now
+  - button "Become a Volunteer"
+  - paragraph: Download the complete annual report data
+  - button "Export Full Report (JSON)":
+    - text: Export Full Report (JSON)
+  - button "Export Full Report (CSV)":
+    - text: Export Full Report (CSV)
+  - paragraph: Green Horizons Foundation
+  - paragraph: Building sustainable futures for communities worldwide
+  - paragraph: © 2024 Green Horizons Foundation. All rights reserved.
+- generic: Sub-Saharan Africa

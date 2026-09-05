@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0040:7",
+  "appId": "WebTestBench_0040",
+  "candidateSha256": "01d84bad06836872cd78ec29040877c2672888e871a5e03e50a178721adbffea",
+  "appArchiveSha256": "8651119f6929decf9e82779e674df0068448d366934dfc6745e3a4e57f767ace",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:55:58.549Z",
+  "completedAt": "2026-09-05T07:57:05.074Z",
+  "isolation": "Unique loopback origin 47102 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened Update onboarding flow."
+    },
+    {
+      "step": 2,
+      "action": "Changed Status from To Do to In Progress and closed details."
+    },
+    {
+      "step": 3,
+      "action": "Verified the card moved and counts changed from 3/2 to 2/3."
+    },
+    {
+      "step": 4,
+      "action": "Reloaded the page."
+    }
+  ],
+  "observations": [
+    "Immediately after the change, the task appeared in In Progress.",
+    "After reload, it returned to To Do and counts reverted to 3 To Do / 2 In Progress."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The status transition is not persisted, so the refreshed Kanban layout is stale.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_7/after-reload.png",
+      "sha256": "09d12fc3846312cb228ecbc78b3c544b88a1c26f74f613ffd8d7b50865d9d2a8",
+      "bytes": 24702
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_7/dom-snapshot.txt",
+      "sha256": "3ea9a13da71b4974b14b7570e96ed2bc1e7cfaa3673735086efc6558aaea4199",
+      "bytes": 2240
+    }
+  ],
+  "laneId": "lane-1"
+}

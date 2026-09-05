@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0013:2",
+  "appId": "WebTestBench_0013",
+  "candidateSha256": "3fac6fc1913c480611c6677b62105163a0bbe13122c9d05b13ec7ef61d8e8c4e",
+  "appArchiveSha256": "d33af275eec3dbd430ced70be6959d69954f1dc0baf1ab7820f5c09b87517ff5",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T07:57:29.134Z",
+  "actions": [
+    {
+      "action": "Opened New Meeting form",
+      "result": "Form exposed title, description, duration, and date-range inputs."
+    },
+    {
+      "action": "Entered synthetic title and description",
+      "result": "Next became enabled with the default selected date range and 1-hour duration."
+    },
+    {
+      "action": "Advanced through Participants and Review",
+      "result": "Review showed the supplied title/description, 1 hour, and Sep 6–12, 2026."
+    },
+    {
+      "action": "Clicked Create Meeting",
+      "result": "Success notification appeared and the new meeting detail page opened with duration, date range, and suggested times."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Users can create meetings with name, description, time, and date",
+      "observed": "The created 'Lane 2 QA Sync' meeting persisted to a detail view with its description, 60-minute duration, Sep 6–12 date range, and time suggestions."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "End-to-end meeting creation completed successfully in the rendered app.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0013_2/after.png",
+      "sha256": "79ecabedcf19f7d51ffb4b746b933708ecdb43a6432ea5e1d34614ab62c52183",
+      "bytes": 30100
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0013_2/dom-after.txt",
+      "sha256": "763fca647c8485423a0273ad3a152ab9c18b345795f7a9e65112cbf3dc8342dd",
+      "bytes": 2260
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4723; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

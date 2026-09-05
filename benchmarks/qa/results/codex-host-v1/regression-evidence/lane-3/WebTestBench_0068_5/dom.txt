@@ -1,0 +1,51 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "LabSim" [level=1]
+  - paragraph: Interactive Lab Platform
+  - navigation:
+    - button "Experiment Editor":
+      - generic: Experiment Editor
+    - button "Multi-Instance Comparison":
+      - generic: Multi-Instance Comparison
+    - button "Historical Scenarios":
+      - generic: Historical Scenarios
+  - generic: System Ready
+- main:
+  - heading "Equipment" [level=3]
+  - button "Bunsen Burner Adjustable heat source for experiments":
+    - paragraph: Bunsen Burner
+    - paragraph: Adjustable heat source for experiments
+  - button "Beaker Container for liquids with volume markings":
+    - paragraph: Beaker
+    - paragraph: Container for liquids with volume markings
+  - button "Thermometer Measures temperature of connected equipment":
+    - paragraph: Thermometer
+    - paragraph: Measures temperature of connected equipment
+  - button "Erlenmeyer Flask Conical flask for mixing and heating":
+    - paragraph: Erlenmeyer Flask
+    - paragraph: Conical flask for mixing and heating
+  - button "Condenser Cools vapor back into liquid":
+    - paragraph: Condenser
+    - paragraph: Cools vapor back into liquid
+  - button "Magnetic Stirrer Stirs liquids at variable speeds":
+    - paragraph: Magnetic Stirrer
+    - paragraph: Stirs liquids at variable speeds
+  - paragraph: Click to add equipment to the canvas
+  - button "New":
+    - text: New
+  - button "Save":
+    - text: Save
+  - button "Add to Comparison":
+    - text: Add to Comparison
+  - button "Reset":
+    - text: Reset
+  - button "Stop" [active]:
+    - text: Stop
+  - generic: 30.0°C
+  - generic: Simulating
+  - generic: Basic Heat Transfer
+  - generic: 3 items
+  - generic: "ID: scene-1"
+  - paragraph: Select equipment to view properties

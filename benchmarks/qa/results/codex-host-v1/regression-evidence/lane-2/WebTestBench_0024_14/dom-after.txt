@@ -1,0 +1,105 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "CityStories Discover the soul of the city":
+    - /url: /
+    - heading "CityStories" [level=1]
+    - paragraph: Discover the soul of the city
+  - navigation:
+    - link "Explore":
+      - /url: /
+    - link "Collections":
+      - /url: /collections
+    - link "Favorites":
+      - /url: /favorites
+  - button:
+- img "The Ancient Roman Baths"
+- link "Back":
+  - /url: /
+  - text: Back
+- generic: 🏛️ History
+- generic: 💎 Hidden Gems
+- heading "The Ancient Roman Baths" [level=1]
+- paragraph: Where emperors once bathed
+- text: 8 min read
+- article:
+  - button "Save for later":
+    - text: Save for later
+  - button "Share":
+    - text: Share
+  - paragraph: Discover the remnants of ancient Rome hidden beneath the modern city streets, where thermal waters still flow through millennia-old marble corridors.
+  - paragraph: The thermal baths of ancient Rome were far more than mere bathing facilities—they were the social heartbeat of the empire. Beneath the bustling streets of today's city center lie the remarkably preserved remains of what was once the grandest bathhouse in the Roman world.
+  - paragraph: Walking through the subterranean chambers, you can almost hear the echoes of senators debating politics, merchants closing deals, and citizens discussing the affairs of the day. The ingenious engineering that heated these waters through hypocaust systems remains a marvel of ancient technology.
+  - paragraph: The complex featured a frigidarium (cold room), tepidarium (warm room), and caldarium (hot room), each designed to provide a complete wellness experience. Mosaics depicting Neptune and sea creatures still adorn portions of the original floors, their colors muted but undeniably magnificent.
+  - paragraph: Local guides recommend visiting in the early morning, when the underground chambers are quiet and the play of light through the ancient skylights creates an almost mystical atmosphere. The thermal springs that fed these baths still bubble up in certain spots, maintaining a constant temperature of 42°C as they have for millennia.
+  - heading "Gallery" [level=3]
+  - button "The Ancient Roman Baths - Image 1":
+    - img "The Ancient Roman Baths - Image 1"
+  - button "The Ancient Roman Baths - Image 2" [active]:
+    - img "The Ancient Roman Baths - Image 2"
+  - button "The Ancient Roman Baths - Image 3":
+    - img "The Ancient Roman Baths - Image 3"
+  - button:
+  - button:
+  - button:
+  - img "The Ancient Roman Baths - Image 2"
+  - button
+  - button
+  - button
+  - complementary:
+    - heading "Historical Timeline" [level=3]
+    - generic: 19 BC
+    - heading "Construction Begins" [level=4]
+    - paragraph: Emperor Augustus commissions the first public baths on this site
+    - generic: 64 AD
+    - heading "Great Fire" [level=4]
+    - paragraph: The original structure damaged but quickly rebuilt under Nero
+    - generic: 212 AD
+    - heading "Golden Age" [level=4]
+    - paragraph: Caracalla expands the baths to accommodate 1,600 bathers daily
+    - button "Show 2 more":
+      - text: Show 2 more
+    - heading "Quick Info" [level=3]
+    - paragraph: Location
+    - paragraph: Historic City Center
+    - paragraph: Best Time to Visit
+    - paragraph: Morning or late afternoon
+- heading "You might also enjoy" [level=2]
+- article:
+  - link "The Carnival of Masks 🏛️ History 🎭 Festivals 7 min read The Carnival of Masks Behind the elaborate facades Each February, the city transforms into a living theater where centuries-old traditions of mystery and celebration take center stage.":
+    - /url: /story/carnival-of-masks
+    - img "The Carnival of Masks"
+    - generic: 🏛️ History
+    - generic: 🎭 Festivals
+    - generic: 7 min read
+    - heading "The Carnival of Masks" [level=3]
+    - paragraph: Behind the elaborate facades
+    - paragraph: Each February, the city transforms into a living theater where centuries-old traditions of mystery and celebration take center stage.
+  - button:
+- article:
+  - link "The Artisan Quarter 🏘️ Neighborhoods 💎 Hidden Gems 9 min read The Artisan Quarter Where craft meets community In winding alleys untouched by time, master craftspeople continue traditions that defined the city's golden age.":
+    - /url: /story/artisan-quarter
+    - img "The Artisan Quarter"
+    - generic: 🏘️ Neighborhoods
+    - generic: 💎 Hidden Gems
+    - generic: 9 min read
+    - heading "The Artisan Quarter" [level=3]
+    - paragraph: Where craft meets community
+    - paragraph: In winding alleys untouched by time, master craftspeople continue traditions that defined the city's golden age.
+  - button:
+- article:
+  - link "The Midnight Bakeries 🍝 Food & Drink 💎 Hidden Gems 6 min read The Midnight Bakeries Following the scent of fresh bread When the city sleeps, a hidden network of bakeries comes alive, producing the loaves that have sustained locals for generations.":
+    - /url: /story/midnight-bakeries
+    - img "The Midnight Bakeries"
+    - generic: 🍝 Food & Drink
+    - generic: 💎 Hidden Gems
+    - generic: 6 min read
+    - heading "The Midnight Bakeries" [level=3]
+    - paragraph: Following the scent of fresh bread
+    - paragraph: When the city sleeps, a hidden network of bakeries comes alive, producing the loaves that have sustained locals for generations.
+  - button:
+- contentinfo:
+  - heading "CityStories" [level=3]
+  - paragraph: Discover the soul of the city
+  - paragraph: © 2024 CityStories. Crafted with love for travelers.

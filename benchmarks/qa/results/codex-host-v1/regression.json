@@ -1,0 +1,807 @@
+[
+  {
+    "caseId": "WebTestBench_0089:23",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0089_23/after-special-character.png",
+      "regression-evidence/lane-3/WebTestBench_0089_23/dom.txt"
+    ],
+    "notes": "Visible field-level feedback identifies forbidden special characters after entry.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0089_23/trace.json",
+      "sha256": "dce2d148ee38139a114e9fa4c07ead3cd22ff3d1132df0c1813da17dfdf53c84"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0071:12",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0071_12/after.png",
+      "regression-evidence/lane-2/WebTestBench_0071_12/dom-after.txt"
+    ],
+    "notes": "Chapter navigation worked through the rendered UI; the target chapter became visible after the click.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0071_12/trace.json",
+      "sha256": "c1fccf65eba81b824e7f4984e0f0696079f5793597ffaf8ca164d707e1c83236"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0070:9",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0070_9/after-spaces.png",
+      "regression-evidence/lane-3/WebTestBench_0070_9/dom.txt"
+    ],
+    "notes": "Whitespace-only steps cannot be added.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0070_9/trace.json",
+      "sha256": "7123b873c59be9db02cd17b2e929dfc360df795d7b419f5d868306469b03e824"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0064:16",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0064_16/after-created-card.png",
+      "regression-evidence/lane-3/WebTestBench_0064_16/dom.txt"
+    ],
+    "notes": "Created card content and assigned metadata are displayed without truncation.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0064_16/trace.json",
+      "sha256": "4cb3a9f555bf39edd9efaa92e969e7ef8c10bf9b00033cdb18dfb65f38fdbf83"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0064:11",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0064_11/after-empty-set-attempt.png",
+      "regression-evidence/lane-3/WebTestBench_0064_11/dom.txt"
+    ],
+    "notes": "The app blocks an empty set before it can be published.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0064_11/trace.json",
+      "sha256": "844e339b07ef595d26c605a18fb93696e57954b1fb75e162e88df7fe99c88cfe"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0021:9",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0021_9/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0021_9/reports-no-export.png"
+    ],
+    "notes": "No rendered customer-list or report export affordance exists, so completeness/format cannot be exercised.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0021_9/trace.json",
+      "sha256": "d4a01a3f22e3746e96bf2ae11a72e1af0bdad9e320114d5d91171bd01bbc49cb"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0011:14",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0011_14/chart-tooltip.png",
+      "regression-evidence/lane-3/WebTestBench_0011_14/dom.txt"
+    ],
+    "notes": "Hovering a chart point reveals detailed series values.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0011_14/trace.json",
+      "sha256": "86e1abf3e0ff7ce767cc8f138641b2681b343f0c16594fcbb95b02787a434f9f"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0024:14",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0024_14/after.png",
+      "regression-evidence/lane-2/WebTestBench_0024_14/dom-after.txt"
+    ],
+    "notes": "Gallery photo zoom was verified by opening the second image and observing the enlarged overlay.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0024_14/trace.json",
+      "sha256": "95e0a6c88847d20b9d1c407c42ab7a78ab4246e2b9b09f96db56206b79e1483d"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0093:17",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0093_17/after-business-scenario.png",
+      "regression-evidence/lane-1/WebTestBench_0093_17/dom-snapshot.txt"
+    ],
+    "notes": "Scenario selection produced clearly context-appropriate documentation rather than merely changing the selector label.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0093_17/trace.json",
+      "sha256": "ebc97c3eb9ac3bcc01ec0e7acd96298f562e1b53d913d8b6abf6b968559ee2e6"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0013:2",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0013_2/after.png",
+      "regression-evidence/lane-2/WebTestBench_0013_2/dom-after.txt"
+    ],
+    "notes": "End-to-end meeting creation completed successfully in the rendered app.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0013_2/trace.json",
+      "sha256": "7e52ca4e99f8645c79e1b35e334f10a84ca48fa7b52a5f6b1bd35563c8fc30b4"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0030:12",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0030_12/after.png",
+      "regression-evidence/lane-2/WebTestBench_0030_12/dom-after.txt"
+    ],
+    "notes": "Automatic local persistence was verified by entering content and reloading without an explicit save action.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0030_12/trace.json",
+      "sha256": "27f366fbdbc48e1040dc89c8df3fadaa3da23e57dd14e189e8dd9c4bd6e65e6b"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0068:5",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0068_5/after-linked-temperature-change.png",
+      "regression-evidence/lane-3/WebTestBench_0068_5/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0068_5/transitions.txt"
+    ],
+    "notes": "Changing the component state propagates to the linked temperature result.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0068_5/trace.json",
+      "sha256": "66be548f3d79440974909732eb6c5ba5806b56cb2d9d19f0d3445747a684e308"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0071:4",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0071_4/after.png",
+      "regression-evidence/lane-2/WebTestBench_0071_4/dom-after.txt"
+    ],
+    "notes": "Fresh rendered-UI review confirms a closed, one-to-one set of valid chapter destinations with working first/last boundaries.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0071_4/trace.json",
+      "sha256": "72410bea011c45911a82494af2d1cd01ad86d46059bb0bce16ba3d72bba79d76"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0020:14",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0020_14/after.png",
+      "regression-evidence/lane-2/WebTestBench_0020_14/dom-after.txt"
+    ],
+    "notes": "The order status transition was exercised end to end on ord-2.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0020_14/trace.json",
+      "sha256": "9be71223572f18dbb82adaf7bfa0151d0157819212391b4efad43452ec4d16ad"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0083:13",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0083_13/after.png",
+      "regression-evidence/lane-2/WebTestBench_0083_13/dom-after.txt"
+    ],
+    "notes": "Draft editing and published history use clearly different views, controls, and status styling.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0083_13/trace.json",
+      "sha256": "d44a76b19c08e4c795a9fefd57ca849c4681a3ac9b479031269b2d74c2fb92f4"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0001:4",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0001_4/after-tag-persistence.png",
+      "regression-evidence/lane-3/WebTestBench_0001_4/dom.txt"
+    ],
+    "notes": "Tags can be added to and persist on an existing product.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0001_4/trace.json",
+      "sha256": "fee9d139c0cc9cd9b9b17b5b960befc72b3af6de96b6d2512f048d1a4a28affd"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0040:7",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0040_7/after-reload.png",
+      "regression-evidence/lane-1/WebTestBench_0040_7/dom-snapshot.txt"
+    ],
+    "notes": "The status transition is not persisted, so the refreshed Kanban layout is stale.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0040_7/trace.json",
+      "sha256": "732955f6dc9ce08e659f78cdb7161aa843a193339012ff6d4f7acf37e4bbfcac"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0082:12",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0082_12/parameter-set-list.png",
+      "regression-evidence/lane-1/WebTestBench_0082_12/dom-snapshot.txt"
+    ],
+    "notes": "A usable list of the system's parameter sets is directly visible.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0082_12/trace.json",
+      "sha256": "9f3f8d2687ef954b11f924e9a24cb4c64382e30c79326106202000035368ff86"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0018:17",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0018_17/extreme-workout-saved.png",
+      "regression-evidence/lane-1/WebTestBench_0018_17/dom-snapshot.txt",
+      "regression-evidence/lane-1/WebTestBench_0018_17/self-review-extreme-workout.png",
+      "regression-evidence/lane-1/WebTestBench_0018_17/self-review-dom-snapshot.txt"
+    ],
+    "notes": "Two fresh-origin repetitions confirm the boundary values are accepted, stored in the active workout list, displayed exactly, and aggregated correctly.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0018_17/trace.json",
+      "sha256": "254894cf07be0a160a6c416bfc40d511f8d508fdcaae9b7762212457a185e6c4"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0032:4",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0032_4/after-eur-conversion.png",
+      "regression-evidence/lane-3/WebTestBench_0032_4/dom.txt"
+    ],
+    "notes": "The aggregate and individual expenditures are automatically converted to the selected primary currency.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0032_4/trace.json",
+      "sha256": "6faf25c9544ca7c6cefe7b79df71e427faa8fa7c373de5ae25fb2550a3dc2136"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0084:12",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0084_12/favorite-selected.png",
+      "regression-evidence/lane-1/WebTestBench_0084_12/dom-snapshot.txt"
+    ],
+    "notes": "Both selected state and favorite count updated in the same interaction.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0084_12/trace.json",
+      "sha256": "206b7289ef3e6f35eb4995f9567375f7b8e8c5770beec68ea829946416f26bee"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0004:14",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0004_14/after.png",
+      "regression-evidence/lane-2/WebTestBench_0004_14/dom-after.txt"
+    ],
+    "notes": "Real-time venue search filtering was verified from 8 results to the single matching venue.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0004_14/trace.json",
+      "sha256": "92909cc8ef9d952973b84d833b57bc7167598acb8ab21c5135b075db741dc9dd"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0022:11",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0022_11/negative-quantity-accepted.png",
+      "regression-evidence/lane-1/WebTestBench_0022_11/dom-snapshot.txt"
+    ],
+    "notes": "Quantity lacks the required positive-number validation.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0022_11/trace.json",
+      "sha256": "134f9ebfa162cae0c5f3b3b16cae293174deb3fbbf859a48d9d00b74fbffa02b"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0005:9",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0005_9/reversed-work-period.png",
+      "regression-evidence/lane-1/WebTestBench_0005_9/dom-snapshot.txt"
+    ],
+    "notes": "Work history does not enforce a valid chronological time frame.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0005_9/trace.json",
+      "sha256": "4f1fd3708d3412acd1ff9db1fa2f0e821844287bfd3a942ea1873841784b58cf"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0044:15",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0044_15/after.png",
+      "regression-evidence/lane-2/WebTestBench_0044_15/dom-after.txt"
+    ],
+    "notes": "Required-field gating exists, but the specifically required validation error message was absent.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0044_15/trace.json",
+      "sha256": "1fa68809fe12636632ff62197203e46f0e3131b6de8fe5b99817e81b61616fd5"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0080:18",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0080_18/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0080_18/no-result-message.png"
+    ],
+    "notes": "The empty-result state exists, but its required exact message is absent on repeated no-match searches.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0080_18/trace.json",
+      "sha256": "34550dd3c3da521b79419f35c4a0fd984bac56526a145453d2b072fed0c3916b"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0094:15",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0094_15/after.png",
+      "regression-evidence/lane-2/WebTestBench_0094_15/dom-after.txt"
+    ],
+    "notes": "The comparison table exists, but it fails the requirement to highlight all three key metric differences.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0094_15/trace.json",
+      "sha256": "3267cebfd099dd212ee65a5ae419a0d5371f4f24841ca42d778d620beacabe48"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0073:3",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0073_3/claims-with-statuses.png",
+      "regression-evidence/lane-1/WebTestBench_0073_3/dom-snapshot.txt"
+    ],
+    "notes": "The claims list exposes each claim and its current status.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0073_3/trace.json",
+      "sha256": "b2a46997efdf3b199b58e95da94a52bcb44065bf68c85caa1b54f18d8d687979"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0001:16",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0001_16/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0001_16/product-detail.png"
+    ],
+    "notes": "The product detail page includes the review, specifications, and retailer link.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0001_16/trace.json",
+      "sha256": "20ae19e4522ca5878beadb1866a159ddd8bf32ee57ac822b4deb1fe88d12abd8"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0049:17",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0049_17/after.png",
+      "regression-evidence/lane-2/WebTestBench_0049_17/dom-after.txt"
+    ],
+    "notes": "Incomplete reservation feedback was directly triggered and displayed.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0049_17/trace.json",
+      "sha256": "8331472a3ede8c26e7a2fbefc6bf95e199d32b04fd396ad27991d8601a9d5f15"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0015:3",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0015_3/creator-share-link.png",
+      "regression-evidence/lane-3/WebTestBench_0015_3/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0015_3/target-voter-not-found.png"
+    ],
+    "notes": "The generated link does not make the newly created poll accessible to a target voter tab.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0015_3/trace.json",
+      "sha256": "a32930ec41fe62fdb9be60950614fd7c9a2e9cf0543e709367b3cc1ceee2fe65"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0012:16",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0012_16/updated-member-list.png",
+      "regression-evidence/lane-1/WebTestBench_0012_16/dom-snapshot.txt"
+    ],
+    "notes": "Member information remained consistent across group card and member-detail views after a membership transition.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0012_16/trace.json",
+      "sha256": "2aaf2e8e6ae678668d2452307625dbab427271c5de0960931c92d1c146b8408d"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0085:5",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-advanced.png",
+      "regression-evidence/lane-1/WebTestBench_0085_5/fresh-preset-only-dom.txt"
+    ],
+    "notes": "The fresh case-specific run confirms preset highlighting works but custom-path creation is absent.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0085_5/trace.json",
+      "sha256": "b3066c5261284c4fa88742de7efae667d690fb3eb38b190736ceb04fa42d46b2"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0040:16",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0040_16/updates-oldest-first.png",
+      "regression-evidence/lane-1/WebTestBench_0040_16/dom-snapshot.txt"
+    ],
+    "notes": "Metadata is present, but the required newest-first ordering is violated.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0040_16/trace.json",
+      "sha256": "cbde4595fe5d6e845ffd8d34a6e6896b2734c4d5b3d141193f252340e6c6a3c6"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0078:17",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0078_17/after.png",
+      "regression-evidence/lane-2/WebTestBench_0078_17/dom-after.txt"
+    ],
+    "notes": "The revoked count/status is visible, but the required separate revoked-applications page is absent.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0078_17/trace.json",
+      "sha256": "1573048a27a2f044e5cb34b8612431f00c09956ef8cc0ce0aa725b00c70f7977"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0027:7",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0027_7/deep-dive-layer.png",
+      "regression-evidence/lane-3/WebTestBench_0027_7/dom.txt"
+    ],
+    "notes": "Exhibit clicks open genuinely tiered educational content.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0027_7/trace.json",
+      "sha256": "9133235fab14adef79280bcfa96536fa49ece9e3af0d5d6678e05770c9a68857"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0064:4",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0064_4/after-three-responses.png",
+      "regression-evidence/lane-3/WebTestBench_0064_4/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0064_4/transition-snapshots.txt"
+    ],
+    "notes": "All three review dispositions are actionable and recorded in session summaries.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0064_4/trace.json",
+      "sha256": "8088382561b1318d80bdfd633aab18b68c7aa9f379eba2ced5a095cb9a4531aa"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0044:17",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0044_17/after.png",
+      "regression-evidence/lane-2/WebTestBench_0044_17/dom-after.txt"
+    ],
+    "notes": "The rendered list and status selector both expose the disallowed Rejected value.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0044_17/trace.json",
+      "sha256": "77b20f46f3d91d7d1f881ef28f986c7b289b5c60b91e569f814f5e58d873c0f3"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0010:6",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0010_6/after.png",
+      "regression-evidence/lane-2/WebTestBench_0010_6/dom-after.txt"
+    ],
+    "notes": "The optional coupon workflow and its reduction were directly verified.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0010_6/trace.json",
+      "sha256": "7c14b67949c58b0a9189567bdebde71f108bd6882d9701e8a6ebeab6798294f0"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0010:16",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0010_16/after.png",
+      "regression-evidence/lane-2/WebTestBench_0010_16/dom-after.txt"
+    ],
+    "notes": "The required combined personal center and comment-history capability is absent.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0010_16/trace.json",
+      "sha256": "b7f3c71cf761be3874a50a3b23b9c63f36350de852353474a0f6958da41381b2"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0023:15",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0023_15/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0023_15/negative-price-rejected.png"
+    ],
+    "notes": "The native nonnegative constraint blocks a negative numeric price.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0023_15/trace.json",
+      "sha256": "78b2a30d220f46b15341ba6ee6cfcf0720900f5e313b2c8b09610455b6808024"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0043:8",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0043_8/python-intelligent-tags.png",
+      "regression-evidence/lane-1/WebTestBench_0043_8/dom-snapshot.txt"
+    ],
+    "notes": "The extraction demonstrated the required basic relevance for an unambiguous Python article.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0043_8/trace.json",
+      "sha256": "95538a668acb04048e1b7d3141dbdd263bd19b8b74193af6358ae0228923c716"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0071:11",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0071_11/after.png",
+      "regression-evidence/lane-2/WebTestBench_0071_11/dom-after.txt"
+    ],
+    "notes": "The program impact chart was both visually present and structurally rendered after chapter activation.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0071_11/trace.json",
+      "sha256": "dd304f43c61d043beba99952dedc42a12d3e3fe9a65589047fa229dda50e602d"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0084:3",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0084_3/favorites-lost-after-reload.png",
+      "regression-evidence/lane-1/WebTestBench_0084_3/dom-snapshot.txt"
+    ],
+    "notes": "The favorites list survives navigation but not a same-session reload.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0084_3/trace.json",
+      "sha256": "5cf7c0c29f394f6eb48d0a66329eb4e7b475f255b409523cb675c39c128d6c3c"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0023:8",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0023_8/cart-with-item.png",
+      "regression-evidence/lane-3/WebTestBench_0023_8/dom.txt"
+    ],
+    "notes": "An authenticated buyer can add an item and retrieve it from the cart.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0023_8/trace.json",
+      "sha256": "b4705d240685e156df5934b91d416b4c318da25d02f89b06b4b99f1c6b9cad7c"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0008:14",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0008_14/after.png",
+      "regression-evidence/lane-2/WebTestBench_0008_14/dom-after.txt"
+    ],
+    "notes": "The test-result reveal timing was verified before and after the explicit run action.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0008_14/trace.json",
+      "sha256": "eb712bc6630e479bb84daccb1929f71082ea431df38326a0a7d3eda4040f3ca2"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0058:15",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0058_15/after.png",
+      "regression-evidence/lane-2/WebTestBench_0058_15/dom-after.txt"
+    ],
+    "notes": "The live-results requirement failed reproducibly after the prescribed rule-selection workflow.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0058_15/trace.json",
+      "sha256": "5d5241fed227dbd2208426a49477fd597323e2422acf34f55c2f44b81d66e6fe"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0005:14",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0005_14/saved-without-feedback.png",
+      "regression-evidence/lane-1/WebTestBench_0005_14/dom-snapshot.txt",
+      "regression-evidence/lane-1/WebTestBench_0005_14/self-review-saved-without-feedback.png",
+      "regression-evidence/lane-1/WebTestBench_0005_14/self-review-dom-snapshot.txt"
+    ],
+    "notes": "Two fresh-origin repetitions confirm implicit saving works but the required success feedback is absent.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0005_14/trace.json",
+      "sha256": "fcd672253a84e6017c963981846c55dfc067329817968819f95809f84518018e"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0068:16",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0068_16/after-30c-chart.png",
+      "regression-evidence/lane-3/WebTestBench_0068_16/before-25c-chart.png",
+      "regression-evidence/lane-3/WebTestBench_0068_16/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0068_16/transitions.txt"
+    ],
+    "notes": "Component state, running behavior, result value, and chart remain synchronized across editor/comparison views.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0068_16/trace.json",
+      "sha256": "6f00d540426e6ec407e9db543d277e04737fedabe72b12f05c074445aa354aae"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0084:10",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0084_10/meeting-sent-without-form.png",
+      "regression-evidence/lane-1/WebTestBench_0084_10/dom-snapshot.txt"
+    ],
+    "notes": "A meeting is accepted without collecting or validating contact information.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0084_10/trace.json",
+      "sha256": "508527e531b63e5de77e053c576d1b3e1b0bf44174285bd3fd823300ceb321f9"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0010:15",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-2/WebTestBench_0010_15/after.png",
+      "regression-evidence/lane-2/WebTestBench_0010_15/dom-after.txt"
+    ],
+    "notes": "The notification-history requirement is missing, so the combined expectation is not satisfied.",
+    "execution": {
+      "trace": "regression-evidence/lane-2/WebTestBench_0010_15/trace.json",
+      "sha256": "1ba4c5131aafb2f0308a8cf354668ef66f6bd804af0bdf1c6e9a3ac837285e2c"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0085:7",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-beginner-intermediate.png",
+      "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-paths-dom.txt"
+    ],
+    "notes": "The fresh case-specific run confirms the prior Beginner highlight is retained when Intermediate is selected.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0085_7/trace.json",
+      "sha256": "05031d0bdc9822ffb41294bbf24009b5c12ea957ff2f1e3a58473961584f7877"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0053:14",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-3/WebTestBench_0053_14/all-categories-nonempty.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/category-accessories.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/category-apparel.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/category-electronics.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/category-home-office.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/category-wellness.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/dom.txt",
+      "regression-evidence/lane-3/WebTestBench_0053_14/sort-high-to-low.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/sort-low-to-high.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/state-all-final.png",
+      "regression-evidence/lane-3/WebTestBench_0053_14/state-all.png"
+    ],
+    "notes": "The shipped UI/data exposes no empty category: All has 12 products and Electronics/Apparel/Accessories/Home & Office/Wellness have 4/2/2/2/2. Every available sort mode only reorders these nonempty sets, so the required empty-category placeholder cannot be demonstrated.",
+    "execution": {
+      "trace": "regression-evidence/lane-3/WebTestBench_0053_14/trace.json",
+      "sha256": "9e1a3402b7be7ef142bbdaddf600a319eb7fec8bcf1437ea6608912f08b1aced"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0084:8",
+    "outcome": "Pass",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0084_8/floor-map.png",
+      "regression-evidence/lane-1/WebTestBench_0084_8/h205-matching-detail.png",
+      "regression-evidence/lane-1/WebTestBench_0084_8/dom-snapshot.txt"
+    ],
+    "notes": "Two booths in different halls round-tripped to the correct one-to-one exhibitor details.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0084_8/trace.json",
+      "sha256": "6598662d4491240b1a8a7602fc57ba0f79319487e427e15d63b2ed77e8747557"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0057:12",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0057_12/experience-detail-open.png",
+      "regression-evidence/lane-1/WebTestBench_0057_12/dom-snapshot.txt",
+      "regression-evidence/lane-1/WebTestBench_0057_12/self-review-inline-details-only.png",
+      "regression-evidence/lane-1/WebTestBench_0057_12/self-review-dom-snapshot.txt"
+    ],
+    "notes": "The UI can expand details inline, but it does not provide the required list-to-individual-detail-page navigation.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0057_12/trace.json",
+      "sha256": "0a1945f35255ad99ca8806d87795d5016a523eb2b750a3f82048eeade3262a08"
+    }
+  },
+  {
+    "caseId": "WebTestBench_0029:19",
+    "outcome": "Fail",
+    "confidence": "high",
+    "evidence": [
+      "regression-evidence/lane-1/WebTestBench_0029_19/completed-book-progress-editable.png",
+      "regression-evidence/lane-1/WebTestBench_0029_19/dom-snapshot.txt"
+    ],
+    "notes": "Completed-book editing loses completed state and exposes an editable progress field.",
+    "execution": {
+      "trace": "regression-evidence/lane-1/WebTestBench_0029_19/trace.json",
+      "sha256": "f2941dd476f3282ea3007e93093aa919f02f21356083c86f9a24dbb649ad9848"
+    }
+  }
+]

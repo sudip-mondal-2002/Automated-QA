@@ -79,6 +79,9 @@ test("the brief carries structure and observable strings, never invented ones", 
 test("the instructions forbid asserting the prose back at the page", () => {
   assert.match(PLANNER_INSTRUCTIONS, /NEVER copy the prose into the assert value/);
   assert.match(PLANNER_INSTRUCTIONS, /plan-draft\.schema\.json/);
+  assert.match(PLANNER_INSTRUCTIONS, /all four QA dimensions/);
+  assert.match(PLANNER_INSTRUCTIONS, /content accuracy, completeness, and cross-view consistency/);
+  assert.match(PLANNER_INSTRUCTIONS, /merely completes without an error/);
 });
 
 test("a draft is rejected unless it satisfies the published contract", () => {

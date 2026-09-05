@@ -1,0 +1,127 @@
+DONT KNOW
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link:
+    - /url: /set/4
+    - button:
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Study Session
+  - link:
+    - /url: /set/4
+    - button:
+- progressbar
+- main:
+  - generic: medium
+  - generic: Click to flip
+  - paragraph: What is mitosis?
+  - generic: cell-biology
+  - generic: division
+  - generic: Answer
+  - generic: Click to flip back
+  - paragraph: Mitosis is cell division that results in two daughter cells with the same number of chromosomes as the parent cell.
+  - generic: Card 2 of 2
+  - button "Don't Know" [active]:
+    - text: Don't Know
+  - button "Uncertain":
+    - text: Uncertain
+  - button "I Know It":
+    - text: I Know It
+  - button "Skip for now":
+    - text: Skip for now
+
+FIRST SUMMARY
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link:
+    - /url: /set/4
+    - button:
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Study Session
+  - link:
+    - /url: /set/4
+    - button:
+- progressbar
+- main:
+  - generic: 🎉
+  - heading "Session Complete!" [level=2]
+  - paragraph: Great job reviewing 2 cards!
+  - generic: "0"
+  - generic: Knew
+  - generic: "1"
+  - generic: Uncertain
+  - generic: "1"
+  - generic: Need Review
+  - button "Study Again"
+  - link "Back to Set":
+    - /url: /set/4
+    - button "Back to Set"
+
+I KNOW
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link:
+    - /url: /set/4
+    - button:
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Study Session
+  - link:
+    - /url: /set/4
+    - button:
+- progressbar
+- main:
+  - generic: medium
+  - generic: Click to flip
+  - paragraph: What are the four phases of mitosis?
+  - generic: cell-biology
+  - generic: division
+  - generic: Answer
+  - generic: Click to flip back
+  - paragraph: "Prophase, Metaphase, Anaphase, and Telophase (remember: PMAT)"
+  - generic: Card 2 of 2
+  - button "Don't Know":
+    - text: Don't Know
+  - button "Uncertain":
+    - text: Uncertain
+  - button "I Know It" [active]:
+    - text: I Know It
+  - button "Skip for now":
+    - text: Skip for now
+
+SECOND SUMMARY
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link:
+    - /url: /set/4
+    - button:
+  - heading "My Biology Notes" [level=1]
+  - paragraph: Study Session
+  - link:
+    - /url: /set/4
+    - button:
+- progressbar
+- main:
+  - generic: 🎉
+  - heading "Session Complete!" [level=2]
+  - paragraph: Great job reviewing 2 cards!
+  - generic: "2"
+  - generic: Knew
+  - generic: "0"
+  - generic: Uncertain
+  - generic: "0"
+  - generic: Need Review
+  - button "Study Again"
+  - link "Back to Set":
+    - /url: /set/4
+    - button "Back to Set"

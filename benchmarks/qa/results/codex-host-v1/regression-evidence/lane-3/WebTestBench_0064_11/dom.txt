@@ -1,0 +1,47 @@
+- region "Notifications (F8)":
+  - list:
+    - status:
+      - generic: Cards required
+      - generic: Add at least one card to your set.
+      - button:
+- region "Notifications alt+T"
+- banner:
+  - link "FlashMind":
+    - /url: /
+    - generic: FlashMind
+  - navigation:
+    - link "Home":
+      - /url: /
+      - button "Home":
+        - text: Home
+    - link "My Sets":
+      - /url: /my-sets
+      - button "My Sets":
+        - text: My Sets
+    - link "Browse":
+      - /url: /browse
+      - button "Browse":
+        - text: Browse
+  - link "New Set":
+    - /url: /create
+    - button "New Set":
+      - generic: New Set
+  - button:
+- main:
+  - heading "Create New Card Set" [level=1]
+  - paragraph: Build your flashcard collection for effective learning
+  - text: Set Title
+  - textbox "Set Title":
+    - /placeholder: e.g., JavaScript Fundamentals
+    - text: Isolated Empty Set
+  - text: Description
+  - textbox "Description":
+    - /placeholder: What will learners master with this set?
+    - text: No cards
+  - heading "Cards (0)" [level=2]
+  - button "Add Card":
+    - text: Add Card
+  - paragraph: No cards yet. Add your first flashcard above.
+  - button "Create Card Set" [active]
+  - button "Cancel"
+- status: Notification Cards requiredAdd at least one card to your set.

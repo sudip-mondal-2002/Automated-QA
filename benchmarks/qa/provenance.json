@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "trackId": "qa-core-v1",
+  "preparedOn": "2026-09-05",
+  "sources": [
+    {
+      "name": "WebTestBench",
+      "paper": "https://arxiv.org/abs/2603.25226",
+      "repository": "https://github.com/friedrichor/WebTestBench",
+      "gitRevision": "04873065bdb0938ed53d809559d4ab473c7ccd31",
+      "dataset": "https://huggingface.co/datasets/friedrichor/WebTestBench",
+      "datasetRevision": "2feeec346c71f7adb30dff9c64e185bb4cdfc0fe",
+      "metadataFile": "WebTestBench.json",
+      "metadataSha256": "5b9a2f11a4e224ba714258f98424ae2a40e634e5446b08c903a231ed346402f2",
+      "runnableArchiveManifest": "webtestbench-app-archives.json",
+      "runnableArchiveManifestSha256": "891b830a9d72f3d1caee6cd9461d233fdb95adf05ea0f090e69d945c4a4fe511",
+      "license": "Apache-2.0",
+      "usedFor": ["test generation", "regression identification"]
+    },
+    {
+      "name": "ReproBreak",
+      "paper": "https://arxiv.org/abs/2605.12158",
+      "repository": "https://github.com/rub-sq/ReproBreak",
+      "gitRevision": "c603a0ccc980c552d9ca3c05c031e36a094ef5df",
+      "archiveDoi": "10.5281/zenodo.21171968",
+      "metadataFile": "locator_analysis.csv",
+      "metadataUrl": "https://raw.githubusercontent.com/rub-sq/ReproBreak/c603a0ccc980c552d9ca3c05c031e36a094ef5df/locator_analysis.csv",
+      "metadataSha256": "2233e024879a4ce92e287022b12d4f71af7140b5ec882ca81e1423c7697d1201",
+      "license": "MIT",
+      "usedFor": ["test self-healing"]
+    }
+  ],
+  "scope": {
+    "kind": "derived composite track",
+    "officialLeaderboardComparable": false,
+    "notes": [
+      "The selection and composite score are maintained by this project, not by the upstream benchmark authors.",
+      "WebTestBench's complete application archives and ReproBreak's Zenodo database/Docker reproductions remain upstream assets and retain their source-project licenses.",
+      "Preparation downloads pinned metadata only and does not produce or claim a benchmark result."
+    ]
+  }
+}

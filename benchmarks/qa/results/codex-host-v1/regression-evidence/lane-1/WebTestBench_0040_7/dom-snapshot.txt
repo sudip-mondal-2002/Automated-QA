@@ -1,0 +1,96 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "TaskFlow" [level=1]
+  - paragraph: Team Kanban Board
+  - generic: 4 members
+  - text: "2"
+  - generic: / 8 completed
+  - button "New Task":
+    - text: New Task
+- main:
+  - textbox "Search tasks..."
+  - generic: "Filter by:"
+  - generic: "Team:"
+  - button "Alex Chen":
+    - img "Alex Chen"
+  - button "Sarah Kim":
+    - img "Sarah Kim"
+  - button "Marcus Johnson":
+    - img "Marcus Johnson"
+  - button "Emma Wilson":
+    - img "Emma Wilson"
+  - generic: "Status:"
+  - generic: To Do
+  - generic: In Progress
+  - generic: Review
+  - generic: Done
+  - heading "To Do" [level=3]
+  - generic: "3"
+  - button:
+  - button:
+  - heading "Design new dashboard layout" [level=4]
+  - generic: high
+  - generic: design
+  - generic: dashboard
+  - img "Sarah Kim"
+  - generic: "1"
+  - generic: Dec 18
+  - heading "Update onboarding flow" [level=4]
+  - generic: low
+  - generic: ux
+  - generic: onboarding
+  - img "Emma Wilson"
+  - generic: Dec 20
+  - heading "Create component library docs" [level=4]
+  - generic: low
+  - generic: documentation
+  - generic: components
+  - img "Sarah Kim"
+  - generic: Dec 25
+  - heading "In Progress" [level=3]
+  - generic: "2"
+  - button:
+  - button:
+  - heading "Implement user authentication" [level=4]
+  - generic: high
+  - generic: backend
+  - generic: security
+  - img "Alex Chen"
+  - generic: "1"
+  - generic: Dec 15
+  - heading "API rate limiting" [level=4]
+  - generic: medium
+  - generic: backend
+  - generic: performance
+  - img "Marcus Johnson"
+  - generic: Dec 16
+  - heading "Review" [level=3]
+  - generic: "1"
+  - button:
+  - button:
+  - heading "Write unit tests for payment module" [level=4]
+  - generic: medium
+  - generic: testing
+  - generic: payments
+  - img "Marcus Johnson"
+  - generic: "1"
+  - generic: Dec 14
+  - heading "Done" [level=3]
+  - generic: "2"
+  - button:
+  - button:
+  - heading "Mobile responsive fixes" [level=4]
+  - generic: high
+  - generic: mobile
+  - generic: bugfix
+  - img "Sarah Kim"
+  - generic: "1"
+  - generic: Dec 10
+  - heading "Database optimization" [level=4]
+  - generic: medium
+  - generic: database
+  - generic: performance
+  - img "Marcus Johnson"
+  - generic: Dec 8

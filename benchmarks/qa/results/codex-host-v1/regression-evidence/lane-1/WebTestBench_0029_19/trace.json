@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0029:19",
+  "appId": "WebTestBench_0029",
+  "candidateSha256": "5b253f064470e3923751272193cf20462fa9f8d642a8a19ddd816cd4d8b9a353",
+  "appArchiveSha256": "791f3c0711fad32c41a24b96fa16cebdf00b39a775cd87cf97d80991ab78e0be",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:10:04.124Z",
+  "completedAt": "2026-09-05T08:10:43.600Z",
+  "isolation": "Unique loopback origin 47119 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened the action menu for completed book The Great Gatsby."
+    },
+    {
+      "step": 2,
+      "action": "Chose Edit Details."
+    },
+    {
+      "step": 3,
+      "action": "Inspected the status and Current Page control."
+    }
+  ],
+  "observations": [
+    "The completed card opened an edit dialog showing Status To Read and Current Page 0.",
+    "Current Page was enabled and modifiable instead of being forced to the completed total/100%."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Completed-book editing loses completed state and exposes an editable progress field.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0029_19/completed-book-progress-editable.png",
+      "sha256": "0f39559cfadf3f8f4fa359970f7b518d496fe9bcae2698febaa45e3d4219fbd1",
+      "bytes": 41158
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0029_19/dom-snapshot.txt",
+      "sha256": "7e90689f7cc65d88c4cad298fc467fcab8d74ce380ddb5988e12d1b72d8ec0ae",
+      "bytes": 4598
+    }
+  ],
+  "laneId": "lane-1"
+}

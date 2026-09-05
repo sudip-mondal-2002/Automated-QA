@@ -1,0 +1,177 @@
+- list
+- region "Notifications alt+T"
+- banner:
+  - heading [level=1]: My Reading Library
+  - button:
+    - text: Add Book
+- main:
+  - paragraph: "10"
+  - paragraph: Total Books
+  - paragraph: "5"
+  - paragraph: Completed
+  - paragraph: "2"
+  - paragraph: Reading
+  - paragraph: "3"
+  - paragraph: To Read
+  - paragraph: 1,720
+  - paragraph: Pages Read
+  - paragraph: "4.6"
+  - paragraph: Avg Rating
+  - heading [level=2]: Recommended for You
+  - paragraph: Based on your reading history and favorite genres
+  - heading [level=3]: The Midnight Library
+  - paragraph: Matt Haig
+  - generic: Contemporary Fiction
+  - heading [level=3]: The Hobbit
+  - paragraph: J.R.R. Tolkien
+  - generic: Fantasy
+  - heading [level=3]: The Name of the Wind
+  - paragraph: Patrick Rothfuss
+  - generic: Fantasy
+  - textbox:
+    - /placeholder: Search by title or author...
+  - combobox:
+    - generic: All Genres
+  - combobox:
+    - generic: All Status
+  - combobox:
+    - generic: All Ratings
+  - tablist:
+    - tab [selected]:
+      - text: All (10)
+    - tab:
+      - text: Reading (2)
+    - tab:
+      - text: To Read (3)
+    - tab:
+      - text: Completed (5)
+  - tabpanel:
+    - heading [level=3]: The Great Gatsby
+    - paragraph: F. Scott Fitzgerald
+    - button:
+    - generic: Completed
+    - generic: Classic Fiction
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - text: "Started: 15/01/2024"
+    - text: "Finished: 28/01/2024"
+    - heading [level=3]: Dune
+    - paragraph: Frank Herbert
+    - button:
+    - generic: Reading
+    - generic: Science Fiction
+    - generic: Progress
+    - generic: 412 / 688 pages
+    - progressbar
+    - text: "Started: 01/02/2024"
+    - heading [level=3]: To Kill a Mockingbird
+    - paragraph: Harper Lee
+    - button:
+    - generic: Completed
+    - generic: Classic Fiction
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - text: "Started: 01/12/2023"
+    - text: "Finished: 15/12/2023"
+    - heading [level=3]: The Midnight Library
+    - paragraph: Matt Haig
+    - button:
+    - generic: To Read
+    - generic: Contemporary Fiction
+    - button:
+      - text: Start Reading
+    - heading [level=3]: Project Hail Mary
+    - paragraph: Andy Weir
+    - button:
+    - generic: Completed
+    - generic: Science Fiction
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - text: "Started: 05/01/2024"
+    - text: "Finished: 20/01/2024"
+    - heading [level=3]: "1984"
+    - paragraph: George Orwell
+    - button:
+    - generic: Reading
+    - generic: Dystopian
+    - generic: Progress
+    - generic: 150 / 328 pages
+    - progressbar
+    - text: "Started: 15/02/2024"
+    - heading [level=3]: The Hobbit
+    - paragraph: J.R.R. Tolkien
+    - button:
+    - generic: To Read
+    - generic: Fantasy
+    - button:
+      - text: Start Reading
+    - heading [level=3]: Atomic Habits
+    - paragraph: James Clear
+    - button:
+    - generic: Completed
+    - generic: Self-Help
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - text: "Started: 10/11/2023"
+    - text: "Finished: 25/11/2023"
+    - heading [level=3]: The Name of the Wind
+    - paragraph: Patrick Rothfuss
+    - button:
+    - generic: To Read
+    - generic: Fantasy
+    - button:
+      - text: Start Reading
+    - heading [level=3]: Sapiens
+    - paragraph: Yuval Noah Harari
+    - button:
+    - generic: Completed
+    - generic: Non-Fiction
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - button [disabled]:
+    - text: "Started: 01/10/2023"
+    - text: "Finished: 20/10/2023"
+- dialog "Edit Book":
+  - heading "Edit Book" [level=2]
+  - text: Title
+  - textbox "Title" [active]:
+    - /placeholder: Book title
+  - text: Author
+  - textbox "Author":
+    - /placeholder: Author name
+  - text: Genre
+  - combobox:
+    - generic: Classic Fiction
+  - combobox
+  - text: Status
+  - combobox:
+    - generic: To Read
+  - combobox
+  - text: Total Pages
+  - spinbutton "Total Pages": "300"
+  - text: Current Page
+  - spinbutton "Current Page": "0"
+  - text: Cover URL (optional)
+  - textbox "Cover URL (optional)":
+    - /placeholder: https://...
+  - text: Notes (optional)
+  - textbox "Notes (optional)":
+    - /placeholder: Your thoughts, favorite quotes...
+  - button "Cancel"
+  - button "Save Changes"
+  - button "Close":
+    - generic: Close
