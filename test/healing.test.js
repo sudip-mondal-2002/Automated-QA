@@ -67,12 +67,42 @@ test("failure classifier exposes conservative explicit outcomes", () => {
   assert.equal(classifyFailure({ failure: actionFailure, verification: { status: "failed" } }).classification, "functional_regression");
   assert.equal(classifyFailure({ failure: actionFailure, verification: { status: "blocked" } }).classification, "blocked");
   assert.equal(classifyFailure({ failure: actionFailure, expectationsUnchanged: false }).classification, "blocked");
+  assert.equal(classifyFailure({
+    failure: { stage: "action", status: "blocked" },
+  }).reason, "Execution was blocked before recovery");
+  assert.equal(classifyFailure({
+    failure: actionFailure,
+    rediscovery: { status: "blocked" },
+  }).reason, "Target rediscovery was blocked");
+  assert.equal(classifyFailure({
+    failure: actionFailure,
+    verification: { status: "blocked" },
+  }).reason, "Recovery verification was blocked");
+  assert.equal(classifyFailure({
+    failure: actionFailure,
+    verification: { status: "failed" },
+  }).reason, "The original expectations still fail after recovery");
+  assert.equal(classifyFailure({
+    failure: { stage: "expectation", status: "failed" },
+  }).reason, "The expected user-visible outcome failed");
+  assert.equal(classifyFailure({
+    failure: { stage: "action", status: "failed" },
+    rediscovery: null,
+  }).reason, "No safe equivalent target was found");
   assert.throws(
     () => classifyFailure(),
     (error) => error instanceof QaError && error.code === "INVALID_HEALING_INPUT",
   );
   assert.throws(
     () => classifyFailure({ failure: { stage: "design", status: "failed" } }),
+    (error) => error instanceof QaError && error.code === "INVALID_HEALING_INPUT",
+  );
+  assert.throws(
+    () => classifyFailure({ failure: { stage: "action", status: "unknown" } }),
+    (error) => error instanceof QaError && error.code === "INVALID_HEALING_INPUT",
+  );
+  assert.throws(
+    () => classifyFailure({ failure: actionFailure, verification: { status: "unknown" } }),
     (error) => error instanceof QaError && error.code === "INVALID_HEALING_INPUT",
   );
 });
@@ -85,6 +115,7 @@ test("rediscovery normalization requires an explicitly equivalent accessible tar
   });
   assert.equal(normalizeTarget(null), undefined);
   assert.equal(normalizeTarget({}), undefined);
+  assert.deepEqual(normalizeTarget({ summary: 42 }), { summary: "42" });
   assert.equal(normalizeRediscovery(null).status, "ambiguous");
   assert.equal(normalizeRediscovery({ status: "unexpected" }).status, "ambiguous");
   assert.match(normalizeRediscovery({
@@ -102,6 +133,16 @@ test("rediscovery normalization requires an explicitly equivalent accessible tar
     target: { summary: "Continue link", role: "link", name: "Continue" },
     equivalent: true,
     observation: "42",
+  });
+  assert.deepEqual(normalizeRediscovery({
+    equivalent: true,
+    selectedTarget: { role: "button", name: "Continue" },
+    explanation: 7,
+  }), {
+    status: "found",
+    target: { summary: "button Continue", role: "button", name: "Continue" },
+    equivalent: true,
+    explanation: "7",
   });
 });
 
@@ -442,6 +483,53 @@ test("a corrupt previous-run pointer does not prevent a fresh execution", async 
   assert.equal(result.classification, "passed");
 });
 
+test("a previous successful target is supplied as evidence for later rediscovery", async (t) => {
+  const { workspace } = await temporaryWorkspace(t);
+  await saveHealingSpec(workspace);
+  const first = await executeRun({
+    workspace,
+    specId: "healing-boundary",
+    runId: "run_20260830_140040",
+    executor: createNativeWebExecutor({
+      act: () => ({ selectedTarget: { summary: "Original checkout button", role: "button", name: "Checkout" } }),
+      observe: () => true,
+      screenshot: () => IMAGE,
+    }),
+    fetchImpl: async () => ({ status: 200 }),
+  });
+  assert.equal(first.classification, "passed");
+
+  let rediscoveryContext;
+  const second = await executeRun({
+    workspace,
+    specId: "healing-boundary",
+    runId: "run_20260830_140041",
+    executor: createNativeWebExecutor({
+      act: () => ({ status: "failed", observation: "The original control is absent" }),
+      observe: () => true,
+      screenshot: () => IMAGE,
+      rediscover: (_intent, context) => {
+        rediscoveryContext = context;
+        return {
+          status: "found",
+          equivalent: true,
+          target: { summary: "Continue to payment link", role: "link", name: "Continue to payment" },
+        };
+      },
+      recover: () => ({}),
+    }),
+    fetchImpl: async () => ({ status: 200 }),
+  });
+
+  assert.equal(second.classification, "healed");
+  assert.deepEqual(rediscoveryContext.previousTarget, {
+    summary: "Original checkout button",
+    role: "button",
+    name: "Checkout",
+  });
+  assert.match(second.steps[0].healing.originalFailure, /Previous target: Original checkout button/);
+});
+
 test("workspace refuses fabricated healed classifications and evidence", async (t) => {
   const { workspace } = await temporaryWorkspace(t);
   const spec = await workspace.loadSpec("checkout-card");
@@ -483,6 +571,28 @@ test("workspace refuses fabricated healed classifications and evidence", async (
   await assert.rejects(
     () => workspace.saveResult(result),
     (error) => error instanceof QaError && error.code === "HEALING_CLASSIFICATION_MISMATCH",
+  );
+
+  result.classification = "functional_regression";
+  result.steps[0].status = "failed";
+  result.steps[0].expectations[0].status = "failed";
+  await assert.rejects(
+    () => workspace.saveResult(result),
+    (error) => error instanceof QaError && error.code === "HEALING_STATUS_MISMATCH",
+  );
+
+  result.classification = "healed";
+  result.steps[0].status = "passed";
+  result.steps[0].expectations[0].status = "passed";
+  result.steps.push({
+    index: 2,
+    intent: spec.steps[1].intent,
+    status: "failed",
+    expectations: spec.steps[1].expect.map((expectation) => ({ expectation, status: "failed" })),
+  });
+  await assert.rejects(
+    () => workspace.saveResult(result),
+    (error) => error instanceof QaError && error.code === "HEALED_WITH_FAILED_STEP",
   );
 });
 
