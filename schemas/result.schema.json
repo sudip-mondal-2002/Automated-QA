@@ -1,0 +1,178 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://auto-qa.local/schemas/result.schema.json",
+  "title": "Semantic QA run result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "runId", "specId", "environment", "classification", "startedAt", "completedAt", "steps"],
+  "properties": {
+    "version": { "const": 1 },
+    "runId": {
+      "type": "string",
+      "pattern": "^run_[0-9]{8}_[0-9]{6}(?:_[a-z0-9]+)?$"
+    },
+    "specId": { "$ref": "#/$defs/id" },
+    "environment": { "$ref": "#/$defs/id" },
+    "classification": {
+      "enum": ["passed", "healed", "functional_regression", "design_regression", "blocked"]
+    },
+    "startedAt": { "$ref": "#/$defs/timestamp" },
+    "completedAt": { "$ref": "#/$defs/timestamp" },
+    "explanation": { "type": "string", "minLength": 1 },
+    "steps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stepResult" }
+    },
+    "fixtures": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fixtureResult" }
+    },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "design": { "$ref": "#/$defs/designResult" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/executionEvent" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "status": { "enum": ["passed", "failed", "blocked", "skipped"] },
+    "expectationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectation", "status"],
+      "properties": {
+        "expectation": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "observation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "selectedTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "healing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["originalFailure", "replacement", "verification"],
+      "properties": {
+        "originalFailure": { "type": "string", "minLength": 1 },
+        "replacement": { "type": "string", "minLength": 1 },
+        "verification": { "type": "string", "minLength": 1 }
+      }
+    },
+    "stepResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "intent", "status", "expectations"],
+      "properties": {
+        "index": { "type": "integer", "minimum": 1 },
+        "intent": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "expectations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/expectationResult" }
+        },
+        "selectedTarget": { "$ref": "#/$defs/selectedTarget" },
+        "healing": { "$ref": "#/$defs/healing" }
+      }
+    },
+    "fixtureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixtureId", "phase", "status"],
+      "properties": {
+        "fixtureId": { "$ref": "#/$defs/id" },
+        "phase": { "enum": ["before", "between", "after"] },
+        "status": { "$ref": "#/$defs/status" },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^screenshots/[a-z0-9][a-z0-9-]*\\.(?:png|jpe?g|webp)$"
+          }
+        },
+        "consoleErrors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "networkErrors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unsupported": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "executionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "at", "type"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 1 },
+        "at": { "$ref": "#/$defs/timestamp" },
+        "type": {
+          "enum": [
+            "run_started",
+            "environment_ready",
+            "capability_notice",
+            "fixture_started",
+            "fixture_completed",
+            "step_started",
+            "step_completed",
+            "screenshot_captured",
+            "cleanup_started",
+            "cleanup_completed",
+            "run_completed"
+          ]
+        },
+        "status": { "$ref": "#/$defs/status" },
+        "phase": { "enum": ["environment", "before", "between", "test", "after", "run"] },
+        "fixtureId": { "$ref": "#/$defs/id" },
+        "stepIndex": { "type": "integer", "minimum": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "designResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "viewport", "status"],
+      "properties": {
+        "reference": { "type": "string", "minLength": 1 },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 320 },
+            "height": { "type": "integer", "minimum": 320 }
+          }
+        },
+        "status": { "enum": ["matched", "regression", "not_checked"] },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

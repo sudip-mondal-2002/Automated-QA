@@ -1,0 +1,11 @@
+version: 1
+id: login-customer
+title: Log in as a customer
+inputs:
+  username: ${QA_CUSTOMER_USERNAME}
+  password: ${QA_CUSTOMER_PASSWORD}
+steps:
+  - intent: Open the login page
+  - intent: Sign in with the supplied customer credentials
+expect:
+  - Customer dashboard is visible

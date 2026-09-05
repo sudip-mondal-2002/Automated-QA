@@ -14,6 +14,42 @@ It also understands an optional design reference, so it can distinguish:
 
 The hackathon product is a **skill plus a small file-backed QA workspace**. It uses native Browser/Chrome for web apps and computer use for desktop/native UI. Playwright and Stagehand are not required, including for fixtures.
 
+## Phase 1–2 quick start
+
+Phases 1 and 2 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. Phase 2 resolves environments and fixture inputs, starts the local demo when needed, executes through a supplied native Browser/Chrome or computer-use capability, records progress events and screenshots, always attempts cleanup, and persists the result.
+
+```bash
+npm install
+npm run qa-agent -- init
+npm run qa-agent -- create "a logged-in customer completes checkout" \
+  --env local \
+  --expect "Order confirmation is visible"
+npm run qa-agent -- validate
+```
+
+The initializer is idempotent: it creates missing sample files and validates existing ones without overwriting edits. Common workspace operations are:
+
+```bash
+npm run qa-agent -- spec list
+npm run qa-agent -- spec show checkout-card
+npm run qa-agent -- fixture list
+npm run qa-agent -- select checkout-card --env local
+npm run qa-agent -- last
+```
+
+Use `spec save`, `fixture save`, `environment save`, or `result save` with a YAML/JSON filename (or `-` for standard input). Writes are validated before an atomic replacement, and cross-file references are checked before a spec or result is accepted.
+
+Start the deterministic checkout target with:
+
+```bash
+npm run demo
+# http://localhost:3000
+```
+
+Then ask the autonomous-QA skill to `run checkout-card --env local` using native Browser/Chrome, or `run-last` to repeat the selected spec and environment. Set `QA_CUSTOMER_USERNAME` and `QA_CUSTOMER_PASSWORD` in the skill's environment; their resolved values are passed to the login fixture but are never stored. A bare `qa-agent run` process without a host-native executor deliberately produces `blocked` rather than claiming browser execution.
+
+The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, and `executeRun` for host integrations. Run the complete Phase 1–2 test suite with `npm test`.
+
 ## What the demo must prove
 
 1. Create an editable semantic test from a natural-language requirement.

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://auto-qa.local/schemas/fixture.schema.json",
+  "title": "Semantic QA fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "title", "steps", "expect"],
+  "properties": {
+    "version": { "const": 1 },
+    "id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1 },
+    "inputs": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/inputName" },
+      "additionalProperties": { "$ref": "#/$defs/inputReference" }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "expect": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/expectation" }
+    },
+    "idempotent": { "type": "boolean" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "inputName": {
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z0-9]*$"
+    },
+    "inputReference": {
+      "type": "string",
+      "pattern": "^\\$\\{(?:[A-Z][A-Z0-9_]*|outputs\\.[A-Za-z][A-Za-z0-9_.-]*)\\}$"
+    },
+    "expectation": { "type": "string", "minLength": 1 },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intent"],
+      "properties": {
+        "intent": { "type": "string", "minLength": 1 },
+        "expect": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/expectation" }
+        }
+      }
+    }
+  }
+}
