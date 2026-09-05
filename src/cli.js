@@ -501,8 +501,9 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       if (error) throw error;
       if (json) output(JSON.stringify({ exitCode, report }));
       else {
+        const counts = report.summary.scenarios;
         output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
-        output(`Scenarios ${report.summary.scenarios.passed + report.summary.scenarios.healed}/${report.summary.scenarios.total} clean · coverage ${report.summary.coverage.score}`);
+        output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean · ${counts.blocked ?? 0} blocked · ${counts.failed} failed · coverage ${report.summary.coverage.score}`);
         output(`Report: ${report.artifacts.specs} + report.json`);
       }
       return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;

@@ -16718,6 +16718,21 @@ async function crawl({ url, credentials, fetchImpl = globalThis.fetch, maxPages 
   let cookie = "";
   const at = now instanceof Date ? now : now();
   const crawledAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  if (credentials?.username && credentials?.password) {
+    try {
+      const probeResponse = await fetchImpl(new URL(queue[0].path, origin).href, { headers: {} });
+      if (probeResponse.ok || [301, 302, 303, 307, 308].includes(probeResponse.status)) {
+        const probeHtml = typeof probeResponse.text === "function" ? await probeResponse.text() : "";
+        const probePage = { forms: parseHtml(probeHtml).forms };
+        const loginForm = detectLoginForm(probePage);
+        if (loginForm) {
+          const auth2 = await authenticate({ origin, page: probePage, credentials, fetchImpl });
+          cookie = auth2.cookie || cookie;
+        }
+      }
+    } catch {
+    }
+  }
   while (queue.length > 0 && pages.length < maxPages) {
     const { path: path7, depth } = queue.shift();
     if (visited.has(path7) || depth > maxDepth) continue;
@@ -16757,14 +16772,38 @@ async function crawl({ url, credentials, fetchImpl = globalThis.fetch, maxPages 
 }
 function parsePrd(text) {
   if (text === void 0 || text === null || String(text).trim() === "") return { requirements: [] };
-  const lines = String(text).split(/\r?\n/);
+  const blocks = [];
+  let current = [];
+  const startsNew = (line) => /^\s*[-*]\s+/.test(line) || /^\s*\d+[.)]\s+/.test(line) || /^\s*#{1,6}\s+/.test(line) || /(REQ-[A-Za-z0-9-]+)/i.test(line);
+  for (const raw of String(text).split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line) {
+      if (current.length > 0) {
+        blocks.push(current.join(" "));
+        current = [];
+      }
+      continue;
+    }
+    if (current.length > 0 && startsNew(raw)) {
+      blocks.push(current.join(" "));
+      current = [];
+    }
+    current.push(line.replace(/^[-*]\s+/, "").replace(/^\d+[.)]\s+/, "").replace(/^#{1,6}\s+/, ""));
+  }
+  if (current.length > 0) blocks.push(current.join(" "));
   const requirements = [];
-  for (const line of lines) {
-    const trimmed = line.trim().replace(/^[-*]\s+/, "").replace(/^\d+[.)]\s+/, "");
-    if (trimmed.length < 8) continue;
-    const idMatch = trimmed.match(/(REQ-[A-Za-z0-9-]+)/i);
+  const hasExplicitIds = blocks.some((block) => /(REQ-[A-Za-z0-9-]+)/i.test(block));
+  let skippedTitle = false;
+  for (const block of blocks) {
+    if (block.length < 8) continue;
+    const idMatch = block.match(/(REQ-[A-Za-z0-9-]+)/i);
+    if (!idMatch && !skippedTitle && requirements.length === 0 && hasExplicitIds && block.length < 60) {
+      skippedTitle = true;
+      continue;
+    }
     const id = idMatch ? idMatch[1].toUpperCase() : `REQ-${requirements.length + 1}`;
-    requirements.push({ id, text: trimmed, keywords: trimmed.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3).slice(0, 8) });
+    if (requirements.some((req) => req.id === id)) continue;
+    requirements.push({ id, text: block.slice(0, 280), keywords: block.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3).slice(0, 8) });
   }
   return { requirements };
 }
@@ -16774,8 +16813,11 @@ function slugifyFlow(value) {
 function promptMatches(text, prompt) {
   if (!prompt) return false;
   const keywords = String(prompt).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
-  const hay = String(text).toLowerCase();
-  return keywords.some((keyword) => hay.includes(keyword));
+  const hay = String(text ?? "").toLowerCase();
+  return keywords.some((keyword) => {
+    if (hay.includes(keyword)) return true;
+    return (PROMPT_ALIASES[keyword] ?? []).some((alias) => hay.includes(alias));
+  });
 }
 function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now = () => /* @__PURE__ */ new Date() } = {}) {
   const pages = siteMap?.pages ?? [];
@@ -16786,27 +16828,30 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
   const requirements = prd?.requirements ?? [];
   const requirementFor = (text) => {
     const hay = String(text).toLowerCase();
-    return requirements.filter((req) => req.keywords?.some((keyword) => hay.includes(keyword))).map((req) => req.id);
+    return requirements.filter((req) => (req.keywords ?? []).slice(0, 3).some((keyword) => hay.includes(keyword))).map((req) => req.id);
   };
   for (const page of pages) {
     for (const [formIndex, form] of (page.forms ?? []).entries()) {
       const base = `${page.path}-form-${formIndex}`;
       const isLogin = (form.inputs ?? []).some((input2) => input2.type === "password");
-      const happyTitle = isLogin ? `Sign in via ${page.path}` : `Submit form on ${page.path}`;
+      const authGated = isLogin && page.path !== "/login" && page.path !== "/";
+      const happyTitle = isLogin ? authGated ? `Sign in (auth gate observed at ${page.path})` : `Sign in via ${page.path}` : `Submit form on ${page.path}`;
+      const actionLabel = (form.buttons ?? []).map((button) => String(button).trim()).find((label) => label.length > 0);
+      const happyIntent = actionLabel ?? happyTitle;
       const happyFlow = {
         id: `flow_${slugifyFlow(`${base}-happy`)}`,
-        title: happyTitle,
+        title: happyIntent,
         category: isLogin ? "happy" : "happy",
-        priority: promptMatches(`${page.path} ${happyTitle}`, prompt) ? "critical" : "high",
-        rationale: `Form discovered at ${page.path} with ${(form.inputs ?? []).length} inputs`,
+        priority: promptMatches(`${page.path} ${happyTitle} ${happyIntent} ${page.path === "/cart" || page.path === "/checkout" ? "checkout payment order" : ""}`, prompt) ? "critical" : "high",
+        rationale: authGated ? `Login gate observed at ${page.path} (unauthenticated fetch redirected to a sign-in form)` : `Form discovered at ${page.path} with ${(form.inputs ?? []).length} inputs`,
         pages: [page.path],
         preconditions: isLogin ? [] : ["authenticated"],
         steps: [{
-          intent: happyTitle,
+          intent: happyIntent,
           page: page.path,
           action: "submit",
           targetRef: `form:${formIndex}`,
-          expect: isLogin ? ["Customer dashboard is visible"] : ["The submitted outcome is visible"]
+          expect: isLogin ? ["Customer dashboard is visible", "No error message is shown"] : ["The submitted outcome is visible", "No error message is shown"]
         }],
         risks: page.signals?.destructive || /delete|place order/i.test(happyTitle) ? ["double submission"] : [],
         requirementIds: requirementFor(`${page.path} ${happyTitle}`)
@@ -16826,7 +16871,28 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
             page: page.path,
             action: "submit",
             targetRef: `form:${formIndex}`,
-            expect: [`A validation error names the ${input2.name || "required"} field`, "No record is created"]
+            expect: ["An error message is shown", "No record is created"]
+          }],
+          risks: [],
+          requirementIds: requirementFor(page.path)
+        });
+      }
+      const errorFlowsForForm = flows.filter((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path));
+      if (!isLogin && errorFlowsForForm.length === 0 && (form.inputs ?? []).length > 0) {
+        flows.push({
+          id: `flow_${slugifyFlow(`${base}-invalid`)}`,
+          title: `Reject invalid submission on ${page.path}`,
+          category: "error",
+          priority: "medium",
+          rationale: `Form on ${page.path} has no required inputs; invalid-submission probe`,
+          pages: [page.path],
+          preconditions: ["authenticated"],
+          steps: [{
+            intent: `Submit an invalid request on ${page.path}`,
+            page: page.path,
+            action: "submit",
+            targetRef: `form:${formIndex}`,
+            expect: ["A validation error is shown or the request is ignored", "No duplicate record is created"]
           }],
           risks: [],
           requirementIds: requirementFor(page.path)
@@ -16841,9 +16907,9 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
           rationale: "Login form requires negative authentication coverage",
           pages: [page.path],
           preconditions: [],
-          steps: [{ intent: "Sign in with invalid credentials", page: page.path, expect: ["An error message is shown"] }],
+          steps: [{ intent: "Sign in with invalid credentials", page: page.path, expect: ["An error message is shown", "No session is created"] }],
           risks: [],
-          requirementIds: requirementFor("login sign in")
+          requirementIds: requirementFor("login sign in authentication")
         });
         flows.push({
           id: `flow_${slugifyFlow("unauthenticated-redirect")}`,
@@ -16853,9 +16919,9 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
           rationale: "Authenticated surface requires unauthenticated coverage",
           pages: ["/dashboard"],
           preconditions: [],
-          steps: [{ intent: "Open a protected page without signing in", page: "/dashboard", expect: ["Sign in is required"] }],
+          steps: [{ intent: "Open a protected page without signing in", page: "/dashboard", expect: ["Sign in is required", "No protected data is shown"] }],
           risks: [],
-          requirementIds: []
+          requirementIds: requirementFor("login authentication redirect")
         });
       }
     }
@@ -16868,7 +16934,7 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
         rationale: "List/table surface discovered",
         pages: [page.path],
         preconditions: ["authenticated"],
-        steps: [{ intent: `Open ${page.path} with no records`, page: page.path, expect: ["An empty state is visible"] }],
+        steps: [{ intent: `Open ${page.path} with no records`, page: page.path, expect: ["An empty state is visible", "No error message is shown"] }],
         risks: [],
         requirementIds: requirementFor(page.path)
       });
@@ -16882,23 +16948,40 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
         rationale: "Numeric input discovered",
         pages: [page.path],
         preconditions: ["authenticated"],
-        steps: [{ intent: "Submit a negative quantity", page: page.path, expect: ["A validation error is shown"] }],
+        steps: [{ intent: "Submit a negative quantity", page: page.path, expect: ["A validation error is shown", "No record is created"] }],
         risks: [],
         requirementIds: requirementFor(page.path)
       });
     }
-    if (page.signals?.payment) {
+    if (page.signals?.payment && (page.forms ?? []).length > 0) {
       flows.push({
         id: `flow_${slugifyFlow(`${page.path}-double-submit`)}`,
         title: `Guard double submission on ${page.path}`,
         category: "edge",
         priority: "medium",
-        rationale: "Payment signal discovered",
+        rationale: "Payment form discovered; double-submission guard",
         pages: [page.path],
         preconditions: ["authenticated"],
-        steps: [{ intent: "Submit payment twice quickly", page: page.path, expect: ["Only one order is created"] }],
+        steps: [{ intent: "Submit payment twice quickly", page: page.path, expect: ["Only one order is created", "No duplicate charge is shown"] }],
         risks: ["double submission"],
         requirementIds: requirementFor("payment checkout order")
+      });
+    }
+  }
+  for (const page of pages) {
+    const hasHappy = flows.some((flow) => flow.category === "happy" && (flow.pages ?? []).includes(page.path));
+    if (!hasHappy) {
+      flows.push({
+        id: `flow_${slugifyFlow(`${page.path}-view`)}`,
+        title: `View ${page.path}`,
+        category: "happy",
+        priority: promptMatches(`${page.path} view`, prompt) ? "critical" : "medium",
+        rationale: `Smoke coverage for ${page.path}, which has no happy flow`,
+        pages: [page.path],
+        preconditions: ["authenticated"],
+        steps: [{ intent: `Open ${page.path}`, page: page.path, expect: [`${page.path} content is visible`, "No error message is shown"] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
       });
     }
   }
@@ -16908,6 +16991,25 @@ function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now =
     seen.add(flow.id);
     return true;
   });
+  for (const page of pages) {
+    const hasSubmittableForm = (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0);
+    const hasEdge = deduped.some((flow) => flow.category === "edge" && (flow.pages ?? []).includes(page.path));
+    if (hasSubmittableForm && !hasEdge) {
+      const fallback = {
+        id: `flow_${slugifyFlow(`${page.path}-invalid-format`)}`,
+        title: `Reject malformed input on ${page.path}`,
+        category: "edge",
+        priority: "medium",
+        rationale: `Form surface on ${page.path} with no other edge coverage; invalid-format probe`,
+        pages: [page.path],
+        preconditions: ["authenticated"],
+        steps: [{ intent: `Submit malformed input on ${page.path}`, page: page.path, expect: ["A validation error is shown", "No record is created"] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
+      };
+      if (!deduped.some((flow) => flow.id === fallback.id)) deduped.push(fallback);
+    }
+  }
   const counts = { happy: 0, edge: 0, error: 0 };
   for (const flow of deduped) counts[flow.category] = (counts[flow.category] ?? 0) + 1;
   return {
@@ -16969,12 +17071,16 @@ function renderTestPlanMarkdown(plan) {
   return `${lines.join("\n")}
 `;
 }
-var STRATEGY_ORDER, BINARY_EXTENSIONS;
+var STRATEGY_ORDER, BINARY_EXTENSIONS, PROMPT_ALIASES;
 var init_planner = __esm({
   "src/planner.js"() {
     init_errors();
     STRATEGY_ORDER = Object.freeze(["testid", "role", "label", "text", "css"]);
     BINARY_EXTENSIONS = /* @__PURE__ */ new Set(["png", "jpg", "jpeg", "webp", "gif", "svg", "ico", "css", "js", "woff", "woff2", "map"]);
+    PROMPT_ALIASES = Object.freeze({
+      checkout: ["/cart", "/checkout", "/confirmation", "cart", "payment", "order"],
+      authentication: ["/login", "/dashboard", "sign in", "auth"]
+    });
   }
 });
 
@@ -17139,6 +17245,7 @@ async function generate({ workspace, plan, siteMap, origin, fetchImpl, executor,
   await writeFile(path3.join(generatedDir, "_resolve.js"), renderResolveHelper());
   let validatedCount = 0;
   const strategies = {};
+  const flowMap = {};
   for (const spec of specs) {
     const flow = (plan.flows ?? []).find((f) => f.id === spec._flowId) ?? {};
     const sidecar = bindLocators({ spec, flow, siteMap });
@@ -17157,8 +17264,9 @@ async function generate({ workspace, plan, siteMap, origin, fetchImpl, executor,
 `);
     await writeFile(path3.join(generatedDir, `${spec.id}.spec.js`), renderPlaywrightSpec({ spec: clean, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin }));
     artifacts.push(spec.id);
+    if (spec._flowId) flowMap[spec.id] = spec._flowId;
   }
-  return { specs: specs.length, validated: validatedCount, unvalidated: specs.length - validatedCount, strategies, dir: generatedDir, artifacts };
+  return { specs: specs.length, validated: validatedCount, unvalidated: specs.length - validatedCount, strategies, dir: generatedDir, artifacts, flowMap };
 }
 var init_generator = __esm({
   "src/generator.js"() {
@@ -17195,6 +17303,7 @@ function diffPrd({ prd, plan } = {}) {
 function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals = [], decisions = [], prd = { requirements: [] }, startedAt, finishedAt, orchestrationId = `orch_${Date.now()}`, target = "" } = {}) {
   const scenarios = (plan?.flows ?? []).map((flow) => {
     const run = runs.find((r) => r.flowId === flow.id || r.specId === flow.id) ?? {};
+    const fallbackSpec = String(flow.id).replace(/^flow_/, "");
     return {
       id: flow.id,
       title: flow.title,
@@ -17204,22 +17313,25 @@ function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals
       classification: run.classification ?? "environment",
       confidence: run.confidence ?? 0.5,
       durationMs: run.durationMs ?? 0,
-      specFile: run.specFile ?? `generated/${flow.id}.spec.js`,
+      specFile: run.specFile ?? `generated/${fallbackSpec}.spec.js`,
       runId: run.runId,
+      runClassification: run.runClassification,
+      blockedReason: run.blockedReason,
       screenshots: run.screenshots ?? [],
       heals: run.heals ?? []
     };
   });
-  const counts = { total: scenarios.length, passed: 0, healed: 0, failed: 0, skipped: 0 };
+  const counts = { total: scenarios.length, passed: 0, healed: 0, failed: 0, blocked: 0, skipped: 0 };
   for (const scenario of scenarios) {
     if (scenario.status === "passed") counts.passed += 1;
     else if (scenario.status === "healed") counts.healed += 1;
     else if (scenario.status === "failed") counts.failed += 1;
+    else if (scenario.status === "blocked") counts.blocked += 1;
     else counts.skipped += 1;
   }
   const lastGaps = gapsHistory.at(-1) ?? { score: 1, gaps: [], untestedRisks: [] };
   const prdGap = diffPrd({ prd, plan });
-  const verdict = counts.failed > 0 ? "defects_found" : counts.skipped === counts.total && counts.total > 0 ? "incomplete" : "clean";
+  const verdict = counts.failed > 0 ? "defects_found" : counts.blocked > 0 || counts.skipped === counts.total && counts.total > 0 ? "incomplete" : "clean";
   const exitCode = counts.failed > 0 ? 10 : verdict === "incomplete" ? 11 : 0;
   const started = startedAt ?? plan?.generatedAt ?? (/* @__PURE__ */ new Date()).toISOString();
   const finished = finishedAt ?? (/* @__PURE__ */ new Date()).toISOString();
@@ -17298,10 +17410,20 @@ function promptHits(text, prompt) {
   if (!prompt) return false;
   const keywords = String(prompt).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
   const hay = String(text ?? "").toLowerCase();
-  return keywords.some((keyword) => hay.includes(keyword));
+  const aliases = {
+    checkout: ["/cart", "/checkout", "/confirmation", "cart", "payment", "order"],
+    authentication: ["/login", "/dashboard", "sign in", "auth"]
+  };
+  return keywords.some((keyword) => {
+    if (hay.includes(keyword)) return true;
+    return (aliases[keyword] ?? []).some((alias) => hay.includes(alias));
+  });
 }
 function formPages(siteMap) {
   return (siteMap?.pages ?? []).filter((page) => (page.forms ?? []).length > 0);
+}
+function submittableFormPages(siteMap) {
+  return formPages(siteMap).filter((page) => (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0));
 }
 function checkHappyPath({ plan, siteMap }) {
   if (formPages(siteMap).length === 0) return { status: "skipped", detail: "No form surface discovered", evidence: [] };
@@ -17331,12 +17453,12 @@ function checkHappyPath({ plan, siteMap }) {
 }
 function checkErrorPerForm({ plan, siteMap }) {
   const flows = plan.flows ?? [];
-  if (formPages(siteMap).length === 0) return { status: "skipped", detail: "No form surface discovered", evidence: [] };
-  const missing = formPages(siteMap).filter((page) => !flows.some((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path)));
+  if (submittableFormPages(siteMap).length === 0) return { status: "skipped", detail: "No submittable form surface discovered", evidence: [] };
+  const missing = submittableFormPages(siteMap).filter((page) => !flows.some((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path)));
   if (missing.length === 0) return { status: "pass", detail: "Every form has an error flow", evidence: [] };
   return {
     status: "fail",
-    detail: `${missing.length} of ${formPages(siteMap).length} forms have no error-state flow`,
+    detail: `${missing.length} of ${submittableFormPages(siteMap).length} forms have no error-state flow`,
     evidence: missing.map((page) => page.path),
     gaps: missing.map((page, index) => ({
       id: `gap_error_${index}`,
@@ -17683,19 +17805,23 @@ async function orchestrate({
     }
     await say("run", "stage_started", { message: "Executing semantic specs" });
     const specs = await workspace.listSpecs();
+    const flowForSpec = generation.flowMap ?? {};
     for (const spec of specs.slice(-generation.specs)) {
+      const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
         const result = await executeRun({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl });
         const durationMs = Date.now() - started;
-        const status = result.classification === "passed" ? "passed" : result.classification === "healed" ? "healed" : "failed";
-        runs.push({ flowId: spec.id, specId: spec.id, status, classification: status === "failed" ? "app_defect" : "broken_locator", confidence: status === "failed" ? 0.7 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), runClassification: result.classification });
+        const classification = result.classification;
+        const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
+        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : "broken_locator";
+        runs.push({ flowId, specId: spec.id, status, classification: triaged, confidence: status === "failed" ? 0.7 : status === "blocked" ? 0.95 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, runClassification: classification, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), ...status === "blocked" ? { blockedReason: result.explanation } : {} });
         for (const step of result.steps ?? []) {
           if (step.healing) heals.push({ specId: spec.id, stepIndex: step.index, promoted: step.healing.outcome === "healed", succeeded: step.healing.outcome === "healed" });
         }
         await say("run", "stage_completed", { message: `${spec.id}: ${result.classification}` });
       } catch (error) {
-        runs.push({ flowId: spec.id, specId: spec.id, status: "failed", classification: "environment", confidence: 0.6, durationMs: 0, specFile: `generated/${spec.id}.spec.js`, screenshots: [], heals: [] });
+        runs.push({ flowId, specId: spec.id, status: "blocked", classification: "environment", confidence: 0.6, durationMs: 0, specFile: `generated/${spec.id}.spec.js`, screenshots: [], heals: [], blockedReason: error instanceof Error ? error.message : String(error) });
       }
     }
     const escalated = verdict === "escalate";
@@ -18654,8 +18780,9 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
       if (error) throw error;
       if (json) output(JSON.stringify({ exitCode, report }));
       else {
+        const counts = report.summary.scenarios;
         output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
-        output(`Scenarios ${report.summary.scenarios.passed + report.summary.scenarios.healed}/${report.summary.scenarios.total} clean \xB7 coverage ${report.summary.coverage.score}`);
+        output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean \xB7 ${counts.blocked ?? 0} blocked \xB7 ${counts.failed} failed \xB7 coverage ${report.summary.coverage.score}`);
         output(`Report: ${report.artifacts.specs} + report.json`);
       }
       return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
@@ -18695,6 +18822,7 @@ export {
   MAX_RECENT_RUNS_PER_SPEC,
   NativeExecutor,
   ORCHESTRATION_ERROR_CODES,
+  PROMPT_ALIASES,
   QaError,
   QaWorkspace,
   SPEC_CHANNELS,
@@ -18740,6 +18868,7 @@ export {
   planStages,
   planToSpecs,
   prepareEnvironment,
+  promptMatches,
   redactSensitive,
   renderGapsMarkdown,
   renderPlaywrightSpec,

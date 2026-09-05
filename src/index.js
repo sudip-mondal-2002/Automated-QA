@@ -37,6 +37,8 @@ export {
   detectLoginForm,
   parseHtml,
   parsePrd,
+  PROMPT_ALIASES,
+  promptMatches,
   replan,
   renderTestPlanMarkdown,
   selectorCandidates,

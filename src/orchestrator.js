@@ -131,19 +131,23 @@ export async function orchestrate({
 
     await say("run", "stage_started", { message: "Executing semantic specs" });
     const specs = await workspace.listSpecs();
+    const flowForSpec = generation.flowMap ?? {};
     for (const spec of specs.slice(-generation.specs)) {
+      const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
         const result = await executeRun({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl });
         const durationMs = Date.now() - started;
-        const status = result.classification === "passed" ? "passed" : result.classification === "healed" ? "healed" : "failed";
-        runs.push({ flowId: spec.id, specId: spec.id, status, classification: status === "failed" ? "app_defect" : "broken_locator", confidence: status === "failed" ? 0.7 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), runClassification: result.classification });
+        const classification = result.classification;
+        const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
+        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : "broken_locator";
+        runs.push({ flowId, specId: spec.id, status, classification: triaged, confidence: status === "failed" ? 0.7 : status === "blocked" ? 0.95 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, runClassification: classification, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), ...(status === "blocked" ? { blockedReason: result.explanation } : {}) });
         for (const step of result.steps ?? []) {
           if (step.healing) heals.push({ specId: spec.id, stepIndex: step.index, promoted: step.healing.outcome === "healed", succeeded: step.healing.outcome === "healed" });
         }
         await say("run", "stage_completed", { message: `${spec.id}: ${result.classification}` });
       } catch (error) {
-        runs.push({ flowId: spec.id, specId: spec.id, status: "failed", classification: "environment", confidence: 0.6, durationMs: 0, specFile: `generated/${spec.id}.spec.js`, screenshots: [], heals: [] });
+        runs.push({ flowId, specId: spec.id, status: "blocked", classification: "environment", confidence: 0.6, durationMs: 0, specFile: `generated/${spec.id}.spec.js`, screenshots: [], heals: [], blockedReason: error instanceof Error ? error.message : String(error) });
       }
     }
 

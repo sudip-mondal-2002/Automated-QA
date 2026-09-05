@@ -33,8 +33,10 @@ test("buildTestPlan covers login negative, form errors, list, numeric and paymen
   assert.ok(plan.flows.some((f) => f.title.includes("out-of-range")));
   assert.ok(plan.flows.some((f) => f.title.includes("double submission")));
   assert.ok(plan.coverageClaims.happy >= 2);
-  const checkout = plan.flows.find((f) => f.title.includes("Submit form on /cart"));
+  const checkout = plan.flows.find((f) => f.id.includes("cart-form-0-happy"));
   assert.equal(checkout.priority, "critical");
+  // Happy intents derive from the form's own submit label, not a generic template.
+  assert.equal(checkout.steps[0].intent, "Place order");
   const paymentGuard = plan.flows.find((f) => f.title.includes("double submission"));
   assert.ok(paymentGuard.requirementIds.includes("REQ-1"));
 });

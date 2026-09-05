@@ -168,6 +168,7 @@ export async function generate({ workspace, plan, siteMap, origin, fetchImpl, ex
   await writeFile(path.join(generatedDir, "_resolve.js"), renderResolveHelper());
   let validatedCount = 0;
   const strategies = {};
+  const flowMap = {};
   for (const spec of specs) {
     const flow = (plan.flows ?? []).find((f) => f.id === spec._flowId) ?? {};
     const sidecar = bindLocators({ spec, flow, siteMap });
@@ -185,6 +186,7 @@ export async function generate({ workspace, plan, siteMap, origin, fetchImpl, ex
     await writeFile(path.join(generatedDir, `${spec.id}.locators.json`), `${JSON.stringify(finalSidecar, null, 2)}\n`);
     await writeFile(path.join(generatedDir, `${spec.id}.spec.js`), renderPlaywrightSpec({ spec: clean, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin }));
     artifacts.push(spec.id);
+    if (spec._flowId) flowMap[spec.id] = spec._flowId;
   }
-  return { specs: specs.length, validated: validatedCount, unvalidated: specs.length - validatedCount, strategies, dir: generatedDir, artifacts };
+  return { specs: specs.length, validated: validatedCount, unvalidated: specs.length - validatedCount, strategies, dir: generatedDir, artifacts, flowMap };
 }

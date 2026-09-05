@@ -15,11 +15,25 @@ function promptHits(text, prompt) {
   if (!prompt) return false;
   const keywords = String(prompt).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
   const hay = String(text ?? "").toLowerCase();
-  return keywords.some((keyword) => hay.includes(keyword));
+  const aliases = {
+    checkout: ["/cart", "/checkout", "/confirmation", "cart", "payment", "order"],
+    authentication: ["/login", "/dashboard", "sign in", "auth"],
+  };
+  return keywords.some((keyword) => {
+    if (hay.includes(keyword)) return true;
+    return (aliases[keyword] ?? []).some((alias) => hay.includes(alias));
+  });
 }
 
 function formPages(siteMap) {
   return (siteMap?.pages ?? []).filter((page) => (page.forms ?? []).length > 0);
+}
+
+function submittableFormPages(siteMap) {
+  // Button-only forms (zero inputs) have no invalid-input error state, so the
+  // error-state rule exempts them. Must match planner.js, which only emits
+  // invalid-submission probes for forms with at least one input.
+  return formPages(siteMap).filter((page) => (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0));
 }
 
 function checkHappyPath({ plan, siteMap }) {
@@ -51,12 +65,12 @@ function checkHappyPath({ plan, siteMap }) {
 
 function checkErrorPerForm({ plan, siteMap }) {
   const flows = plan.flows ?? [];
-  if (formPages(siteMap).length === 0) return { status: "skipped", detail: "No form surface discovered", evidence: [] };
-  const missing = formPages(siteMap).filter((page) => !flows.some((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path)));
+  if (submittableFormPages(siteMap).length === 0) return { status: "skipped", detail: "No submittable form surface discovered", evidence: [] };
+  const missing = submittableFormPages(siteMap).filter((page) => !flows.some((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path)));
   if (missing.length === 0) return { status: "pass", detail: "Every form has an error flow", evidence: [] };
   return {
     status: "fail",
-    detail: `${missing.length} of ${formPages(siteMap).length} forms have no error-state flow`,
+    detail: `${missing.length} of ${submittableFormPages(siteMap).length} forms have no error-state flow`,
     evidence: missing.map((page) => page.path),
     gaps: missing.map((page, index) => ({
       id: `gap_error_${index}`,

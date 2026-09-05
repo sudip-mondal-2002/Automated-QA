@@ -28,6 +28,7 @@ export function diffPrd({ prd, plan } = {}) {
 export function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals = [], decisions = [], prd = { requirements: [] }, startedAt, finishedAt, orchestrationId = `orch_${Date.now()}`, target = "" } = {}) {
   const scenarios = (plan?.flows ?? []).map((flow) => {
     const run = runs.find((r) => r.flowId === flow.id || r.specId === flow.id) ?? {};
+    const fallbackSpec = String(flow.id).replace(/^flow_/, "");
     return {
       id: flow.id,
       title: flow.title,
@@ -37,22 +38,25 @@ export function buildReport({ plan, gapsHistory = [], generation = {}, runs = []
       classification: run.classification ?? "environment",
       confidence: run.confidence ?? 0.5,
       durationMs: run.durationMs ?? 0,
-      specFile: run.specFile ?? `generated/${flow.id}.spec.js`,
+      specFile: run.specFile ?? `generated/${fallbackSpec}.spec.js`,
       runId: run.runId,
+      runClassification: run.runClassification,
+      blockedReason: run.blockedReason,
       screenshots: run.screenshots ?? [],
       heals: run.heals ?? [],
     };
   });
-  const counts = { total: scenarios.length, passed: 0, healed: 0, failed: 0, skipped: 0 };
+  const counts = { total: scenarios.length, passed: 0, healed: 0, failed: 0, blocked: 0, skipped: 0 };
   for (const scenario of scenarios) {
     if (scenario.status === "passed") counts.passed += 1;
     else if (scenario.status === "healed") counts.healed += 1;
     else if (scenario.status === "failed") counts.failed += 1;
+    else if (scenario.status === "blocked") counts.blocked += 1;
     else counts.skipped += 1;
   }
   const lastGaps = gapsHistory.at(-1) ?? { score: 1, gaps: [], untestedRisks: [] };
   const prdGap = diffPrd({ prd, plan });
-  const verdict = counts.failed > 0 ? "defects_found" : counts.skipped === counts.total && counts.total > 0 ? "incomplete" : "clean";
+  const verdict = counts.failed > 0 ? "defects_found" : counts.blocked > 0 || counts.skipped === counts.total && counts.total > 0 ? "incomplete" : "clean";
   const exitCode = counts.failed > 0 ? 10 : verdict === "incomplete" ? 11 : 0;
   const started = startedAt ?? plan?.generatedAt ?? new Date().toISOString();
   const finished = finishedAt ?? new Date().toISOString();
