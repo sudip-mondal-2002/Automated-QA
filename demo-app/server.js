@@ -48,8 +48,13 @@ async function form(request) {
   return new URLSearchParams(Buffer.concat(chunks).toString("utf8"));
 }
 
-export function createDemoApplication() {
-  const state = { loggedIn: false, orderCreated: false };
+export function createDemoApplication({ variant = "stable" } = {}) {
+  if (!new Set(["stable", "drift", "broken", "drift-broken"]).has(variant)) {
+    throw new TypeError(`Unknown demo variant: ${variant}`);
+  }
+  const hasCheckoutDrift = variant === "drift" || variant === "drift-broken";
+  const hasBrokenConfirmation = variant === "broken" || variant === "drift-broken";
+  const state = { loggedIn: false, orderCreated: false, variant };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
 
@@ -85,7 +90,9 @@ export function createDemoApplication() {
         <h1>Shopping cart</h1>
         <div class="item"><span>QA Demo Card</span><strong>₹499</strong></div>
         <p>Cart contains one item.</p>
-        <a class="button" href="/checkout">Proceed to checkout</a>`));
+        ${hasCheckoutDrift
+          ? `<details><summary>Checkout options</summary><a class="button" href="/checkout">Continue to payment</a></details>`
+          : `<a class="button" href="/checkout">Proceed to checkout</a>`}`));
     }
     if (request.method === "GET" && url.pathname === "/checkout") {
       return send(response, 200, page("Checkout", `
@@ -98,7 +105,11 @@ export function createDemoApplication() {
       return redirect(response, "/confirmation");
     }
     if (request.method === "GET" && url.pathname === "/confirmation") {
-      return send(response, 200, page("Order confirmed", `
+      return send(response, 200, hasBrokenConfirmation
+        ? page("Order failed", `
+        <h1>Order could not be completed</h1>
+        <p>An error message is shown.</p>`)
+        : page("Order confirmed", `
         <h1>Order confirmation</h1>
         <p class="success">Order QA-1001 was placed successfully.</p>
         <a href="/orders/current">View test order</a>`));
@@ -141,7 +152,9 @@ export function createDemoApplication() {
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const portArgument = process.argv.indexOf("--port");
   const port = portArgument >= 0 ? Number(process.argv[portArgument + 1]) : Number(process.env.PORT || 3000);
-  const app = createDemoApplication();
+  const variantArgument = process.argv.indexOf("--variant");
+  const variant = variantArgument >= 0 ? process.argv[variantArgument + 1] : "stable";
+  const app = createDemoApplication({ variant });
   const url = await app.start(port);
   console.log(`QA demo application is ready at ${url}`);
   for (const signal of ["SIGINT", "SIGTERM"]) {

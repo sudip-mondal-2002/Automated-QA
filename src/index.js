@@ -4,6 +4,12 @@ export { formatQaError, QaError } from "./errors.js";
 export { prepareEnvironment, spawnApplication } from "./environment.js";
 export { createRunId, executeRun } from "./execution.js";
 export {
+  classifyFailure,
+  createExpectationGuard,
+  normalizeRediscovery,
+  normalizeTarget,
+} from "./healing.js";
+export {
   createNativeDesktopExecutor,
   createNativeWebExecutor,
   detectNativeCapability,

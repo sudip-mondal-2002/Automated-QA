@@ -14,9 +14,9 @@ It also understands an optional design reference, so it can distinguish:
 
 The hackathon product is a **skill plus a small file-backed QA workspace**. It uses native Browser/Chrome for web apps and computer use for desktop/native UI. Playwright and Stagehand are not required, including for fixtures.
 
-## Phase 1–2 quick start
+## Phase 1–3 quick start
 
-Phases 1 and 2 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. Phase 2 resolves environments and fixture inputs, starts the local demo when needed, executes through a supplied native Browser/Chrome or computer-use capability, records progress events and screenshots, always attempts cleanup, and persists the result.
+Phases 1 through 3 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. The runtime resolves environments and fixture inputs, starts the local demo when needed, executes through a supplied native Browser/Chrome or computer-use capability, records progress events and screenshots, always attempts cleanup, and persists the result. Phase 3 adds conservative semantic target rediscovery, observable-readiness recovery, unchanged-expectation guards, and evidence-backed `healed` classification.
 
 ```bash
 npm install
@@ -46,9 +46,21 @@ npm run demo
 # http://localhost:3000
 ```
 
+The demo has explicit Phase 3 variants:
+
+```bash
+npm run demo -- --variant drift
+# "Proceed to checkout" moves into a menu and becomes "Continue to payment"
+
+npm run demo -- --variant drift-broken
+# The interaction drifts and the final confirmation outcome is also broken
+```
+
+The unchanged checkout spec produces `healed` for `drift`, including before/after screenshots and a replacement-target explanation. It produces `functional_regression` for `drift-broken`, even though the earlier checkout action was recovered, because the original confirmation expectation still fails.
+
 Then ask the autonomous-QA skill to `run checkout-card --env local` using native Browser/Chrome, or `run-last` to repeat the selected spec and environment. Set `QA_CUSTOMER_USERNAME` and `QA_CUSTOMER_PASSWORD` in the skill's environment; their resolved values are passed to the login fixture but are never stored. A bare `qa-agent run` process without a host-native executor deliberately produces `blocked` rather than claiming browser execution.
 
-The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, and `executeRun` for host integrations. Run the complete Phase 1–2 test suite with `npm test`.
+The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, `executeRun`, `classifyFailure`, and the expectation/rediscovery guards for host integrations. Native drivers can opt into `rediscover`, `recover`, and `waitFor`; recovery is never inferred from a merely similar target. Run the suite with `npm test`, or enforce 100% production line coverage and the configured branch/function gates with `npm run test:coverage`.
 
 ## What the demo must prove
 

@@ -46,6 +46,23 @@ export class NativeExecutor {
     return this.driver.screenshot(context);
   }
 
+  supports(operation) {
+    return typeof this.driver[operation] === "function";
+  }
+
+  rediscover(intent, context) {
+    return this.driver.rediscover?.(intent, context);
+  }
+
+  recover(intent, target, context) {
+    if (typeof this.driver.recover === "function") return this.driver.recover(intent, target, context);
+    return this.driver.act(intent, { ...context, recovery: { target } });
+  }
+
+  waitFor(expectation, context) {
+    return this.driver.waitFor?.(expectation, context);
+  }
+
   consoleErrors(context) {
     return this.driver.consoleErrors?.(context);
   }

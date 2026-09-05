@@ -45,7 +45,7 @@ async function runCommand(workspace, specId, environmentId, io, output) {
   });
   output(`${result.runId}\t${result.classification}\t${result.explanation}`);
   output(`Saved .qa/runs/${result.runId}/result.json`);
-  return result.classification === "passed" ? 0 : 1;
+  return new Set(["passed", "healed"]).has(result.classification) ? 0 : 1;
 }
 
 function option(args, name) {
