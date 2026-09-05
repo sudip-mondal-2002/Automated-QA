@@ -693,7 +693,10 @@ export async function executeRun(options) {
       for (const fixtureId of spec.fixtures?.before ?? []) {
         const status = await runFixture(fixtureId, "before");
         if (status !== "passed") {
-          primaryClassification = "blocked";
+          // H4: a failed fixture postcondition is a real product signal, not
+          // environment noise. Only blocked stays blocked; failed is a
+          // functional regression and is never healed.
+          primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
           primaryExplanation = `Before fixture ${fixtureId} ${status}`;
           break;
         }
@@ -770,7 +773,9 @@ export async function executeRun(options) {
             for (const fixtureId of group.fixtures) {
               const status = await runFixture(fixtureId, "between", index);
               if (status !== "passed") {
-                primaryClassification = "blocked";
+                // H4: same as before-fixtures — failed postcondition means
+                // functional_regression, never healed, never blocked.
+                primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
                 primaryExplanation = `Between-step fixture ${fixtureId} ${status}`;
                 break;
               }

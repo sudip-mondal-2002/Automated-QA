@@ -311,3 +311,51 @@ test("fixture observation exceptions become cleanup evidence", async (t) => {
   assert.equal(result.fixtures[0].status, "failed");
   assert.match(result.fixtures[0].explanation, /postcondition unavailable/);
 });
+
+test("H4: failed fixture postconditions are functional regressions, never blocked or healed", async (t) => {
+  // Fixture steps succeed but the postcondition assertion genuinely fails:
+  // that is product signal, not environment noise.
+  async function failingPostconditionSetup(phase) {
+    const { workspace } = await temporaryWorkspace(t);
+    await workspace.saveFixture({
+      version: 1,
+      id: "session-setup",
+      title: "Establish the session",
+      steps: [{ intent: "Prepare the session state" }],
+      expect: ["The session is established"],
+    });
+    const fixtures = phase === "before"
+      ? { before: ["session-setup"] }
+      : { between: [{ afterStep: 1, fixtures: ["session-setup"] }] };
+    await saveSimpleSpec(workspace, { fixtures });
+    return workspace;
+  }
+
+  const failingObserve = (expectation) => (
+    expectation === "The session is established"
+      ? { status: "failed", observation: "The session is established was not observed" }
+      : { status: "passed" }
+  );
+
+  const beforeWorkspace = await failingPostconditionSetup("before");
+  const before = await executeRun(runOptions(
+    beforeWorkspace,
+    "run_20260830_130080",
+    executor({ observe: failingObserve }),
+  ));
+  assert.equal(before.classification, "functional_regression");
+  assert.match(before.explanation, /Before fixture session-setup failed/);
+  assert.deepEqual(before.steps.map((step) => step.status), ["skipped", "skipped"]);
+  assert.ok(!before.steps.some((step) => step.healing));
+
+  const betweenWorkspace = await failingPostconditionSetup("between");
+  const between = await executeRun(runOptions(
+    betweenWorkspace,
+    "run_20260830_130081",
+    executor({ observe: failingObserve }),
+  ));
+  assert.equal(between.classification, "functional_regression");
+  assert.match(between.explanation, /Between-step fixture session-setup failed/);
+  assert.deepEqual(between.steps.map((step) => step.status), ["passed", "skipped"]);
+  assert.ok(!between.steps.some((step) => step.healing));
+});
