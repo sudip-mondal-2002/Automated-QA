@@ -74,7 +74,7 @@ auto-qa/
 │   ├── planner.js                    # fetch-only crawl + deterministic plan synthesis
 │   ├── planner-agent.js              # Planner sub-agent protocol (brief · review · fallback)
 │   ├── coverage.js                   # 12-rule coverage gate, scoring, verdict
-│   ├── generator.js                  # plan → semantic specs + Playwright artifacts + live validation
+│   ├── generator.js                  # plan → semantic specs + Playwright artifacts + fetch preflight
 │   ├── execution.js                  # the semantic execution engine (852 LOC, the core)
 │   ├── healing.js                    # conservative self-healing decision machine
 │   ├── locator-chain.js              # strategy ordering + defect triage table

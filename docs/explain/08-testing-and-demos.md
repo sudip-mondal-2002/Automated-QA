@@ -204,7 +204,7 @@ against each other, using different code from the code that produced them.
 | --- | --- |
 | Cold `orchestrate --plan-only` on demo-app, **current tree `d8199ad`** | gate **escalate at 0.7**, 7 flows, **4 multi-step journeys**, 15/21 predicates, PRD gap 0.8 with exactly REQ-4 uncovered, 1 declared open question (full table in [04](04-orchestration-pipeline.md)) |
 | Cold `orchestrate` on demo-app, **pre-PR-#3** | gate pass at 0.95, 11 flows (5H/4E/2e), 0 multi-step, 0 predicates, 10/10 selectors validated, 30 trace events |
-| Real Chromium (`run-with-playwright.mjs`) | browser opens; **5/11 scenarios genuinely pass**; exit 10 `defects_found` |
+| Real Chromium (`run-with-playwright.mjs`) | browser opens; **5/11 scenarios genuinely pass**; the pipeline completes with red verdict `defects_found` (exit 10), not a crash |
 | Shell mode, no executor | every scenario `blocked` **with reasons**; exit 11 — by design |
 | Agent-driven Chromium, 4 scenarios | `passed` / `healed` / `functional_regression` / `design_regression`, each for the right reason (table in [07 §5](07-ui-cli-surface.md)) |
 | Adversarial inputs | dead port → 20; remote without flag → hard stop; bad PRD → clear error |

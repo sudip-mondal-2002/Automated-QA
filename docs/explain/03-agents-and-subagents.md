@@ -28,7 +28,7 @@ flowchart TB
   subgraph RAILS["**Deterministic rails** — never delegated"]
     C1["crawl + parseHtml"]
     C2["coverage gate — 12 rules"]
-    C3["generator + live validation"]
+    C3["generator + fetch preflight"]
     C4["expectation guard"]
     C5["schemas + storage + redaction"]
     C6["reporter"]
