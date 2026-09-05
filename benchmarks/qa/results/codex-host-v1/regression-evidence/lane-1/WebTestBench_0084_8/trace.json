@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0084:8",
+  "appId": "WebTestBench_0084",
+  "candidateSha256": "3fb9d19a0def5651c91ab9ed9fa0625bc0fe182f90c4953363d2f03ee515715f",
+  "appArchiveSha256": "1313b6fefb9a5692e0f4233635b1a0d92c5832e07505ee5abdb94596c377d0f2",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:08:06.864Z",
+  "completedAt": "2026-09-05T08:09:05.225Z",
+  "isolation": "Unique loopback origin 47117 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened QuantTech Systems, noted Hall A / Booth E-101, and followed View on Floor Map."
+    },
+    {
+      "step": 2,
+      "action": "Clicked the E-101 QuantTech map entry and verified the resulting detail."
+    },
+    {
+      "step": 3,
+      "action": "Returned to the map and clicked H-205 MediCore Innovations."
+    }
+  ],
+  "observations": [
+    "E-101 opened QuantTech Systems whose detail remained Hall A / Booth E-101.",
+    "H-205 opened MediCore Innovations whose detail was Hall B / Booth H-205.",
+    "Map entries expose unique booth-number/exhibitor link pairs."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Two booths in different halls round-tripped to the correct one-to-one exhibitor details.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/floor-map.png",
+      "sha256": "ecb156442cd616d950a30e5d9d081818ad0250f64275043b1fc946e5e6a8376b",
+      "bytes": 27585
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/h205-matching-detail.png",
+      "sha256": "c9b23b445cb88516c270916e8919a4d78f9dbbc06ab4552b83b2b2184c32cabe",
+      "bytes": 35397
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_8/dom-snapshot.txt",
+      "sha256": "5fd30a50e7ddce38587df8e46df4ebcb1e75b0e312a6e3b5134551b13f8cd250",
+      "bytes": 6713
+    }
+  ],
+  "laneId": "lane-1"
+}

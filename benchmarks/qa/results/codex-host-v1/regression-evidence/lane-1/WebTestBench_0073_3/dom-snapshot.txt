@@ -1,0 +1,77 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - generic: TechDocs
+  - button:
+  - navigation:
+    - list:
+      - link "Knowledge Base":
+        - /url: /
+        - generic: Knowledge Base
+      - link "Expense Reports":
+        - /url: /expenses
+        - generic: Expense Reports
+      - link "Upload Receipts":
+        - /url: /upload
+        - generic: Upload Receipts
+      - link "Statistics":
+        - /url: /statistics
+        - generic: Statistics
+  - button "Settings":
+    - generic: Settings
+- main:
+  - heading "Expense Reports" [level=1]
+  - paragraph: Manage and track your expense reimbursement requests
+  - link "New Report":
+    - /url: /upload
+    - button "New Report":
+      - text: New Report
+  - textbox "Search expense reports..."
+  - button "Filters":
+    - text: Filters
+  - link "Q1 Conference Travel John Smith Approved 2024-01-05 3 2,450.00 4 expense items":
+    - /url: /expense/exp-001
+    - heading "Q1 Conference Travel" [level=3]
+    - paragraph: John Smith
+    - text: Approved
+    - generic: 2024-01-05
+    - generic: "3"
+    - text: 2,450.00
+    - generic: 4 expense items
+  - link "Office Equipment Purchase Emily Chen Revision 2024-01-18 2 1,899.00 3 expense items":
+    - /url: /expense/exp-002
+    - heading "Office Equipment Purchase" [level=3]
+    - paragraph: Emily Chen
+    - text: Revision
+    - generic: 2024-01-18
+    - generic: "2"
+    - text: 1,899.00
+    - generic: 3 expense items
+  - link "Software Subscriptions - January Mike Johnson Pending 2024-01-20 3 449.00 4 expense items":
+    - /url: /expense/exp-003
+    - heading "Software Subscriptions - January" [level=3]
+    - paragraph: Mike Johnson
+    - text: Pending
+    - generic: 2024-01-20
+    - generic: "3"
+    - text: "449.00"
+    - generic: 4 expense items
+  - link "Client Meeting Expenses Sarah Kim Rejected 2024-01-08 0 280.00 3 expense items":
+    - /url: /expense/exp-004
+    - heading "Client Meeting Expenses" [level=3]
+    - paragraph: Sarah Kim
+    - text: Rejected
+    - generic: 2024-01-08
+    - generic: "0"
+    - text: "280.00"
+    - generic: 3 expense items
+  - link "Office Supplies - Q1 Alex Chen Draft 2024-01-22 0 156.50 3 expense items":
+    - /url: /expense/exp-005
+    - heading "Office Supplies - Q1" [level=3]
+    - paragraph: Alex Chen
+    - text: Draft
+    - generic: 2024-01-22
+    - generic: "0"
+    - text: "156.50"
+    - generic: 3 expense items

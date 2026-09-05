@@ -1,0 +1,155 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - generic: ProductDocs
+  - combobox [active]:
+    - generic: Business Use
+  - button "Search... ⌘K":
+    - generic: Search...
+    - generic: ⌘K
+  - button "Compare":
+    - text: Compare
+  - button "Export PDF":
+    - text: Export PDF
+- complementary:
+  - navigation:
+    - heading "Documentation" [level=3]
+    - button "Getting Started"
+    - button "Configuration"
+    - button "Troubleshooting"
+    - button "Advanced Features"
+    - button "Security"
+    - button "Backup & Recovery"
+- main:
+  - paragraph:
+    - text: "Currently viewing: Business Use documentation"
+    - generic: — Small to medium businesses
+  - heading "Getting Started Link to Getting Started" [level=2]:
+    - text: Getting Started
+    - link "Link to Getting Started":
+      - /url: "#getting-started-gs-1"
+  - paragraph: Welcome to our product documentation. This guide will help you set up and start using the product quickly and efficiently.
+  - heading "System Requirements Link to System Requirements" [level=2]:
+    - text: System Requirements
+    - link "Link to System Requirements":
+      - /url: "#getting-started-gs-3"
+  - list:
+    - listitem: "Operating System: Windows 10+ Pro, macOS 11+, or Linux Server"
+    - listitem: "RAM: 8GB minimum (16GB recommended)"
+    - listitem: "Storage: 2GB available space"
+    - listitem: "Network: Stable internet connection for cloud sync"
+  - heading "Installation Link to Installation" [level=2]:
+    - text: Installation
+    - link "Link to Installation":
+      - /url: "#getting-started-gs-7"
+  - paragraph: Contact your IT administrator for the deployment package and follow corporate installation guidelines.
+  - paragraph: Business licenses require activation. Contact sales@example.com for licensing.
+  - heading "Configuration Link to Configuration" [level=2]:
+    - text: Configuration
+    - link "Link to Configuration":
+      - /url: "#configuration-cfg-1"
+  - paragraph: Configure the product to match your specific needs and environment.
+  - heading "Basic Settings Link to Basic Settings" [level=2]:
+    - text: Basic Settings
+    - link "Link to Basic Settings":
+      - /url: "#configuration-cfg-3"
+  - list:
+    - listitem: Organization profile setup
+    - listitem: Team member management
+    - listitem: Permission levels
+    - listitem: Branding customization
+    - listitem: Integration settings
+  - heading "Network Configuration Link to Network Configuration" [level=2]:
+    - text: Network Configuration
+    - link "Link to Network Configuration":
+      - /url: "#configuration-cfg-7"
+  - paragraph: Configure proxy settings and firewall rules for secure connectivity.
+  - code: "# config.yaml network: proxy: \"http://proxy.company.com:8080\" allowed_domains: - \"*.example.com\" - \"api.example.com\""
+  - heading "Troubleshooting Link to Troubleshooting" [level=2]:
+    - text: Troubleshooting
+    - link "Link to Troubleshooting":
+      - /url: "#troubleshooting-ts-1"
+  - paragraph: Common issues and their solutions to help you resolve problems quickly.
+  - heading "Connection Issues Link to Connection Issues" [level=2]:
+    - text: Connection Issues
+    - link "Link to Connection Issues":
+      - /url: "#troubleshooting-ts-3"
+  - list:
+    - listitem: Verify corporate proxy settings
+    - listitem: Check firewall rules
+    - listitem: Validate SSL certificates
+    - listitem: Review network logs
+    - listitem: Contact IT support for network issues
+  - heading "Performance Issues Link to Performance Issues" [level=2]:
+    - text: Performance Issues
+    - link "Link to Performance Issues":
+      - /url: "#troubleshooting-ts-6"
+  - paragraph: Monitor system resources and consider scaling infrastructure. Check database query performance and optimize indexes.
+  - heading "Getting Help Link to Getting Help" [level=2]:
+    - text: Getting Help
+    - link "Link to Getting Help":
+      - /url: "#troubleshooting-ts-10"
+  - paragraph: "Business customers have access to email support: support@example.com (24-48h response)"
+  - heading "Advanced Features Link to Advanced Features" [level=2]:
+    - text: Advanced Features
+    - link "Link to Advanced Features":
+      - /url: "#advanced-features-af-1"
+  - paragraph: Explore powerful features designed for professional and enterprise use cases.
+  - heading "API Integration Link to API Integration" [level=2]:
+    - text: API Integration
+    - link "Link to API Integration":
+      - /url: "#advanced-features-af-3"
+  - paragraph: Connect with third-party services using our REST API. Rate limits apply based on your plan.
+  - code: "// API Example const response = await fetch(\"https://api.example.com/v2/data\", { headers: { \"Authorization\": `Bearer ${API_KEY}` } }); const data = await response.json();"
+  - heading "Automation & Workflows Link to Automation & Workflows" [level=2]:
+    - text: Automation & Workflows
+    - link "Link to Automation & Workflows":
+      - /url: "#advanced-features-af-7"
+  - list:
+    - listitem: Scheduled tasks and reports
+    - listitem: Email notifications
+    - listitem: Basic workflow automation
+  - heading "Security Link to Security" [level=2]:
+    - text: Security
+    - link "Link to Security":
+      - /url: "#security-sec-1"
+  - paragraph: Security features and best practices to protect your data.
+  - heading "Authentication Link to Authentication" [level=2]:
+    - text: Authentication
+    - link "Link to Authentication":
+      - /url: "#security-sec-3"
+  - list:
+    - listitem: Two-factor authentication (2FA)
+    - listitem: Password policies
+    - listitem: Session management
+    - listitem: IP allowlisting
+  - heading "Data Protection Link to Data Protection" [level=2]:
+    - text: Data Protection
+    - link "Link to Data Protection":
+      - /url: "#security-sec-6"
+  - paragraph: All data is encrypted at rest using AES-256 and in transit using TLS 1.3.
+  - list:
+    - listitem: Encryption at rest (AES-256)
+    - listitem: Encryption in transit (TLS 1.3)
+    - listitem: Regular security audits
+    - listitem: Data backup and recovery
+  - heading "Backup & Recovery Link to Backup & Recovery" [level=2]:
+    - text: Backup & Recovery
+    - link "Link to Backup & Recovery":
+      - /url: "#backup-recovery-br-1"
+  - paragraph: Protect your data with comprehensive backup and recovery options.
+  - heading "Backup Options Link to Backup Options" [level=2]:
+    - text: Backup Options
+    - link "Link to Backup Options":
+      - /url: "#backup-recovery-br-3"
+  - list:
+    - listitem: Automated daily backups
+    - listitem: Cloud storage (100GB included)
+    - listitem: Version history (30 days)
+    - listitem: Cross-region replication
+  - heading "Recovery Procedures Link to Recovery Procedures" [level=2]:
+    - text: Recovery Procedures
+    - link "Link to Recovery Procedures":
+      - /url: "#backup-recovery-br-7"
+  - paragraph: Business administrators can initiate recovery from the admin console. Recovery typically completes within 1-4 hours.

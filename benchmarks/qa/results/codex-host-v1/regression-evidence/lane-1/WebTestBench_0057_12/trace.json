@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0057:12",
+  "appId": "WebTestBench_0057",
+  "candidateSha256": "c3ee1654ebb001268ac700bbcbfca04b630e34ee78f349deebbf9cebd2be54f5",
+  "appArchiveSha256": "a86737732a55670fa8ab283ee4b6525856e28f9a10df475eedc9e859c42b6440",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:09:18.979Z",
+  "completedAt": "2026-09-05T08:16:02.676Z",
+  "isolation": "Primary run used unique origin http://127.0.0.1:47118; independent self-review used new origin http://127.0.0.1:47218. Neither origin had prior case storage. Each Vite process was started fresh and stopped afterward.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Primary run opened and hid Google's interview details from Browse Experiences."
+    },
+    {
+      "step": 2,
+      "action": "Independent self-review recorded the URL and link inventory before opening details."
+    },
+    {
+      "step": 3,
+      "action": "Clicked Show Interview Details and recorded the URL and remaining article list."
+    }
+  ],
+  "observations": [
+    "The detail is only an inline disclosure inside the list.",
+    "The URL stayed at the root, the page exposes no experience links, and all three list articles remained visible while Google's details were expanded.",
+    "There is no individual experience detail page to navigate to or back from."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The UI can expand details inline, but it does not provide the required list-to-individual-detail-page navigation.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/experience-detail-open.png",
+      "sha256": "f6592447b40b62a42eafa0da61b447cf10b5ae47b28638f462e0df172437b6d3",
+      "bytes": 68648
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/dom-snapshot.txt",
+      "sha256": "44ffc3a7beeb3ea9888a84f118acb335841ca5fa2e7747396c31d8423b6359c8",
+      "bytes": 2833
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/self-review-inline-details-only.png",
+      "sha256": "ec9516475f858b01f5d3a3c4e957de7919b7b7ee3f8f3583cd71b85417a20a9b",
+      "bytes": 68689
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0057_12/self-review-dom-snapshot.txt",
+      "sha256": "44ffc3a7beeb3ea9888a84f118acb335841ca5fa2e7747396c31d8423b6359c8",
+      "bytes": 2833
+    }
+  ],
+  "laneId": "lane-1"
+}

@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-1225
+title: ReproBreak 1225 healing core
+environment: local
+steps:
+  - intent: Inspect the Title column header menu for the remove-filter command
+    expect:
+      - The Title column header menu contains Remove Filter

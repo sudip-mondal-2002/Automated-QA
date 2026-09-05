@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0015:3",
+  "appId": "WebTestBench_0015",
+  "candidateSha256": "a5cfa34fa2f15d96f9b3d7ed6f3b46535cf64cebc854c6d6e86608cbe40e7375",
+  "appArchiveSha256": "dfb526c02575ade03605048dca2d77edee552df4b406099edc9f151f28ae5c3e",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:08:54.796Z",
+  "completedAt": "2026-09-05T08:09:54.796Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0015-3.localhost:43185; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Logged in with the displayed demo account.",
+    "Created a current anonymous two-option poll.",
+    "Copied the generated /poll/... target from the creator view.",
+    "Opened that exact generated target in a separate voter tab."
+  ],
+  "observations": [
+    "The creator view reported Poll created successfully and displayed a share URL.",
+    "The target voter tab rendered Poll Not Found and said the link may be incorrect."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The generated link does not make the newly created poll accessible to a target voter tab.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/creator-share-link.png",
+      "sha256": "a078ec0890a96d6ae20995834095e647c185a2dbf287e6b146309a42e6451560",
+      "bytes": 26765
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/dom.txt",
+      "sha256": "b0a6f30806188ca8f6bb586358a138f4868d719a1a63388c243a618c864debbd",
+      "bytes": 1648
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0015_3/target-voter-not-found.png",
+      "sha256": "2dd9e6eb7b33b85d91195cf3d079540d4b8fa65d1d567b01a0052777536aa805",
+      "bytes": 9859
+    }
+  ],
+  "laneId": "lane-3"
+}

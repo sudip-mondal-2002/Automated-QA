@@ -1,0 +1,850 @@
+ALL / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 12 items
+  - combobox:
+    - text: Most Popular
+  - img "Wireless Earbuds Pro"
+  - generic: Electronics
+  - heading "Wireless Earbuds Pro" [level=3]
+  - paragraph: Premium noise-cancelling earbuds with 24-hour battery life and crystal-clear audio quality.
+  - generic: 2,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Portable Charger 20000mAh"
+  - text: Out of Stock
+  - generic: Electronics
+  - heading "Portable Charger 20000mAh" [level=3]
+  - paragraph: High-capacity power bank with fast charging. Keep all your devices powered on the go.
+  - generic: "900"
+  - generic: pts
+  - button "Add" [disabled]:
+    - text: Add
+  - img "Executive Backpack"
+  - generic: Accessories
+  - heading "Executive Backpack" [level=3]
+  - paragraph: Water-resistant backpack with laptop compartment, USB charging port, and anti-theft design.
+  - generic: 1,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Logo Hoodie"
+  - generic: Apparel
+  - heading "Company Logo Hoodie" [level=3]
+  - paragraph: Soft cotton blend hoodie featuring our embroidered company logo. Perfect for casual Fridays.
+  - generic: "800"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Bluetooth Speaker"
+  - generic: Electronics
+  - heading "Bluetooth Speaker" [level=3]
+  - paragraph: Compact waterproof speaker with 360° sound and 12-hour playtime.
+  - generic: "750"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Leather Laptop Sleeve"
+  - generic: Accessories
+  - heading "Leather Laptop Sleeve" [level=3]
+  - paragraph: Genuine leather sleeve fits up to 15" laptops. Elegant protection for your device.
+  - generic: 1,200
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Wireless Keyboard & Mouse"
+  - generic: Electronics
+  - heading "Wireless Keyboard & Mouse" [level=3]
+  - paragraph: Sleek wireless combo with quiet keys and precision tracking. Perfect for productivity.
+  - generic: 1,100
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Ergonomic Desk Lamp"
+  - generic: Home & Office
+  - heading "Ergonomic Desk Lamp" [level=3]
+  - paragraph: Adjustable LED lamp with multiple brightness levels and color temperatures.
+  - generic: "650"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Polo Shirt"
+  - generic: Apparel
+  - heading "Company Polo Shirt" [level=3]
+  - paragraph: Breathable performance polo with subtle company branding. Business casual essential.
+  - generic: "500"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Desktop Plant Set"
+  - generic: Home & Office
+  - heading "Desktop Plant Set" [level=3]
+  - paragraph: Set of 3 low-maintenance succulents in modern ceramic pots. Brighten up your workspace.
+  - generic: "280"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+ALL / POINTS LOW TO HIGH
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 12 items
+  - combobox [active]:
+    - text: "Points: Low to High"
+  - img "Desktop Plant Set"
+  - generic: Home & Office
+  - heading "Desktop Plant Set" [level=3]
+  - paragraph: Set of 3 low-maintenance succulents in modern ceramic pots. Brighten up your workspace.
+  - generic: "280"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Polo Shirt"
+  - generic: Apparel
+  - heading "Company Polo Shirt" [level=3]
+  - paragraph: Breathable performance polo with subtle company branding. Business casual essential.
+  - generic: "500"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Ergonomic Desk Lamp"
+  - generic: Home & Office
+  - heading "Ergonomic Desk Lamp" [level=3]
+  - paragraph: Adjustable LED lamp with multiple brightness levels and color temperatures.
+  - generic: "650"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Bluetooth Speaker"
+  - generic: Electronics
+  - heading "Bluetooth Speaker" [level=3]
+  - paragraph: Compact waterproof speaker with 360° sound and 12-hour playtime.
+  - generic: "750"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Logo Hoodie"
+  - generic: Apparel
+  - heading "Company Logo Hoodie" [level=3]
+  - paragraph: Soft cotton blend hoodie featuring our embroidered company logo. Perfect for casual Fridays.
+  - generic: "800"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Portable Charger 20000mAh"
+  - text: Out of Stock
+  - generic: Electronics
+  - heading "Portable Charger 20000mAh" [level=3]
+  - paragraph: High-capacity power bank with fast charging. Keep all your devices powered on the go.
+  - generic: "900"
+  - generic: pts
+  - button "Add" [disabled]:
+    - text: Add
+  - img "Wireless Keyboard & Mouse"
+  - generic: Electronics
+  - heading "Wireless Keyboard & Mouse" [level=3]
+  - paragraph: Sleek wireless combo with quiet keys and precision tracking. Perfect for productivity.
+  - generic: 1,100
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Leather Laptop Sleeve"
+  - generic: Accessories
+  - heading "Leather Laptop Sleeve" [level=3]
+  - paragraph: Genuine leather sleeve fits up to 15" laptops. Elegant protection for your device.
+  - generic: 1,200
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Executive Backpack"
+  - generic: Accessories
+  - heading "Executive Backpack" [level=3]
+  - paragraph: Water-resistant backpack with laptop compartment, USB charging port, and anti-theft design.
+  - generic: 1,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Wireless Earbuds Pro"
+  - generic: Electronics
+  - heading "Wireless Earbuds Pro" [level=3]
+  - paragraph: Premium noise-cancelling earbuds with 24-hour battery life and crystal-clear audio quality.
+  - generic: 2,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+ALL / POINTS HIGH TO LOW
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 12 items
+  - combobox [active]:
+    - text: "Points: High to Low"
+  - img "Wireless Earbuds Pro"
+  - generic: Electronics
+  - heading "Wireless Earbuds Pro" [level=3]
+  - paragraph: Premium noise-cancelling earbuds with 24-hour battery life and crystal-clear audio quality.
+  - generic: 2,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Executive Backpack"
+  - generic: Accessories
+  - heading "Executive Backpack" [level=3]
+  - paragraph: Water-resistant backpack with laptop compartment, USB charging port, and anti-theft design.
+  - generic: 1,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Leather Laptop Sleeve"
+  - generic: Accessories
+  - heading "Leather Laptop Sleeve" [level=3]
+  - paragraph: Genuine leather sleeve fits up to 15" laptops. Elegant protection for your device.
+  - generic: 1,200
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Wireless Keyboard & Mouse"
+  - generic: Electronics
+  - heading "Wireless Keyboard & Mouse" [level=3]
+  - paragraph: Sleek wireless combo with quiet keys and precision tracking. Perfect for productivity.
+  - generic: 1,100
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Portable Charger 20000mAh"
+  - text: Out of Stock
+  - generic: Electronics
+  - heading "Portable Charger 20000mAh" [level=3]
+  - paragraph: High-capacity power bank with fast charging. Keep all your devices powered on the go.
+  - generic: "900"
+  - generic: pts
+  - button "Add" [disabled]:
+    - text: Add
+  - img "Company Logo Hoodie"
+  - generic: Apparel
+  - heading "Company Logo Hoodie" [level=3]
+  - paragraph: Soft cotton blend hoodie featuring our embroidered company logo. Perfect for casual Fridays.
+  - generic: "800"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Bluetooth Speaker"
+  - generic: Electronics
+  - heading "Bluetooth Speaker" [level=3]
+  - paragraph: Compact waterproof speaker with 360° sound and 12-hour playtime.
+  - generic: "750"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Ergonomic Desk Lamp"
+  - generic: Home & Office
+  - heading "Ergonomic Desk Lamp" [level=3]
+  - paragraph: Adjustable LED lamp with multiple brightness levels and color temperatures.
+  - generic: "650"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Polo Shirt"
+  - generic: Apparel
+  - heading "Company Polo Shirt" [level=3]
+  - paragraph: Breathable performance polo with subtle company branding. Business casual essential.
+  - generic: "500"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Desktop Plant Set"
+  - generic: Home & Office
+  - heading "Desktop Plant Set" [level=3]
+  - paragraph: Set of 3 low-maintenance succulents in modern ceramic pots. Brighten up your workspace.
+  - generic: "280"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+ELECTRONICS / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics" [active]
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 4 items
+  - combobox:
+    - text: Most Popular
+  - img "Wireless Earbuds Pro"
+  - generic: Electronics
+  - heading "Wireless Earbuds Pro" [level=3]
+  - paragraph: Premium noise-cancelling earbuds with 24-hour battery life and crystal-clear audio quality.
+  - generic: 2,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Portable Charger 20000mAh"
+  - text: Out of Stock
+  - generic: Electronics
+  - heading "Portable Charger 20000mAh" [level=3]
+  - paragraph: High-capacity power bank with fast charging. Keep all your devices powered on the go.
+  - generic: "900"
+  - generic: pts
+  - button "Add" [disabled]:
+    - text: Add
+  - img "Bluetooth Speaker"
+  - generic: Electronics
+  - heading "Bluetooth Speaker" [level=3]
+  - paragraph: Compact waterproof speaker with 360° sound and 12-hour playtime.
+  - generic: "750"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Wireless Keyboard & Mouse"
+  - generic: Electronics
+  - heading "Wireless Keyboard & Mouse" [level=3]
+  - paragraph: Sleek wireless combo with quiet keys and precision tracking. Perfect for productivity.
+  - generic: 1,100
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+APPAREL / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel" [active]
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 2 items
+  - combobox:
+    - text: Most Popular
+  - img "Company Logo Hoodie"
+  - generic: Apparel
+  - heading "Company Logo Hoodie" [level=3]
+  - paragraph: Soft cotton blend hoodie featuring our embroidered company logo. Perfect for casual Fridays.
+  - generic: "800"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Polo Shirt"
+  - generic: Apparel
+  - heading "Company Polo Shirt" [level=3]
+  - paragraph: Breathable performance polo with subtle company branding. Business casual essential.
+  - generic: "500"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+ACCESSORIES / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories" [active]
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 2 items
+  - combobox:
+    - text: Most Popular
+  - img "Executive Backpack"
+  - generic: Accessories
+  - heading "Executive Backpack" [level=3]
+  - paragraph: Water-resistant backpack with laptop compartment, USB charging port, and anti-theft design.
+  - generic: 1,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Leather Laptop Sleeve"
+  - generic: Accessories
+  - heading "Leather Laptop Sleeve" [level=3]
+  - paragraph: Genuine leather sleeve fits up to 15" laptops. Elegant protection for your device.
+  - generic: 1,200
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+HOME & OFFICE / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office" [active]
+  - button "Wellness"
+  - generic: 2 items
+  - combobox:
+    - text: Most Popular
+  - img "Ergonomic Desk Lamp"
+  - generic: Home & Office
+  - heading "Ergonomic Desk Lamp" [level=3]
+  - paragraph: Adjustable LED lamp with multiple brightness levels and color temperatures.
+  - generic: "650"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Desktop Plant Set"
+  - generic: Home & Office
+  - heading "Desktop Plant Set" [level=3]
+  - paragraph: Set of 3 low-maintenance succulents in modern ceramic pots. Brighten up your workspace.
+  - generic: "280"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+WELLNESS / MOST POPULAR
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness" [active]
+  - generic: 2 items
+  - combobox:
+    - text: Most Popular
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+WELLNESS / POINTS LOW TO HIGH
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 2 items
+  - combobox [active]:
+    - text: "Points: Low to High"
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+WELLNESS / POINTS HIGH TO LOW
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All"
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 2 items
+  - combobox [active]:
+    - text: "Points: High to Low"
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+ALL / FINAL
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "Rewards Store" [level=1]
+  - paragraph: Redeem your hard-earned points
+  - generic: 5,000
+  - generic: pts
+  - navigation:
+    - button "Products":
+      - text: Products
+    - button "Redemption Cart":
+      - text: Redemption Cart
+    - button "My Records":
+      - text: My Records
+- main:
+  - button "All" [active]
+  - button "Electronics"
+  - button "Apparel"
+  - button "Accessories"
+  - button "Home & Office"
+  - button "Wellness"
+  - generic: 12 items
+  - combobox:
+    - text: "Points: High to Low"
+  - img "Wireless Earbuds Pro"
+  - generic: Electronics
+  - heading "Wireless Earbuds Pro" [level=3]
+  - paragraph: Premium noise-cancelling earbuds with 24-hour battery life and crystal-clear audio quality.
+  - generic: 2,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Executive Backpack"
+  - generic: Accessories
+  - heading "Executive Backpack" [level=3]
+  - paragraph: Water-resistant backpack with laptop compartment, USB charging port, and anti-theft design.
+  - generic: 1,500
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Leather Laptop Sleeve"
+  - generic: Accessories
+  - heading "Leather Laptop Sleeve" [level=3]
+  - paragraph: Genuine leather sleeve fits up to 15" laptops. Elegant protection for your device.
+  - generic: 1,200
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Wireless Keyboard & Mouse"
+  - generic: Electronics
+  - heading "Wireless Keyboard & Mouse" [level=3]
+  - paragraph: Sleek wireless combo with quiet keys and precision tracking. Perfect for productivity.
+  - generic: 1,100
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Portable Charger 20000mAh"
+  - text: Out of Stock
+  - generic: Electronics
+  - heading "Portable Charger 20000mAh" [level=3]
+  - paragraph: High-capacity power bank with fast charging. Keep all your devices powered on the go.
+  - generic: "900"
+  - generic: pts
+  - button "Add" [disabled]:
+    - text: Add
+  - img "Company Logo Hoodie"
+  - generic: Apparel
+  - heading "Company Logo Hoodie" [level=3]
+  - paragraph: Soft cotton blend hoodie featuring our embroidered company logo. Perfect for casual Fridays.
+  - generic: "800"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Bluetooth Speaker"
+  - generic: Electronics
+  - heading "Bluetooth Speaker" [level=3]
+  - paragraph: Compact waterproof speaker with 360° sound and 12-hour playtime.
+  - generic: "750"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Ergonomic Desk Lamp"
+  - generic: Home & Office
+  - heading "Ergonomic Desk Lamp" [level=3]
+  - paragraph: Adjustable LED lamp with multiple brightness levels and color temperatures.
+  - generic: "650"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Company Polo Shirt"
+  - generic: Apparel
+  - heading "Company Polo Shirt" [level=3]
+  - paragraph: Breathable performance polo with subtle company branding. Business casual essential.
+  - generic: "500"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Smart Water Bottle"
+  - generic: Wellness
+  - heading "Smart Water Bottle" [level=3]
+  - paragraph: Temperature-tracking bottle that reminds you to stay hydrated throughout the day.
+  - generic: "450"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Yoga Mat Premium"
+  - generic: Wellness
+  - heading "Yoga Mat Premium" [level=3]
+  - paragraph: Non-slip eco-friendly yoga mat with alignment lines and carrying strap.
+  - generic: "350"
+  - generic: pts
+  - button "Add":
+    - text: Add
+  - img "Desktop Plant Set"
+  - generic: Home & Office
+  - heading "Desktop Plant Set" [level=3]
+  - paragraph: Set of 3 low-maintenance succulents in modern ceramic pots. Brighten up your workspace.
+  - generic: "280"
+  - generic: pts
+  - button "Add":
+    - text: Add
+- region "Notifications (F8)":
+  - list
+
+OBSERVED COUNTS: All=12; Electronics=4; Apparel=2; Accessories=2; Home & Office=2; Wellness=2.
+
+EXPECTED TEXT "No related products available" was absent from every reachable category/sort state.

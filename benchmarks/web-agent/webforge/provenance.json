@@ -1,0 +1,38 @@
+{
+  "benchmark": "WebForge-Bench",
+  "paper": "https://arxiv.org/abs/2604.10988",
+  "sourceRepository": "https://github.com/yuandaxia2001/WebForge",
+  "sourceRevision": "ca0cf9fc8d5ab9cac34c1d4387018600e0f1849e",
+  "datasetRepository": "https://huggingface.co/datasets/yuandaxia/WebForge",
+  "datasetRevision": "56e0903f9205577cf39a4253bb0fc163fdb3cbd5",
+  "taskManifestSha256": "72f85e83427cecfb4aea344fd5309f23a1498dcf2c6b70a5f19eb772c234272b",
+  "license": "Apache-2.0",
+  "methodologicalAnalogy": {
+    "name": "Code-QA-Bench",
+    "paper": "https://arxiv.org/abs/2605.29277",
+    "sourceRepository": "https://github.com/Lens-Frontier/code-qa-bench",
+    "sourceRevision": "d615139074369bc395eedf879cd68eca2ab63ee8",
+    "license": "MIT",
+    "relationship": "Methodological analogy only; its repository-access conditions and LLM judging protocol are not reproduced by this browser benchmark."
+  },
+  "track": "operation-code-21-v2",
+  "trackStatus": "retired-disclosed after publication of final-state evidence and expected-answer hashes; use a new held-out track for future blind evaluation",
+  "selectionSeed": "auto-qa-webforge-op21-v1",
+  "selection": "Filter to non-stochastic operation_code tasks whose declared start page exists and whose pinned text assets contain no external HTTP(S) or protocol-relative URL literal, then for each of the 21 domain-by-level strata choose the task with the lexicographically smallest SHA-256 of selectionSeed + ':' + task id. The exact IDs and asset inventory totals are frozen in track.json.",
+  "scoring": "Exact case-sensitive operation-code match after Unicode NFKC normalization and removal of outer whitespace only.",
+  "assetIntegrity": "Every cached regular Git file is checked by byte size and Git blob SHA-1; every LFS file is checked by byte size and raw SHA-256, using metadata from the pinned Hugging Face tree API.",
+  "protocol": {
+    "tasks": 21,
+    "attemptsPerTask": 1,
+    "maxBrowserActions": 50,
+    "taskSpecificHostnamePerTask": true,
+    "originFormat": "http://<task-id>.localhost:<ephemeral-port>",
+    "groundTruthHiddenDuringExecution": true,
+    "externalNetworkRequiredByFixtures": false,
+    "externalLiteralScanScope": "HTTP(S) and protocol-relative URL literals in pinned CSS, HTML, JavaScript, JSON, SVG, text, and XML assets",
+    "externalSubresourcesConnectionsAndFormsRestrictedByCsp": true,
+    "runnerNavigationRule": "Remain on the printed task-specific origin; top-level external navigation is prohibited by protocol and is not claimed to be fully enforced by CSP",
+    "evidenceRequired": true,
+    "existingResultMayBeOverwritten": false
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0001:4",
+  "appId": "WebTestBench_0001",
+  "candidateSha256": "57b1886e49f9f4d666c2c02d2f4d0558fb134172ac0e4db1af61cd4cc60a9066",
+  "appArchiveSha256": "2ebdb5a9e8a2262cf232971aac91eccdc898a56888650768e69ecda722fe3fef",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:04:14.001Z",
+  "completedAt": "2026-09-05T08:05:14.001Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0001-4.localhost:43181; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened Admin Panel and edited Sony WH-1000XM5.",
+    "Appended lane-three-tag and saved.",
+    "Reopened the same existing product."
+  ],
+  "observations": [
+    "Product updated successfully was shown.",
+    "The reopened Tags field retained lane-three-tag."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Tags can be added to and persist on an existing product.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_4/after-tag-persistence.png",
+      "sha256": "a734e724964d892471ea18a0d29a43f9cb055182c0746b408b5723475097a6f2",
+      "bytes": 147646
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0001_4/dom.txt",
+      "sha256": "3128f2f1cf0ac0e0aa40f23302c9db386b5d5871d20d9a5c7988681319499221",
+      "bytes": 5024
+    }
+  ],
+  "laneId": "lane-3"
+}

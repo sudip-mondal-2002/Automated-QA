@@ -1,0 +1,91 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "Culturverse":
+    - /url: /
+    - generic: Culturverse
+  - navigation:
+    - link "Explore":
+      - /url: /
+    - link "My Collection":
+      - /url: /bookmarks
+- img "Mysteries of Ancient Egypt"
+- link "Back to Explore":
+  - /url: /
+  - text: Back to Explore
+- generic: Ancient Civilizations
+- generic: Egyptian
+- heading "Mysteries of Ancient Egypt" [level=1]
+- paragraph: Journey Through the Land of Pharaohs
+- button "Save Tour":
+  - text: Save Tour
+- main:
+  - generic: Duration
+  - paragraph: 45 min
+  - generic: Rooms
+  - paragraph: "3"
+  - generic: Difficulty
+  - paragraph: Beginner
+  - generic: Progress
+  - paragraph: 20%
+  - generic: Tour Progress
+  - generic: 1/5 exhibits viewed
+  - heading "About This Tour" [level=2]
+  - paragraph: Explore the magnificent temples, tombs, and treasures of ancient Egyptian civilization. From the pyramids of Giza to the Valley of the Kings, discover the secrets of one of history's most fascinating cultures.
+  - button "The Great Hall of Pharaohs":
+    - generic: The Great Hall of Pharaohs
+  - button "The Tomb Chamber":
+    - generic: The Tomb Chamber
+  - button "Treasury of the Pharaohs":
+    - generic: Treasury of the Pharaohs
+  - button "Previous Room" [disabled]:
+    - generic: Previous Room
+  - generic: Room 1 of 3
+  - button "Next Room":
+    - generic: Next Room
+  - img "The Great Hall of Pharaohs"
+  - heading "The Great Hall of Pharaohs" [level=3]
+  - paragraph: 2 exhibits
+  - paragraph: Begin your journey in the grand entrance hall, surrounded by colossal statues of Egypt's most powerful rulers.
+  - generic: Progress
+  - generic: 1/2
+  - heading "Exhibits in The Great Hall of Pharaohs" [level=2]
+  - button "Colossal Statue of Ramesses II Colossal Statue of Ramesses II This 10-meter granite statue depicts Ramesses II, often considered Egypt's most powerful pharaoh, who reigned for 66 years.":
+    - img "Colossal Statue of Ramesses II"
+    - heading "Colossal Statue of Ramesses II" [level=4]
+    - paragraph: This 10-meter granite statue depicts Ramesses II, often considered Egypt's most powerful pharaoh, who reigned for 66 years.
+  - button "Bust of Queen Nefertari Bust of Queen Nefertari This exquisite painted limestone bust portrays Nefertari, the Great Royal Wife of Ramesses II and one of the best-known Egyptian queens.":
+    - img "Bust of Queen Nefertari"
+    - heading "Bust of Queen Nefertari" [level=4]
+    - paragraph: This exquisite painted limestone bust portrays Nefertari, the Great Royal Wife of Ramesses II and one of the best-known Egyptian queens.
+  - heading "Continue Your Journey" [level=2]
+  - link "Realm of the Greek Gods Mythology Realm of the Greek Gods Explore tour":
+    - /url: /tour/greek-mythology
+    - img "Realm of the Greek Gods"
+    - text: Mythology
+    - heading "Realm of the Greek Gods" [level=3]
+    - generic: Explore tour
+  - link "Glory of Rome Ancient Civilizations Glory of Rome Explore tour":
+    - /url: /tour/roman-empire
+    - img "Glory of Rome"
+    - text: Ancient Civilizations
+    - heading "Glory of Rome" [level=3]
+    - generic: Explore tour
+- img "Colossal Statue of Ramesses II"
+- button:
+- heading "Colossal Statue of Ramesses II" [level=2]
+- button "Overview":
+  - text: Overview
+- button "Deep Dive" [active]:
+  - text: Deep Dive
+- button "Timeline":
+  - text: Timeline
+- button "Quiz":
+  - text: Quiz
+- paragraph: Ramesses II (c. 1303-1213 BCE) was the third pharaoh of the Nineteenth Dynasty. He is often regarded as the most powerful and celebrated pharaoh of the Egyptian Empire. His reign saw numerous military campaigns, massive building projects, and the establishment of the first known peace treaty in history with the Hittites.
+- heading "Related Items" [level=4]
+- generic: Nefertari Bust
+- generic: Abu Simbel Model
+- contentinfo:
+  - paragraph: © 2024 Culturverse. Explore the world's cultural heritage.

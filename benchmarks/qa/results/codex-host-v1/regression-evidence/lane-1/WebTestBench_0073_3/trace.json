@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0073:3",
+  "appId": "WebTestBench_0073",
+  "candidateSha256": "7889f71c3a69f98cb6f565d9174c5cd14e6511c656d3465531f95f3ac4a89f67",
+  "appArchiveSha256": "cb5bbc65677322ed12f38ae5653c0875d82f8ba264ea86392687f9143b204240",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:01:37.280Z",
+  "completedAt": "2026-09-05T08:01:51.844Z",
+  "isolation": "Unique loopback origin 47108 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened Expense Reports from the application navigation."
+    },
+    {
+      "step": 2,
+      "action": "Inspected every visible claim row."
+    }
+  ],
+  "observations": [
+    "Five claims were listed with distinct current statuses: Approved, Revision, Pending, Rejected, and Draft."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The claims list exposes each claim and its current status.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0073_3/claims-with-statuses.png",
+      "sha256": "89aba66e504bf3fae1e8f395985a3fa02873d2a41410928775d5ee85a4b7e38f",
+      "bytes": 27116
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0073_3/dom-snapshot.txt",
+      "sha256": "d84b0491fa3d0f966464c0a9c4e8bef17a8a007e3ab5f8340cfbfc6b5a85d9cb",
+      "bytes": 2432
+    }
+  ],
+  "laneId": "lane-1"
+}

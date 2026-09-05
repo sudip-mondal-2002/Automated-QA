@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120002_36671e6cd8881386a0de3b4a",
+  "specId": "reprobreak-619",
+  "environment": "local",
+  "classification": "functional_regression",
+  "startedAt": "2026-09-05T12:00:02.000Z",
+  "completedAt": "2026-09-05T12:00:02.130Z",
+  "explanation": "The toolbar remains visible (1 found)",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Remove the editor selection and inspect the floating toolbar",
+      "status": "failed",
+      "expectations": [
+        {
+          "expectation": "The floating toolbar is absent after selection removal",
+          "status": "failed",
+          "observation": "The toolbar remains visible (1 found)"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "ARIA toolbar absence query in the Editor region",
+        "role": "toolbar",
+        "name": "floating toolbar"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "failed",
+        "originalFailure": "The old page.$ locator returns an ElementHandle/null and cannot satisfy the migrated Locator assertion contract: page.$('[data-kg-floating-toolbar]')). Previous target: page.$('[data-kg-floating-toolbar]'))",
+        "replacement": "ARIA toolbar absence query in the Editor region",
+        "verification": "The toolbar remains visible (1 found)",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-failure-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:02.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-619"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:02.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:02.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Remove the editor selection and inspect the floating toolbar"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:02.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The old page.$ locator returns an ElementHandle/null and cannot satisfy the migrated Locator assertion contract: page.$('[data-kg-floating-toolbar]')). Previous target: page.$('[data-kg-floating-toolbar]'))"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:02.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:02.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:02.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "ARIA toolbar absence query in the Editor region: The toolbar remains visible (1 found)"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:02.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-failure-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:02.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "failed",
+      "message": "Expectation or action failed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:02.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:02.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:02.120Z",
+      "type": "run_completed",
+      "status": "failed",
+      "message": "The toolbar remains visible (1 found)"
+    }
+  ]
+}

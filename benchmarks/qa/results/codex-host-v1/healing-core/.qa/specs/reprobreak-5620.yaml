@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-5620
+title: ReproBreak 5620 healing core
+environment: local
+steps:
+  - intent: Select the smoke tag in the test tree
+    expect:
+      - The Filter field contains @smoke and only the tagged test remains

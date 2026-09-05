@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0040:16",
+  "appId": "WebTestBench_0040",
+  "candidateSha256": "32359a14d142e47d145b506e7ca40b4cb11819c04709ba2c76883f00aae96ec8",
+  "appArchiveSha256": "8651119f6929decf9e82779e674df0068448d366934dfc6745e3a4e57f767ace",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T08:03:59.567Z",
+  "completedAt": "2026-09-05T08:04:28.763Z",
+  "isolation": "Unique loopback origin 47111 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened Design new dashboard layout, which had one existing update."
+    },
+    {
+      "step": 2,
+      "action": "Added QA update older, then QA update newer."
+    },
+    {
+      "step": 3,
+      "action": "Closed and reopened details to force the list to refresh."
+    }
+  ],
+  "observations": [
+    "Every update shows publisher and publication time.",
+    "The order is original Dec 10 update, QA update older, QA update newer—oldest to newest, not reverse chronological."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Metadata is present, but the required newest-first ordering is violated.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_16/updates-oldest-first.png",
+      "sha256": "53f3d52cc08105cd95f6d5bb1f03901e5f61f33fced432bfa63cfbfcb0afe8b8",
+      "bytes": 19153
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0040_16/dom-snapshot.txt",
+      "sha256": "374372201fce89b59ded0682502c53ae59d48d770b27aaec4a7d512934764355",
+      "bytes": 3008
+    }
+  ],
+  "laneId": "lane-1"
+}

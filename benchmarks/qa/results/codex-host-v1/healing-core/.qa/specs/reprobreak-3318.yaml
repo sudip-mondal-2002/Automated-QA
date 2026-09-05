@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-3318
+title: ReproBreak 3318 healing core
+environment: local
+steps:
+  - intent: Confirm clearing the Recently Viewed list
+    expect:
+      - The Recently Viewed list is empty and its clear button is disabled

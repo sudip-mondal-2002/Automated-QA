@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0004:14",
+  "appId": "WebTestBench_0004",
+  "candidateSha256": "250ce7857024a3a7d106f2e0fb749bf9e0c955845e5aa155932b0cbf2a3d9927",
+  "appArchiveSha256": "0560a09f34e202645982c32cf0c34b49d3d91a3caa503d9d9fcc35f0e4a9059c",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T07:55:29.599Z",
+  "completedAt": "2026-09-05T08:01:19.008Z",
+  "actions": [
+    {
+      "action": "Opened Wedding Venues",
+      "result": "The unfiltered view showed 8 venue cards."
+    },
+    {
+      "action": "Typed 'Coastal' into Search venues without submitting",
+      "result": "The list immediately collapsed to one card, Coastal Haven, and the counter changed to 'Showing 1 of 8 venues'."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Venue/supplier list updates in real time when criteria change",
+      "observed": "Changing the search criterion updated both list contents and result count immediately, with no submit action."
+    }
+  ],
+  "outcome": "Pass",
+  "notes": "Real-time venue search filtering was verified from 8 results to the single matching venue.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0004_14/after.png",
+      "sha256": "95af8c5fa7f8c5b6dc52e1503adabc1119a1d2fab39cc7c0df99fbd2920b6887",
+      "bytes": 25185
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0004_14/dom-after.txt",
+      "sha256": "d21598eb680007a143b927329024ccc5ca6d3ef5cf202bcb7c255a1ff3a3415d",
+      "bytes": 1781
+    }
+  ],
+  "confidence": "high",
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4728; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

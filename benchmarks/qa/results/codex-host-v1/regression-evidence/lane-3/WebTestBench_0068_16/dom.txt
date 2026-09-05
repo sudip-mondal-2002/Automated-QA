@@ -1,0 +1,29 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - heading "LabSim" [level=1]
+  - paragraph: Interactive Lab Platform
+  - navigation:
+    - button "Experiment Editor":
+      - generic: Experiment Editor
+    - button "Multi-Instance Comparison" [active]:
+      - generic: Multi-Instance Comparison
+    - button "Historical Scenarios":
+      - generic: Historical Scenarios
+  - generic: System Ready
+- main:
+  - heading "Multi-Instance Comparison" [level=2]
+  - paragraph: Run experiments side by side and compare results
+  - button "Add Current Scene":
+    - text: Add Current Scene
+  - 'heading "Basic Heat Transfer #1" [level=3]'
+  - paragraph: 3 items
+  - button:
+  - button:
+  - generic: 0:00
+  - paragraph: Avg Temp
+  - paragraph: 30.0°C
+  - paragraph: Status
+  - paragraph: Running
+- generic: 0s

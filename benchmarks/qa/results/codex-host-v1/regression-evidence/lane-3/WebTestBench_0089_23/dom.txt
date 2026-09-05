@@ -1,0 +1,160 @@
+- list
+- region "Notifications alt+T"
+- banner:
+  - heading [level=1]: Template Library
+  - paragraph: Browse, create, and customize templates
+  - button:
+    - text: Favorites
+  - button:
+    - text: Submit Template
+- heading [level=2]: Find the Perfect Template
+- paragraph: Browse our curated collection of professional templates for every need
+- textbox:
+  - /placeholder: Search templates by name, author, or field...
+- main:
+  - complementary:
+    - heading [level=3]: Filters
+    - paragraph: Showing 6 of 6 templates
+    - generic: Category
+    - combobox:
+      - generic: All Categories
+    - generic: Scenario
+    - combobox:
+      - generic: All Scenarios
+    - generic: Sort By
+    - combobox:
+      - generic: Most Popular
+  - generic: Resume
+  - generic: Business
+  - button:
+  - heading [level=3]: Professional Resume
+  - paragraph: A clean, modern resume template perfect for job applications in any industry.
+  - generic: Sarah Chen
+  - generic: 1,250 uses
+  - generic: Updated 2024-12-01
+  - button:
+    - text: Use Template
+  - generic: Email
+  - generic: Business
+  - button:
+  - heading [level=3]: Professional Email
+  - paragraph: Craft professional emails for business communications.
+  - generic: Lisa Park
+  - generic: 1,100 uses
+  - generic: Updated 2024-12-05
+  - button:
+    - text: Use Template
+  - generic: Weekly Report
+  - generic: Business
+  - button:
+  - heading [level=3]: Weekly Status Report
+  - paragraph: Keep your team informed with this comprehensive weekly report template.
+  - generic: Michael Torres
+  - generic: 890 uses
+  - generic: Updated 2024-11-28
+  - button:
+    - text: Use Template
+  - generic: Meeting Minutes
+  - generic: Business
+  - button:
+  - heading [level=3]: Meeting Minutes
+  - paragraph: Document your meetings efficiently with clear action items and decisions.
+  - generic: Emily Watson
+  - generic: 720 uses
+  - generic: Updated 2024-11-15
+  - button:
+    - text: Use Template
+  - generic: Proposal
+  - generic: Business
+  - button:
+  - heading [level=3]: Project Proposal
+  - paragraph: Present your project ideas professionally with this structured proposal template.
+  - generic: David Kim
+  - generic: 560 uses
+  - generic: Updated 2024-10-20
+  - button:
+    - text: Use Template
+  - generic: Other
+  - generic: Academic
+  - button:
+  - heading [level=3]: Academic Research Summary
+  - paragraph: Summarize your research findings in a structured academic format.
+  - generic: Dr. James Wilson
+  - generic: 340 uses
+  - generic: Updated 2024-09-30
+  - button:
+    - text: Use Template
+- dialog "Professional Resume":
+  - generic: Resume
+  - generic: Business
+  - heading "Professional Resume" [level=2]
+  - paragraph: A clean, modern resume template perfect for job applications in any industry.
+  - generic: Sarah Chen
+  - generic: 1,250 uses
+  - button:
+  - button:
+  - tablist:
+    - tab "Fill Template" [selected]
+    - tab "Preview Result" [disabled]
+  - tabpanel "Fill Template":
+    - paragraph: Required fields missing
+    - paragraph: "Please fill in: Job Title, Email, Professional Summary, Company Name, Position, Start Date, Responsibilities, Degree, School, Graduation Year, Skills"
+    - text: Full Name
+    - generic: "*"
+    - textbox "Full Name *" [active]:
+      - /placeholder: John Doe
+      - text: John<Doe>
+    - paragraph:
+      - text: "Special characters like < > { } [ ] \\ | ` are not allowed"
+    - text: Job Title
+    - generic: "*"
+    - textbox "Job Title *":
+      - /placeholder: Software Engineer
+    - text: Email
+    - generic: "*"
+    - textbox "Email *":
+      - /placeholder: john@example.com
+    - generic: Phone
+    - textbox "Phone":
+      - /placeholder: +1 234 567 8900
+    - text: Professional Summary
+    - generic: "*"
+    - textbox "Professional Summary *":
+      - /placeholder: Experienced professional with...
+    - text: Company Name
+    - generic: "*"
+    - textbox "Company Name *":
+      - /placeholder: Tech Corp
+    - text: Position
+    - generic: "*"
+    - textbox "Position *":
+      - /placeholder: Senior Developer
+    - text: Start Date
+    - generic: "*"
+    - textbox "Start Date *":
+      - /placeholder: Jan 2020
+    - generic: End Date
+    - textbox "End Date":
+      - /placeholder: Present
+    - text: Responsibilities
+    - generic: "*"
+    - textbox "Responsibilities *":
+      - /placeholder: Led team of 5 engineers...
+    - text: Degree
+    - generic: "*"
+    - textbox "Degree *":
+      - /placeholder: B.S. Computer Science
+    - text: School
+    - generic: "*"
+    - textbox "School *":
+      - /placeholder: MIT
+    - text: Graduation Year
+    - generic: "*"
+    - textbox "Graduation Year *":
+      - /placeholder: "2018"
+    - text: Skills
+    - generic: "*"
+    - textbox "Skills *":
+      - /placeholder: JavaScript, React, Node.js
+  - button "Close":
+    - generic: Close

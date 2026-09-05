@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0027:7",
+  "appId": "WebTestBench_0027",
+  "candidateSha256": "6f6145ecc3ffdace9cd35c2f0b59fff5f57374a94a3f40c69dc48e9f013fe2e9",
+  "appArchiveSha256": "4e2e78cdf70550d8cf524b43b53ff9350ad22206d46282b74dcaf1fcfa514ea9",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:10:11.948Z",
+  "completedAt": "2026-09-05T08:11:11.948Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0027-7.localhost:43186; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Entered Mysteries of Ancient Egypt.",
+    "Clicked the Colossal Statue of Ramesses II exhibit.",
+    "Switched from Overview to Deep Dive."
+  ],
+  "observations": [
+    "The exhibit opened with Overview, Deep Dive, Timeline, and Quiz layers.",
+    "Deep Dive rendered a distinct detailed history paragraph and Related Items.",
+    "Tour progress advanced to 1/5 exhibits viewed."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Exhibit clicks open genuinely tiered educational content.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0027_7/deep-dive-layer.png",
+      "sha256": "306695ba2fe183485727f8ff5214191e2cd12ed5d4bcf87d156d19a707755d3d",
+      "bytes": 69418
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0027_7/dom.txt",
+      "sha256": "f79d6d466aec32c7f8dc719f6ccd054293212c1386630459505d0242122951c0",
+      "bytes": 3952
+    }
+  ],
+  "laneId": "lane-3"
+}

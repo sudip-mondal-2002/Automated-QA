@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0044:15",
+  "appId": "WebTestBench_0044",
+  "candidateSha256": "10f3c13e5fa8acf325a3e736f4fda306bf08dd81b86c39f3b86409036290a92f",
+  "appArchiveSha256": "623ebb4d9aa811eeed9e647efb9f2c560b01dc5e2d3d83c261501b4e42627284",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "startedAt": "2026-09-05T08:00:39.865Z",
+  "completedAt": "2026-09-05T08:02:13.378Z",
+  "actions": [
+    {
+      "action": "Opened Add New Application",
+      "result": "Company and Role were blank and the submit button was disabled."
+    },
+    {
+      "action": "Entered Company but left required Role blank",
+      "result": "Submit remained disabled."
+    },
+    {
+      "action": "Pressed Enter to attempt submission from the incomplete form",
+      "result": "The dialog stayed open with no inline, toast, alert, or other validation error message."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Missing or invalid required fields produce a validation error message",
+      "observed": "The UI only disabled Add Application; it did not display a validation error message before or after the incomplete submission attempt."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Required-field gating exists, but the specifically required validation error message was absent.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_15/after.png",
+      "sha256": "962df4d23b2898819c3173ffbcc790a4a2dc32cc1e8cd77847cdaa50870a0daa",
+      "bytes": 18732
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_15/dom-after.txt",
+      "sha256": "72ac54dfdf268aa397c3016f644659c57b77737d7f9a3db67c5a2c4ee7cdc298",
+      "bytes": 1730
+    }
+  ],
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4729; origin-scoped local/session storage cannot carry over from other cases.",
+  "laneId": "lane-2"
+}

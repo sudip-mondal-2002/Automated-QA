@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0022:11",
+  "appId": "WebTestBench_0022",
+  "candidateSha256": "da26baf66e070afa7617e3dc4b5745b25d8d8ff512002c90672df87809f36b18",
+  "appArchiveSha256": "971448f527ece98d889bfd2173d6b6cc2478c7da951d73c641be720db397f66b",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:59:42.979Z",
+  "completedAt": "2026-09-05T08:00:19.215Z",
+  "isolation": "Unique loopback origin 47106 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Opened Pantry and Add Pantry Item."
+    },
+    {
+      "step": 2,
+      "action": "Entered item QA Negative Item, quantity -5, and a correctly formatted date."
+    },
+    {
+      "step": 3,
+      "action": "Submitted the form."
+    }
+  ],
+  "observations": [
+    "The dialog closed with no validation error.",
+    "QA Negative Item was added and displayed as -5 g."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "Quantity lacks the required positive-number validation.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0022_11/negative-quantity-accepted.png",
+      "sha256": "ed07a8c351340a5cf2fcdd634c06c9d228274b6d058581618d278a2ec4253438",
+      "bytes": 30585
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0022_11/dom-snapshot.txt",
+      "sha256": "6ae7c2696d7cbbabd25c59888e9f84bcd088820ecb91251f9ce3625c4020970c",
+      "bytes": 2633
+    }
+  ],
+  "laneId": "lane-1"
+}

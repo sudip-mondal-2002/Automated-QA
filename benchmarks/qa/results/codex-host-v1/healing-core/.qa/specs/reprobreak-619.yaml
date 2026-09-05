@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-619
+title: ReproBreak 619 healing core
+environment: local
+steps:
+  - intent: Remove the editor selection and inspect the floating toolbar
+    expect:
+      - The floating toolbar is absent after selection removal

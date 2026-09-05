@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0089:23",
+  "appId": "WebTestBench_0089",
+  "candidateSha256": "26fa204300cb729e9a9411648beda7c1a58d5ecc23aab57a904040fad6a1740f",
+  "appArchiveSha256": "be24cc40ed0ba72e21b9334a9e8b3f7006b02d7f7d35b5d573879a32e83291de",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:15:45.214Z",
+  "completedAt": "2026-09-05T08:16:45.214Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0089-23.localhost:43190; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Opened the first library template.",
+    "Entered John<Doe> in the required Full Name field.",
+    "Moved focus away to trigger validation."
+  ],
+  "observations": [
+    "The input showed: Special characters like < > { } [ ] \\ | ` are not allowed.",
+    "The warning appeared directly below the edited field."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Visible field-level feedback identifies forbidden special characters after entry.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0089_23/after-special-character.png",
+      "sha256": "94adc2df77228da07f68592c8e0e7090e6391cb91f124fed5b12bc67c48b2c50",
+      "bytes": 32322
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0089_23/dom.txt",
+      "sha256": "4711c06c4c82e163775c3c7eb8c832774121bd95eb46109ce3e9d0566f499aca",
+      "bytes": 4825
+    }
+  ],
+  "laneId": "lane-3"
+}

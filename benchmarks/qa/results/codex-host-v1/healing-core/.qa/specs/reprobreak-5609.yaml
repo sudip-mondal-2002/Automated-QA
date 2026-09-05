@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-5609
+title: ReproBreak 5609 healing core
+environment: local
+steps:
+  - intent: Expand the suite in the test tree and open its annotation test
+    expect:
+      - The annotation test can be opened from the expanded suite

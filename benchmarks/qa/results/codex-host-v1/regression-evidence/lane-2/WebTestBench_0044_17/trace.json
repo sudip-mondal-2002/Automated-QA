@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0044:17",
+  "appId": "WebTestBench_0044",
+  "candidateSha256": "925a6890022a6bc176ec15df36ca2a50bfca132fef62e95ebb4565e49fb207e5",
+  "appArchiveSha256": "623ebb4d9aa811eeed9e647efb9f2c560b01dc5e2d3d83c261501b4e42627284",
+  "runner": "codex-regression-lane-2",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "Chrome/151.0.0.0"
+  },
+  "isolation": "Fresh Vite process on case-unique loopback origin http://127.0.0.1:4733; origin-scoped local/session storage cannot carry over from other cases.",
+  "startedAt": "2026-09-05T08:03:09.639Z",
+  "completedAt": "2026-09-05T08:05:22.039Z",
+  "actions": [
+    {
+      "action": "Inspected status labels in the application list",
+      "result": "The list displayed Interviewed, Applied, Offered, and Rejected."
+    },
+    {
+      "action": "Opened the new-application Status selector",
+      "result": "Its options also included Rejected alongside Applied, Interviewed, and Offered."
+    }
+  ],
+  "observations": [
+    {
+      "expected": "Every displayed status is exactly one of applied, interviewed, or offered",
+      "observed": "A fourth status, Rejected, is displayed and selectable; displayed labels are also title-cased rather than the exact lowercase values stated."
+    }
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The rendered list and status selector both expose the disallowed Rejected value.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_17/after.png",
+      "sha256": "8ea4521b5edc1fde7f787ac9a19d5db5065041abb4e67e55a7063f34dfb5a9a8",
+      "bytes": 18451
+    },
+    {
+      "file": "regression-evidence/lane-2/WebTestBench_0044_17/dom-after.txt",
+      "sha256": "51f5a6a6c48e30753844e8c01485ee145d93770e1062290f32b9385d44d445ab",
+      "bytes": 1853
+    }
+  ],
+  "laneId": "lane-2"
+}

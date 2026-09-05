@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "runId": "run_20260905_120007_739ae9d4ed6d6c849c0ed54c",
+  "specId": "reprobreak-619",
+  "environment": "local",
+  "classification": "healed",
+  "startedAt": "2026-09-05T12:00:07.000Z",
+  "completedAt": "2026-09-05T12:00:07.130Z",
+  "explanation": "Recovered 1 interaction and verified every original expectation unchanged",
+  "steps": [
+    {
+      "index": 1,
+      "intent": "Remove the editor selection and inspect the floating toolbar",
+      "status": "passed",
+      "expectations": [
+        {
+          "expectation": "The floating toolbar is absent after selection removal",
+          "status": "passed",
+          "observation": "The semantic toolbar query reports zero toolbars"
+        }
+      ],
+      "selectedTarget": {
+        "summary": "ARIA toolbar absence query in the Editor region",
+        "role": "toolbar",
+        "name": "floating toolbar"
+      },
+      "healing": {
+        "strategy": "target_rediscovery",
+        "outcome": "healed",
+        "originalFailure": "The old page.$ locator returns an ElementHandle/null and cannot satisfy the migrated Locator assertion contract: page.$('[data-kg-floating-toolbar]')). Previous target: page.$('[data-kg-floating-toolbar]'))",
+        "replacement": "ARIA toolbar absence query in the Editor region",
+        "verification": "The original expectations passed unchanged after recovery",
+        "beforeScreenshot": "screenshots/005-healing-before-step-1.png",
+        "afterScreenshot": "screenshots/006-healing-after-step-1.png"
+      }
+    }
+  ],
+  "fixtures": [],
+  "evidence": {
+    "screenshots": [
+      "screenshots/005-healing-before-step-1.png",
+      "screenshots/006-healing-after-step-1.png",
+      "screenshots/008-checkpoint-step-1.png"
+    ],
+    "consoleErrors": [],
+    "networkErrors": [],
+    "unsupported": []
+  },
+  "events": [
+    {
+      "sequence": 1,
+      "at": "2026-09-05T12:00:07.010Z",
+      "type": "run_started",
+      "message": "Running reprobreak-619"
+    },
+    {
+      "sequence": 2,
+      "at": "2026-09-05T12:00:07.020Z",
+      "type": "environment_ready",
+      "status": "passed",
+      "message": "web environment is ready"
+    },
+    {
+      "sequence": 3,
+      "at": "2026-09-05T12:00:07.030Z",
+      "type": "step_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "Remove the editor selection and inspect the floating toolbar"
+    },
+    {
+      "sequence": 4,
+      "at": "2026-09-05T12:00:07.040Z",
+      "type": "healing_started",
+      "phase": "test",
+      "stepIndex": 1,
+      "message": "The old page.$ locator returns an ElementHandle/null and cannot satisfy the migrated Locator assertion contract: page.$('[data-kg-floating-toolbar]')). Previous target: page.$('[data-kg-floating-toolbar]'))"
+    },
+    {
+      "sequence": 5,
+      "at": "2026-09-05T12:00:07.050Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/005-healing-before-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 6,
+      "at": "2026-09-05T12:00:07.060Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/006-healing-after-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 7,
+      "at": "2026-09-05T12:00:07.070Z",
+      "type": "healing_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "ARIA toolbar absence query in the Editor region: The original expectations passed unchanged after recovery"
+    },
+    {
+      "sequence": 8,
+      "at": "2026-09-05T12:00:07.080Z",
+      "type": "screenshot_captured",
+      "message": "screenshots/008-checkpoint-step-1.png",
+      "phase": "test",
+      "stepIndex": 1
+    },
+    {
+      "sequence": 9,
+      "at": "2026-09-05T12:00:07.090Z",
+      "type": "step_completed",
+      "phase": "test",
+      "stepIndex": 1,
+      "status": "passed",
+      "message": "Expectations passed"
+    },
+    {
+      "sequence": 10,
+      "at": "2026-09-05T12:00:07.100Z",
+      "type": "cleanup_started",
+      "phase": "after",
+      "message": "Running after fixtures"
+    },
+    {
+      "sequence": 11,
+      "at": "2026-09-05T12:00:07.110Z",
+      "type": "cleanup_completed",
+      "phase": "after",
+      "status": "passed",
+      "message": "Cleanup completed"
+    },
+    {
+      "sequence": 12,
+      "at": "2026-09-05T12:00:07.120Z",
+      "type": "run_completed",
+      "status": "passed",
+      "message": "Recovered 1 interaction and verified every original expectation unchanged"
+    }
+  ]
+}

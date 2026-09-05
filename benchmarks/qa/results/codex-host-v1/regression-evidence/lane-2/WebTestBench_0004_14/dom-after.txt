@@ -1,0 +1,61 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - navigation:
+    - link "Ever After":
+      - /url: /
+      - generic: Ever After
+    - link "Dashboard":
+      - /url: /
+      - button "Dashboard":
+        - text: Dashboard
+    - link "Venues":
+      - /url: /venues
+      - button "Venues":
+        - text: Venues
+    - link "Vendors":
+      - /url: /vendors
+      - button "Vendors":
+        - text: Vendors
+    - link "Favorites":
+      - /url: /favorites
+      - button "Favorites":
+        - text: Favorites
+    - link "Checklists":
+      - /url: /checklists
+      - button "Checklists":
+        - text: Checklists
+- main:
+  - heading "Wedding Venues" [level=1]
+  - paragraph: Find the perfect setting for your special day. From romantic gardens to elegant ballrooms, discover venues that match your vision.
+  - complementary:
+    - heading "Filters" [level=2]
+    - textbox "Search venues..." [active]: Coastal
+    - button:
+    - text: Venue Type
+    - generic: Garden
+    - generic: Beach
+    - generic: Ballroom
+    - generic: Barn
+    - generic: Vineyard
+    - generic: Rooftop
+    - text: Price Range
+    - generic: Budget ($)
+    - generic: Moderate ($$)
+    - generic: Luxury ($$$)
+    - button "Clear all filters":
+      - text: Clear all filters
+  - paragraph: Showing 1 of 8 venues
+  - img "Coastal Haven"
+  - button:
+  - generic: Beach
+  - generic: Budget ($)
+  - heading "Coastal Haven" [level=3]
+  - text: Cape Cod, MA
+  - text: "4.5"
+  - paragraph: An intimate beachfront cottage perfect for small gatherings, featuring a private beach, cozy interiors, and unforgettable ocean views.
+  - generic: Up to 50 guests
+  - button "View Details"
+- contentinfo:
+  - paragraph: © 2024 Ever After. Made with love for your perfect day.

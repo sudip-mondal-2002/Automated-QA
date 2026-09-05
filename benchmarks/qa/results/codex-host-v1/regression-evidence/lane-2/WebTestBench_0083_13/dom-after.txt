@@ -1,0 +1,32 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - heading "ShiftFlow" [level=1]
+  - paragraph: Scheduling Made Easy
+  - navigation:
+    - list:
+      - link "Dashboard":
+        - /url: /
+        - generic: Dashboard
+      - link "Schedule":
+        - /url: /schedule
+        - generic: Schedule
+      - link "Employees":
+        - /url: /employees
+        - generic: Employees
+      - link "Templates":
+        - /url: /templates
+        - generic: Templates
+      - link "Published":
+        - /url: /published
+        - generic: Published
+  - paragraph: Current Week
+  - paragraph: Sep 5, 2026
+- main:
+  - heading "Published Schedules" [level=1]
+  - paragraph: View previously published schedules and their details.
+  - heading "Week of December 16, 2024" [level=3]
+  - paragraph: 5 shifts • 4 employees
+  - paragraph: Published
+  - paragraph: Dec 14, 2:30 PM

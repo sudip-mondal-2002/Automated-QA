@@ -1,0 +1,30 @@
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TableSpot":
+    - /url: /
+    - generic: TableSpot
+  - navigation:
+    - link "Restaurants":
+      - /url: /
+    - link "My Reservations":
+      - /url: /reservations
+- heading "My Reservations" [level=1]
+- paragraph: Manage your upcoming and past dining experiences
+- tablist:
+  - tab "Upcoming (1)" [selected]
+  - tab "Past (0)"
+- tabpanel "Upcoming (1)":
+  - img "Trattoria Bella"
+  - heading "Trattoria Bella" [level=3]
+  - paragraph: Italian · $$
+  - generic: Upcoming
+  - generic: September 7, 2026
+  - generic: 19:30
+  - generic: 2 Guests
+  - generic: Little Italy
+  - button "Modify" [active]:
+    - text: Modify
+  - button "Cancel":
+    - text: Cancel

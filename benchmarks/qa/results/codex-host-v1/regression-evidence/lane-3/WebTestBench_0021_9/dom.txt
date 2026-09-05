@@ -1,0 +1,215 @@
+CUSTOMERS
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - generic: Gallery CRM
+  - generic: Art Management
+  - button:
+  - navigation:
+    - link "Dashboard":
+      - /url: /
+      - generic: Dashboard
+    - link "Customers":
+      - /url: /customers
+      - generic: Customers
+    - link "Artworks":
+      - /url: /artworks
+      - generic: Artworks
+    - link "Reports":
+      - /url: /reports
+      - generic: Reports
+    - link "Settings":
+      - /url: /settings
+      - generic: Settings
+  - generic: SA
+  - generic: Sarah Adams
+  - generic: Gallery Manager
+- main:
+  - heading "Customers" [level=1]
+  - paragraph: Manage your collector relationships
+  - button "Add Customer":
+    - text: Add Customer
+  - textbox "Search by name, email, or tag..."
+  - combobox:
+    - generic: All Statuses
+  - generic: VA
+  - link "Victoria Ashworth":
+    - /url: /customers/cust-1
+  - generic: VIP Collector
+  - text: v.ashworth@email.com
+  - text: +1 (555) 234-5678
+  - generic: high-value
+  - generic: contemporary-collector
+  - generic: private-client
+  - paragraph: Total Spent
+  - paragraph: $156,000
+  - paragraph: Purchases
+  - paragraph: "8"
+  - paragraph: Last Contact
+  - paragraph: Jan 10
+  - button:
+  - generic: JM
+  - link "James Morrison":
+    - /url: /customers/cust-2
+  - generic: Negotiating
+  - text: j.morrison@company.com
+  - text: +1 (555) 345-6789
+  - generic: corporate
+  - generic: bulk-buyer
+  - paragraph: Total Spent
+  - paragraph: $24,500
+  - paragraph: Purchases
+  - paragraph: "3"
+  - paragraph: Last Contact
+  - paragraph: Jan 8
+  - button:
+  - generic: SC
+  - link "Sophia Chen":
+    - /url: /customers/cust-3
+  - generic: Interested
+  - text: sophia.chen@gallery.net
+  - text: +1 (555) 456-7890
+  - generic: new-collector
+  - generic: asian-art-interest
+  - paragraph: Total Spent
+  - paragraph: $0
+  - paragraph: Purchases
+  - paragraph: "0"
+  - paragraph: Last Contact
+  - paragraph: Jan 5
+  - button:
+  - generic: RW
+  - link "Robert Williams":
+    - /url: /customers/cust-4
+  - generic: Purchased
+  - text: rwilliams@invest.com
+  - text: +1 (555) 567-8901
+  - generic: investor
+  - generic: returning-client
+  - paragraph: Total Spent
+  - paragraph: $89,000
+  - paragraph: Purchases
+  - paragraph: "5"
+  - paragraph: Last Contact
+  - paragraph: Dec 20
+  - button:
+  - generic: ET
+  - link "Emma Thompson":
+    - /url: /customers/cust-5
+  - generic: Contacted
+  - text: emma.t@design.studio
+  - text: +1 (555) 678-9012
+  - generic: designer
+  - generic: partnership-potential
+  - paragraph: Total Spent
+  - paragraph: $5,500
+  - paragraph: Purchases
+  - paragraph: "1"
+  - paragraph: Last Contact
+  - paragraph: Jan 3
+  - button:
+  - generic: MF
+  - link "Michael Foster":
+    - /url: /customers/cust-6
+  - generic: New Lead
+  - text: mfoster@email.com
+  - text: +1 (555) 789-0123
+  - generic: referral
+  - generic: first-time-buyer
+  - paragraph: Total Spent
+  - paragraph: $0
+  - paragraph: Purchases
+  - paragraph: "0"
+  - paragraph: Last Contact
+  - paragraph: Jan 12
+  - button:
+  - generic: IR
+  - link "Isabella Romano":
+    - /url: /customers/cust-7
+  - generic: Inactive
+  - text: isabella.romano@art.eu
+  - text: +39 06 1234 5678
+  - generic: international
+  - generic: european-client
+  - paragraph: Total Spent
+  - paragraph: $45,000
+  - paragraph: Purchases
+  - paragraph: "2"
+  - paragraph: Last Contact
+  - paragraph: Jun 15
+  - button:
+  - generic: AP
+  - link "Alexander Petrov":
+    - /url: /customers/cust-8
+  - generic: VIP Collector
+  - text: a.petrov@finance.ru
+  - text: +7 495 123 4567
+  - generic: high-value
+  - generic: international
+  - generic: vip
+  - paragraph: Total Spent
+  - paragraph: $420,000
+  - paragraph: Purchases
+  - paragraph: "12"
+  - paragraph: Last Contact
+  - paragraph: Jan 11
+  - button:
+- generic: $0k
+
+REPORTS
+
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- complementary:
+  - generic: Gallery CRM
+  - generic: Art Management
+  - button:
+  - navigation:
+    - link "Dashboard":
+      - /url: /
+      - generic: Dashboard
+    - link "Customers":
+      - /url: /customers
+      - generic: Customers
+    - link "Artworks":
+      - /url: /artworks
+      - generic: Artworks
+    - link "Reports":
+      - /url: /reports
+      - generic: Reports
+    - link "Settings":
+      - /url: /settings
+      - generic: Settings
+  - generic: SA
+  - generic: Sarah Adams
+  - generic: Gallery Manager
+- main:
+  - heading "Reports" [level=1]
+  - paragraph: Analytics and performance summaries
+  - paragraph: Total Revenue (All Time)
+  - paragraph: $740,000
+  - paragraph: Avg. Purchase Value
+  - paragraph: $123,333
+  - paragraph: Conversion Rate
+  - paragraph: 38%
+  - paragraph: Active Relationships
+  - paragraph: "7"
+  - tablist:
+    - tab "Revenue" [selected]
+    - tab "Engagement"
+    - tab "Sales Funnel"
+  - tabpanel "Revenue":
+    - heading "Monthly Revenue Trend" [level=3]
+    - heading "Revenue by Customer Type" [level=3]
+    - generic: VIP Collectors
+    - generic: Regular Buyers
+    - generic: New Collectors
+    - heading "Artist Performance" [level=3]
+- generic: Elena Voss
+
+BUTTONS
+
+{"customerButtons":["","Add Customer","","","","","","","",""],"reportButtons":[""]}

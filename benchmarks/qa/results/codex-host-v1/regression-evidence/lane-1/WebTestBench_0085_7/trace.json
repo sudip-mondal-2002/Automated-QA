@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0085:7",
+  "appId": "WebTestBench_0085",
+  "candidateSha256": "1af2ee32f7c7a56e9faa5daf5d7b9cf3c66cfb38686ed84cb2e790b53e52886a",
+  "appArchiveSha256": "c24ddb94febe4c6f0bf5f3fa9ce9e1363939357355b8e439a9fca61ebdfbcbea",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Google Chrome",
+    "version": "152.0.7977.76",
+    "surface": "Chrome extension"
+  },
+  "startedAt": "2026-09-05T08:21:58.607Z",
+  "completedAt": "2026-09-05T08:22:06.550Z",
+  "isolation": "Fresh re-execution used unique origin http://127.0.0.1:47307 with no prior case cookies/localStorage. Vite was started solely for this case and stopped afterward.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Selected Beginner and confirmed it became Active."
+    },
+    {
+      "step": 2,
+      "action": "Selected Intermediate on the same fresh view."
+    },
+    {
+      "step": 3,
+      "action": "Read both pathway controls after the second selection."
+    }
+  ],
+  "observations": [
+    "Beginner was Active after the first selection.",
+    "After selecting Intermediate, Beginner still displayed Active and Intermediate also displayed Active.",
+    "Advanced remained unselected, isolating the retained previous-path behavior."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "The fresh case-specific run confirms the prior Beginner highlight is retained when Intermediate is selected.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-beginner-intermediate.png",
+      "sha256": "60d951b4842f2d3cf7c3ea2a76e6cc8be6dd5db96017f02b13445fe95cca861a",
+      "bytes": 67961
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0085_7/fresh-retained-paths-dom.txt",
+      "sha256": "eb1c63ccc2072103adbce3dd333baa6c3d0fa62234223291f0b8a7c04d34a9b8",
+      "bytes": 5437
+    }
+  ],
+  "laneId": "lane-1"
+}

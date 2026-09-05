@@ -1,0 +1,210 @@
+=== FLOOR MAP ===
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites":
+      - /url: /favorites
+      - text: Favorites
+- main:
+  - heading "Floor Map" [level=1]
+  - paragraph: Navigate the exhibition halls and find booth locations
+  - heading "Exhibition Areas" [level=3]
+  - generic: "Hall A: Electronics & Technology"
+  - generic: "Hall B: Healthcare & Medical"
+  - generic: "Hall C: Manufacturing & Automation"
+  - heading "Hall A" [level=3]
+  - generic: Electronics & Technology
+  - link "E-101 QuantTech Systems":
+    - /url: /exhibitor/quantech-systems
+    - text: E-101
+    - paragraph: QuantTech Systems
+  - link "E-118 NeuralSense AI":
+    - /url: /exhibitor/neuralsense-ai
+    - text: E-118
+    - paragraph: NeuralSense AI
+  - link "E-125 Voltaic Energy":
+    - /url: /exhibitor/voltaic-energy
+    - text: E-125
+    - paragraph: Voltaic Energy
+  - generic: 3 exhibitors
+  - text: Click to explore
+  - heading "Hall B" [level=3]
+  - generic: Healthcare & Medical
+  - link "H-205 MediCore Innovations":
+    - /url: /exhibitor/medicore-innovations
+    - text: H-205
+    - paragraph: MediCore Innovations
+  - link "H-221 BioSynth Labs":
+    - /url: /exhibitor/biosynth-labs
+    - text: H-221
+    - paragraph: BioSynth Labs
+  - link "H-238 Healix Therapeutics":
+    - /url: /exhibitor/healix-therapeutics
+    - text: H-238
+    - paragraph: Healix Therapeutics
+  - generic: 3 exhibitors
+  - text: Click to explore
+  - heading "Hall C" [level=3]
+  - generic: Manufacturing & Automation
+  - link "M-312 AutoForge Robotics":
+    - /url: /exhibitor/autoforge-robotics
+    - text: M-312
+    - paragraph: AutoForge Robotics
+  - link "M-340 Precision Dynamics":
+    - /url: /exhibitor/precision-dynamics
+    - text: M-340
+    - paragraph: Precision Dynamics
+  - generic: 2 exhibitors
+  - text: Click to explore
+
+=== E-101 DESTINATION ===
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites":
+      - /url: /favorites
+      - text: Favorites
+- button "Back":
+  - text: Back
+- button "Save":
+  - text: Save
+- main:
+  - img "QuantTech Systems logo"
+  - generic: Electronics & Technology
+  - heading "QuantTech Systems" [level=1]
+  - paragraph: Next-Generation Quantum Computing Solutions
+  - paragraph: QuantTech Systems is pioneering accessible quantum computing for enterprise applications. Our hybrid quantum-classical systems enable businesses to solve complex optimization problems in logistics, finance, and drug discovery.
+  - heading "Highlights" [level=3]:
+    - button "Highlights" [expanded]:
+      - text: Highlights
+  - region "Highlights":
+    - list:
+      - generic: "1"
+      - generic: Live quantum computing demos every hour
+      - generic: "2"
+      - generic: New QT-500 processor launch
+      - generic: "3"
+      - generic: Free workshop on quantum algorithms
+      - generic: "4"
+      - generic: Partner ecosystem showcase
+  - heading "Specifications" [level=3]:
+    - button "Specifications":
+      - text: Specifications
+  - heading "Target Audience" [level=3]:
+    - button "Target Audience":
+      - text: Target Audience
+  - heading "Frequently Asked Questions" [level=3]:
+    - button "Frequently Asked Questions":
+      - text: Frequently Asked Questions
+  - heading "Location" [level=3]
+  - paragraph: Hall & Booth
+  - paragraph: Hall A • Booth E-101
+  - link "View on Floor Map":
+    - /url: /map
+    - text: View on Floor Map
+  - heading "On-site Actions" [level=3]
+  - button "Schedule a Meeting":
+    - text: Schedule a Meeting
+  - button "Request Materials":
+    - text: Request Materials
+  - heading "Contact" [level=3]
+  - link "Visit Website":
+    - /url: https://quanttech.example.com
+    - text: Visit Website
+  - link "contact@quanttech.example.com":
+    - /url: mailto:contact@quanttech.example.com
+    - text: contact@quanttech.example.com
+
+=== H-205 DESTINATION ===
+- region "Notifications (F8)":
+  - list
+- region "Notifications alt+T"
+- banner:
+  - link "TX TechExpo 2024 Exhibitor Directory":
+    - /url: /
+    - generic: TX
+    - heading "TechExpo 2024" [level=1]
+    - paragraph: Exhibitor Directory
+  - navigation:
+    - link "Exhibitors":
+      - /url: /
+    - link "Floor Map":
+      - /url: /map
+      - text: Floor Map
+    - link "Favorites":
+      - /url: /favorites
+      - text: Favorites
+- button "Back":
+  - text: Back
+- button "Save":
+  - text: Save
+- main:
+  - img "MediCore Innovations logo"
+  - generic: Healthcare & Medical
+  - heading "MediCore Innovations" [level=1]
+  - paragraph: AI-Powered Diagnostic Imaging
+  - paragraph: MediCore Innovations combines advanced AI with medical imaging to deliver faster, more accurate diagnoses. Our FDA-cleared solutions help radiologists detect conditions earlier and improve patient outcomes.
+  - heading "Highlights" [level=3]:
+    - button "Highlights" [expanded]:
+      - text: Highlights
+  - region "Highlights":
+    - list:
+      - generic: "1"
+      - generic: FDA-cleared AI diagnostic tools
+      - generic: "2"
+      - generic: Real-time imaging analysis demos
+      - generic: "3"
+      - generic: Case study presentations at 2PM daily
+      - generic: "4"
+      - generic: Integration partner meetups
+  - heading "Specifications" [level=3]:
+    - button "Specifications":
+      - text: Specifications
+  - heading "Target Audience" [level=3]:
+    - button "Target Audience":
+      - text: Target Audience
+  - heading "Frequently Asked Questions" [level=3]:
+    - button "Frequently Asked Questions":
+      - text: Frequently Asked Questions
+  - heading "Location" [level=3]
+  - paragraph: Hall & Booth
+  - paragraph: Hall B • Booth H-205
+  - link "View on Floor Map":
+    - /url: /map
+    - text: View on Floor Map
+  - heading "On-site Actions" [level=3]
+  - button "Schedule a Meeting":
+    - text: Schedule a Meeting
+  - button "Request Materials":
+    - text: Request Materials
+  - heading "Contact" [level=3]
+  - link "Visit Website":
+    - /url: https://medicore.example.com
+    - text: Visit Website
+  - link "info@medicore.example.com":
+    - /url: mailto:info@medicore.example.com
+    - text: info@medicore.example.com

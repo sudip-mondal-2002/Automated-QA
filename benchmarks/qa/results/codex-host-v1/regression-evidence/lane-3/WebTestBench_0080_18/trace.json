@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0080:18",
+  "appId": "WebTestBench_0080",
+  "candidateSha256": "0bd2b6529076f0ee01dbd0698c058e8ae80b233f2889c8fb3459546e9a815068",
+  "appArchiveSha256": "e86b46fa963da043889524b7f6fa5419f79104bbd5b9e40c3f91335fdfc2ca71",
+  "runner": "codex-regression-lane-3",
+  "browser": "Codex In-app Browser",
+  "browserVersion": "Chrome 151.0.0.0",
+  "startedAt": "2026-09-05T08:06:22.162Z",
+  "completedAt": "2026-09-05T08:07:22.162Z",
+  "isolation": "Fresh Codex in-app Browser tab and newly started Vite process on case-unique origin http://wtb0080-18.localhost:43184; no cookie or localStorage origin was reused across cases.",
+  "actions": [
+    "Searched for zzzz-no-such-error-928374.",
+    "Repeated with qwerty-impossible-token-442211."
+  ],
+  "observations": [
+    "Both no-match searches rendered No errors found.",
+    "The secondary copy was Try searching with different keywords; the required sentence never appeared."
+  ],
+  "outcome": "Fail",
+  "confidence": "high",
+  "notes": "The empty-result state exists, but its required exact message is absent on repeated no-match searches.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0080_18/dom.txt",
+      "sha256": "e597f7453dda1dfa93cd4b45463242e604def80efaf5b1ed54d330deb7fb1254",
+      "bytes": 413
+    },
+    {
+      "file": "regression-evidence/lane-3/WebTestBench_0080_18/no-result-message.png",
+      "sha256": "aa500e937fc2f8fb040faff6190832526c95c9da8b525558235dcc66cae88a9d",
+      "bytes": 13046
+    }
+  ],
+  "laneId": "lane-3"
+}

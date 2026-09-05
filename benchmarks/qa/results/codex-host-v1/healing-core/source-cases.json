@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "track": "reprobreak-healing-core-v1",
+  "scope": "protocol-core",
+  "source": {
+    "name": "ReproBreak: A Dataset of Reproducible Web Locator Breaks",
+    "artifactUrl": "https://doi.org/10.5281/zenodo.21171968",
+    "repositoryUrl": "https://github.com/rub-sq/ReproBreak",
+    "paperUrl": "https://arxiv.org/abs/2605.12158",
+    "repositoryCommit": "c603a0ccc980c552d9ca3c05c031e36a094ef5df",
+    "license": "MIT",
+    "databaseArchive": "ReproBreak-db.zip",
+    "databaseArchiveSha256": "967a680b1740d1f454c5681c263a3f5782e000b05d6817435bde2ccb25482689",
+    "databaseArchiveMd5": "f6a50d8a3b3cfe82086bf7289c8f2464",
+    "selection": "The eight CURATED_IDS in upstream run_reduced_experiment.py, in upstream order",
+    "selectedIds": [1224, 1225, 616, 619, 3316, 3318, 5609, 5620],
+    "databaseQuery": "SELECT lc.id, lc.old_locator, lc.new_locator, lc.repository_name, lc.commit_sha, gc.previous_sha, gc.commit_date, lc.test_file_path, lc.line_no, lc.framework, lb.reproduce_files_id FROM locator_change lc JOIN locator_break lb ON lb.locator_change_id = lc.id JOIN git_commit gc ON gc.sha = lc.commit_sha AND gc.repository_name = lc.repository_name WHERE lc.id IN (1224,1225,616,619,3316,3318,5609,5620);"
+  },
+  "claimBoundary": "These cases use official locator records as provenance and model one locally authored assertion-level slice based on the surrounding upstream test in deterministic browser microfixtures. They are not executions of the four upstream applications and must not be reported as official ReproBreak reproduction results.",
+  "cases": [
+    {
+      "id": 1224,
+      "source_record": {
+        "old_locator": "cy.get('.slick-header-menu')",
+        "new_locator": "cy.get('.slick-header-menu .slick-menu-command-list')",
+        "repository_name": "ghiscoding/angular-slickgrid",
+        "commit_sha": "b779ef14186481ebbd3ff32c1167729989feb3cf",
+        "previous_sha": "79a6802b75b15effa6f1b9fbce30f57c36dd7559",
+        "commit_date": "2023-11-01",
+        "test_file_path": "test/cypress/e2e/example06.cy.ts",
+        "line_no": 440,
+        "framework": "cypress",
+        "reproduce_files_id": 1
+      },
+      "sourceUrl": "https://github.com/ghiscoding/angular-slickgrid/blob/b779ef14186481ebbd3ff32c1167729989feb3cf/test/cypress/e2e/example06.cy.ts#L440",
+      "semanticIntent": "Inspect the Title column header menu for the descending-sort command",
+      "expectation": "The Title column header menu contains Sort Descending",
+      "microfixture": {
+        "kind": "nested-menu-command",
+        "commandIndex": 4,
+        "expectedText": "Sort Descending"
+      }
+    },
+    {
+      "id": 1225,
+      "source_record": {
+        "old_locator": "cy.get('.slick-header-menu')",
+        "new_locator": "cy.get('.slick-header-menu .slick-menu-command-list')",
+        "repository_name": "ghiscoding/angular-slickgrid",
+        "commit_sha": "b779ef14186481ebbd3ff32c1167729989feb3cf",
+        "previous_sha": "79a6802b75b15effa6f1b9fbce30f57c36dd7559",
+        "commit_date": "2023-11-01",
+        "test_file_path": "test/cypress/e2e/example06.cy.ts",
+        "line_no": 445,
+        "framework": "cypress",
+        "reproduce_files_id": 1
+      },
+      "sourceUrl": "https://github.com/ghiscoding/angular-slickgrid/blob/b779ef14186481ebbd3ff32c1167729989feb3cf/test/cypress/e2e/example06.cy.ts#L445",
+      "semanticIntent": "Inspect the Title column header menu for the remove-filter command",
+      "expectation": "The Title column header menu contains Remove Filter",
+      "microfixture": {
+        "kind": "nested-menu-command",
+        "commandIndex": 6,
+        "expectedText": "Remove Filter"
+      }
+    },
+    {
+      "id": 616,
+      "source_record": {
+        "old_locator": "page.$('[data-kg-floating-toolbar]'))",
+        "new_locator": "page.locator('[data-kg-floating-toolbar]'))",
+        "repository_name": "tryghost/koenig",
+        "commit_sha": "93882b2c1d3f2358d8bd8b93315f283972b07732",
+        "previous_sha": "78b4d527da4b343679790a3c8d790a31a1f0e836",
+        "commit_date": "2023-05-04",
+        "test_file_path": "packages/koenig-lexical/test/e2e/floating-toolbar.test.js",
+        "line_no": 13,
+        "framework": "playwright",
+        "reproduce_files_id": 5
+      },
+      "sourceUrl": "https://github.com/tryghost/koenig/blob/93882b2c1d3f2358d8bd8b93315f283972b07732/packages/koenig-lexical/test/e2e/floating-toolbar.test.js#L13",
+      "semanticIntent": "Inspect the editor before text is selected",
+      "expectation": "The floating toolbar is absent before text selection",
+      "microfixture": {
+        "kind": "toolbar-absence",
+        "phase": "before-selection"
+      }
+    },
+    {
+      "id": 619,
+      "source_record": {
+        "old_locator": "page.$('[data-kg-floating-toolbar]'))",
+        "new_locator": "page.locator('[data-kg-floating-toolbar]'))",
+        "repository_name": "tryghost/koenig",
+        "commit_sha": "93882b2c1d3f2358d8bd8b93315f283972b07732",
+        "previous_sha": "78b4d527da4b343679790a3c8d790a31a1f0e836",
+        "commit_date": "2023-05-04",
+        "test_file_path": "packages/koenig-lexical/test/e2e/floating-toolbar.test.js",
+        "line_no": 35,
+        "framework": "playwright",
+        "reproduce_files_id": 5
+      },
+      "sourceUrl": "https://github.com/tryghost/koenig/blob/93882b2c1d3f2358d8bd8b93315f283972b07732/packages/koenig-lexical/test/e2e/floating-toolbar.test.js#L35",
+      "semanticIntent": "Remove the editor selection and inspect the floating toolbar",
+      "expectation": "The floating toolbar is absent after selection removal",
+      "microfixture": {
+        "kind": "toolbar-absence",
+        "phase": "after-selection-removal"
+      }
+    },
+    {
+      "id": 3316,
+      "source_record": {
+        "old_locator": "page.getByRole('button', { name: 'OK', exact: true })",
+        "new_locator": "page.getByRole('button', { name: 'Ok', exact: true })",
+        "repository_name": "nasa/openmct",
+        "commit_sha": "0413e77d8a4a1514c052b766367b696fe20e2a58",
+        "previous_sha": "4ee68cccd66105d068337f2ba50772651dcdb1c2",
+        "commit_date": "2024-08-07",
+        "test_file_path": "e2e/tests/functional/recentObjects.e2e.spec.js",
+        "line_no": 107,
+        "framework": "playwright",
+        "reproduce_files_id": 6
+      },
+      "sourceUrl": "https://github.com/nasa/openmct/blob/0413e77d8a4a1514c052b766367b696fe20e2a58/e2e/tests/functional/recentObjects.e2e.spec.js#L107",
+      "semanticIntent": "Confirm deletion of the renamed folder from the tree",
+      "expectation": "The renamed folder and its clock are absent from Recently Viewed",
+      "microfixture": {
+        "kind": "exact-name-confirmation",
+        "operation": "delete-folder"
+      }
+    },
+    {
+      "id": 3318,
+      "source_record": {
+        "old_locator": "page.getByRole('button', { name: 'OK', exact: true })",
+        "new_locator": "page.getByRole('button', { name: 'Ok', exact: true })",
+        "repository_name": "nasa/openmct",
+        "commit_sha": "0413e77d8a4a1514c052b766367b696fe20e2a58",
+        "previous_sha": "4ee68cccd66105d068337f2ba50772651dcdb1c2",
+        "commit_date": "2024-08-07",
+        "test_file_path": "e2e/tests/functional/recentObjects.e2e.spec.js",
+        "line_no": 310,
+        "framework": "playwright",
+        "reproduce_files_id": 6
+      },
+      "sourceUrl": "https://github.com/nasa/openmct/blob/0413e77d8a4a1514c052b766367b696fe20e2a58/e2e/tests/functional/recentObjects.e2e.spec.js#L310",
+      "semanticIntent": "Confirm clearing the Recently Viewed list",
+      "expectation": "The Recently Viewed list is empty and its clear button is disabled",
+      "microfixture": {
+        "kind": "exact-name-confirmation",
+        "operation": "clear-recents"
+      }
+    },
+    {
+      "id": 5609,
+      "source_record": {
+        "old_locator": "page.getByRole('listitem')",
+        "new_locator": "page.getByRole('treeitem')",
+        "repository_name": "microsoft/playwright",
+        "commit_sha": "623a8916f9acf76f3a49287f3d63af9f9dac591a",
+        "previous_sha": "aa952c1b03d5676c29760793cdefa0bdc78222f9",
+        "commit_date": "2024-10-17",
+        "test_file_path": "tests/playwright-test/ui-mode-test-annotations.spec.ts",
+        "line_no": 36,
+        "framework": "playwright",
+        "reproduce_files_id": 7
+      },
+      "sourceUrl": "https://github.com/microsoft/playwright/blob/623a8916f9acf76f3a49287f3d63af9f9dac591a/tests/playwright-test/ui-mode-test-annotations.spec.ts#L36",
+      "semanticIntent": "Expand the suite in the test tree and open its annotation test",
+      "expectation": "The annotation test can be opened from the expanded suite",
+      "microfixture": {
+        "kind": "aria-treeitem",
+        "operation": "expand-suite"
+      }
+    },
+    {
+      "id": 5620,
+      "source_record": {
+        "old_locator": "page.locator('.ui-mode-list-item-title')",
+        "new_locator": "page.locator('.ui-mode-tree-item-title')",
+        "repository_name": "microsoft/playwright",
+        "commit_sha": "623a8916f9acf76f3a49287f3d63af9f9dac591a",
+        "previous_sha": "aa952c1b03d5676c29760793cdefa0bdc78222f9",
+        "commit_date": "2024-10-17",
+        "test_file_path": "tests/playwright-test/ui-mode-test-filters.spec.ts",
+        "line_no": 67,
+        "framework": "playwright",
+        "reproduce_files_id": 7
+      },
+      "sourceUrl": "https://github.com/microsoft/playwright/blob/623a8916f9acf76f3a49287f3d63af9f9dac591a/tests/playwright-test/ui-mode-test-filters.spec.ts#L67",
+      "semanticIntent": "Select the smoke tag in the test tree",
+      "expectation": "The Filter field contains @smoke and only the tagged test remains",
+      "microfixture": {
+        "kind": "renamed-tree-title-class",
+        "operation": "filter-smoke"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+version: 1
+id: reprobreak-616
+title: ReproBreak 616 healing core
+environment: local
+steps:
+  - intent: Inspect the editor before text is selected
+    expect:
+      - The floating toolbar is absent before text selection

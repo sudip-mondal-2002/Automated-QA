@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "caseId": "WebTestBench_0084:12",
+  "appId": "WebTestBench_0084",
+  "candidateSha256": "89e3b1d93ede9a4eb271667ba2787516e73c68c17333f1f4b51e20f745995ba7",
+  "appArchiveSha256": "1313b6fefb9a5692e0f4233635b1a0d92c5832e07505ee5abdb94596c377d0f2",
+  "runner": "codex-regression-lane-1",
+  "browser": {
+    "name": "Codex In-app Browser",
+    "version": "151.0.0.0",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+  },
+  "startedAt": "2026-09-05T07:59:11.177Z",
+  "completedAt": "2026-09-05T07:59:29.865Z",
+  "isolation": "Unique loopback origin 47105 was used only for this case, so cookies/localStorage could not carry over from another case; Vite was started fresh and stopped after the run.",
+  "actions": [
+    {
+      "step": 1,
+      "action": "Clicked Add to favorites on QuantTech Systems."
+    },
+    {
+      "step": 2,
+      "action": "Inspected the card control and navigation badge immediately."
+    }
+  ],
+  "observations": [
+    "The control changed from Add to favorites to Remove from favorites.",
+    "The navigation link synchronously changed to Favorites 1."
+  ],
+  "outcome": "Pass",
+  "confidence": "high",
+  "notes": "Both selected state and favorite count updated in the same interaction.",
+  "evidence": [
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_12/favorite-selected.png",
+      "sha256": "b6aa493f2e15c63dba01000935b692ee6b3b399ab4f58994abbfbb1a177be8de",
+      "bytes": 73592
+    },
+    {
+      "file": "regression-evidence/lane-1/WebTestBench_0084_12/dom-snapshot.txt",
+      "sha256": "93d6130edf7224696f888939498629edd04b1caa53cd2b27f51e692b485d8f5e",
+      "bytes": 7714
+    }
+  ],
+  "laneId": "lane-1"
+}
