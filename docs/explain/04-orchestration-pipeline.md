@@ -18,7 +18,7 @@ flowchart TB
   S1["**1 · probe**<br/>GET origin, redirect:manual<br/>status < 500 = reachable"] --> S2
   S2["**2 · crawl**<br/>auth-first cookie session<br/>BFS ≤25 pages, ≤3 depth<br/>→ site-map.json"] --> S3
   S3["**3 · plan**<br/>Planner sub-agent (2 attempts)<br/>or deterministic buildTestPlan<br/>→ test-plan.json / .md"] --> S4
-  S4{"**4 · gate**<br/>12 rules · weighted score<br/>decideVerdict"} 
+  S4{"**4 · gate**<br/>12 rules · weighted score<br/>decideVerdict"}
   S4 -->|replan · autoFixable gaps| S3
   S4 -->|escalate| S7
   S4 -->|pass| S5

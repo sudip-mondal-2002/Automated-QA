@@ -29,6 +29,7 @@
     },
     "evidence": { "$ref": "#/$defs/evidence" },
     "design": { "$ref": "#/$defs/designResult" },
+    "execution": { "$ref": "#/$defs/execution" },
     "events": {
       "type": "array",
       "items": { "$ref": "#/$defs/executionEvent" }
@@ -154,6 +155,12 @@
             "screenshot_captured",
             "cleanup_started",
             "cleanup_completed",
+            "playwright_started",
+            "playwright_completed",
+            "playwright_validation_started",
+            "playwright_validation_completed",
+            "agent_fallback_started",
+            "agent_fallback_completed",
             "run_completed"
           ]
         },
@@ -164,10 +171,53 @@
         "message": { "type": "string", "minLength": 1 }
       }
     },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "attempts", "agentCalls"],
+      "properties": {
+        "mode": { "enum": ["playwright", "hybrid", "agent_fallback", "agent"] },
+        "agentCalls": { "type": "integer", "minimum": 0 },
+        "fallbackReason": { "type": "string", "minLength": 1 },
+        "script": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "state", "sourceHash", "scriptHash", "validationRuns"],
+          "properties": {
+            "path": { "type": "string", "pattern": "^\\.qa/specs/[a-z][a-z0-9-]*\\.playwright\\.mjs$" },
+            "state": { "enum": ["missing", "candidate", "trusted", "rejected", "stale", "edited"] },
+            "sourceHash": { "$ref": "#/$defs/hash" },
+            "scriptHash": { "$ref": "#/$defs/hash" },
+            "validationRuns": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["engine", "status", "startedAt", "completedAt", "durationMs"],
+            "properties": {
+              "engine": { "enum": ["playwright", "agent"] },
+              "status": { "enum": ["passed", "failed", "blocked", "skipped"] },
+              "startedAt": { "$ref": "#/$defs/timestamp" },
+              "completedAt": { "$ref": "#/$defs/timestamp" },
+              "durationMs": { "type": "integer", "minimum": 0 },
+              "reason": { "type": "string", "minLength": 1 },
+              "browserChannel": { "type": "string", "minLength": 1 },
+              "validation": { "type": "boolean" },
+              "consoleErrors": { "type": "array", "items": { "type": "string" } },
+              "networkErrors": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
     "screenshotPath": {
       "type": "string",
       "pattern": "^screenshots/[a-z0-9][a-z0-9-]*\\.(?:png|jpe?g|webp)$"
     },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "designResult": {
       "type": "object",
       "additionalProperties": false,

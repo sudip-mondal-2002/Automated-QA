@@ -1,9 +1,9 @@
 // Playwright adapter for the NativeExecutor contract (dev/demo only).
 //
-// NOT part of the bundled skill runtime: skill-runtime.js never imports this
-// file, so `ajv+yaml` stays the production dep floor. Install as a dev
-// dependency (`npm install --save-dev @playwright/test`) and pass a real
-// Playwright `page` object in. The heuristics below are deterministic and
+// This heuristic adapter remains development/demo-only. The packaged runtime
+// now owns a separate deterministic replay runner, so application projects do
+// not install Playwright. Pass a real Playwright `page` object in here when
+// exercising the semantic executor during repository development. The heuristics below are deterministic and
 // deliberately dumb: first accessible match wins, observations are keyword
 // containment, and anything ambiguous is reported, never guessed.
 import { QaError } from "./errors.js";

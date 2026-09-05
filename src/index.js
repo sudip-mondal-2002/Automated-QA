@@ -4,6 +4,22 @@ export { formatQaError, ORCHESTRATION_ERROR_CODES, QaError } from "./errors.js";
 export { prepareEnvironment, spawnApplication, stopProcessTree } from "./environment.js";
 export { channelFor, createRunId, executeRun } from "./execution.js";
 export {
+  createReplayManifest,
+  createReplayRecorder,
+  executeWithReplay,
+  renderRecordedReplay,
+  renderReplayFromBindings,
+  replayHash,
+  replayPromotionSafe,
+  replaySource,
+  replayStatus,
+  REPLAY_GENERATOR_VERSION,
+  REPLAY_VALIDATION_RUNS,
+  runReplayAttempt,
+  validateReplayCandidate,
+  validateReplayScriptSource,
+} from "./replay.js";
+export {
   buildDesignComparisonRequest,
   DEFAULT_DESIGN_VIEWPORT,
   DESIGN_COMPARISON_RULES,

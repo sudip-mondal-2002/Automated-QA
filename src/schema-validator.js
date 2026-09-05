@@ -11,6 +11,7 @@ const SCHEMA_FILES = {
   lastTest: "last-test.schema.json",
   testPlan: "test-plan.schema.json",
   planDraft: "plan-draft.schema.json",
+  replayManifest: "replay-manifest.schema.json",
   siteMap: "site-map.schema.json",
   gaps: "gaps.schema.json",
   report: "report.schema.json",

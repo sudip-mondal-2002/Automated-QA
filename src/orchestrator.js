@@ -7,7 +7,7 @@ import { planWithAgent } from "./planner-agent.js";
 import { validateDocument } from "./schema-validator.js";
 import { decideVerdict, evaluatePlan, renderGapsMarkdown } from "./coverage.js";
 import { generate } from "./generator.js";
-import { executeRun } from "./execution.js";
+import { executeWithReplay } from "./replay.js";
 import { buildReport, writeReport } from "./reporter.js";
 import { QaWorkspace } from "./storage.js";
 import { stringifyYaml } from "./documents.js";
@@ -59,6 +59,7 @@ export async function orchestrate({
   emit,
   planner,
   planOnly = false,
+  browserLauncher,
 } = {}) {
   if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "--url is required");
   const parsed = assertTargetAllowed(url, { allowRemote });
@@ -178,7 +179,7 @@ export async function orchestrate({
       const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
-        const result = await executeRun({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl });
+        const result = await executeWithReplay({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl, browserLauncher });
         const durationMs = Date.now() - started;
         const classification = result.classification;
         const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";

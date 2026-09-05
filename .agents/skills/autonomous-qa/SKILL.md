@@ -21,7 +21,8 @@ Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. This installed
 
 - `scripts/qa-agent` — POSIX internal launcher;
 - `scripts/qa-agent.cmd` — the same launcher for Windows shells;
-- `runtime/qa-agent.mjs` — bundled Node.js runtime and dependencies;
+- `runtime/qa-agent.mjs` — a single-file bundled Node.js and Playwright runtime;
+- `runtime/playwright-core/` — Playwright package/browser metadata used by that bundle (not a dependency tree);
 - `schemas/` — authoritative document contracts;
 - `ui/` — loopback workspace assets.
 
@@ -59,24 +60,31 @@ The application needs Node.js 20 or newer, but it does not need to install the s
 The skill, not the developer, performs every step below.
 
 1. Load the selected spec, environment, and referenced fixtures. `run-last` means the exact spec and environment in `.qa/last-test.json`.
-2. Detect the required native capability before launch:
+2. For a web target, inspect the adjacent `.qa/specs/<id>.playwright.mjs` and `.playwright.json` replay artifacts before requesting a native capability:
+   - a trusted replay whose semantic source and script hashes still match runs first in a fresh headless Chrome-family context;
+   - a complete Playwright pass is the final result and must not invoke Browser, Chrome control, computer use, or a model-backed executor;
+   - a missing, stale, edited, rejected, unavailable, or failed replay falls through to native execution; preserve that attempt in the single final result;
+   - an edited script must pass internal `replay validate <id> --env <environment>` three consecutive times before it can be trusted;
+   - design and mixed-channel specs may use a passing replay as a deterministic prefix, but invoke judgement only for the uncovered semantic checkpoints. If state cannot be handed off safely, rerun the complete semantic test natively.
+3. When fallback is required, detect the required native capability before launch:
    - `type: web` requires Browser or Chrome control.
    - `type: desktop` requires computer use.
    - If the required capability is unavailable, save `blocked` with the precise reason. Never imply that a shell-only run drove a UI.
-3. For web targets, check `baseUrl`. When a loopback target is unreachable and `startCommand` exists, start it from the application repository, wait for observable reachability, and remember whether this skill started the process. Reuse an already healthy target.
-4. Connect to the target and execute fixture and test intents through the native capability:
+4. For web targets, check `baseUrl`. When a loopback target is unreachable and `startCommand` exists, start it from the application repository, wait for observable reachability, and remember whether this skill started the process. Reuse an already healthy target.
+5. Connect to the target and execute fixture and test intents through the native capability:
    - run `before` fixtures in declaration order;
    - after each passing step, run fixtures at that `between.afterStep` boundary;
    - observe the current UI, perform the minimum semantic action, and verify every declared expectation unchanged;
    - verify each fixture's top-level postcondition.
-5. Capture evidence after fixture checkpoints and test steps, and at failures. Do not capture credential entry while secret fields are populated. Save images only under `.qa/runs/<run-id>/screenshots/` and use run-relative paths in the result.
-6. When an action fails or its target is missing, capture current state and rediscover from the unchanged intent, current UI, failed or previous accessible target, and original expectations. Retry once only when the replacement is explicitly equivalent. Never heal a fixture postcondition.
-7. When an action succeeds but the expected UI may still be settling, wait only on an observable readiness condition supported by the native capability. Never use a fixed sleep.
-8. A successful recovery must retain the expectation list byte-for-byte, capture before and after evidence, and record the failed target, equivalent replacement, strategy, retry outcome, and verification.
-9. If the spec declares `design`, resolve the explicit image, URL, or Figma reference. At the declared checkpoint, capture the actual viewport and compare only component/content presence, major layout/order/grouping/alignment, and obvious style changes. Record structured findings and provenance.
-10. Always attempt `after` fixtures in a finally-style cleanup path while the native session remains usable. Cleanup failure is separate and must not replace the primary classification.
-11. Save a result matching `schemas/result.schema.json`, update `.qa/last-test.json` atomically, and keep recent-run retention intact. Report console and network errors only when the native capability exposes them; otherwise record that inspection as unsupported.
-12. Stop only an application process started for this run. Preserve `.qa/` artifacts and any already-running developer process.
+6. Capture evidence after fixture checkpoints and test steps, and at failures. A successful Playwright-only rerun saves metadata plus available console/network errors and intentionally captures no screenshot. Do not capture credential entry while secret fields are populated. Save images only under `.qa/runs/<run-id>/screenshots/` and use run-relative paths in the result.
+7. When an action fails or its target is missing, capture current state and rediscover from the unchanged intent, current UI, failed or previous accessible target, and original expectations. Retry once only when the replacement is explicitly equivalent. Never heal a fixture postcondition.
+8. When an action succeeds but the expected UI may still be settling, wait only on an observable readiness condition supported by the native capability. Never use a fixed sleep.
+9. A successful recovery must retain the expectation list byte-for-byte, capture before and after evidence, and record the failed target, equivalent replacement, strategy, retry outcome, and verification. Return a replay descriptor with successful native actions and observations so the runtime can generate or repair the Playwright script without copying resolved secret values.
+10. If the spec declares `design`, resolve the explicit image, URL, or Figma reference. At the declared checkpoint, capture the actual viewport and compare only component/content presence, major layout/order/grouping/alignment, and obvious style changes. Record structured findings and provenance.
+11. Always attempt `after` fixtures in a finally-style cleanup path while the native session remains usable. Cleanup failure is separate and must not replace the primary classification.
+12. After a passing or healed agent run, generate or repair the adjacent import-free replay. Promote it only after three zero-retry passes in fresh browser contexts. Destructive journeys require idempotent reset/cleanup fixtures; otherwise leave the candidate untrusted. A failed candidate validation never changes the successful semantic result.
+13. Save one result matching `schemas/result.schema.json`, including execution mode and every Playwright/agent attempt; update `.qa/last-test.json` atomically and keep recent-run retention intact. Report console and network errors only when exposed; otherwise record that inspection as unsupported.
+14. Stop only an application process started for this run. Preserve `.qa/` artifacts and any already-running developer process.
 
 ## Autonomous orchestration
 
@@ -151,8 +159,8 @@ The schemas in `schemas/` are authoritative. IDs use lowercase words separated b
 - Healing requires before/after evidence and unchanged-expectation verification.
 - Agent taste cannot create a design regression; explicit reference evidence and concrete findings are required.
 - Do not repair application code, update design baselines, or perform pixel-perfect diffing while running QA.
-- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Stagehand, DOM-selector scripts, coordinate scripts, or fixed sleeps.
-- The runtime never adds a Playwright dependency and never drives a browser itself. `orchestrate` emits `generated/*.spec.js` as portable artifacts for the developer's own runner; execution always goes through the native capability and the semantic spec stays the contract.
+- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Stagehand, coordinate scripts, or fixed sleeps.
+- Playwright scripts are generated mechanical artifacts beside selector-free semantic YAML. The bundled runtime may drive only a trusted, source-matched replay; it never modifies the application's package manifest or trusts skipped/unverified assertions. Any Playwright failure returns to the unchanged semantic contract and native agent capability.
 - **The runtime never calls a language model.** It ships no provider client, reads no API key, and makes no outbound request except to the target under test. Judgement — planning, rediscovery, design comparison — is a capability this skill supplies as a sub-agent. Where the capability is absent, the runtime falls back to a deterministic path and records that it did.
 - A plan draft is validated against `plan-draft.schema.json` before anything is generated from it. Never widen the schema to accommodate a draft; correct the draft.
 - Do not expose the UI beyond loopback or turn it into an execution service.

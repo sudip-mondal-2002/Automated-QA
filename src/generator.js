@@ -2,6 +2,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { validateDocument } from "./schema-validator.js";
 import { selectorCandidates } from "./planner.js";
+import {
+  createReplayManifest,
+  renderReplayFromBindings,
+  replaySource,
+  validateReplayScriptSource,
+} from "./replay.js";
 
 function slugify(value) {
   return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "flow";
@@ -505,6 +511,23 @@ export async function generate({ workspace, plan, siteMap, origin, fetchImpl, ex
       path.join(generatedDir, `${spec.id}.spec.js`),
       renderPlaywrightSpec({ spec: { ...clean, _preconditions: spec._preconditions }, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin }),
     );
+    const replay = renderReplayFromBindings({
+      spec: clean,
+      bindings: finalSidecar.bindings,
+      origin: origin ?? siteMap?.origin,
+      auth: (spec._preconditions ?? []).includes("authenticated") ? auth : null,
+    });
+    const source = await replaySource(workspace, clean.id, clean.environment);
+    const replayScript = validateReplayScriptSource(replay.script);
+    const replayManifest = createReplayManifest({
+      specId: clean.id,
+      environment: clean.environment,
+      sourceHash: source.sourceHash,
+      script: replayScript,
+      coverage: replay.coverage,
+    });
+    await workspace.saveReplayArtifacts(clean.id, replayScript, replayManifest);
+    await writeFile(path.join(generatedDir, `${spec.id}.playwright.mjs`), replayScript);
     artifacts.push(spec.id);
     if (spec._flowId) flowMap[spec.id] = spec._flowId;
   }

@@ -11,7 +11,9 @@ flowchart TB
   GATE -->|replan, autoFixable gaps| PLAN
   GATE -->|escalate| REP
   GATE -->|pass| GEN["generator.js<br/>planToSpecs · bindLocators<br/>validateSelectors — real predicate compile,<br/>fetch-probed assertions, auth+input binding"]
-  GEN --> RUN["execution.js<br/>executeRun per spec<br/>native-executor.js contract"]
+  GEN --> COORD{{"replay.js<br/>Playwright-first coordinator"}}
+  COORD -->|trusted complete pass| REP
+  COORD -->|missing · stale · failed · hybrid| RUN["execution.js<br/>executeRun per spec<br/>native-executor.js contract"]
   RUN -->|failure| HEAL["healing.js + locator-chain.js<br/>rediscovery · triage · expectation guard<br/>(never re-assert, only re-locate)"]
   HEAL --> ORC
   RUN -->|design check declared| DESIGN["design.js<br/>reference resolve · layout/style findings"]
@@ -20,6 +22,13 @@ flowchart TB
   ORC -.->|events| TR[("trace.jsonl")]
   TR --> UI["ui-server.js<br/>workspace + orchestration decision timeline"]
 ```
+
+Semantic YAML remains the source of truth. Each web spec may have an adjacent
+import-free Playwright script and replay manifest. A script becomes trusted
+only after three consecutive zero-retry runs in fresh contexts. Trusted
+complete passes bypass the agent; missing, stale, unavailable, failed, or
+safely non-deterministic replay portions fall back through the semantic
+executor once.
 
 Two pipelines share this codebase:
 
@@ -30,7 +39,8 @@ Two pipelines share this codebase:
   (no crawl/plan/gate), and `execution.js` drives it through the same
   native-executor contract. `orchestrate` reuses this execution engine rather
   than duplicating it — `generate()` writes specs into the workspace and
-  `orchestrator.js` calls the same `executeRun()` the skill uses.
+  `orchestrator.js` calls the same `executeWithReplay()` coordinator the skill
+  uses.
 
 ## Planner sub-agent (`src/planner-agent.js`)
 
@@ -86,12 +96,16 @@ resolve to a generated `signIn()` helper; form inputs are bound and filled;
 fetch of the live page (or a native executor when supplied) and leaves
 anything unresolvable `null` rather than stamping it `true`.
 
-Generated `.spec.js` files are portable artifacts for the developer's own
-Playwright runner — the orchestrator's own `run` stage executes the semantic
-plan through `execution.js`/native-executor, not these files.
+Generated `.spec.js` files remain portable artifacts for the developer's own
+Playwright runner. The orchestrator also stores a constrained adjacent replay;
+its `run` stage uses `executeWithReplay()` to run that artifact only after it is
+trusted, otherwise it executes the semantic plan through
+`execution.js`/native-executor.
 
 ## Execution, healing, design (`src/execution.js`, `src/healing.js`, `src/design.js`)
 
+- `replay.js` coordinates trusted Playwright execution, validation, and the
+  single semantic fallback while preserving all attempts in one result.
 - `execution.js` runs `before`/`between`/`after` fixtures and test steps
   through the `NativeExecutor` contract (`native-executor.js`), classifying
   each run as `passed`/`healed`/`functional_regression`/`design_regression`/`blocked`.
@@ -117,7 +131,7 @@ silently shipping a malformed artifact judges or the UI would read. `trace.jsonl
 carries every stage/decision event and is what `ui-server.js`'s orchestration
 decision timeline renders.
 
-Two honest notes: shell mode without a native executor reports `blocked` with
-the missing-capability reason rather than guessing, and generated Playwright
-files are portable artifacts validated against the live DOM — execution runs
-on the semantic engine.
+Two honest notes: a trusted complete replay can finish in shell mode with zero
+agent calls; if replay is unavailable or fails and no native executor exists,
+the run reports `blocked` with the missing-capability reason rather than
+guessing. Semantic YAML remains authoritative in both paths.

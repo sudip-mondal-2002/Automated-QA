@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { draftSpec } from "./draft.js";
 import { parseJson, stringifyJson, stringifyYaml } from "./documents.js";
 import { formatQaError, QaError } from "./errors.js";
-import { executeRun } from "./execution.js";
+import { executeWithReplay, replayStatus, validateReplayCandidate } from "./replay.js";
 import { atomicWriteFile, QaWorkspace } from "./storage.js";
 import { startQaUi } from "./ui-server.js";
 
@@ -21,6 +21,7 @@ Usage:
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
   qa-agent result <list|show|validate|save|delete> [run-id|file]
+  qa-agent replay <status|validate> <spec-id> [--env <id>]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
   qa-agent audit <run-id>
@@ -34,7 +35,7 @@ Use '-' as a save/validate file to read from standard input. All writes are
 validated and atomically replace the destination file.`;
 
 async function runCommand(workspace, specId, environmentId, io, output) {
-  const result = await executeRun({
+  const result = await executeWithReplay({
     workspace,
     specId,
     environmentId,
@@ -49,6 +50,8 @@ async function runCommand(workspace, specId, environmentId, io, output) {
       const subject = event.fixtureId ?? (event.stepIndex ? `step ${event.stepIndex}` : "");
       output([event.type, subject, event.status].filter(Boolean).join("\t"));
     }),
+    browserLauncher: io.browserLauncher,
+    expectImpl: io.expectImpl,
   });
   output(`${result.runId}\t${result.classification}\t${result.explanation}`);
   output(`Saved .qa/runs/${result.runId}/result.json`);
@@ -302,6 +305,37 @@ async function resultCommand(workspace, args, output) {
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);
 }
 
+async function replayCommand(workspace, args, io, output) {
+  const action = args.shift();
+  const id = args.shift();
+  const environmentId = option(args, "--env");
+  if (!id) throw new QaError("MISSING_ARGUMENT", `replay ${action ?? "operation"} requires a spec ID`);
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected replay argument: ${args[0]}`);
+  if (action === "status") {
+    const status = await replayStatus(workspace, id, environmentId);
+    output(stringifyJson({ state: status.state, ...(status.manifest ? { manifest: status.manifest } : {}) }));
+    return 0;
+  }
+  if (action === "validate") {
+    const result = await validateReplayCandidate({
+      workspace,
+      specId: id,
+      environmentId,
+      variables: io.variables ?? process.env,
+      browserLauncher: io.browserLauncher,
+      expectImpl: io.expectImpl,
+      fetchImpl: io.fetchImpl,
+      startApplication: io.startApplication,
+      startupTimeoutMs: io.startupTimeoutMs,
+      signal: io.signal,
+    });
+    output(stringifyJson({ trusted: result.trusted, manifest: result.manifest, attempts: result.attempts }));
+    return result.trusted ? 0 : 1;
+  }
+  throw new QaError("UNKNOWN_COMMAND", `Unknown replay operation: ${action ?? "(missing)"}`);
+}
+
 export function auditResult({ spec, result }) {
   const checks = [];
   const push = (name, passed, detail) => checks.push({ name, passed, ...(detail ? { detail } : {}) });
@@ -446,6 +480,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     else if (command === "fixture") await fixtureCommand(workspace, args, output);
     else if (command === "environment") await environmentCommand(workspace, args, output);
     else if (command === "result") await resultCommand(workspace, args, output);
+    else if (command === "replay") return await replayCommand(workspace, args, io, output);
     else if (command === "ui") {
       const host = option(args, "--host");
       const portValue = option(args, "--port");
@@ -519,7 +554,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       const { report, plan, exitCode, error } = await orchestrate({
         url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote, planOnly,
         planner,
-        executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl,
+        executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl, browserLauncher: io.browserLauncher,
       });
       if (error) throw error;
       if (json) output(JSON.stringify({ exitCode, report, ...(plan ? { plan } : {}) }));
