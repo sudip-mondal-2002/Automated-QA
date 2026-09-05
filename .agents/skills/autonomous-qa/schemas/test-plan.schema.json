@@ -87,8 +87,8 @@
           }
         },
         "expect": {
+          "description": "Empty for an action-only step (navigate/click/fill/submit with nothing yet to observe) — mergeActionSteps() in the generator folds it into the step that asserts its outcome. Never empty for an observing step; that is caught by the coverage gate's assertion-presence rule, not this schema.",
           "type": "array",
-          "minItems": 1,
           "items": {
             "oneOf": [
               { "type": "string", "minLength": 1 },

@@ -13,7 +13,7 @@ const elements = Object.fromEntries([
   "save-state", "yaml-editor", "validation-message", "validate-document", "save-document", "runs-list",
   "result-panel", "empty-result", "result-detail", "result-title", "result-status", "result-explanation",
   "delete-run", "result-metadata", "step-count", "step-list", "screenshot-count", "screenshot-grid",
-  "design-findings", "execution-detail", "toast",
+  "design-findings", "toast",
   "orchestration-panel", "orchestrations-badge", "orchestrations-list", "orchestration-detail",
   "orchestration-empty", "orchestration-body", "orchestration-metadata", "gate-score", "gate-list",
   "timeline", "timeline-count", "flow-list", "flow-count", "scenario-list", "scenario-count",
@@ -234,28 +234,7 @@ function renderResult(result) {
     metadataItem("Environment", result.environment),
     metadataItem("Started", formatTime(result.startedAt)),
     metadataItem("Completed", formatTime(result.completedAt)),
-    ...(result.execution ? [
-      metadataItem("Execution", result.execution.mode.replaceAll("_", " ")),
-      metadataItem("Agent calls", String(result.execution.agentCalls)),
-      metadataItem("Replay", result.execution.script?.state ?? "missing"),
-    ] : []),
   );
-  elements["execution-detail"].replaceChildren();
-  if (result.execution) {
-    const attempts = node("div", { className: "execution-attempts" });
-    for (const attempt of result.execution.attempts) {
-      attempts.append(node("span", {
-        className: `execution-attempt execution-${attempt.status}`,
-        text: `${attempt.engine}${attempt.validation ? " validation" : ""} · ${attempt.status} · ${attempt.durationMs}ms${attempt.browserChannel ? ` · ${attempt.browserChannel}` : ""}`,
-      }));
-    }
-    elements["execution-detail"].append(attempts);
-    if (result.execution.fallbackReason) {
-      elements["execution-detail"].append(node("p", { className: "execution-reason", text: `Fallback: ${result.execution.fallbackReason}` }));
-    }
-    const errors = [...(result.evidence?.consoleErrors ?? []), ...(result.evidence?.networkErrors ?? [])];
-    if (errors.length > 0) elements["execution-detail"].append(node("pre", { className: "execution-logs", text: errors.join("\n") }));
-  }
 
   elements["step-count"].textContent = `${result.steps.length} steps`;
   elements["step-list"].replaceChildren();

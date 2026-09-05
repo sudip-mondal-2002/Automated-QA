@@ -63,7 +63,17 @@ steps merge.
 
 ## P0 — Correctness bugs that will show on stage
 
-### 0.1 Generated tests assert the *description* of an expectation as literal page text **[verified]**
+**Status update (2026-09-05): 0.1, 0.2, and 0.3 below are fixed.** `src/generator.js`
+now compiles `{ prose, assert }` predicates into real Playwright assertions
+(`predicateToPlaywright`), emits `// UNVERIFIED` instead of asserting bare
+prose when no predicate exists, resolves `authenticated` preconditions to a
+generated `signIn()` helper, binds and fills every form input, and
+`validateSelectors()` actually probes locators and assertions against a live
+fetch (or native executor) instead of hardcoding `true`. Left below for
+history / regression-test reference — do not re-fix what these describe
+without first re-reading the current `src/generator.js`.
+
+### 0.1 Generated tests assert the *description* of an expectation as literal page text **[verified, fixed]**
 `src/generator.js:10` `expectationToPlaywright()` compiles the expectation string into
 `getByText(/<the expectation string>/i)`. Actual emitted code:
 
@@ -85,7 +95,7 @@ Fix: expectations must carry a machine-checkable predicate, not only prose. Eith
 (b) an LLM compiles prose → predicate against the observed DOM at generation time. Prose stays
 the human contract; the predicate is what executes.
 
-### 0.2 Generated tests skip auth and never fill inputs **[verified]**
+### 0.2 Generated tests skip auth and never fill inputs **[verified, fixed]**
 `flow.preconditions: ["authenticated"]` is planned and then dropped on the floor —
 `renderPlaywrightSpec()` never reads it. `bindLocators()` binds only the submit button, never the
 form inputs. So the generated "happy path" for `/checkout` navigates unauthenticated, clicks
@@ -95,7 +105,7 @@ error case while claiming to test the happy path.
 Fix: `preconditions` must resolve to a reusable auth setup (Playwright `storageState`, or a
 `before` fixture); `bindLocators` must bind every input in the form with a value source.
 
-### 0.3 "Live selector and assertion validation" — assertion validation does not exist **[verified]**
+### 0.3 "Live selector and assertion validation" — assertion validation does not exist **[verified, fixed]**
 `bindLocators()` hardcodes `assertionValidated: true` (`src/generator.js:66`). `validateSelectors()`
 only flips it false inside a `catch`. The selector "validation" itself is
 `html.toLowerCase().includes(needle.slice(0, 12))` — a 12-character substring match against
@@ -195,7 +205,15 @@ One `page` is reused across every spec in `scripts/run-with-playwright.mjs`. Aut
 between scenarios, which is why `unauth-redirect` cannot pass. Needs a fresh
 `browser.newContext()` per spec — which is also the prerequisite for parallelism.
 
-### 1.7 The coverage gate scores plan *shape*, not test *quality* **[verified]**
+### 1.7 The coverage gate scores plan *shape*, not test *quality* **[verified, fixed]**
+
+Status (2026-09-05): fixed. `src/coverage.js` now carries 12 rules, 6
+blocking / 6 advisory; `category-mix` and `journey-depth` are advisory,
+`checkable-assertions` is a real blocking rule that rewards predicate
+coverage, `assertion-presence` no longer scores a no-op `fill` step as thin,
+and `orphan-page`/`happy-path-coverage`/`error-state-per-form` all downgrade
+to advisory for pages the developer's prompt scoped out. Left below for
+history.
 The comparison table above is the finding: the LLM plan is better by every quality measure
 (6 multi-step journeys vs 0, fills inputs vs never, 100% checkable predicates vs 0%) and the gate
 scores it **0.50 → escalate** against the deterministic plan's **0.90 → pass**.
@@ -390,38 +408,45 @@ Still to do: the actual win/mac/linux CI matrix, so this does not regress.
 
 ## P4 — Contracts, packaging, delivery
 
-### 4.1 Orchestrator artifacts have no schema
-`schemas/` covers `spec`, `fixture`, `result`, `environments`, `lastTest` — all Layer A.
-`test-plan.json`, `gaps.json`, `report.json`, `site-map.json`, `*.locators.json`, `trace.jsonl`
-have **no schema and no validation**. These are the artifacts the brief is graded on, and they are
-the unvalidated ones. Add schemas and run `validateDocument()` before every write — this also
-becomes the contract an LLM planner's output is checked against (see 2.1).
+### 4.1 Orchestrator artifacts have no schema **[fixed 2026-09-05]**
+`schemas/` covered `spec`, `fixture`, `result`, `environments`, `lastTest`, `test-plan`, `plan-draft`
+but not `report.json`, `gaps.json`, `site-map.json`. Added `schemas/report.schema.json`,
+`schemas/gaps.schema.json`, `schemas/site-map.schema.json`; `orchestrator.js` now calls
+`validateDocument()` on the site map, gaps, and test plan before writing them, and
+`reporter.writeReport()` validates `report.json` before writing. A validation failure traces a
+`*_invalid` warning event rather than silently shipping a malformed artifact — verified live
+against `demo-app` with no such warnings on a clean run. `*.locators.json` and `trace.jsonl`
+remain unvalidated (locators are a generation-internal sidecar, not a graded artifact; trace is an
+append-only event log — schema-validating one line at a time would add cost without catching the
+failure mode that matters, a structurally broken document).
 
-### 4.2 The trace UI is backend-only
-`GET /api/orchestrations/:id/trace` exists (`src/ui-server.js:276`). `ui/app.js` contains **zero**
-references to orchestrations or traces. The "decision timeline" in `docs/architecture.md` has no
-frontend, and there is no way to start an orchestration from the UI — it is CLI-only.
-"User experience and demo clarity" is 15% of the score. Build the timeline view: stages, gate
-decisions with scores, replan events, per-scenario triage, PRD gaps.
+### 4.2 The trace UI is backend-only **[done — merged via exp_2]**
+`ui/app.js` now renders the orchestration decision timeline (stages, gate decisions with scores,
+replan events, per-scenario triage, PRD gaps), backed by `GET /api/orchestrations/:id/trace`.
+Covered by `test/ui.test.js` ("the UI lists orchestrations…", "an orchestration exposes the whole
+decision record…", "UI serves orchestration trace with since filtering").
 
-### 4.3 Two products, one repo, one README
-`main` sells a *one-skill developer experience* (describe a journey → semantic YAML → native
-execution → design regression). The brief asks for *URL in → test suite out*. `orchestrate` is the
-submission; the skill is infrastructure it reuses. Right now `README.md` leads with the skill and
-buries `orchestrate` at line 203. Restructure so the brief's pipeline is the headline, with the
-semantic-contract layer presented as the thing that makes the output trustworthy.
+### 4.3 Two products, one repo, one README **[fixed 2026-09-05]**
+`README.md` now leads with the orchestration agent as the primary submission (`## Autonomous
+orchestration — primary submission`, right after the intro), and the one-skill developer
+experience is presented as the reusable execution layer underneath it (`## The one-skill developer
+experience`, with its subsections demoted to `###`).
 
-### 4.4 Delivery must not depend on the judge's agent harness
-Submission requires *"the orchestration agent running live on a target application"* and *"clear
-setup instructions"*. A Codex/Claude skill runs only inside that harness. Ship a standalone
-entrypoint — `npx . orchestrate --url ... --model ...` with an API key — as the primary path, and
-keep the skill packaging as an additional integration.
+### 4.4 Delivery must not depend on the judge's agent harness **[fixed 2026-09-05]**
+This was already technically true — `node .agents/skills/autonomous-qa/scripts/qa-agent.mjs
+orchestrate --url ...` has always run standalone via plain Node, no Codex/Claude harness required
+— but it wasn't presented as the primary path. README now leads with exactly that command before
+any mention of installing the skill.
 
-### 4.5 Sample specs in `.qa/specs/` read as hand-written test scripts
-The brief lists *"Manually written test scripts"* under **Out of Scope** — "all test behaviour must
-be produced by the agent pipeline". `checkout-card.yaml`, `checkout-design.yaml`,
-`checkout-saved-card.yaml` are committed hand-written specs. They are demo fixtures for Layer A,
-but a judge reading the repo cannot tell. Move them under `examples/` and label them.
+### 4.5 Sample specs in `.qa/specs/` read as hand-written test scripts **[mitigated 2026-09-05, not fully closed]**
+Added `.qa/specs/README.md` labeling `checkout-card.yaml`, `checkout-design.yaml`,
+`checkout-saved-card.yaml` as hand-authored demo fixtures for the one-skill layer, distinct from
+`orchestrate`'s own generated output under `.qa/runs/orchestrations/<id>/generated/`. Did **not**
+physically move them to `examples/` as originally suggested: `.qa/` is the live workspace the
+recorded demo, `LIVE_DEMO.md`, and the packaged results UI all point at, and this repository's own
+`.qa/` is also the workspace a running `qa-agent ui` instance was actively serving during this
+session — relocating the files would have broken that demo path for a labeling fix. Revisit if the
+brief's judges need the physical separation, not just the label.
 
 ---
 
@@ -441,13 +466,14 @@ do not have access to this site"*).
 
 ## Suggested order
 
-1. ~~0.1 → 0.5~~ **done**; 3.2 next (the test that keeps 0.1/0.2 fixed — run the emitted specs
-   under Playwright against a working app and require them to pass)
+1. ~~0.1 → 0.5~~, ~~1.7~~, ~~4.1~~, ~~4.2~~, ~~4.3~~, ~~4.4~~ **done** (see status notes inline
+   above, current as of 2026-09-05); 3.2 next (the test that keeps 0.1/0.2 fixed — run the emitted
+   specs under Playwright against a working app and require them to pass)
 2. 1.8 predicate-refutation feedback loop — fixes the invented success assertions *and* gives
    1.2's replan demo a real trigger
-3. 1.7 rebalance the gate, then 2.1 item 2 (model-judged coverage rubric)
+3. 2.1 item 2 (model-judged coverage rubric) now that the gate rebalance (1.7) is done
 4. 1.1 browser-based crawl — unlocks working against the organiser's URL at all
 5. 2.1 item 3 LLM Healer, 1.5 session isolation → 2.3 parallelism
 6. 3.1 seeded-defect matrix — the slide number
-7. 4.2 trace UI, 4.3/4.4 packaging and README
-8. rest of 4.1 schemas, remaining P3 tests, 3.9 cross-platform CI
+7. 4.5 physically separate hand-authored demo specs from generated output, if judges need it
+8. remaining P3 tests, 3.9 cross-platform CI matrix

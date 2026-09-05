@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { validateDocument } from "./schema-validator.js";
 
 export function computeUntestedRisk({ siteMap, plan, gaps } = {}) {
   const covered = new Set((plan?.flows ?? []).flatMap((flow) => flow.pages ?? []));
@@ -129,8 +130,13 @@ export function renderReportMarkdown(report) {
   return `${lines.join("\n")}\n`;
 }
 
-export async function writeReport({ outDir, report }) {
+export async function writeReport({ outDir, report, emit }) {
   await mkdir(outDir, { recursive: true });
+  try {
+    validateDocument("report", report);
+  } catch (error) {
+    await emit?.("report", "report_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+  }
   await writeFile(path.join(outDir, "report.json"), `${JSON.stringify(report, null, 2)}\n`);
   await writeFile(path.join(outDir, "report.md"), renderReportMarkdown(report));
   return { json: path.join(outDir, "report.json"), markdown: path.join(outDir, "report.md") };

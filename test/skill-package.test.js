@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
-import { access, chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
-import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -10,18 +9,6 @@ import { skillLauncher } from "../test-support/helpers.js";
 
 const repositoryRoot = path.resolve(import.meta.dirname, "..");
 const packagedSkill = path.join(repositoryRoot, ".agents", "skills", "autonomous-qa");
-
-async function hasChrome() {
-  const candidates = process.platform === "darwin"
-    ? ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
-    : process.platform === "win32"
-      ? [`${process.env.PROGRAMFILES}\\Google\\Chrome\\Application\\chrome.exe`]
-      : ["/usr/bin/google-chrome"];
-  for (const candidate of candidates) {
-    try { await access(candidate); return true; } catch {}
-  }
-  return false;
-}
 
 function runSkill(launcher, projectRoot, args) {
   const full = [...args, "--root", projectRoot];
@@ -46,9 +33,6 @@ test("installed skill owns setup, native execution, evidence, and UI from an ext
   const installedSkill = path.join(temporaryRoot, "installed skills", "autonomous-qa");
   await mkdir(projectRoot, { recursive: true });
   await cp(packagedSkill, installedSkill, { recursive: true });
-  await assert.rejects(access(path.join(installedSkill, "runtime", "node_modules")), { code: "ENOENT" });
-  await access(path.join(installedSkill, "runtime", "playwright-core", "package.json"));
-  await access(path.join(installedSkill, "runtime", "playwright-core", "browsers.json"));
   await writeFile(path.join(projectRoot, "package.json"), `${JSON.stringify({
     name: "developer-demo",
     private: true,
@@ -105,34 +89,6 @@ test("installed skill owns setup, native execution, evidence, and UI from an ext
   const result = await workspace.loadResult(selection.lastRunId);
   assert.equal(result.classification, "passed");
   assert.equal(result.evidence.screenshots.length, 1);
-
-  if (await hasChrome()) {
-    const target = http.createServer((_request, response) => {
-      response.setHeader("content-type", "text/html");
-      response.end("<button onclick=\"document.querySelector('main').textContent='Home page'\">Open</button><main>Waiting</main>");
-    });
-    await new Promise((resolve) => target.listen(0, "127.0.0.1", resolve));
-    t.after(() => new Promise((resolve) => target.close(resolve)));
-    const baseUrl = `http://127.0.0.1:${target.address().port}`;
-    await workspace.saveEnvironments({ version: 1, environments: { local: { type: "web", baseUrl } } });
-    const script = `export default async function replay({ page, expect, checkpoint, target, baseURL }) {
-  await page.goto(baseURL);
-  await (await target([{ strategy: "role", value: ["button", { name: "Open" }] }])).click();
-  await checkpoint(1, 0, async () => { await expect(page.getByText("Home page", { exact: true })).toBeVisible(); });
-}\n`;
-    const source = await runtime.replaySource(workspace, "home-page", "local");
-    const manifest = runtime.createReplayManifest({ specId: "home-page", environment: "local", sourceHash: source.sourceHash, script, coverage: { deterministic: 1, total: 1, complete: true }, state: "trusted" });
-    manifest.validation = { required: 3, passed: 3 };
-    await workspace.saveReplayArtifacts("home-page", script, manifest);
-    const fastOutput = [];
-    const fastExit = await runtime.runCli(["run-last", "--root", projectRoot], { output: (value) => fastOutput.push(String(value)), error: (value) => fastOutput.push(String(value)) });
-    assert.equal(fastExit, 0, fastOutput.join("\n"));
-    const fastSelection = await workspace.readLastTest();
-    const fastResult = await workspace.loadResult(fastSelection.lastRunId);
-    assert.equal(fastResult.execution.mode, "playwright");
-    assert.equal(fastResult.execution.agentCalls, 0);
-    assert.deepEqual(fastResult.evidence.screenshots, []);
-  }
 
   const application = await runtime.startQaUi({ workspace, port: 0 });
   t.after(() => application.stop());

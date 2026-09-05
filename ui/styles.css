@@ -141,13 +141,6 @@ button:disabled { cursor: not-allowed; opacity: .48; }
 .result-metadata div { display: grid; gap: 2px; }
 .result-metadata dt { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
 .result-metadata dd { margin: 0; color: #344054; font-size: 12px; font-weight: 650; }
-.execution-detail { padding: 12px 26px 0; }
-.execution-attempts { display: flex; flex-wrap: wrap; gap: 8px; }
-.execution-attempt { border: 1px solid var(--border); border-radius: 999px; padding: 5px 9px; font-size: 11px; background: #f9fafb; }
-.execution-passed { border-color: #86efac; color: #166534; }
-.execution-failed, .execution-blocked { border-color: #fca5a5; color: #991b1b; }
-.execution-reason { color: var(--muted); margin: 8px 0 0; font-size: 12px; }
-.execution-logs { max-height: 190px; overflow: auto; background: #101828; color: #e2e8f0; border-radius: 8px; padding: 10px; font-size: 11px; }
 .detail-grid { padding: 24px 26px 30px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; }
 .detail-heading { justify-content: space-between; margin-bottom: 12px; }
 .detail-heading span { color: var(--muted); font-size: 11px; }

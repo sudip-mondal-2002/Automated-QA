@@ -153,61 +153,6 @@ export class QaWorkspace {
     return path.join(this.specsDirectory, `${id}.yaml`);
   }
 
-  replayScriptPath(id) {
-    assertStableId(id, "$.specId");
-    return path.join(this.specsDirectory, `${id}.playwright.mjs`);
-  }
-
-  replayManifestPath(id) {
-    assertStableId(id, "$.specId");
-    return path.join(this.specsDirectory, `${id}.playwright.json`);
-  }
-
-  async readReplayScript(id) {
-    return readText(this.replayScriptPath(id), `Playwright replay ${id}`);
-  }
-
-  async loadReplayManifest(id) {
-    const value = validateDocument(
-      "replayManifest",
-      parseJson(await readText(this.replayManifestPath(id), `Playwright replay manifest ${id}`), `Playwright replay manifest ${id}`),
-    );
-    if (value.specId !== id) {
-      throw new QaError("ID_MISMATCH", "Replay manifest and filename do not match", [
-        { path: "$.specId", message: `expected ${id}` },
-      ]);
-    }
-    return value;
-  }
-
-  async saveReplayManifest(id, manifest) {
-    await this.loadSpec(id);
-    const value = validateDocument("replayManifest", manifest);
-    if (value.specId !== id) throw new QaError("ID_MISMATCH", "Replay manifest and spec do not match");
-    await atomicWriteFile(this.replayManifestPath(id), stringifyJson(value));
-    return value;
-  }
-
-  async saveReplayArtifacts(id, script, manifest) {
-    await this.loadSpec(id);
-    if (typeof script !== "string" || script.length === 0) {
-      throw new QaError("INVALID_REPLAY_SCRIPT", "Playwright replay script must not be empty");
-    }
-    const value = validateDocument("replayManifest", manifest);
-    if (value.specId !== id) throw new QaError("ID_MISMATCH", "Replay manifest and spec do not match");
-    await atomicWriteFile(this.replayScriptPath(id), script);
-    // The manifest is the commit record, so it is written only after the script.
-    await atomicWriteFile(this.replayManifestPath(id), stringifyJson(value));
-    return value;
-  }
-
-  async deleteReplayArtifacts(id) {
-    await Promise.all([
-      rm(this.replayScriptPath(id), { force: true }),
-      rm(this.replayManifestPath(id), { force: true }),
-    ]);
-  }
-
   resultPath(runId) {
     if (typeof runId !== "string" || !/^run_[0-9]{8}_[0-9]{6}(?:_[a-z0-9]+)?$/.test(runId)) {
       throw new QaError("INVALID_RUN_ID", "Run ID is invalid", [
@@ -385,7 +330,6 @@ export class QaWorkspace {
       }
     }
     await unlink(this.specPath(id));
-    await this.deleteReplayArtifacts(id);
   }
 
   async selectSpec(id, environment) {

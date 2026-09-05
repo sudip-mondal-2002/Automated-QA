@@ -39,7 +39,7 @@ Unit mirror: `test/subagents-corner.test.js` (`node --test test/subagents-corner
 | H1 | Rename, behavior intact | `rediscovery:{status:found,equivalent:true,target}` | `retry_equivalent_target`, one retry, `healed` only if original expectations pass unchanged + before/after evidence |
 | H2 | Button removed | `equivalent:false` / no target | `functional_regression`, `No safe equivalent target` |
 | H3 | Copy/outcome changed | expectation text differs | never heal; `functional_regression` (guard: model may re-locate, never re-assert) |
-| H4 | Fixture postcondition fails | `before/between/after` postcondition | never heal, `functional_regression` — **currently unmet**: `src/execution.js` collapses any non-`passed` `before`/`between` fixture status into `blocked` regardless of whether `runFixture` returned `"failed"` (a real postcondition assertion failure) or `"blocked"` (environment/capability issue); see Known gaps below |
+| H4 | Fixture postcondition fails | `before/between/after` postcondition | never heal, `functional_regression` — **implemented**: `src/execution.js` maps a `failed` `before`/`between` fixture to `functional_regression` and only a genuinely `blocked` one to `blocked`; covered by `test/execution-boundaries.test.js` ("H4: failed fixture postconditions are functional regressions, never blocked or healed") |
 | H5 | No capability | `supports(rediscover)=false` => `rediscovery:null` | no retry, stays `failed/blocked` with reason |
 | H6 | Native blocked/ambiguous | `{status:blocked}` or garbage | `classifyFailure` -> blocked/failed, uncertainty never pass |
 | H7 | Later failure overrides heal | heal succeeded then later step fails | final `functional_regression` |
@@ -94,6 +94,6 @@ This confirms the skill's judgement contract holds under real interaction: an ag
 
 ## Known gaps (as of 2026-09-05)
 
-- **H4 is not implemented as documented.** `src/execution.js` (`before`/`between` fixture handling) classifies any non-`passed` fixture status as `blocked`, even when `runFixture` returned `"failed"` because a postcondition assertion genuinely didn't hold. A real regression surfaced through a fixture's own postcondition is currently reported as an environment block rather than `functional_regression`, which understates real defects as environment noise. No test in `test/` currently exercises a fixture whose steps pass but whose postcondition assertion fails.
+- **H4 is now implemented** (was: fixture postcondition failures collapsed into `blocked`). `src/execution.js` distinguishes a fixture that returned `"failed"` — a real postcondition assertion failure, now reported as `functional_regression` and never healed — from one that returned `"blocked"`. `test/execution-boundaries.test.js` exercises a fixture whose steps pass but whose postcondition assertion fails, for both the `before` and `between` phases.
 - H7, H8, D4, E5 are exercised correctly elsewhere in the broader `test/` suite (`healing.test.js`, `execution-boundaries.test.js`, `design.test.js`, `execution.test.js`) even though `test/subagents-corner.test.js` doesn't mirror them.
 - D1 (no `design` key → `not_checked`) and E4 (secret redaction) have supporting unit coverage but no single end-to-end test proving the plain "no explicit reference" case or full YAML/trace/screenshot secret-leak path in one run.

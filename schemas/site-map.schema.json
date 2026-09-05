@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aivar.dev/auto-qa/site-map.schema.json",
+  "title": "Site map",
+  "description": "The fetch-only crawl result the Planner reads to synthesize a test plan.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["origin", "crawledAt", "pages", "auth", "degraded"],
+  "properties": {
+    "origin": { "type": "string", "minLength": 1 },
+    "crawledAt": { "type": "string", "minLength": 1 },
+    "degraded": { "type": "boolean" },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authenticated"],
+      "properties": {
+        "authenticated": { "type": "boolean" }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/page" }
+    }
+  },
+  "definitions": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "depth", "status", "title", "headings", "links", "forms", "signals"],
+      "properties": {
+        "path": { "type": "string" },
+        "depth": { "type": "integer", "minimum": 0 },
+        "status": { "type": "integer" },
+        "title": { "type": "string" },
+        "headings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["level", "text"],
+            "properties": {
+              "level": { "type": "integer", "minimum": 1, "maximum": 3 },
+              "text": { "type": "string" }
+            }
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["href", "text"],
+            "properties": {
+              "href": { "type": "string" },
+              "text": { "type": "string" }
+            }
+          }
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["action", "method", "inputs", "buttons"],
+            "properties": {
+              "action": { "type": "string" },
+              "method": { "type": "string" },
+              "buttons": { "type": "array", "items": { "type": "string" } },
+              "inputs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["name", "type", "required", "placeholder"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "required": { "type": "boolean" },
+                    "placeholder": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "signals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "login": { "type": "boolean" },
+            "checkout": { "type": "boolean" },
+            "payment": { "type": "boolean" },
+            "search": { "type": "boolean" },
+            "list": { "type": "boolean" },
+            "numeric": { "type": "boolean" },
+            "destructive": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

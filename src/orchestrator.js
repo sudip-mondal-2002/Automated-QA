@@ -7,7 +7,7 @@ import { planWithAgent } from "./planner-agent.js";
 import { validateDocument } from "./schema-validator.js";
 import { decideVerdict, evaluatePlan, renderGapsMarkdown } from "./coverage.js";
 import { generate } from "./generator.js";
-import { executeWithReplay } from "./replay.js";
+import { executeRun } from "./execution.js";
 import { buildReport, writeReport } from "./reporter.js";
 import { QaWorkspace } from "./storage.js";
 import { stringifyYaml } from "./documents.js";
@@ -59,7 +59,6 @@ export async function orchestrate({
   emit,
   planner,
   planOnly = false,
-  browserLauncher,
 } = {}) {
   if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "--url is required");
   const parsed = assertTargetAllowed(url, { allowRemote });
@@ -101,6 +100,11 @@ export async function orchestrate({
     const credentials = username && password ? { username, password } : undefined;
     await say("plan", "stage_started", { message: "Crawling target" });
     let siteMap = await crawl({ url: parsed.href, credentials, fetchImpl, maxPages, maxDepth, emit: say, now });
+    try {
+      validateDocument("siteMap", siteMap);
+    } catch (error) {
+      await say("plan", "site_map_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+    }
     await writeFile(path.join(directory, "site-map.json"), `${JSON.stringify(siteMap, null, 2)}\n`);
     const prdParsed = prdText !== undefined ? parsePrd(prdText) : { requirements: [] };
     let plan = planner
@@ -132,13 +136,18 @@ export async function orchestrate({
     }
     await writeFile(path.join(directory, "test-plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
     await writeFile(path.join(directory, "test-plan.md"), renderTestPlanMarkdown(plan));
+    try {
+      validateDocument("gaps", gaps);
+    } catch (error) {
+      await say("gate", "gaps_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+    }
     await writeFile(path.join(directory, "gaps.json"), `${JSON.stringify(gaps, null, 2)}\n`);
     await writeFile(path.join(directory, "gaps.md"), renderGapsMarkdown(gaps));
 
     if (planOnly) {
       await say("plan", "plan_only", { message: `Stopping after planning: ${plan.flows.length} flows, score ${gaps.score}` });
       const report = buildReport({ plan, gapsHistory, generation: {}, runs: [], heals: [], decisions, prd: prdParsed, startedAt, finishedAt: new Date().toISOString(), orchestrationId, target: parsed.origin });
-      await writeReport({ outDir: directory, report });
+      await writeReport({ outDir: directory, report, emit: say });
       return { report, plan, gaps, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
     }
 
@@ -154,7 +163,7 @@ export async function orchestrate({
     await say("generate", "stage_completed", { message: `${generation.validated}/${generation.specs} validated` });
     if (generation.specs === 0 || generation.validated === 0) {
       const report = buildReport({ plan, gapsHistory, generation, runs, heals, decisions, prd: prdParsed, startedAt, finishedAt: new Date().toISOString(), orchestrationId, target: parsed.origin });
-      await writeReport({ outDir: directory, report });
+      await writeReport({ outDir: directory, report, emit: say });
       return { report, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
     }
 
@@ -169,7 +178,7 @@ export async function orchestrate({
       const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
-        const result = await executeWithReplay({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl, browserLauncher });
+        const result = await executeRun({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl });
         const durationMs = Date.now() - started;
         const classification = result.classification;
         const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
@@ -193,7 +202,7 @@ export async function orchestrate({
 
     const escalated = verdict === "escalate";
     const report = buildReport({ plan, gapsHistory, generation, runs, heals, decisions, prd: prdParsed, startedAt, finishedAt: new Date().toISOString(), orchestrationId, target: parsed.origin });
-    await writeReport({ outDir: directory, report });
+    await writeReport({ outDir: directory, report, emit: say });
     await writeFile(path.join(directory, "report.yaml"), stringifyYaml({ verdict: report.summary.verdict, exitCode: report.summary.exitCode }));
     const exitCode = report.summary.exitCode !== 0 ? report.summary.exitCode : escalated ? EXIT.ESCALATED : EXIT.OK;
     return { report, exitCode, artifacts: { dir: directory } };

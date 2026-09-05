@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aivar.dev/auto-qa/gaps.schema.json",
+  "title": "Coverage gate result",
+  "description": "The Gate's scored checklist and the gaps it found, evaluated against a test plan.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "planId", "attempt", "score", "checklist", "gaps", "untestedRisks"],
+  "properties": {
+    "version": { "const": 1 },
+    "planId": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ruleId", "severity", "status", "detail", "evidence"],
+        "properties": {
+          "ruleId": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["blocking", "advisory"] },
+          "status": { "enum": ["pass", "fail", "skipped"] },
+          "detail": { "type": "string" },
+          "evidence": { "type": "array", "items": {} }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/gap" }
+    },
+    "untestedRisks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["area", "reason", "risk", "impact"],
+        "properties": {
+          "area": { "type": "string" },
+          "reason": { "type": "string" },
+          "risk": { "type": "string" },
+          "impact": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ruleId", "kind", "severity", "target", "autoFixable"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "ruleId": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string" },
+        "severity": { "enum": ["blocking", "advisory"] },
+        "target": { "type": "string" },
+        "autoFixable": { "type": "boolean" },
+        "hint": { "type": "string" },
+        "suggestion": {
+          "description": "A ready-to-merge flow draft the auto-fixable replan loop can insert.",
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["id", "title"],
+          "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" },
+            "category": { "type": "string" },
+            "priority": { "type": "string" },
+            "pages": { "type": "array", "items": { "type": "string" } },
+            "steps": { "type": "array" }
+          }
+        }
+      }
+    }
+  }
+}
