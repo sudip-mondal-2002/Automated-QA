@@ -11,7 +11,8 @@
     "demo": "node demo-app/server.js",
     "dev": "node demo-app/server.js",
     "qa-agent": "node .agents/skills/autonomous-qa/scripts/qa-agent",
-    "test": "node --test"
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=100 --test-coverage-branches=95 --test-coverage-functions=98"
   },
   "engines": {
     "node": ">=20"
