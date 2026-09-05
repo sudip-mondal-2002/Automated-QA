@@ -17,6 +17,8 @@
     "pretest": "npm run build:skill",
     "pretest:coverage": "npm run build:skill",
     "test": "node --test",
+    "test:soak": "node scripts/replay-soak.mjs",
+    "benchmark:replay": "node scripts/benchmark-replay.mjs",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=100 --test-coverage-branches=95 --test-coverage-functions=98"
   },
   "engines": {
@@ -27,6 +29,7 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "esbuild": "^0.25.9"
   }
 }

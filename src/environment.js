@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 import { QaError } from "./errors.js";
 
@@ -30,6 +30,28 @@ async function reachable(baseUrl, fetchImpl, signal) {
   }
 }
 
+/**
+ * Stop a shell-spawned application, including anything it started.
+ *
+ * POSIX: the child is detached into its own process group, so signalling the
+ * negative pid reaches the whole tree.
+ *
+ * Windows has no process groups. `shell: true` means the direct child is
+ * `cmd.exe`, and killing it orphans the dev server underneath — which then
+ * keeps holding the port. `taskkill /T` walks the tree instead.
+ */
+export function stopProcessTree(child, { platform = process.platform, spawnSyncImpl } = {}) {
+  if (platform !== "win32") {
+    process.kill(-child.pid, "SIGTERM");
+    return;
+  }
+  const run = spawnSyncImpl ?? spawnSync;
+  const result = run("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore", windowsHide: true });
+  // 128 = the process is already gone, which is the outcome we wanted anyway.
+  if (result?.error && result.error.code !== "ENOENT") throw result.error;
+  if (result?.error || (result?.status !== 0 && result?.status !== 128)) child.kill("SIGTERM");
+}
+
 export function spawnApplication(command, repositoryRoot) {
   const child = spawn(command, {
     cwd: repositoryRoot,
@@ -43,9 +65,9 @@ export function spawnApplication(command, repositoryRoot) {
     async stop() {
       if (child.exitCode !== null || child.signalCode !== null) return;
       try {
-        if (process.platform === "win32") child.kill("SIGTERM");
-        else process.kill(-child.pid, "SIGTERM");
+        stopProcessTree(child);
       } catch (error) {
+        // The process finishing before we reached it is success, not failure.
         if (error.code !== "ESRCH") throw error;
       }
     },

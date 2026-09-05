@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { runCli } from "../src/cli.js";
 import { createNativeWebExecutor, QaWorkspace, stringifyJson, stringifyYaml } from "../src/index.js";
-import { passingResult } from "../test-support/helpers.js";
+import { noopEditor, passingResult } from "../test-support/helpers.js";
 
 function capture(extra = {}) {
   const output = [];
@@ -107,7 +107,7 @@ test("CLI document operations cover list, show, validate, save, and guarded dele
   assert.match((await invoke(root, ["result", "list"])).output[0], /No entries found/);
 
   const previousEditor = process.env.EDITOR;
-  process.env.EDITOR = "/usr/bin/true";
+  process.env.EDITOR = await noopEditor(t);
   try {
     assert.match((await invoke(root, ["edit", "checkout-card"])).output[0], /Saved/);
   } finally {

@@ -58,15 +58,17 @@ export const DEMO_SCENARIOS = Object.freeze({
   drift: "drift",
   functional: "broken",
   design: "design",
+  locator: "locator-drift",
 });
 
-const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design"]);
+const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design", "locator-drift"]);
 
 export function resetDemoState(state, scenario) {
   const variant = DEMO_SCENARIOS[scenario];
   if (!variant) throw new TypeError(`Unknown demo scenario: ${scenario}`);
   state.loggedIn = false;
   state.orderCreated = false;
+  state.chatAnswered = false;
   state.variant = variant;
   return { scenario, variant };
 }
@@ -75,7 +77,7 @@ export function createDemoApplication({ variant = "stable" } = {}) {
   if (!DEMO_VARIANTS.has(variant)) {
     throw new TypeError(`Unknown demo variant: ${variant}`);
   }
-  const state = { loggedIn: false, orderCreated: false, variant };
+  const state = { loggedIn: false, orderCreated: false, chatAnswered: false, variant };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
     const hasCheckoutDrift = state.variant === "drift" || state.variant === "drift-broken";
@@ -122,24 +124,46 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       return send(response, 200, page("Dashboard", `
         <h1>Customer dashboard</h1>
         <p>Welcome back. Your saved card is ready for the deterministic QA checkout.</p>
-        <a class="button" href="/cart">Open shopping cart</a>`));
+        <a class="button" href="/cart">Open shopping cart</a>
+        <a class="button" href="/chat">Open support chat</a>`));
+    }
+    if (request.method === "GET" && url.pathname === "/chat") {
+      const asked = url.searchParams.get("asked") === "1" || state.chatAnswered === true;
+      return send(response, 200, page("Support chat", `
+        <h1>Support chat</h1>
+        <p>Chat transcript is visible.</p>
+        ${asked
+          ? `<p class="success">Support response is visible: refunds are processed in 5 days.</p>`
+          : `<form method="post" action="/chat"><button type="submit">Ask for the refund policy</button></form>`}`));
+    }
+    if (request.method === "POST" && url.pathname === "/chat") {
+      state.chatAnswered = true;
+      return redirect(response, "/chat?asked=1");
     }
     if (request.method === "GET" && url.pathname === "/cart") {
+      const locatorDrift = state.variant === "locator-drift";
       return send(response, 200, page("Shopping cart", `
         <h1>Shopping cart</h1>
         <div class="item"><span>QA Demo Card</span><strong>₹499</strong></div>
         <p>Cart contains one item.</p>
         ${hasCheckoutDrift
           ? `<details><summary>Checkout options</summary><a class="button" href="/checkout">Continue to payment</a></details>`
-          : `<a class="button" href="/checkout">Proceed to checkout</a>`}`));
+          : locatorDrift
+            ? `<a class="button" href="/checkout">Proceed to checkout</a>`
+            : `<a class="button" data-testid="proceed-checkout" href="/checkout">Proceed to checkout</a>`}`));
     }
     if (request.method === "GET" && url.pathname === "/checkout") {
+      const locatorDrift = state.variant === "locator-drift";
       return send(response, 200, page("Checkout", `
         <h1>Checkout form</h1>
         <p>Total: ₹499 · Saved test card ending in 4242</p>
-        <form method="post" action="/checkout"><button type="submit">Place order</button></form>`));
+        <form method="post" action="/checkout"><label>Card <input name="card" required></label><button type="submit" ${locatorDrift ? "" : `data-testid="place-order"`}>Place order</button></form>`));
     }
     if (request.method === "POST" && url.pathname === "/checkout") {
+      const values = await form(request);
+      if (!values.get("card") && request.headers["content-type"]?.includes("application/x-www-form-urlencoded")) {
+        return send(response, 400, page("Checkout", `<h1>Checkout form</h1><p>A validation error names the card field.</p><p>No order is created.</p>`));
+      }
       state.orderCreated = true;
       return redirect(response, "/confirmation");
     }
@@ -165,6 +189,9 @@ export function createDemoApplication({ variant = "stable" } = {}) {
         ? `<h1>Order QA-1001</h1><form method="post" action="/orders/current/delete"><button type="submit">Delete test order</button></form>`
         : `<h1>Test order absent</h1><p>There is no test order to remove.</p>`));
     }
+    if (request.method === "GET" && url.pathname === "/orders/history") {
+      return send(response, 200, page("Order history", `<h1>Order history</h1><p>An empty state is visible: no past orders.</p>`));
+    }
     if (request.method === "POST" && url.pathname === "/orders/current/delete") {
       state.orderCreated = false;
       return redirect(response, "/orders/current");
@@ -172,6 +199,7 @@ export function createDemoApplication({ variant = "stable" } = {}) {
     if (request.method === "POST" && url.pathname === "/reset") {
       state.loggedIn = false;
       state.orderCreated = false;
+      state.chatAnswered = false;
       return redirect(response, "/login");
     }
     return send(response, 404, page("Not found", "<h1>Not found</h1>"));

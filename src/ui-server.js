@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { stringifyYaml } from "./documents.js";
@@ -197,6 +197,66 @@ async function serveStatic(response, pathname, assetsDirectory) {
   return true;
 }
 
+function orchestrationDirectory(workspace, orchestrationId) {
+  return path.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
+}
+
+async function readOrchestrationJson(directory, fileName) {
+  try {
+    return JSON.parse(await readFile(path.join(directory, fileName), "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function readTraceEvents(directory, since = 0) {
+  try {
+    const raw = await readFile(path.join(directory, "trace.jsonl"), "utf8");
+    const { redactSensitive } = await import("./references.js");
+    return raw
+      .split("\n")
+      .filter(Boolean)
+      .map((line) => {
+        try {
+          return JSON.parse(line);
+        } catch {
+          // A run killed mid-write leaves a partial final line. Skip it rather
+          // than failing the whole timeline.
+          return null;
+        }
+      })
+      .filter((entry) => entry && (entry.seq ?? 0) > since)
+      .map((entry) => redactSensitive(entry, []));
+  } catch {
+    return [];
+  }
+}
+
+/** Newest first, so the UI opens on the run the developer just did. */
+async function listOrchestrations(workspace) {
+  let ids;
+  try {
+    ids = await readdir(path.join(workspace.qaDirectory, "runs", "orchestrations"));
+  } catch {
+    return [];
+  }
+  const entries = [];
+  for (const id of ids.filter((name) => name.startsWith("orch_"))) {
+    const report = await readOrchestrationJson(orchestrationDirectory(workspace, id), "report.json");
+    entries.push({
+      orchestrationId: id,
+      target: report?.target ?? null,
+      startedAt: report?.startedAt ?? null,
+      verdict: report?.summary?.verdict ?? "unknown",
+      exitCode: report?.summary?.exitCode ?? null,
+      score: report?.summary?.coverage?.score ?? null,
+      scenarios: report?.summary?.scenarios ?? null,
+      planner: report?.planSource?.planner ?? null,
+    });
+  }
+  return entries.sort((a, b) => String(b.orchestrationId).localeCompare(String(a.orchestrationId)));
+}
+
 export function createQaUiServer({
   workspace = new QaWorkspace(),
   assetsDirectory = DEFAULT_ASSETS_DIRECTORY,
@@ -271,6 +331,45 @@ export function createQaUiServer({
         }
         const contents = await readFile(workspace.screenshotPath(runId, fileName));
         send(response, 200, contents, screenshotContentType(fileName));
+        return;
+      }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length === 2) {
+        sendJson(response, 200, { orchestrations: await listOrchestrations(workspace) });
+        return;
+      }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length >= 3) {
+        const orchId = parts[2];
+        const directory = orchestrationDirectory(workspace, orchId);
+        if (parts[3] === "trace") {
+          const since = Number(url.searchParams.get("since") ?? 0);
+          sendJson(response, 200, { orchestrationId: orchId, events: await readTraceEvents(directory, since) });
+          return;
+        }
+        // The decision record: what it planned, how the gate scored it, what it
+        // generated, and what each scenario was triaged as.
+        const [report, gaps, plan] = await Promise.all([
+          readOrchestrationJson(directory, "report.json"),
+          readOrchestrationJson(directory, "gaps.json"),
+          readOrchestrationJson(directory, "test-plan.json"),
+        ]);
+        if (!report && !gaps && !plan) throw new QaError("NOT_FOUND", `Orchestration does not exist: ${orchId}`);
+        sendJson(response, 200, {
+          orchestrationId: orchId,
+          report,
+          checklist: gaps?.checklist ?? [],
+          gaps: gaps?.gaps ?? [],
+          untestedRisks: gaps?.untestedRisks ?? [],
+          openQuestions: plan?.openQuestions ?? [],
+          planSource: plan?.source ?? report?.planSource ?? null,
+          flows: (plan?.flows ?? []).map((flow) => ({
+            id: flow.id,
+            title: flow.title,
+            category: flow.category,
+            priority: flow.priority,
+            steps: (flow.steps ?? []).length,
+            pages: flow.pages ?? [],
+          })),
+        });
         return;
       }
       if (request.method === "GET" && await serveStatic(response, url.pathname, assetsDirectory)) return;

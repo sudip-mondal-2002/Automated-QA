@@ -20,3 +20,13 @@ export function formatQaError(error) {
   if (error.issues.length === 0) return heading;
   return `${heading}\n${error.issues.map(({ path, message }) => `  - ${path}: ${message}`).join("\n")}`;
 }
+
+export const ORCHESTRATION_ERROR_CODES = Object.freeze([
+  "ORCHESTRATION_TARGET_UNREACHABLE",
+  "ORCHESTRATION_AUTH_FAILED",
+  "ORCHESTRATION_REMOTE_BLOCKED",
+  "PLAN_EMPTY",
+  "COVERAGE_ESCALATED",
+  "GENERATION_UNVALIDATED",
+  "TRACE_WRITE_FAILED",
+]);

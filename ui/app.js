@@ -2,6 +2,8 @@ const state = {
   workspace: null,
   document: null,
   selectedRunId: null,
+  orchestrations: [],
+  selectedOrchestration: null,
   toastTimer: null,
 };
 
@@ -11,7 +13,11 @@ const elements = Object.fromEntries([
   "save-state", "yaml-editor", "validation-message", "validate-document", "save-document", "runs-list",
   "result-panel", "empty-result", "result-detail", "result-title", "result-status", "result-explanation",
   "delete-run", "result-metadata", "step-count", "step-list", "screenshot-count", "screenshot-grid",
-  "design-findings", "toast",
+  "design-findings", "execution-detail", "toast",
+  "orchestration-panel", "orchestrations-badge", "orchestrations-list", "orchestration-detail",
+  "orchestration-empty", "orchestration-body", "orchestration-metadata", "gate-score", "gate-list",
+  "timeline", "timeline-count", "flow-list", "flow-count", "scenario-list", "scenario-count",
+  "unknown-list", "unknown-count",
 ].map((id) => [id, document.getElementById(id)]));
 
 const statusLabels = {
@@ -228,7 +234,28 @@ function renderResult(result) {
     metadataItem("Environment", result.environment),
     metadataItem("Started", formatTime(result.startedAt)),
     metadataItem("Completed", formatTime(result.completedAt)),
+    ...(result.execution ? [
+      metadataItem("Execution", result.execution.mode.replaceAll("_", " ")),
+      metadataItem("Agent calls", String(result.execution.agentCalls)),
+      metadataItem("Replay", result.execution.script?.state ?? "missing"),
+    ] : []),
   );
+  elements["execution-detail"].replaceChildren();
+  if (result.execution) {
+    const attempts = node("div", { className: "execution-attempts" });
+    for (const attempt of result.execution.attempts) {
+      attempts.append(node("span", {
+        className: `execution-attempt execution-${attempt.status}`,
+        text: `${attempt.engine}${attempt.validation ? " validation" : ""} · ${attempt.status} · ${attempt.durationMs}ms${attempt.browserChannel ? ` · ${attempt.browserChannel}` : ""}`,
+      }));
+    }
+    elements["execution-detail"].append(attempts);
+    if (result.execution.fallbackReason) {
+      elements["execution-detail"].append(node("p", { className: "execution-reason", text: `Fallback: ${result.execution.fallbackReason}` }));
+    }
+    const errors = [...(result.evidence?.consoleErrors ?? []), ...(result.evidence?.networkErrors ?? [])];
+    if (errors.length > 0) elements["execution-detail"].append(node("pre", { className: "execution-logs", text: errors.join("\n") }));
+  }
 
   elements["step-count"].textContent = `${result.steps.length} steps`;
   elements["step-list"].replaceChildren();
@@ -341,6 +368,226 @@ async function refreshWorkspace({ quiet = false } = {}) {
   }
 }
 
+// ---------------------------------------------------------------- orchestration
+
+const STAGE_ORDER = ["bootstrap", "probe", "crawl", "plan", "gate", "generate", "run", "triage", "report"];
+
+const STAGE_LABELS = {
+  bootstrap: "Bootstrap",
+  probe: "Probe target",
+  crawl: "Crawl",
+  plan: "Plan",
+  gate: "Coverage gate",
+  generate: "Generate",
+  run: "Execute",
+  triage: "Triage",
+  report: "Report",
+};
+
+/** A gate rule fails; it does not regress. Borrow the palette, not the wording. */
+function ruleBadge(status) {
+  const label = status === "pass" ? "Passed" : status === "skipped" ? "Skipped" : "Failed";
+  const tone = status === "pass" ? "passed" : status === "skipped" ? "skipped" : "functional_regression";
+  return node("span", { className: `status status-${tone}`, text: label });
+}
+
+function renderOrchestrationList() {
+  const list = elements["orchestrations-list"];
+  list.replaceChildren();
+  elements["orchestrations-badge"].textContent = state.orchestrations.length;
+  elements["orchestration-panel"].hidden = state.orchestrations.length === 0;
+  for (const entry of state.orchestrations) {
+    const button = node("button", {
+      className: `list-button${entry.orchestrationId === state.selectedOrchestration ? " active" : ""}`,
+      type: "button",
+      dataset: { id: entry.orchestrationId },
+    }, [
+      node("span", { className: "list-row" }, [
+        node("span", { className: "list-title", text: entry.target ?? entry.orchestrationId }),
+        statusBadge(entry.verdict === "clean" ? "passed" : entry.verdict === "defects_found" ? "functional_regression" : "blocked"),
+      ]),
+      node("span", { className: "list-meta" }, [
+        node("span", { className: "list-id", text: entry.orchestrationId }),
+        node("span", { text: `${entry.planner ?? "—"} · score ${entry.score ?? "—"} · exit ${entry.exitCode ?? "—"}` }),
+      ]),
+    ]);
+    button.addEventListener("click", () => selectOrchestration(entry.orchestrationId));
+    list.append(button);
+  }
+}
+
+function renderGate(detail) {
+  const list = elements["gate-list"];
+  list.replaceChildren();
+  const score = detail.report?.summary?.coverage?.score;
+  const blocking = detail.checklist.filter((entry) => entry.severity === "blocking" && entry.status === "fail").length;
+  elements["gate-score"].textContent = `score ${score ?? "—"} · ${blocking} blocking`;
+  for (const entry of detail.checklist) {
+    const related = detail.gaps.filter((candidate) => candidate.ruleId === entry.ruleId);
+    // A gap either explains itself (hint) or proposes a concrete flow
+    // (suggestion). Show whichever it carries — this is what the planner would
+    // be handed on a replan, so it should be legible here too.
+    const advice = related.find((gap) => gap.hint)?.hint
+      ?? (related.some((gap) => gap.suggestion)
+        ? `Suggested: ${related.filter((gap) => gap.suggestion).map((gap) => gap.suggestion.title).join("; ")}`
+        : null);
+    list.append(node("div", { className: `gate-row gate-${entry.status}` }, [
+      node("div", { className: "gate-row-head" }, [
+        node("span", { className: "gate-rule", text: entry.ruleId }),
+        node("span", { className: `severity severity-${entry.severity}`, text: entry.severity }),
+        ruleBadge(entry.status),
+      ]),
+      node("p", { className: "gate-detail", text: entry.detail ?? "" }),
+      ...(advice ? [node("p", { className: "gate-hint", text: advice })] : []),
+    ]));
+  }
+}
+
+function renderTimeline(events) {
+  const timeline = elements.timeline;
+  timeline.replaceChildren();
+  const stages = new Map();
+  for (const event of events) {
+    const stage = event.stage ?? "bootstrap";
+    if (!stages.has(stage)) stages.set(stage, []);
+    stages.get(stage).push(event);
+  }
+  const ordered = [...stages.keys()].sort((a, b) => {
+    const rank = (value) => (STAGE_ORDER.indexOf(value) === -1 ? STAGE_ORDER.length : STAGE_ORDER.indexOf(value));
+    return rank(a) - rank(b);
+  });
+  elements["timeline-count"].textContent = `${events.length} event${events.length === 1 ? "" : "s"}`;
+  for (const stage of ordered) {
+    const entries = stages.get(stage);
+    const warned = entries.some((event) => event.level === "warn" || event.level === "error");
+    timeline.append(node("li", { className: `timeline-stage${warned ? " warned" : ""}` }, [
+      node("div", { className: "timeline-marker" }, []),
+      node("div", { className: "timeline-body" }, [
+        node("p", { className: "timeline-stage-name", text: STAGE_LABELS[stage] ?? stage }),
+        ...entries.map((event) => node("p", {
+          className: `timeline-event${event.level === "warn" || event.level === "error" ? " warn" : ""}`,
+        }, [
+          node("code", { text: event.event ?? event.type ?? "event" }),
+          node("span", { text: event.message ?? "" }),
+        ])),
+      ]),
+    ]));
+  }
+  if (events.length === 0) {
+    timeline.append(node("li", { className: "no-evidence", text: "No trace events were recorded for this orchestration." }));
+  }
+}
+
+function renderFlows(detail) {
+  const list = elements["flow-list"];
+  list.replaceChildren();
+  elements["flow-count"].textContent = `${detail.flows.length}`;
+  for (const flow of detail.flows) {
+    list.append(node("div", { className: "flow-row" }, [
+      node("div", { className: "flow-row-head" }, [
+        node("span", { className: "list-title", text: flow.title ?? flow.id }),
+        node("span", { className: `chip chip-${flow.category}`, text: flow.category ?? "—" }),
+      ]),
+      node("span", { className: "list-meta", text: `${flow.steps} step${flow.steps === 1 ? "" : "s"} · ${flow.priority ?? "—"} · ${(flow.pages ?? []).join(", ") || "no page declared"}` }),
+    ]));
+  }
+  if (detail.flows.length === 0) list.append(node("p", { className: "no-evidence", text: "No flows were planned." }));
+}
+
+function renderScenarios(detail) {
+  const list = elements["scenario-list"];
+  list.replaceChildren();
+  const runs = detail.report?.scenarios ?? detail.report?.runs ?? [];
+  elements["scenario-count"].textContent = `${runs.length}`;
+  for (const run of runs) {
+    list.append(node("div", { className: "scenario-row" }, [
+      node("div", { className: "flow-row-head" }, [
+        node("span", { className: "list-title", text: run.title ?? run.id ?? run.specId ?? "scenario" }),
+        statusBadge(run.status ?? "not_run"),
+      ]),
+      node("span", { className: "list-meta", text: `${run.classification ?? "—"}${run.confidence ? ` · confidence ${run.confidence}` : ""}${run.blockedReason ? ` · ${run.blockedReason}` : ""}` }),
+    ]));
+  }
+  if (runs.length === 0) list.append(node("p", { className: "no-evidence", text: "No scenarios were executed." }));
+}
+
+function renderUnknowns(detail) {
+  const list = elements["unknown-list"];
+  list.replaceChildren();
+  const prdGaps = (detail.report?.prdGap?.requirements ?? [])
+    .filter((requirement) => requirement.status !== "covered")
+    .map((requirement) => ({
+      kind: "PRD gap",
+      tone: "prd",
+      text: `${requirement.id} — ${requirement.note || "not covered"}: ${String(requirement.text ?? "").slice(0, 160)}`,
+    }));
+  const items = [
+    // What the planner said it could not determine, rather than resolving it
+    // by assumption. This is the ambiguity trail, and it is the point.
+    ...detail.openQuestions.map((text) => ({ kind: "Open question", tone: "unknown", text })),
+    ...prdGaps,
+    ...detail.untestedRisks.map((risk) => ({ kind: "Untested", tone: risk.risk === "low" ? "low" : "unknown", text: `${risk.area} — ${risk.reason}` })),
+  ];
+  elements["unknown-count"].textContent = `${items.length}`;
+  for (const item of items) {
+    list.append(node("p", { className: "unknown-row" }, [
+      node("span", { className: `chip chip-${item.tone ?? "unknown"}`, text: item.kind }),
+      node("span", { text: item.text }),
+    ]));
+  }
+  if (items.length === 0) list.append(node("p", { className: "no-evidence", text: "The agent declared no open questions or untested surface." }));
+}
+
+async function selectOrchestration(orchestrationId) {
+  state.selectedOrchestration = orchestrationId;
+  renderOrchestrationList();
+  try {
+    const [detail, trace] = await Promise.all([
+      api(`/api/orchestrations/${encodeURIComponent(orchestrationId)}`),
+      api(`/api/orchestrations/${encodeURIComponent(orchestrationId)}/trace`),
+    ]);
+    elements["orchestration-empty"].hidden = true;
+    elements["orchestration-body"].hidden = false;
+    const summary = detail.report?.summary ?? {};
+    elements["orchestration-metadata"].replaceChildren(...[
+      ["Target", detail.report?.target ?? "—"],
+      ["Verdict", `${summary.verdict ?? "—"} (exit ${summary.exitCode ?? "—"})`],
+      ["Planner", `${detail.planSource?.planner ?? "—"}${detail.planSource?.fellBack ? " — fell back" : ""}`],
+      ["Coverage", `${summary.coverage?.score ?? "—"} over ${summary.coverage?.attempts ?? 1} attempt(s)`],
+      ["Assertions", `${summary.generation?.assertions?.withPredicates ?? 0}/${summary.generation?.assertions?.total ?? 0} checkable · ${summary.generation?.assertions?.verified ?? 0} verified · ${summary.generation?.assertions?.refuted ?? 0} refuted`],
+      ["Healing", `${summary.healing?.succeeded ?? 0}/${summary.healing?.attempted ?? 0} recovered`],
+    ].map(([term, value]) => node("div", {}, [node("dt", { text: term }), node("dd", { text: String(value) })])));
+    if (detail.planSource?.fellBack && detail.planSource.fallbackReason) {
+      elements["orchestration-metadata"].append(node("div", {}, [
+        node("dt", { text: "Fallback reason" }),
+        node("dd", { text: detail.planSource.fallbackReason }),
+      ]));
+    }
+    renderGate(detail);
+    renderTimeline(trace.events ?? []);
+    renderFlows(detail);
+    renderScenarios(detail);
+    renderUnknowns(detail);
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function refreshOrchestrations() {
+  try {
+    const payload = await api("/api/orchestrations");
+    state.orchestrations = payload.orchestrations ?? [];
+    renderOrchestrationList();
+    // Open the newest run on first load so the panel is never empty when there
+    // is something to show.
+    if (!state.selectedOrchestration && state.orchestrations.length > 0) {
+      await selectOrchestration(state.orchestrations[0].orchestrationId);
+    }
+  } catch {
+    // The workspace may simply have no orchestrations yet.
+  }
+}
+
 elements.refresh.addEventListener("click", () => refreshWorkspace());
 elements["copy-rerun"].addEventListener("click", () => {
   if (state.workspace) copy(state.workspace.rerunPrompt, "Rerun prompt copied");
@@ -354,6 +601,9 @@ elements["yaml-editor"].addEventListener("input", () => {
 });
 
 await refreshWorkspace({ quiet: true });
+await refreshOrchestrations();
 setInterval(() => {
-  if (document.visibilityState === "visible") refreshWorkspace({ quiet: true });
+  if (document.visibilityState !== "visible") return;
+  refreshWorkspace({ quiet: true });
+  refreshOrchestrations();
 }, 2500);

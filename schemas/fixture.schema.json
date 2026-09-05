@@ -40,12 +40,16 @@
       "pattern": "^\\$\\{(?:[A-Z][A-Z0-9_]*|outputs\\.[A-Za-z][A-Za-z0-9_.-]*)\\}$"
     },
     "expectation": { "type": "string", "minLength": 1 },
+    "channel": {
+      "enum": ["web", "chat", "voice", "workflow", "api"]
+    },
     "step": {
       "type": "object",
       "additionalProperties": false,
       "required": ["intent"],
       "properties": {
         "intent": { "type": "string", "minLength": 1 },
+        "channel": { "$ref": "#/$defs/channel" },
         "expect": {
           "type": "array",
           "minItems": 1,
