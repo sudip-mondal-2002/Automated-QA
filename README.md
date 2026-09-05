@@ -14,6 +14,28 @@ It also understands an optional design reference, so it can distinguish:
 
 The hackathon product is a **skill plus a small file-backed QA workspace**. It uses native Browser/Chrome for web apps and computer use for desktop/native UI. Playwright and Stagehand are not required, including for fixtures.
 
+## Current implementation
+
+All five implementation phases are complete on `main`:
+
+| Phase | Delivered implementation |
+| --- | --- |
+| Foundation | Validated semantic specs, fixtures, environments, results, last-test selection, atomic file-backed storage, and guarded paths. |
+| Native execution | Host-supplied web and desktop executors, reusable before/after fixtures, environment resolution, observations, screenshots, and blocked-result handling when native capability is unavailable. |
+| Self-healing | One conservative recovery attempt for explicitly equivalent accessible targets, unchanged-expectation verification, and `passed`, `healed`, `functional_regression`, and `blocked` classifications. |
+| Design intelligence | Explicit local/remote/Figma reference resolution, declared viewport and checkpoint handling, structured findings, provenance, actual/reference evidence, and `design_regression` classification. |
+| UI and demo | Loopback-only QA workspace, semantic YAML validation and atomic save, recent-run polling, result/evidence inspection, safe run deletion, and deterministic pass/drift/functional/design demo resets. |
+
+The implementation is covered by the Node.js test suite and production coverage gates: 100% lines, at least 95% branches, and at least 98% functions.
+
+### Recorded end-to-end demo
+
+[![Watch the complete Autonomous QA demo](artifacts/demo-video/playback-contact-sheet.png)](artifacts/demo-video/auto-qa-full-demo.mp4)
+
+[Watch or download the complete narrated demo (2:35, MP4)](artifacts/demo-video/auto-qa-full-demo.mp4). It walks through the file-backed workspace and semantic editor, a passing checkout, harmless interaction drift that heals, a real functional regression that remains failed, and a reference-backed design regression.
+
+The repository also includes the [captions](artifacts/demo-video/auto-qa-full-demo.vtt), [timing manifest](artifacts/demo-video/timing-manifest.json), [separate voiceover](artifacts/demo-video/auto-qa-full-demo-voiceover.m4a), source frames, and reproducible renderer. The encoded audio and video end timestamps differ by less than one millisecond. See [scripts.md](scripts.md#recorded-full-demo) for the UI behavior and recording workflow.
+
 ## Complete MVP quick start
 
 All five phases are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, an inspectable `.qa/` workspace, and an optional localhost UI. The runtime resolves environments and fixtures, executes through a supplied native Browser/Chrome or computer-use capability, conservatively heals interaction drift, and persists structured evidence. Explicit repository images, URLs, and Figma links can drive a declared design checkpoint. The Phase 5 UI reads and writes those same files—there is no database or second copy of a spec or result.
@@ -238,10 +260,28 @@ flowchart TB
         ├── result.json
         └── screenshots/
 
+src/
+├── execution.js
+├── native-executor.js
+├── healing.js
+├── design.js
+├── storage.js
+└── ui-server.js
+
 ui/
 ├── index.html
 ├── app.js
 └── styles.css
+
+demo-app/
+├── server.js
+└── reset.js
+
+artifacts/demo-video/
+├── auto-qa-full-demo.mp4
+├── playback-contact-sheet.png
+├── timing-manifest.json
+└── render-video.mjs
 ```
 
 No database is required for the hackathon. The UI reads these files directly. Keep only the latest 20 runs per test or expose a “delete run” action.
@@ -464,20 +504,20 @@ Each result should contain:
 
 ## Minimal UI
 
-Run locally:
+The implemented UI is loopback-only and operates directly on the `.qa/` workspace. Run it locally:
 
 ```bash
 qa-agent ui
 # http://localhost:4173
 ```
 
-Build one page with three areas:
+The page has three primary areas:
 
 1. **Tests** — list specs, environment, last status, and a copyable run/rerun command.
 2. **Editor** — edit and save the YAML spec or fixture.
 3. **Recent runs** — view status, screenshots, healing explanation, and delete a run.
 
-Do not build authentication, a database-backed revision system, analytics, organization management, or an embedded MCP UI for the hackathon.
+It intentionally has no authentication, database-backed revision system, analytics, organization management, or embedded MCP UI. Validation, save, result deletion, and evidence access reuse the guarded workspace APIs rather than maintaining separate browser state.
 
 ## Operations
 
@@ -574,15 +614,15 @@ The hackathon MVP is complete when:
 - Headless CI, scheduling, parallel execution, and browser matrices.
 - Production testing and destructive production policies.
 - SQLite, complex migrations, unlimited revision history, and elaborate retention workers.
-- Video recording, trace viewers, or long-term artifact storage.
+- Per-run video recording, trace viewers, or long-term artifact hosting. The repository contains only the curated judge-facing demo video above.
 - Multi-user authentication, roles, organizations, cloud hosting, or billing.
 - A full visual-diff engine or automated Figma component library reconciliation.
 - Automatic design-baseline or expected-outcome updates.
 - Enterprise audit/compliance features.
 
-## Build order
+## Completed build order
 
-See [phases.md](phases.md) for the phased implementation plan and per-phase exit criteria.
+See [phases.md](phases.md) for the completed phased implementation plan and per-phase exit criteria.
 
 1. Semantic spec, fixture, and result schemas.
 2. Skill workflow plus native Browser/Chrome execution.

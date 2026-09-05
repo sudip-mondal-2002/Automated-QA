@@ -1,0 +1,100 @@
+[
+  {
+    "id": "01",
+    "frame": "01-overview.jpg",
+    "label": "OVERVIEW",
+    "title": "Two interfaces. One source of truth.",
+    "narration": "Intent QA separates the application under test from the evidence workspace. The shop runs locally, while this dashboard reads the same file-backed QA artifacts used by the command line and the native agent."
+  },
+  {
+    "id": "02",
+    "frame": "02-editor.jpg",
+    "label": "SEMANTIC TEST",
+    "title": "Human-readable YAML, validated before save",
+    "narration": "Tests stay human-readable. This YAML records intent and observable outcomes, never selectors or coordinates. The editor reuses the authoritative validator, preserves the document identity, and saves atomically only after references are valid."
+  },
+  {
+    "id": "03",
+    "frame": "03-dashboard.jpg",
+    "label": "SCENARIO 1 · PASS",
+    "title": "Reusable login fixture",
+    "narration": "First, the stable journey. A reusable login fixture signs in without exposing credentials in evidence. The agent reaches the customer dashboard and begins the unchanged checkout specification."
+  },
+  {
+    "id": "04",
+    "frame": "04-cart.jpg",
+    "label": "SCENARIO 1 · PASS",
+    "title": "Semantic navigation",
+    "narration": "The agent opens the shopping cart and checks the visible outcome: exactly one item is present. It resolves the checkout action semantically instead of relying on a stored selector."
+  },
+  {
+    "id": "05",
+    "frame": "05-checkout.jpg",
+    "label": "SCENARIO 1 · PASS",
+    "title": "Expectations remain explicit",
+    "narration": "At checkout, the next expectation is visible before submission. The saved test card and total are present, so the agent performs the approved payment action and continues."
+  },
+  {
+    "id": "06",
+    "frame": "06-confirmation.jpg",
+    "label": "SCENARIO 1 · PASS",
+    "title": "Approved outcome observed",
+    "narration": "The expected confirmation appears with no error message. Cleanup runs afterward, screenshots are stored, and the functional result is classified as passed."
+  },
+  {
+    "id": "07",
+    "frame": "07-pass-result.jpg",
+    "label": "RESULT · PASSED",
+    "title": "Steps, targets, and evidence",
+    "narration": "The result view explains the decision. Every step passed, every original expectation is preserved, and each selected accessible target is recorded beside the evidence captured during the run."
+  },
+  {
+    "id": "08",
+    "frame": "08-drift-cart.jpg",
+    "label": "SCENARIO 2 · HARMLESS DRIFT",
+    "title": "The control moved and changed name",
+    "narration": "Now the demo resets to harmless drift. Proceed to checkout has moved inside a menu and is renamed Continue to payment. The specification and its expected checkout form remain unchanged."
+  },
+  {
+    "id": "09",
+    "frame": "09-healed-result.jpg",
+    "label": "RESULT · HEALED",
+    "title": "Equivalent target, unchanged expectation",
+    "narration": "The original target is absent, so the agent captures the failure, rediscovers an explicitly equivalent accessible control, retries once, and verifies the same expectation. Before-and-after evidence supports the healed classification."
+  },
+  {
+    "id": "10",
+    "frame": "10-functional-app.jpg",
+    "label": "SCENARIO 3 · REAL BUG",
+    "title": "Interaction succeeds; outcome fails",
+    "narration": "Next is a genuine functional bug. The checkout interaction still succeeds, but the application shows an order failure instead of the required confirmation. This is not eligible for healing."
+  },
+  {
+    "id": "11",
+    "frame": "11-functional-result.jpg",
+    "label": "RESULT · FUNCTIONAL REGRESSION",
+    "title": "No assertion rewriting",
+    "narration": "The result stays honest: functional regression. The missing confirmation is recorded as the failed observable outcome, later steps do not invent success, and the original assertion is never rewritten."
+  },
+  {
+    "id": "12",
+    "frame": "12-design-app.jpg",
+    "label": "SCENARIO 4 · DESIGN MISMATCH",
+    "title": "Functionally correct, visibly wrong",
+    "narration": "Finally, the behavior works, but the approved confirmation design does not. The action moves ahead of the heading, and the green success treatment becomes a prominent red warning panel."
+  },
+  {
+    "id": "13",
+    "frame": "13-design-result.jpg",
+    "label": "RESULT · DESIGN REGRESSION",
+    "title": "Reference-backed visual findings",
+    "narration": "Because the functional steps passed, the explicit design checkpoint runs at its declared viewport. Concrete order and style findings, plus the actual screenshot and reference provenance, support a design regression."
+  },
+  {
+    "id": "14",
+    "frame": "14-outro.jpg",
+    "label": "COMPLETE MVP",
+    "title": "Intent survives drift. Regressions stay visible.",
+    "narration": "That is the complete loop: semantic YAML, reusable fixtures, native execution, conservative healing, functional and design classification, and inspectable file-backed evidence. Harmless drift recovers; real regressions remain visible."
+  }
+]
