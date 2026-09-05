@@ -194,6 +194,35 @@ flowchart LR
     class UI ui;
 ```
 
+## Autonomous orchestration (hackathon track)
+
+Beyond the skill above, the repo ships an end-to-end test orchestrator for the
+Bessemer Tech Catalyst challenge. One command, URL as the only required input:
+
+```bash
+node .agents/skills/autonomous-qa/scripts/qa-agent orchestrate \
+  --url http://127.0.0.1:4555 \
+  --username demo --password demo \
+  --prompt "focus on checkout and authentication" \
+  --prd docs/prd.md
+```
+
+The pipeline runs with zero human input between stages: probe → fetch-only
+crawl + test-plan synthesis → coverage gate (pass / replan / escalate) →
+Playwright spec generation with live selector validation → semantic execution
+→ locator-chain healing with bug-vs-broken triage → `report.json`/`report.md`
+with PRD-gap analysis. Every decision lands in `trace.jsonl`, viewable via
+`GET /api/orchestrations/:id/trace` on the loopback UI. See
+[docs/architecture.md](docs/architecture.md) and
+[docs/ORCHESTRATOR_DEMO.md](docs/ORCHESTRATOR_DEMO.md).
+
+Two honest notes: (a) shell mode without a browser executor reports `blocked`
+with the missing-capability reason rather than guessing — use
+`scripts/run-with-playwright.mjs` (devDependency `@playwright/test`,
+`npx playwright install chromium`) for real browser runs; (b) generated
+Playwright files are portable artifacts validated against the live DOM —
+execution runs on the semantic engine, and semantic YAML stays the contract.
+
 ## Repository development
 
 The commands below are for maintainers of the skill package, not application developers:
@@ -211,7 +240,7 @@ For internal diagnostics, maintainers can invoke `.agents/skills/autonomous-qa/s
 
 ## Scope boundaries
 
-The project intentionally excludes Playwright, Stagehand, selector scripts, coordinate scripts, fixed sleeps, headless CI, scheduling, parallel/browser-matrix execution, production testing, databases, remote UI hosting, multi-user auth, automatic baseline updates, and pixel-perfect visual diffing.
+The project intentionally excludes Stagehand, selector scripts, coordinate scripts, fixed sleeps, headless CI, scheduling, parallel/browser-matrix execution, production testing, databases, remote UI hosting, multi-user auth, automatic baseline updates, and pixel-perfect visual diffing. Playwright is a devDependency only: generated `.spec.js` files are portable artifacts, and `src/playwright-executor.js` (never bundled — the shipped runtime stays `ajv`+`yaml`) adapts a real browser page to the native-executor contract for orchestrated runs.
 
 The product promise stays narrow: **install one skill, describe intent in the application project, survive harmless UI drift, and keep real functional or design regressions visible.**
 

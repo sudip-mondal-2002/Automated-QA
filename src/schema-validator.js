@@ -9,6 +9,8 @@ const SCHEMA_FILES = {
   spec: "spec.schema.json",
   result: "result.schema.json",
   lastTest: "last-test.schema.json",
+  testPlan: "test-plan.schema.json",
+  planDraft: "plan-draft.schema.json",
 };
 
 const ajv = new Ajv({ allErrors: true, strict: true });

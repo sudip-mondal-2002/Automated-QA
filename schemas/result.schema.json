@@ -44,6 +44,9 @@
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
     },
     "status": { "enum": ["passed", "failed", "blocked", "skipped"] },
+    "channel": {
+      "enum": ["web", "chat", "voice", "workflow", "api"]
+    },
     "expectationResult": {
       "type": "object",
       "additionalProperties": false,
@@ -85,6 +88,7 @@
       "properties": {
         "index": { "type": "integer", "minimum": 1 },
         "intent": { "type": "string", "minLength": 1 },
+        "channel": { "$ref": "#/$defs/channel" },
         "status": { "$ref": "#/$defs/status" },
         "expectations": {
           "type": "array",

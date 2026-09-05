@@ -79,10 +79,21 @@ export async function resolveDesignReference(reference, {
 
   let requestedPath;
   try {
-    requestedPath = source.startsWith("file:")
-      ? fileURLToPath(source)
-      : isAbsolute(source) ? source : resolve(repositoryRoot, source);
-  } catch {
+    if (source.startsWith("file:")) {
+      // A file URL with a host is a UNC path on Windows: file://example.com/x.png
+      // resolves to \\example.com\x.png and would reach out over SMB. POSIX
+      // rejects it outright. Reject it everywhere so the contract does not
+      // depend on which machine the run happens on.
+      const fileUrl = new URL(source);
+      if (fileUrl.host && fileUrl.host !== "localhost") {
+        throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL must not name a host");
+      }
+      requestedPath = fileURLToPath(source);
+    } else {
+      requestedPath = isAbsolute(source) ? source : resolve(repositoryRoot, source);
+    }
+  } catch (error) {
+    if (error instanceof QaError) throw error;
     throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL is invalid");
   }
 

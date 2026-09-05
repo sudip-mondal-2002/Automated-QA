@@ -17,6 +17,7 @@ import {
   resolveReferences,
   slugify,
   spawnApplication,
+  stopProcessTree,
   stringifyJson,
   stringifyYaml,
   validateDocument,
@@ -220,27 +221,47 @@ test("environment preparation handles every readiness boundary", async () => {
   assert.equal(stopped, 1);
 });
 
+test("stopping an application kills the whole tree on both platforms", () => {
+  // Windows has no process groups, so a shell-spawned dev server survives a
+  // kill aimed at the cmd.exe wrapper and keeps holding the port. Assert the
+  // platform-correct mechanism directly rather than monkeypatching globals,
+  // which only ever exercised whichever branch the test host happened to take.
+  const calls = [];
+  const child = { pid: 4321, kill: (signal) => calls.push(["kill", signal]) };
+  stopProcessTree(child, {
+    platform: "win32",
+    spawnSyncImpl: (command, args) => {
+      calls.push([command, ...args]);
+      return { status: 0 };
+    },
+  });
+  assert.deepEqual(calls, [["taskkill", "/pid", "4321", "/T", "/F"]]);
+  assert.equal(calls.some(([command]) => command === "kill"), false, "taskkill succeeding must not also signal the wrapper");
+
+  // If taskkill is unavailable or fails, fall back rather than leaving the
+  // caller with no attempt at all.
+  const fallback = [];
+  stopProcessTree(
+    { pid: 99, kill: (signal) => fallback.push(signal) },
+    { platform: "win32", spawnSyncImpl: () => ({ status: 1 }) },
+  );
+  assert.deepEqual(fallback, ["SIGTERM"]);
+
+  // An already-dead process reports 128; that is the outcome we wanted.
+  const quiet = [];
+  stopProcessTree(
+    { pid: 100, kill: (signal) => quiet.push(signal) },
+    { platform: "win32", spawnSyncImpl: () => ({ status: 128 }) },
+  );
+  assert.deepEqual(quiet, []);
+});
+
 test("spawned applications can be stopped idempotently", async () => {
   const application = spawnApplication(`${process.execPath} -e \"setInterval(() => {}, 1000)\"`, process.cwd());
   assert(application.child.pid > 0);
-  const kill = process.kill;
-  try {
-    process.kill = () => {
-      const error = new Error("already stopped");
-      error.code = "ESRCH";
-      throw error;
-    };
-    await application.stop();
-    process.kill = () => {
-      const error = new Error("not permitted");
-      error.code = "EPERM";
-      throw error;
-    };
-    await assert.rejects(() => application.stop(), (error) => error.code === "EPERM");
-  } finally {
-    process.kill = kill;
-  }
   await application.stop();
   await once(application.child, "exit");
+  // Stopping an already-exited application is a no-op, not an error.
+  await application.stop();
   await application.stop();
 });

@@ -21,6 +21,10 @@ import { redactSensitive, resolveReferences } from "./references.js";
 const STEP_STATUSES = new Set(["passed", "failed", "blocked"]);
 const SCREENSHOT_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp"]);
 
+export function channelFor(step = {}) {
+  return step.channel ?? "web";
+}
+
 function instant(clock) {
   const value = clock();
   return (value instanceof Date ? value : new Date(value)).toISOString();
@@ -194,6 +198,7 @@ function skippedStep(step, index) {
   return {
     index,
     intent: step.intent,
+    ...(step.channel ? { channel: step.channel } : {}),
     status: "skipped",
     expectations: step.expect.map((expectation) => ({ expectation, status: "skipped" })),
   };
@@ -503,12 +508,14 @@ export async function executeRun(options) {
       const stepResult = await executeSemanticStep(executor, {
         intent: step.intent,
         expectations: step.expect ?? [],
+        channel: channelFor(step),
       }, {
         runId,
         scope: "fixture",
         phase,
         fixtureId,
         fixtureStepIndex: index + 1,
+        channel: channelFor(step),
         inputs,
         outputs,
         target: resolvedEnvironment,
@@ -686,7 +693,10 @@ export async function executeRun(options) {
       for (const fixtureId of spec.fixtures?.before ?? []) {
         const status = await runFixture(fixtureId, "before");
         if (status !== "passed") {
-          primaryClassification = "blocked";
+          // H4: a failed fixture postcondition is a real product signal, not
+          // environment noise. Only blocked stays blocked; failed is a
+          // functional regression and is never healed.
+          primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
           primaryExplanation = `Before fixture ${fixtureId} ${status}`;
           break;
         }
@@ -705,6 +715,7 @@ export async function executeRun(options) {
             runId,
             scope: "test",
             stepIndex: index,
+            channel: channelFor(step),
             outputs,
             target: resolvedEnvironment,
             signal,
@@ -713,11 +724,13 @@ export async function executeRun(options) {
           let executed = await executeSemanticStep(executor, {
             intent: step.intent,
             expectations: step.expect,
+            channel: channelFor(step),
           }, stepContext);
           if (executed.status === "failed") {
             executed = await attemptHealing(executor, {
               intent: step.intent,
               expectations: step.expect,
+              channel: channelFor(step),
             }, stepContext, executed, {
               capture,
               event: (type, details) => journal.add(type, details),
@@ -727,6 +740,7 @@ export async function executeRun(options) {
           const recorded = redact({
             index,
             intent: step.intent,
+            ...(step.channel ? { channel: step.channel } : {}),
             status: executed.status,
             expectations: executed.expectations,
             ...(executed.selectedTarget ? { selectedTarget: executed.selectedTarget } : {}),
@@ -759,7 +773,9 @@ export async function executeRun(options) {
             for (const fixtureId of group.fixtures) {
               const status = await runFixture(fixtureId, "between", index);
               if (status !== "passed") {
-                primaryClassification = "blocked";
+                // H4: same as before-fixtures — failed postcondition means
+                // functional_regression, never healed, never blocked.
+                primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
                 primaryExplanation = `Between-step fixture ${fixtureId} ${status}`;
                 break;
               }

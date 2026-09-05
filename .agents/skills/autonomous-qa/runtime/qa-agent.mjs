@@ -11,8 +11,15 @@ var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require
   if (typeof require !== "undefined") return require.apply(this, arguments);
   throw Error('Dynamic require of "' + x + '" is not supported');
 });
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
 var __commonJS = (cb, mod) => function __require2() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -30,6 +37,39 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+
+// src/errors.js
+function formatQaError(error) {
+  if (!(error instanceof QaError)) {
+    return `Unexpected error: ${error instanceof Error ? error.message : String(error)}`;
+  }
+  const heading = `${error.message} [${error.code}]`;
+  if (error.issues.length === 0) return heading;
+  return `${heading}
+${error.issues.map(({ path: path7, message }) => `  - ${path7}: ${message}`).join("\n")}`;
+}
+var QaError, ORCHESTRATION_ERROR_CODES;
+var init_errors = __esm({
+  "src/errors.js"() {
+    QaError = class extends Error {
+      constructor(code, message, issues = [], options2 = {}) {
+        super(message, options2);
+        this.name = "QaError";
+        this.code = code;
+        this.issues = issues;
+      }
+    };
+    ORCHESTRATION_ERROR_CODES = Object.freeze([
+      "ORCHESTRATION_TARGET_UNREACHABLE",
+      "ORCHESTRATION_AUTH_FAILED",
+      "ORCHESTRATION_REMOTE_BLOCKED",
+      "PLAN_EMPTY",
+      "COVERAGE_ESCALATED",
+      "GENERATION_UNVALIDATED",
+      "TRACE_WRITE_FAILED"
+    ]);
+  }
+});
 
 // node_modules/ajv/dist/compile/codegen/code.js
 var require_code = __commonJS({
@@ -3259,8 +3299,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path4) {
-      let input2 = path4;
+    function removeDotSegments(path7) {
+      let input2 = path7;
       const output = [];
       let nextSlash = -1;
       let len = 0;
@@ -3665,8 +3705,8 @@ var require_schemes = __commonJS({
       }
       if (wsComponent.resourceName) {
         const queryIndex = wsComponent.resourceName.indexOf("?");
-        const path4 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
-        wsComponent.path = path4 && path4 !== "/" ? path4 : void 0;
+        const path7 = queryIndex === -1 ? wsComponent.resourceName : wsComponent.resourceName.slice(0, queryIndex);
+        wsComponent.path = path7 && path7 !== "/" ? path7 : void 0;
         wsComponent.query = queryIndex === -1 ? void 0 : wsComponent.resourceName.slice(queryIndex + 1);
         wsComponent.resourceName = void 0;
       }
@@ -6868,6 +6908,80 @@ var require_ajv = __commonJS({
   }
 });
 
+// src/schema-validator.js
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+function propertyPath(instancePath) {
+  if (!instancePath) return "$";
+  const segments = instancePath.split("/").slice(1).map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"));
+  return segments.reduce((path7, segment) => {
+    if (/^[0-9]+$/.test(segment)) return `${path7}[${segment}]`;
+    if (/^[A-Za-z_$][A-Za-z0-9_$-]*$/.test(segment)) return `${path7}.${segment}`;
+    return `${path7}[${JSON.stringify(segment)}]`;
+  }, "$");
+}
+function errorPath(error) {
+  const base = propertyPath(error.instancePath);
+  if (error.keyword === "required") return `${base}.${error.params.missingProperty}`;
+  if (error.keyword === "additionalProperties") return `${base}.${error.params.additionalProperty}`;
+  return base;
+}
+function schemaIssues(errors = []) {
+  const issues = errors.map((error) => ({
+    path: errorPath(error),
+    message: error.message ?? "is invalid"
+  }));
+  return issues.filter(
+    (candidate, index) => !(candidate.message === "must match exactly one schema in oneOf" && issues.length > 1 && index === issues.length - 1)
+  );
+}
+function validateDocument(kind, value) {
+  const validator = validators.get(kind);
+  if (!validator) throw new QaError("UNKNOWN_CONTRACT", `Unknown document contract: ${kind}`);
+  if (!validator(value)) {
+    throw new QaError(
+      "VALIDATION_FAILED",
+      `${kind} document is invalid`,
+      schemaIssues(validator.errors)
+    );
+  }
+  return value;
+}
+function isStableId(value) {
+  return typeof value === "string" && /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(value);
+}
+function assertStableId(value, path7 = "$.id") {
+  if (!isStableId(value)) {
+    throw new QaError("INVALID_ID", "ID is invalid", [
+      { path: path7, message: "use lowercase words separated by single hyphens" }
+    ]);
+  }
+  return value;
+}
+var import_ajv, SCHEMA_FILES, ajv, validators;
+var init_schema_validator = __esm({
+  "src/schema-validator.js"() {
+    import_ajv = __toESM(require_ajv(), 1);
+    init_errors();
+    SCHEMA_FILES = {
+      environments: "environments.schema.json",
+      fixture: "fixture.schema.json",
+      spec: "spec.schema.json",
+      result: "result.schema.json",
+      lastTest: "last-test.schema.json",
+      testPlan: "test-plan.schema.json",
+      planDraft: "plan-draft.schema.json"
+    };
+    ajv = new import_ajv.default({ allErrors: true, strict: true });
+    validators = /* @__PURE__ */ new Map();
+    for (const [kind, fileName] of Object.entries(SCHEMA_FILES)) {
+      const schemaUrl = new URL(`../schemas/${fileName}`, import.meta.url);
+      const schema = JSON.parse(readFileSync(fileURLToPath(schemaUrl), "utf8"));
+      validators.set(kind, ajv.compile(schema));
+    }
+  }
+});
+
 // node_modules/yaml/dist/nodes/identity.js
 var require_identity = __commonJS({
   "node_modules/yaml/dist/nodes/identity.js"(exports) {
@@ -6945,17 +7059,17 @@ var require_visit = __commonJS({
     visit.BREAK = BREAK;
     visit.SKIP = SKIP;
     visit.REMOVE = REMOVE;
-    function visit_(key, node, visitor, path4) {
-      const ctrl = callVisitor(key, node, visitor, path4);
+    function visit_(key, node, visitor, path7) {
+      const ctrl = callVisitor(key, node, visitor, path7);
       if (identity.isNode(ctrl) || identity.isPair(ctrl)) {
-        replaceNode(key, path4, ctrl);
-        return visit_(key, ctrl, visitor, path4);
+        replaceNode(key, path7, ctrl);
+        return visit_(key, ctrl, visitor, path7);
       }
       if (typeof ctrl !== "symbol") {
         if (identity.isCollection(node)) {
-          path4 = Object.freeze(path4.concat(node));
+          path7 = Object.freeze(path7.concat(node));
           for (let i = 0; i < node.items.length; ++i) {
-            const ci = visit_(i, node.items[i], visitor, path4);
+            const ci = visit_(i, node.items[i], visitor, path7);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -6966,13 +7080,13 @@ var require_visit = __commonJS({
             }
           }
         } else if (identity.isPair(node)) {
-          path4 = Object.freeze(path4.concat(node));
-          const ck = visit_("key", node.key, visitor, path4);
+          path7 = Object.freeze(path7.concat(node));
+          const ck = visit_("key", node.key, visitor, path7);
           if (ck === BREAK)
             return BREAK;
           else if (ck === REMOVE)
             node.key = null;
-          const cv = visit_("value", node.value, visitor, path4);
+          const cv = visit_("value", node.value, visitor, path7);
           if (cv === BREAK)
             return BREAK;
           else if (cv === REMOVE)
@@ -6993,17 +7107,17 @@ var require_visit = __commonJS({
     visitAsync.BREAK = BREAK;
     visitAsync.SKIP = SKIP;
     visitAsync.REMOVE = REMOVE;
-    async function visitAsync_(key, node, visitor, path4) {
-      const ctrl = await callVisitor(key, node, visitor, path4);
+    async function visitAsync_(key, node, visitor, path7) {
+      const ctrl = await callVisitor(key, node, visitor, path7);
       if (identity.isNode(ctrl) || identity.isPair(ctrl)) {
-        replaceNode(key, path4, ctrl);
-        return visitAsync_(key, ctrl, visitor, path4);
+        replaceNode(key, path7, ctrl);
+        return visitAsync_(key, ctrl, visitor, path7);
       }
       if (typeof ctrl !== "symbol") {
         if (identity.isCollection(node)) {
-          path4 = Object.freeze(path4.concat(node));
+          path7 = Object.freeze(path7.concat(node));
           for (let i = 0; i < node.items.length; ++i) {
-            const ci = await visitAsync_(i, node.items[i], visitor, path4);
+            const ci = await visitAsync_(i, node.items[i], visitor, path7);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -7014,13 +7128,13 @@ var require_visit = __commonJS({
             }
           }
         } else if (identity.isPair(node)) {
-          path4 = Object.freeze(path4.concat(node));
-          const ck = await visitAsync_("key", node.key, visitor, path4);
+          path7 = Object.freeze(path7.concat(node));
+          const ck = await visitAsync_("key", node.key, visitor, path7);
           if (ck === BREAK)
             return BREAK;
           else if (ck === REMOVE)
             node.key = null;
-          const cv = await visitAsync_("value", node.value, visitor, path4);
+          const cv = await visitAsync_("value", node.value, visitor, path7);
           if (cv === BREAK)
             return BREAK;
           else if (cv === REMOVE)
@@ -7047,23 +7161,23 @@ var require_visit = __commonJS({
       }
       return visitor;
     }
-    function callVisitor(key, node, visitor, path4) {
+    function callVisitor(key, node, visitor, path7) {
       if (typeof visitor === "function")
-        return visitor(key, node, path4);
+        return visitor(key, node, path7);
       if (identity.isMap(node))
-        return visitor.Map?.(key, node, path4);
+        return visitor.Map?.(key, node, path7);
       if (identity.isSeq(node))
-        return visitor.Seq?.(key, node, path4);
+        return visitor.Seq?.(key, node, path7);
       if (identity.isPair(node))
-        return visitor.Pair?.(key, node, path4);
+        return visitor.Pair?.(key, node, path7);
       if (identity.isScalar(node))
-        return visitor.Scalar?.(key, node, path4);
+        return visitor.Scalar?.(key, node, path7);
       if (identity.isAlias(node))
-        return visitor.Alias?.(key, node, path4);
+        return visitor.Alias?.(key, node, path7);
       return void 0;
     }
-    function replaceNode(key, path4, node) {
-      const parent = path4[path4.length - 1];
+    function replaceNode(key, path7, node) {
+      const parent = path7[path7.length - 1];
       if (identity.isCollection(parent)) {
         parent.items[key] = node;
       } else if (identity.isPair(parent)) {
@@ -7673,10 +7787,10 @@ var require_Collection = __commonJS({
     var createNode = require_createNode();
     var identity = require_identity();
     var Node = require_Node();
-    function collectionFromPath(schema, path4, value) {
+    function collectionFromPath(schema, path7, value) {
       let v = value;
-      for (let i = path4.length - 1; i >= 0; --i) {
-        const k = path4[i];
+      for (let i = path7.length - 1; i >= 0; --i) {
+        const k = path7[i];
         if (typeof k === "number" && Number.isInteger(k) && k >= 0) {
           const a = [];
           a[k] = v;
@@ -7695,7 +7809,7 @@ var require_Collection = __commonJS({
         sourceObjects: /* @__PURE__ */ new Map()
       });
     }
-    var isEmptyPath = (path4) => path4 == null || typeof path4 === "object" && !!path4[Symbol.iterator]().next().done;
+    var isEmptyPath = (path7) => path7 == null || typeof path7 === "object" && !!path7[Symbol.iterator]().next().done;
     var Collection = class extends Node.NodeBase {
       constructor(type, schema) {
         super(type);
@@ -7725,11 +7839,11 @@ var require_Collection = __commonJS({
        * be a Pair instance or a `{ key, value }` object, which may not have a key
        * that already exists in the map.
        */
-      addIn(path4, value) {
-        if (isEmptyPath(path4))
+      addIn(path7, value) {
+        if (isEmptyPath(path7))
           this.add(value);
         else {
-          const [key, ...rest] = path4;
+          const [key, ...rest] = path7;
           const node = this.get(key, true);
           if (identity.isCollection(node))
             node.addIn(rest, value);
@@ -7743,8 +7857,8 @@ var require_Collection = __commonJS({
        * Removes a value from the collection.
        * @returns `true` if the item was found and removed.
        */
-      deleteIn(path4) {
-        const [key, ...rest] = path4;
+      deleteIn(path7) {
+        const [key, ...rest] = path7;
         if (rest.length === 0)
           return this.delete(key);
         const node = this.get(key, true);
@@ -7758,8 +7872,8 @@ var require_Collection = __commonJS({
        * scalar values from their surrounding node; to disable set `keepScalar` to
        * `true` (collections are always returned intact).
        */
-      getIn(path4, keepScalar) {
-        const [key, ...rest] = path4;
+      getIn(path7, keepScalar) {
+        const [key, ...rest] = path7;
         const node = this.get(key, true);
         if (rest.length === 0)
           return !keepScalar && identity.isScalar(node) ? node.value : node;
@@ -7777,8 +7891,8 @@ var require_Collection = __commonJS({
       /**
        * Checks if the collection includes a value with the key `key`.
        */
-      hasIn(path4) {
-        const [key, ...rest] = path4;
+      hasIn(path7) {
+        const [key, ...rest] = path7;
         if (rest.length === 0)
           return this.has(key);
         const node = this.get(key, true);
@@ -7788,8 +7902,8 @@ var require_Collection = __commonJS({
        * Sets a value in this collection. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path4, value) {
-        const [key, ...rest] = path4;
+      setIn(path7, value) {
+        const [key, ...rest] = path7;
         if (rest.length === 0) {
           this.set(key, value);
         } else {
@@ -10304,9 +10418,9 @@ var require_Document = __commonJS({
           this.contents.add(value);
       }
       /** Adds a value to the document. */
-      addIn(path4, value) {
+      addIn(path7, value) {
         if (assertCollection(this.contents))
-          this.contents.addIn(path4, value);
+          this.contents.addIn(path7, value);
       }
       /**
        * Create a new `Alias` node, ensuring that the target `node` has the required anchor.
@@ -10381,14 +10495,14 @@ var require_Document = __commonJS({
        * Removes a value from the document.
        * @returns `true` if the item was found and removed.
        */
-      deleteIn(path4) {
-        if (Collection.isEmptyPath(path4)) {
+      deleteIn(path7) {
+        if (Collection.isEmptyPath(path7)) {
           if (this.contents == null)
             return false;
           this.contents = null;
           return true;
         }
-        return assertCollection(this.contents) ? this.contents.deleteIn(path4) : false;
+        return assertCollection(this.contents) ? this.contents.deleteIn(path7) : false;
       }
       /**
        * Returns item at `key`, or `undefined` if not found. By default unwraps
@@ -10403,10 +10517,10 @@ var require_Document = __commonJS({
        * scalar values from their surrounding node; to disable set `keepScalar` to
        * `true` (collections are always returned intact).
        */
-      getIn(path4, keepScalar) {
-        if (Collection.isEmptyPath(path4))
+      getIn(path7, keepScalar) {
+        if (Collection.isEmptyPath(path7))
           return !keepScalar && identity.isScalar(this.contents) ? this.contents.value : this.contents;
-        return identity.isCollection(this.contents) ? this.contents.getIn(path4, keepScalar) : void 0;
+        return identity.isCollection(this.contents) ? this.contents.getIn(path7, keepScalar) : void 0;
       }
       /**
        * Checks if the document includes a value with the key `key`.
@@ -10417,10 +10531,10 @@ var require_Document = __commonJS({
       /**
        * Checks if the document includes a value at `path`.
        */
-      hasIn(path4) {
-        if (Collection.isEmptyPath(path4))
+      hasIn(path7) {
+        if (Collection.isEmptyPath(path7))
           return this.contents !== void 0;
-        return identity.isCollection(this.contents) ? this.contents.hasIn(path4) : false;
+        return identity.isCollection(this.contents) ? this.contents.hasIn(path7) : false;
       }
       /**
        * Sets a value in this document. For `!!set`, `value` needs to be a
@@ -10437,13 +10551,13 @@ var require_Document = __commonJS({
        * Sets a value in this document. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path4, value) {
-        if (Collection.isEmptyPath(path4)) {
+      setIn(path7, value) {
+        if (Collection.isEmptyPath(path7)) {
           this.contents = value;
         } else if (this.contents == null) {
-          this.contents = Collection.collectionFromPath(this.schema, Array.from(path4), value);
+          this.contents = Collection.collectionFromPath(this.schema, Array.from(path7), value);
         } else if (assertCollection(this.contents)) {
-          this.contents.setIn(path4, value);
+          this.contents.setIn(path7, value);
         }
       }
       /**
@@ -12403,9 +12517,9 @@ var require_cst_visit = __commonJS({
     visit.BREAK = BREAK;
     visit.SKIP = SKIP;
     visit.REMOVE = REMOVE;
-    visit.itemAtPath = (cst, path4) => {
+    visit.itemAtPath = (cst, path7) => {
       let item = cst;
-      for (const [field, index] of path4) {
+      for (const [field, index] of path7) {
         const tok = item?.[field];
         if (tok && "items" in tok) {
           item = tok.items[index];
@@ -12414,23 +12528,23 @@ var require_cst_visit = __commonJS({
       }
       return item;
     };
-    visit.parentCollection = (cst, path4) => {
-      const parent = visit.itemAtPath(cst, path4.slice(0, -1));
-      const field = path4[path4.length - 1][0];
+    visit.parentCollection = (cst, path7) => {
+      const parent = visit.itemAtPath(cst, path7.slice(0, -1));
+      const field = path7[path7.length - 1][0];
       const coll = parent?.[field];
       if (coll && "items" in coll)
         return coll;
       throw new Error("Parent collection not found");
     };
-    function _visit(path4, item, visitor) {
-      let ctrl = visitor(item, path4);
+    function _visit(path7, item, visitor) {
+      let ctrl = visitor(item, path7);
       if (typeof ctrl === "symbol")
         return ctrl;
       for (const field of ["key", "value"]) {
         const token = item[field];
         if (token && "items" in token) {
           for (let i = 0; i < token.items.length; ++i) {
-            const ci = _visit(Object.freeze(path4.concat([[field, i]])), token.items[i], visitor);
+            const ci = _visit(Object.freeze(path7.concat([[field, i]])), token.items[i], visitor);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
@@ -12441,10 +12555,10 @@ var require_cst_visit = __commonJS({
             }
           }
           if (typeof ctrl === "function" && field === "key")
-            ctrl = ctrl(item, path4);
+            ctrl = ctrl(item, path7);
         }
       }
-      return typeof ctrl === "function" ? ctrl(item, path4) : ctrl;
+      return typeof ctrl === "function" ? ctrl(item, path7) : ctrl;
     }
     exports.visit = visit;
   }
@@ -12870,9 +12984,9 @@ var require_lexer = __commonJS({
         }
       }
       *parseQuotedScalar() {
-        const quote = this.charAt(0);
-        let end = this.buffer.indexOf(quote, this.pos + 1);
-        if (quote === "'") {
+        const quote2 = this.charAt(0);
+        let end = this.buffer.indexOf(quote2, this.pos + 1);
+        if (quote2 === "'") {
           while (end !== -1 && this.buffer[end + 1] === "'")
             end = this.buffer.indexOf("'", end + 2);
         } else {
@@ -14195,146 +14309,7 @@ var require_dist = __commonJS({
   }
 });
 
-// src/errors.js
-var QaError = class extends Error {
-  constructor(code, message, issues = [], options2 = {}) {
-    super(message, options2);
-    this.name = "QaError";
-    this.code = code;
-    this.issues = issues;
-  }
-};
-function formatQaError(error) {
-  if (!(error instanceof QaError)) {
-    return `Unexpected error: ${error instanceof Error ? error.message : String(error)}`;
-  }
-  const heading = `${error.message} [${error.code}]`;
-  if (error.issues.length === 0) return heading;
-  return `${heading}
-${error.issues.map(({ path: path4, message }) => `  - ${path4}: ${message}`).join("\n")}`;
-}
-
-// src/schema-validator.js
-var import_ajv = __toESM(require_ajv(), 1);
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-var SCHEMA_FILES = {
-  environments: "environments.schema.json",
-  fixture: "fixture.schema.json",
-  spec: "spec.schema.json",
-  result: "result.schema.json",
-  lastTest: "last-test.schema.json"
-};
-var ajv = new import_ajv.default({ allErrors: true, strict: true });
-var validators = /* @__PURE__ */ new Map();
-for (const [kind, fileName] of Object.entries(SCHEMA_FILES)) {
-  const schemaUrl = new URL(`../schemas/${fileName}`, import.meta.url);
-  const schema = JSON.parse(readFileSync(fileURLToPath(schemaUrl), "utf8"));
-  validators.set(kind, ajv.compile(schema));
-}
-function propertyPath(instancePath) {
-  if (!instancePath) return "$";
-  const segments = instancePath.split("/").slice(1).map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"));
-  return segments.reduce((path4, segment) => {
-    if (/^[0-9]+$/.test(segment)) return `${path4}[${segment}]`;
-    if (/^[A-Za-z_$][A-Za-z0-9_$-]*$/.test(segment)) return `${path4}.${segment}`;
-    return `${path4}[${JSON.stringify(segment)}]`;
-  }, "$");
-}
-function errorPath(error) {
-  const base = propertyPath(error.instancePath);
-  if (error.keyword === "required") return `${base}.${error.params.missingProperty}`;
-  if (error.keyword === "additionalProperties") return `${base}.${error.params.additionalProperty}`;
-  return base;
-}
-function schemaIssues(errors = []) {
-  const issues = errors.map((error) => ({
-    path: errorPath(error),
-    message: error.message ?? "is invalid"
-  }));
-  return issues.filter(
-    (candidate, index) => !(candidate.message === "must match exactly one schema in oneOf" && issues.length > 1 && index === issues.length - 1)
-  );
-}
-function validateDocument(kind, value) {
-  const validator = validators.get(kind);
-  if (!validator) throw new QaError("UNKNOWN_CONTRACT", `Unknown document contract: ${kind}`);
-  if (!validator(value)) {
-    throw new QaError(
-      "VALIDATION_FAILED",
-      `${kind} document is invalid`,
-      schemaIssues(validator.errors)
-    );
-  }
-  return value;
-}
-function isStableId(value) {
-  return typeof value === "string" && /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(value);
-}
-function assertStableId(value, path4 = "$.id") {
-  if (!isStableId(value)) {
-    throw new QaError("INVALID_ID", "ID is invalid", [
-      { path: path4, message: "use lowercase words separated by single hyphens" }
-    ]);
-  }
-  return value;
-}
-
-// src/draft.js
-var FILLER_PREFIX = /^(?:a|an|the|test(?: that)?|verify(?: that)?|ensure(?: that)?)\s+/i;
-function cleanRequirement(requirement) {
-  if (typeof requirement !== "string" || requirement.trim().length === 0) {
-    throw new QaError("MISSING_REQUIREMENT", "A natural-language requirement is required");
-  }
-  return requirement.trim().replace(/[.!?]+$/, "");
-}
-function sentenceCase(value) {
-  const cleaned = value.replace(FILLER_PREFIX, "").trim();
-  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-}
-function slugify(value) {
-  const slug = value.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").replace(/-+/g, "-").slice(0, 64).replace(/-+$/g, "");
-  return slug || "semantic-test";
-}
-function inferredExpectation(requirement) {
-  if (/check\s*out|purchase|place(?:s)? (?:an )?order/i.test(requirement)) {
-    return "Order confirmation is visible";
-  }
-  if (/log\s*in|sign\s*in/i.test(requirement)) return "Customer dashboard is visible";
-  if (/register|sign\s*up|create(?:s)? (?:an )?account/i.test(requirement)) {
-    return "Account confirmation is visible";
-  }
-  if (/search/i.test(requirement)) return "Relevant search results are visible";
-  if (/add(?:s)? .+ (?:to|into) (?:the )?cart/i.test(requirement)) {
-    return "The selected item is visible in the shopping cart";
-  }
-  if (/update|edit|change/i.test(requirement)) return "The saved changes are visible";
-  return "The requested outcome is visible to the user";
-}
-function draftSpec(requirement, options2 = {}) {
-  const cleaned = cleanRequirement(requirement);
-  const title = options2.title?.trim() || sentenceCase(cleaned);
-  const id = options2.id || slugify(title);
-  assertStableId(id);
-  const fixtures = options2.beforeFixtures?.length ? { before: [...new Set(options2.beforeFixtures)] } : void 0;
-  const spec = {
-    version: 1,
-    id,
-    title,
-    environment: options2.environment || "local",
-    ...fixtures ? { fixtures } : {},
-    steps: [
-      {
-        intent: options2.intent?.trim() || sentenceCase(cleaned),
-        expect: options2.expectations?.length ? options2.expectations.map((expectation) => expectation.trim()) : [inferredExpectation(cleaned)]
-      }
-    ]
-  };
-  return spec;
-}
-
 // src/documents.js
-var import_yaml = __toESM(require_dist(), 1);
 function yamlErrorIssue(error, source) {
   let position = error.linePos?.[0];
   if (!position && Number.isInteger(error.pos?.[0])) {
@@ -14342,8 +14317,8 @@ function yamlErrorIssue(error, source) {
     const lines = prefix.split(/\r?\n/);
     position = { line: lines.length, col: lines.at(-1).length + 1 };
   }
-  const path4 = position ? `$ (line ${position.line}, column ${position.col})` : "$";
-  return { path: path4, message: error.message };
+  const path7 = position ? `$ (line ${position.line}, column ${position.col})` : "$";
+  return { path: path7, message: error.message };
 }
 function parseYaml(source, label = "YAML") {
   if (typeof source !== "string") return source;
@@ -14384,9 +14359,16 @@ function stringifyJson(value) {
   return `${JSON.stringify(value, null, 2)}
 `;
 }
+var import_yaml;
+var init_documents = __esm({
+  "src/documents.js"() {
+    import_yaml = __toESM(require_dist(), 1);
+    init_errors();
+  }
+});
 
 // src/environment.js
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 function assertWebUrl(baseUrl) {
   let parsed;
@@ -14414,6 +14396,16 @@ async function reachable(baseUrl, fetchImpl, signal) {
     return false;
   }
 }
+function stopProcessTree(child, { platform = process.platform, spawnSyncImpl } = {}) {
+  if (platform !== "win32") {
+    process.kill(-child.pid, "SIGTERM");
+    return;
+  }
+  const run = spawnSyncImpl ?? spawnSync;
+  const result = run("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore", windowsHide: true });
+  if (result?.error && result.error.code !== "ENOENT") throw result.error;
+  if (result?.error || result?.status !== 0 && result?.status !== 128) child.kill("SIGTERM");
+}
 function spawnApplication(command, repositoryRoot) {
   const child = spawn(command, {
     cwd: repositoryRoot,
@@ -14427,8 +14419,7 @@ function spawnApplication(command, repositoryRoot) {
     async stop() {
       if (child.exitCode !== null || child.signalCode !== null) return;
       try {
-        if (process.platform === "win32") child.kill("SIGTERM");
-        else process.kill(-child.pid, "SIGTERM");
+        stopProcessTree(child);
       } catch (error) {
         if (error.code !== "ESRCH") throw error;
       }
@@ -14471,78 +14462,13 @@ async function prepareEnvironment(environment, options2 = {}) {
     { path: "$.baseUrl", message: "verify baseUrl and startCommand" }
   ]);
 }
-
-// src/execution.js
-import { randomBytes } from "node:crypto";
-import { extname as extname2 } from "node:path";
-import { readFile as readFile2 } from "node:fs/promises";
+var init_environment = __esm({
+  "src/environment.js"() {
+    init_errors();
+  }
+});
 
 // src/native-executor.js
-var REQUIRED_METHODS = ["act", "observe", "screenshot"];
-var NativeExecutor = class {
-  constructor(kind, driver) {
-    if (!(/* @__PURE__ */ new Set(["web", "desktop"])).has(kind)) {
-      throw new QaError("INVALID_NATIVE_EXECUTOR", `Unsupported native executor kind: ${kind}`);
-    }
-    this.kind = kind;
-    this.driver = driver ?? {};
-  }
-  async availability() {
-    const missing = REQUIRED_METHODS.filter((method) => typeof this.driver[method] !== "function");
-    if (missing.length > 0) {
-      return { available: false, explanation: `Native ${this.kind} executor is missing: ${missing.join(", ")}` };
-    }
-    if (typeof this.driver.isAvailable === "function") {
-      const result = await this.driver.isAvailable();
-      if (result === false) return { available: false, explanation: `Native ${this.kind} capability is unavailable` };
-      if (result && typeof result === "object" && result.available === false) return result;
-    }
-    return {
-      available: true,
-      unsupported: [
-        ...typeof this.driver.consoleErrors === "function" ? [] : ["console inspection"],
-        ...typeof this.driver.networkErrors === "function" ? [] : ["network inspection"]
-      ]
-    };
-  }
-  connect(target, context) {
-    return this.driver.connect?.(target, context);
-  }
-  act(intent, context) {
-    return this.driver.act(intent, context);
-  }
-  observe(expectation, context) {
-    return this.driver.observe(expectation, context);
-  }
-  screenshot(context) {
-    return this.driver.screenshot(context);
-  }
-  supports(operation) {
-    return typeof this.driver[operation] === "function";
-  }
-  rediscover(intent, context) {
-    return this.driver.rediscover?.(intent, context);
-  }
-  recover(intent, target, context) {
-    if (typeof this.driver.recover === "function") return this.driver.recover(intent, target, context);
-    return this.driver.act(intent, { ...context, recovery: { target } });
-  }
-  waitFor(expectation, context) {
-    return this.driver.waitFor?.(expectation, context);
-  }
-  compareDesign(request, context) {
-    return this.driver.compareDesign?.(request, context);
-  }
-  consoleErrors(context) {
-    return this.driver.consoleErrors?.(context);
-  }
-  networkErrors(context) {
-    return this.driver.networkErrors?.(context);
-  }
-  close(context) {
-    return this.driver.close?.(context);
-  }
-};
 function createNativeWebExecutor(driver) {
   return new NativeExecutor("web", driver);
 }
@@ -14566,26 +14492,85 @@ async function detectNativeCapability(environment, executor) {
   }
   return executor.availability();
 }
-
-// src/design.js
-import { extname, isAbsolute, relative, resolve, sep } from "node:path";
-import { readFile, realpath } from "node:fs/promises";
-import { fileURLToPath as fileURLToPath2 } from "node:url";
+var REQUIRED_METHODS, NativeExecutor;
+var init_native_executor = __esm({
+  "src/native-executor.js"() {
+    init_errors();
+    REQUIRED_METHODS = ["act", "observe", "screenshot"];
+    NativeExecutor = class {
+      constructor(kind, driver) {
+        if (!(/* @__PURE__ */ new Set(["web", "desktop"])).has(kind)) {
+          throw new QaError("INVALID_NATIVE_EXECUTOR", `Unsupported native executor kind: ${kind}`);
+        }
+        this.kind = kind;
+        this.driver = driver ?? {};
+      }
+      async availability() {
+        const missing = REQUIRED_METHODS.filter((method) => typeof this.driver[method] !== "function");
+        if (missing.length > 0) {
+          return { available: false, explanation: `Native ${this.kind} executor is missing: ${missing.join(", ")}` };
+        }
+        if (typeof this.driver.isAvailable === "function") {
+          const result = await this.driver.isAvailable();
+          if (result === false) return { available: false, explanation: `Native ${this.kind} capability is unavailable` };
+          if (result && typeof result === "object" && result.available === false) return result;
+        }
+        return {
+          available: true,
+          unsupported: [
+            ...typeof this.driver.consoleErrors === "function" ? [] : ["console inspection"],
+            ...typeof this.driver.networkErrors === "function" ? [] : ["network inspection"]
+          ]
+        };
+      }
+      connect(target, context) {
+        return this.driver.connect?.(target, context);
+      }
+      act(intent, context) {
+        return this.driver.act(intent, context);
+      }
+      observe(expectation, context) {
+        return this.driver.observe(expectation, context);
+      }
+      screenshot(context) {
+        return this.driver.screenshot(context);
+      }
+      supports(operation) {
+        return typeof this.driver[operation] === "function";
+      }
+      rediscover(intent, context) {
+        return this.driver.rediscover?.(intent, context);
+      }
+      recover(intent, target, context) {
+        if (typeof this.driver.recover === "function") return this.driver.recover(intent, target, context);
+        return this.driver.act(intent, { ...context, recovery: { target } });
+      }
+      waitFor(expectation, context) {
+        return this.driver.waitFor?.(expectation, context);
+      }
+      compareDesign(request, context) {
+        return this.driver.compareDesign?.(request, context);
+      }
+      consoleErrors(context) {
+        return this.driver.consoleErrors?.(context);
+      }
+      networkErrors(context) {
+        return this.driver.networkErrors?.(context);
+      }
+      close(context) {
+        return this.driver.close?.(context);
+      }
+    };
+  }
+});
 
 // src/references.js
-var REFERENCE = /^\$\{([A-Z][A-Z0-9_]*|outputs\.[A-Za-z][A-Za-z0-9_.-]*)\}$/;
-var UNSAFE_OUTPUT_SEGMENTS = /* @__PURE__ */ new Set(["__proto__", "constructor", "prototype"]);
-var IMMUTABLE_CONTRACT_FIELDS = /* @__PURE__ */ new Set([
-  "runId",
-  "specId",
-  "environment",
-  "fixtureId",
-  "phase",
-  "type",
-  "status",
-  "intent",
-  "expectation"
-]);
+var references_exports = {};
+__export(references_exports, {
+  redactSensitive: () => redactSensitive,
+  resolveReference: () => resolveReference,
+  resolveReferences: () => resolveReferences
+});
 function outputValue(outputs, reference) {
   const segments = reference.slice("outputs.".length).split(".");
   let value = outputs;
@@ -14649,40 +14634,36 @@ function redactSensitive(value, sensitiveValues = []) {
   }
   return visit(value);
 }
+var REFERENCE, UNSAFE_OUTPUT_SEGMENTS, IMMUTABLE_CONTRACT_FIELDS;
+var init_references = __esm({
+  "src/references.js"() {
+    init_errors();
+    REFERENCE = /^\$\{([A-Z][A-Z0-9_]*|outputs\.[A-Za-z][A-Za-z0-9_.-]*)\}$/;
+    UNSAFE_OUTPUT_SEGMENTS = /* @__PURE__ */ new Set(["__proto__", "constructor", "prototype"]);
+    IMMUTABLE_CONTRACT_FIELDS = /* @__PURE__ */ new Set([
+      "runId",
+      "specId",
+      "environment",
+      "fixtureId",
+      "phase",
+      "type",
+      "status",
+      "intent",
+      "expectation"
+    ]);
+  }
+});
 
 // src/design.js
-var DEFAULT_DESIGN_VIEWPORT = Object.freeze({ width: 1440, height: 1e3 });
-var DESIGN_COMPARISON_RULES = Object.freeze([
-  "Check that required components and visible content in the reference are present.",
-  "Compare major layout, order, grouping, and alignment.",
-  "Compare only obvious style signals such as component variant, dominant color, and large spacing differences.",
-  "Ignore minor pixel, font-rendering, anti-aliasing, and sub-pixel differences.",
-  "Report a regression only when the explicit reference directly supports a concrete finding.",
-  "Never update or reinterpret the reference to make the rendered state pass."
-]);
-var IMAGE_EXTENSIONS = /* @__PURE__ */ new Map([
-  [".png", "png"],
-  [".jpg", "jpg"],
-  [".jpeg", "jpeg"],
-  [".webp", "webp"]
-]);
-var COMPARISON_STATUSES = /* @__PURE__ */ new Set(["matched", "regression", "blocked"]);
-var FINDING_STATUSES = /* @__PURE__ */ new Set(["matched", "regression", "not_checked"]);
-var FINDING_CATEGORIES = /* @__PURE__ */ new Set([
-  "components",
-  "content",
-  "layout",
-  "order",
-  "grouping",
-  "alignment",
-  "style"
-]);
+import { extname, isAbsolute, relative, resolve, sep } from "node:path";
+import { readFile, realpath } from "node:fs/promises";
+import { fileURLToPath as fileURLToPath2 } from "node:url";
 function isInside(root, candidate) {
   const pathFromRoot = relative(root, candidate);
   return pathFromRoot === "" || !pathFromRoot.startsWith(`..${sep}`) && pathFromRoot !== "..";
 }
-function designError(code, message, path4 = "$.design.reference") {
-  return new QaError(code, message, [{ path: path4, message }]);
+function designError(code, message, path7 = "$.design.reference") {
+  return new QaError(code, message, [{ path: path7, message }]);
 }
 function designConfigurationForSpec(design, stepCount) {
   return {
@@ -14718,8 +14699,17 @@ async function resolveDesignReference(reference, {
   }
   let requestedPath;
   try {
-    requestedPath = source.startsWith("file:") ? fileURLToPath2(source) : isAbsolute(source) ? source : resolve(repositoryRoot, source);
-  } catch {
+    if (source.startsWith("file:")) {
+      const fileUrl = new URL(source);
+      if (fileUrl.host && fileUrl.host !== "localhost") {
+        throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL must not name a host");
+      }
+      requestedPath = fileURLToPath2(source);
+    } else {
+      requestedPath = isAbsolute(source) ? source : resolve(repositoryRoot, source);
+    }
+  } catch (error) {
+    if (error instanceof QaError) throw error;
     throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL is invalid");
   }
   let realRoot;
@@ -14819,12 +14809,41 @@ function normalizeDesignComparison(response) {
     ...response.referenceScreenshot ? { referenceScreenshot: response.referenceScreenshot } : {}
   };
 }
+var DEFAULT_DESIGN_VIEWPORT, DESIGN_COMPARISON_RULES, IMAGE_EXTENSIONS, COMPARISON_STATUSES, FINDING_STATUSES, FINDING_CATEGORIES;
+var init_design = __esm({
+  "src/design.js"() {
+    init_errors();
+    init_references();
+    DEFAULT_DESIGN_VIEWPORT = Object.freeze({ width: 1440, height: 1e3 });
+    DESIGN_COMPARISON_RULES = Object.freeze([
+      "Check that required components and visible content in the reference are present.",
+      "Compare major layout, order, grouping, and alignment.",
+      "Compare only obvious style signals such as component variant, dominant color, and large spacing differences.",
+      "Ignore minor pixel, font-rendering, anti-aliasing, and sub-pixel differences.",
+      "Report a regression only when the explicit reference directly supports a concrete finding.",
+      "Never update or reinterpret the reference to make the rendered state pass."
+    ]);
+    IMAGE_EXTENSIONS = /* @__PURE__ */ new Map([
+      [".png", "png"],
+      [".jpg", "jpg"],
+      [".jpeg", "jpeg"],
+      [".webp", "webp"]
+    ]);
+    COMPARISON_STATUSES = /* @__PURE__ */ new Set(["matched", "regression", "blocked"]);
+    FINDING_STATUSES = /* @__PURE__ */ new Set(["matched", "regression", "not_checked"]);
+    FINDING_CATEGORIES = /* @__PURE__ */ new Set([
+      "components",
+      "content",
+      "layout",
+      "order",
+      "grouping",
+      "alignment",
+      "style"
+    ]);
+  }
+});
 
 // src/healing.js
-var FAILURE_STAGES = /* @__PURE__ */ new Set(["action", "expectation"]);
-var FAILURE_STATUSES = /* @__PURE__ */ new Set(["failed", "blocked"]);
-var REDISCOVERY_STATUSES = /* @__PURE__ */ new Set(["found", "not_found", "ambiguous", "blocked"]);
-var VERIFICATION_STATUSES = /* @__PURE__ */ new Set(["passed", "failed", "blocked"]);
 function assertChoice(value, choices, name) {
   if (!choices.has(value)) {
     throw new QaError("INVALID_HEALING_INPUT", `${name} is invalid`);
@@ -14967,10 +14986,24 @@ function classifyFailure({
     reason: rediscovery?.explanation || failure.explanation || "No safe equivalent target was found"
   };
 }
+var FAILURE_STAGES, FAILURE_STATUSES, REDISCOVERY_STATUSES, VERIFICATION_STATUSES;
+var init_healing = __esm({
+  "src/healing.js"() {
+    init_errors();
+    FAILURE_STAGES = /* @__PURE__ */ new Set(["action", "expectation"]);
+    FAILURE_STATUSES = /* @__PURE__ */ new Set(["failed", "blocked"]);
+    REDISCOVERY_STATUSES = /* @__PURE__ */ new Set(["found", "not_found", "ambiguous", "blocked"]);
+    VERIFICATION_STATUSES = /* @__PURE__ */ new Set(["passed", "failed", "blocked"]);
+  }
+});
 
 // src/execution.js
-var STEP_STATUSES = /* @__PURE__ */ new Set(["passed", "failed", "blocked"]);
-var SCREENSHOT_EXTENSIONS = /* @__PURE__ */ new Set(["png", "jpg", "jpeg", "webp"]);
+import { randomBytes } from "node:crypto";
+import { extname as extname2 } from "node:path";
+import { readFile as readFile2 } from "node:fs/promises";
+function channelFor(step = {}) {
+  return step.channel ?? "web";
+}
 function instant(clock) {
   const value = clock();
   return (value instanceof Date ? value : new Date(value)).toISOString();
@@ -15039,25 +15072,6 @@ async function screenshotArtifact(artifact) {
   }
   return { contents, extension };
 }
-var EventJournal = class {
-  constructor(clock, onEvent, redact) {
-    this.clock = clock;
-    this.onEvent = onEvent;
-    this.redact = redact;
-    this.events = [];
-  }
-  async add(type, details = {}) {
-    const event = this.redact({
-      sequence: this.events.length + 1,
-      at: instant(this.clock),
-      type,
-      ...details
-    });
-    this.events.push(event);
-    await this.onEvent?.(event);
-    return event;
-  }
-};
 async function executeSemanticStep(executor, item, context) {
   let action;
   try {
@@ -15127,6 +15141,7 @@ function skippedStep(step, index) {
   return {
     index,
     intent: step.intent,
+    ...step.channel ? { channel: step.channel } : {},
     status: "skipped",
     expectations: step.expect.map((expectation) => ({ expectation, status: "skipped" }))
   };
@@ -15413,13 +15428,15 @@ async function executeRun(options2) {
       }
       const stepResult = await executeSemanticStep(executor, {
         intent: step.intent,
-        expectations: step.expect ?? []
+        expectations: step.expect ?? [],
+        channel: channelFor(step)
       }, {
         runId,
         scope: "fixture",
         phase,
         fixtureId,
         fixtureStepIndex: index + 1,
+        channel: channelFor(step),
         inputs,
         outputs,
         target: resolvedEnvironment,
@@ -15587,7 +15604,7 @@ async function executeRun(options2) {
       for (const fixtureId of spec.fixtures?.before ?? []) {
         const status = await runFixture(fixtureId, "before");
         if (status !== "passed") {
-          primaryClassification = "blocked";
+          primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
           primaryExplanation = `Before fixture ${fixtureId} ${status}`;
           break;
         }
@@ -15605,6 +15622,7 @@ async function executeRun(options2) {
             runId,
             scope: "test",
             stepIndex: index,
+            channel: channelFor(step),
             outputs,
             target: resolvedEnvironment,
             signal,
@@ -15612,12 +15630,14 @@ async function executeRun(options2) {
           };
           let executed = await executeSemanticStep(executor, {
             intent: step.intent,
-            expectations: step.expect
+            expectations: step.expect,
+            channel: channelFor(step)
           }, stepContext);
           if (executed.status === "failed") {
             executed = await attemptHealing(executor, {
               intent: step.intent,
-              expectations: step.expect
+              expectations: step.expect,
+              channel: channelFor(step)
             }, stepContext, executed, {
               capture,
               event: (type, details) => journal.add(type, details)
@@ -15627,6 +15647,7 @@ async function executeRun(options2) {
           const recorded = redact({
             index,
             intent: step.intent,
+            ...step.channel ? { channel: step.channel } : {},
             status: executed.status,
             expectations: executed.expectations,
             ...executed.selectedTarget ? { selectedTarget: executed.selectedTarget } : {},
@@ -15656,7 +15677,7 @@ async function executeRun(options2) {
             for (const fixtureId of group.fixtures) {
               const status = await runFixture(fixtureId, "between", index);
               if (status !== "passed") {
-                primaryClassification = "blocked";
+                primaryClassification = status === "blocked" ? "blocked" : "functional_regression";
                 primaryExplanation = `Between-step fixture ${fixtureId} ${status}`;
                 break;
               }
@@ -15733,6 +15754,170 @@ async function executeRun(options2) {
   await workspace.saveResult(result);
   return result;
 }
+var STEP_STATUSES, SCREENSHOT_EXTENSIONS, EventJournal;
+var init_execution = __esm({
+  "src/execution.js"() {
+    init_native_executor();
+    init_environment();
+    init_errors();
+    init_design();
+    init_healing();
+    init_references();
+    STEP_STATUSES = /* @__PURE__ */ new Set(["passed", "failed", "blocked"]);
+    SCREENSHOT_EXTENSIONS = /* @__PURE__ */ new Set(["png", "jpg", "jpeg", "webp"]);
+    EventJournal = class {
+      constructor(clock, onEvent, redact) {
+        this.clock = clock;
+        this.onEvent = onEvent;
+        this.redact = redact;
+        this.events = [];
+      }
+      async add(type, details = {}) {
+        const event = this.redact({
+          sequence: this.events.length + 1,
+          at: instant(this.clock),
+          type,
+          ...details
+        });
+        this.events.push(event);
+        await this.onEvent?.(event);
+        return event;
+      }
+    };
+  }
+});
+
+// src/samples.js
+var SAMPLE_ENVIRONMENTS, SAMPLE_FIXTURES, SAMPLE_SPECS, SAMPLE_SPEC;
+var init_samples = __esm({
+  "src/samples.js"() {
+    SAMPLE_ENVIRONMENTS = {
+      version: 1,
+      environments: {
+        local: {
+          type: "web",
+          baseUrl: "http://localhost:3000",
+          startCommand: "npm run dev"
+        },
+        staging: {
+          type: "web",
+          baseUrl: "${QA_STAGING_URL}"
+        },
+        desktop: {
+          type: "desktop",
+          app: "${QA_DESKTOP_APP}"
+        }
+      }
+    };
+    SAMPLE_FIXTURES = [
+      {
+        version: 1,
+        id: "login-customer",
+        title: "Log in as a customer",
+        inputs: {
+          username: "${QA_CUSTOMER_USERNAME}",
+          password: "${QA_CUSTOMER_PASSWORD}"
+        },
+        steps: [
+          { intent: "Open the login page" },
+          { intent: "Sign in with the supplied customer credentials" }
+        ],
+        expect: ["Customer dashboard is visible"]
+      },
+      {
+        version: 1,
+        id: "cleanup-test-order",
+        title: "Remove the order created by this test",
+        steps: [
+          { intent: "Open the order created during this run" },
+          { intent: "Delete it if it exists" }
+        ],
+        expect: ["The test order is absent"],
+        idempotent: true
+      }
+    ];
+    SAMPLE_SPECS = [
+      {
+        version: 1,
+        id: "checkout-card",
+        title: "Customer completes checkout",
+        environment: "local",
+        fixtures: {
+          before: ["login-customer"],
+          after: ["cleanup-test-order"]
+        },
+        steps: [
+          {
+            intent: "Open the shopping cart",
+            expect: ["Cart contains one item"]
+          },
+          {
+            intent: "Proceed to checkout",
+            expect: ["Checkout form is visible"]
+          },
+          {
+            intent: "Submit the approved test payment details",
+            expect: ["Order confirmation is visible", "No error message is shown"]
+          }
+        ]
+      },
+      {
+        version: 1,
+        id: "checkout-saved-card",
+        title: "Customer checks out with a saved card",
+        environment: "local",
+        fixtures: {
+          before: ["login-customer"],
+          after: ["cleanup-test-order"]
+        },
+        steps: [
+          {
+            intent: "Open the shopping cart",
+            expect: ["Cart contains one item"]
+          },
+          {
+            intent: "Proceed to checkout",
+            expect: ["Checkout form is visible"]
+          },
+          {
+            intent: "Place the order with the saved test card",
+            expect: ["Order confirmation is visible", "No error message is shown"]
+          }
+        ]
+      },
+      {
+        version: 1,
+        id: "checkout-design",
+        title: "Checkout matches the approved confirmation design",
+        environment: "local",
+        fixtures: {
+          before: ["login-customer"],
+          after: ["cleanup-test-order"]
+        },
+        design: {
+          reference: "http://localhost:3000/reference/approved-confirmation",
+          afterStep: 3,
+          viewport: { width: 1280, height: 900 }
+        },
+        steps: [
+          {
+            intent: "Open the shopping cart",
+            expect: ["Cart contains one item"]
+          },
+          {
+            intent: "Proceed to checkout",
+            expect: ["Checkout form is visible"]
+          },
+          {
+            intent: "Submit the approved test payment details",
+            expect: ["Order confirmation is visible", "No error message is shown"]
+          }
+        ]
+      }
+    ];
+    SAMPLE_SPEC = SAMPLE_SPECS[0];
+  }
+});
 
 // src/storage.js
 import { constants } from "node:fs";
@@ -15748,136 +15933,6 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-
-// src/samples.js
-var SAMPLE_ENVIRONMENTS = {
-  version: 1,
-  environments: {
-    local: {
-      type: "web",
-      baseUrl: "http://localhost:3000",
-      startCommand: "npm run dev"
-    },
-    staging: {
-      type: "web",
-      baseUrl: "${QA_STAGING_URL}"
-    },
-    desktop: {
-      type: "desktop",
-      app: "${QA_DESKTOP_APP}"
-    }
-  }
-};
-var SAMPLE_FIXTURES = [
-  {
-    version: 1,
-    id: "login-customer",
-    title: "Log in as a customer",
-    inputs: {
-      username: "${QA_CUSTOMER_USERNAME}",
-      password: "${QA_CUSTOMER_PASSWORD}"
-    },
-    steps: [
-      { intent: "Open the login page" },
-      { intent: "Sign in with the supplied customer credentials" }
-    ],
-    expect: ["Customer dashboard is visible"]
-  },
-  {
-    version: 1,
-    id: "cleanup-test-order",
-    title: "Remove the order created by this test",
-    steps: [
-      { intent: "Open the order created during this run" },
-      { intent: "Delete it if it exists" }
-    ],
-    expect: ["The test order is absent"],
-    idempotent: true
-  }
-];
-var SAMPLE_SPECS = [
-  {
-    version: 1,
-    id: "checkout-card",
-    title: "Customer completes checkout",
-    environment: "local",
-    fixtures: {
-      before: ["login-customer"],
-      after: ["cleanup-test-order"]
-    },
-    steps: [
-      {
-        intent: "Open the shopping cart",
-        expect: ["Cart contains one item"]
-      },
-      {
-        intent: "Proceed to checkout",
-        expect: ["Checkout form is visible"]
-      },
-      {
-        intent: "Submit the approved test payment details",
-        expect: ["Order confirmation is visible", "No error message is shown"]
-      }
-    ]
-  },
-  {
-    version: 1,
-    id: "checkout-saved-card",
-    title: "Customer checks out with a saved card",
-    environment: "local",
-    fixtures: {
-      before: ["login-customer"],
-      after: ["cleanup-test-order"]
-    },
-    steps: [
-      {
-        intent: "Open the shopping cart",
-        expect: ["Cart contains one item"]
-      },
-      {
-        intent: "Proceed to checkout",
-        expect: ["Checkout form is visible"]
-      },
-      {
-        intent: "Place the order with the saved test card",
-        expect: ["Order confirmation is visible", "No error message is shown"]
-      }
-    ]
-  },
-  {
-    version: 1,
-    id: "checkout-design",
-    title: "Checkout matches the approved confirmation design",
-    environment: "local",
-    fixtures: {
-      before: ["login-customer"],
-      after: ["cleanup-test-order"]
-    },
-    design: {
-      reference: "http://localhost:3000/reference/approved-confirmation",
-      afterStep: 3,
-      viewport: { width: 1280, height: 900 }
-    },
-    steps: [
-      {
-        intent: "Open the shopping cart",
-        expect: ["Cart contains one item"]
-      },
-      {
-        intent: "Proceed to checkout",
-        expect: ["Checkout form is visible"]
-      },
-      {
-        intent: "Submit the approved test payment details",
-        expect: ["Order confirmation is visible", "No error message is shown"]
-      }
-    ]
-  }
-];
-var SAMPLE_SPEC = SAMPLE_SPECS[0];
-
-// src/storage.js
-var MAX_RECENT_RUNS_PER_SPEC = 20;
 async function exists(filePath) {
   try {
     await access(filePath, constants.F_OK);
@@ -15932,533 +15987,2708 @@ function fixtureIds(spec) {
     ...(plan.between ?? []).flatMap((entry) => entry.fixtures)
   ];
 }
-var QaWorkspace = class {
-  constructor(repositoryRoot = process.cwd()) {
-    this.repositoryRoot = path.resolve(repositoryRoot);
-    this.qaDirectory = path.join(this.repositoryRoot, ".qa");
-    this.environmentsPath = path.join(this.qaDirectory, "environments.yaml");
-    this.fixturesDirectory = path.join(this.qaDirectory, "fixtures");
-    this.specsDirectory = path.join(this.qaDirectory, "specs");
-    this.runsDirectory = path.join(this.qaDirectory, "runs");
-    this.lastTestPath = path.join(this.qaDirectory, "last-test.json");
-  }
-  async ensureDirectories() {
-    await Promise.all([
-      mkdir(this.fixturesDirectory, { recursive: true }),
-      mkdir(this.specsDirectory, { recursive: true }),
-      mkdir(this.runsDirectory, { recursive: true })
-    ]);
-  }
-  async init({ seed = true } = {}) {
-    await this.ensureDirectories();
-    const created = [];
-    const skipped = [];
-    if (!await exists(this.environmentsPath)) {
-      await this.saveEnvironments(SAMPLE_ENVIRONMENTS);
-      created.push(path.relative(this.repositoryRoot, this.environmentsPath));
-    } else {
-      await this.loadEnvironments();
-      skipped.push(path.relative(this.repositoryRoot, this.environmentsPath));
-    }
-    if (!seed) return { created, skipped };
-    for (const fixture of SAMPLE_FIXTURES) {
-      const fixturePath = this.fixturePath(fixture.id);
-      if (await exists(fixturePath)) {
-        await this.loadFixture(fixture.id);
-        skipped.push(path.relative(this.repositoryRoot, fixturePath));
-      } else {
-        await this.saveFixture(fixture);
-        created.push(path.relative(this.repositoryRoot, fixturePath));
+var MAX_RECENT_RUNS_PER_SPEC, QaWorkspace;
+var init_storage = __esm({
+  "src/storage.js"() {
+    init_documents();
+    init_design();
+    init_errors();
+    init_schema_validator();
+    init_samples();
+    MAX_RECENT_RUNS_PER_SPEC = 20;
+    QaWorkspace = class {
+      constructor(repositoryRoot = process.cwd()) {
+        this.repositoryRoot = path.resolve(repositoryRoot);
+        this.qaDirectory = path.join(this.repositoryRoot, ".qa");
+        this.environmentsPath = path.join(this.qaDirectory, "environments.yaml");
+        this.fixturesDirectory = path.join(this.qaDirectory, "fixtures");
+        this.specsDirectory = path.join(this.qaDirectory, "specs");
+        this.runsDirectory = path.join(this.qaDirectory, "runs");
+        this.lastTestPath = path.join(this.qaDirectory, "last-test.json");
       }
-    }
-    for (const sampleSpec of SAMPLE_SPECS) {
-      const sampleSpecPath = this.specPath(sampleSpec.id);
-      if (await exists(sampleSpecPath)) {
-        await this.loadSpec(sampleSpec.id);
-        skipped.push(path.relative(this.repositoryRoot, sampleSpecPath));
-      } else {
-        await this.saveSpec(sampleSpec);
-        created.push(path.relative(this.repositoryRoot, sampleSpecPath));
-      }
-    }
-    if (!await exists(this.lastTestPath)) {
-      await this.selectSpec(SAMPLE_SPEC.id, SAMPLE_SPEC.environment);
-      created.push(path.relative(this.repositoryRoot, this.lastTestPath));
-    } else {
-      await this.readLastTest();
-      skipped.push(path.relative(this.repositoryRoot, this.lastTestPath));
-    }
-    return { created, skipped };
-  }
-  fixturePath(id) {
-    assertStableId(id, "$.fixtureId");
-    return path.join(this.fixturesDirectory, `${id}.yaml`);
-  }
-  specPath(id) {
-    assertStableId(id, "$.specId");
-    return path.join(this.specsDirectory, `${id}.yaml`);
-  }
-  resultPath(runId) {
-    if (typeof runId !== "string" || !/^run_[0-9]{8}_[0-9]{6}(?:_[a-z0-9]+)?$/.test(runId)) {
-      throw new QaError("INVALID_RUN_ID", "Run ID is invalid", [
-        { path: "$.runId", message: "expected run_YYYYMMDD_HHMMSS with an optional lowercase suffix" }
-      ]);
-    }
-    return path.join(this.runsDirectory, runId, "result.json");
-  }
-  screenshotPath(runId, fileName) {
-    this.resultPath(runId);
-    if (typeof fileName !== "string" || !/^[a-z0-9][a-z0-9-]*\.(?:png|jpe?g|webp)$/.test(fileName)) {
-      throw new QaError("INVALID_SCREENSHOT_NAME", "Screenshot filename is invalid", [
-        { path: "$.fileName", message: "use lowercase letters, numbers, and hyphens with a supported image extension" }
-      ]);
-    }
-    return path.join(this.runsDirectory, runId, "screenshots", fileName);
-  }
-  async saveScreenshot(runId, fileName, contents) {
-    const filePath = this.screenshotPath(runId, fileName);
-    await mkdir(path.dirname(filePath), { recursive: true });
-    await atomicWriteFile(filePath, contents);
-    return path.posix.join("screenshots", fileName);
-  }
-  async loadEnvironments() {
-    const source = await readText(this.environmentsPath, "Environments file");
-    return this.validateEnvironments(source);
-  }
-  validateEnvironments(valueOrYaml) {
-    return validateDocument("environments", parseYaml(valueOrYaml, "Environments YAML"));
-  }
-  async saveEnvironments(valueOrYaml) {
-    await this.ensureDirectories();
-    const value = this.validateEnvironments(valueOrYaml);
-    const specNames = (await readdir(this.specsDirectory)).filter((name) => name.endsWith(".yaml"));
-    for (const name of specNames) {
-      const source = await readText(path.join(this.specsDirectory, name), `Spec ${name}`);
-      const spec = validateDocument("spec", parseYaml(source, `Spec ${name}`));
-      if (!Object.hasOwn(value.environments, spec.environment)) {
-        throw new QaError("ENVIRONMENT_IN_USE", `Environment ${spec.environment} is still referenced`, [
-          { path: `$.environments.${spec.environment}`, message: `required by spec ${spec.id}` }
+      async ensureDirectories() {
+        await Promise.all([
+          mkdir(this.fixturesDirectory, { recursive: true }),
+          mkdir(this.specsDirectory, { recursive: true }),
+          mkdir(this.runsDirectory, { recursive: true })
         ]);
       }
-    }
-    await atomicWriteFile(this.environmentsPath, stringifyYaml(value));
-    return value;
-  }
-  async listEnvironments() {
-    const { environments } = await this.loadEnvironments();
-    return Object.entries(environments).sort(([left], [right]) => left.localeCompare(right)).map(([id, environment]) => ({ id, ...environment }));
-  }
-  async loadFixture(id) {
-    const filePath = this.fixturePath(id);
-    const value = this.validateFixture(await readText(filePath, `Fixture ${id}`), `Fixture ${id}`);
-    if (value.id !== id) {
-      throw new QaError("ID_MISMATCH", `Fixture filename and document ID do not match`, [
-        { path: "$.id", message: `expected ${id} for ${path.basename(filePath)}` }
-      ]);
-    }
-    return value;
-  }
-  validateFixture(valueOrYaml, label = "Fixture YAML") {
-    return validateDocument("fixture", parseYaml(valueOrYaml, label));
-  }
-  async saveFixture(valueOrYaml) {
-    await this.ensureDirectories();
-    const value = this.validateFixture(valueOrYaml);
-    await atomicWriteFile(this.fixturePath(value.id), stringifyYaml(value));
-    return value;
-  }
-  async listFixtures() {
-    await this.ensureDirectories();
-    const names = (await readdir(this.fixturesDirectory)).filter((name) => name.endsWith(".yaml"));
-    const fixtures = await Promise.all(names.map((name) => this.loadFixture(name.slice(0, -5))));
-    return fixtures.sort((left, right) => left.id.localeCompare(right.id));
-  }
-  async deleteFixture(id) {
-    await this.loadFixture(id);
-    const referencing = (await this.listSpecs()).filter((spec) => fixtureIds(spec).includes(id));
-    if (referencing.length > 0) {
-      throw new QaError("FIXTURE_IN_USE", `Fixture ${id} is still referenced`, [
-        { path: "$.fixtures", message: `used by ${referencing.map((spec) => spec.id).join(", ")}` }
-      ]);
-    }
-    await unlink(this.fixturePath(id));
-  }
-  async validateSpecReferences(spec) {
-    const { environments } = await this.loadEnvironments();
-    if (!Object.hasOwn(environments, spec.environment)) {
-      throw new QaError("UNKNOWN_ENVIRONMENT", `Spec ${spec.id} references an unknown environment`, [
-        { path: "$.environment", message: `${spec.environment} is not defined in .qa/environments.yaml` }
-      ]);
-    }
-    const availableFixtures = new Set((await this.listFixtures()).map((fixture) => fixture.id));
-    const unknownFixtures = [...new Set(fixtureIds(spec).filter((id) => !availableFixtures.has(id)))];
-    if (unknownFixtures.length > 0) {
-      throw new QaError(
-        "UNKNOWN_FIXTURE",
-        `Spec ${spec.id} references unknown fixtures`,
-        unknownFixtures.map((id) => ({ path: "$.fixtures", message: `${id} is not defined in .qa/fixtures` }))
-      );
-    }
-    for (const [index, entry] of (spec.fixtures?.between ?? []).entries()) {
-      if (entry.afterStep >= spec.steps.length) {
-        throw new QaError("INVALID_FIXTURE_POSITION", `Spec ${spec.id} has an invalid between-step fixture`, [
-          {
-            path: `$.fixtures.between[${index}].afterStep`,
-            message: `must be less than the ${spec.steps.length} test steps`
-          }
-        ]);
-      }
-    }
-    if (spec.design?.afterStep > spec.steps.length) {
-      throw new QaError("INVALID_DESIGN_POSITION", `Spec ${spec.id} has an invalid design checkpoint`, [
-        {
-          path: "$.design.afterStep",
-          message: `must reference one of the ${spec.steps.length} test steps`
+      async init({ seed = true } = {}) {
+        await this.ensureDirectories();
+        const created = [];
+        const skipped = [];
+        if (!await exists(this.environmentsPath)) {
+          await this.saveEnvironments(SAMPLE_ENVIRONMENTS);
+          created.push(path.relative(this.repositoryRoot, this.environmentsPath));
+        } else {
+          await this.loadEnvironments();
+          skipped.push(path.relative(this.repositoryRoot, this.environmentsPath));
         }
-      ]);
-    }
-    return spec;
-  }
-  async loadSpec(id) {
-    const filePath = this.specPath(id);
-    const value = validateDocument("spec", parseYaml(await readText(filePath, `Spec ${id}`), `Spec ${id}`));
-    if (value.id !== id) {
-      throw new QaError("ID_MISMATCH", `Spec filename and document ID do not match`, [
-        { path: "$.id", message: `expected ${id} for ${path.basename(filePath)}` }
-      ]);
-    }
-    return this.validateSpecReferences(value);
-  }
-  async validateSpec(valueOrYaml, label = "Spec YAML") {
-    const value = validateDocument("spec", parseYaml(valueOrYaml, label));
-    return this.validateSpecReferences(value);
-  }
-  async saveSpec(valueOrYaml) {
-    await this.ensureDirectories();
-    const value = await this.validateSpec(valueOrYaml);
-    await atomicWriteFile(this.specPath(value.id), stringifyYaml(value));
-    return value;
-  }
-  async listSpecs() {
-    await this.ensureDirectories();
-    const names = (await readdir(this.specsDirectory)).filter((name) => name.endsWith(".yaml"));
-    const specs = await Promise.all(names.map((name) => this.loadSpec(name.slice(0, -5))));
-    return specs.sort((left, right) => left.id.localeCompare(right.id));
-  }
-  async deleteSpec(id) {
-    await this.loadSpec(id);
-    if (await exists(this.lastTestPath)) {
-      const selected = await this.readLastTest();
-      if (selected.specId === id) {
-        throw new QaError("SPEC_SELECTED", `Spec ${id} is the most recently selected test`, [
-          { path: "$.specId", message: "select another spec before deleting this one" }
-        ]);
-      }
-    }
-    await unlink(this.specPath(id));
-  }
-  async selectSpec(id, environment) {
-    const spec = await this.loadSpec(id);
-    const selectedEnvironment = environment || spec.environment;
-    const { environments } = await this.loadEnvironments();
-    if (!Object.hasOwn(environments, selectedEnvironment)) {
-      throw new QaError("UNKNOWN_ENVIRONMENT", `Cannot select unknown environment ${selectedEnvironment}`, [
-        { path: "$.environment", message: "environment is not defined in .qa/environments.yaml" }
-      ]);
-    }
-    const value = validateDocument("lastTest", { specId: id, environment: selectedEnvironment });
-    await atomicWriteFile(this.lastTestPath, stringifyJson(value));
-    return value;
-  }
-  async readLastTest() {
-    const value = validateDocument(
-      "lastTest",
-      parseJson(await readText(this.lastTestPath, "Last-test pointer"), "Last-test JSON")
-    );
-    await this.loadSpec(value.specId);
-    const { environments } = await this.loadEnvironments();
-    if (!Object.hasOwn(environments, value.environment)) {
-      throw new QaError("UNKNOWN_ENVIRONMENT", "Last-test pointer references an unknown environment", [
-        { path: "$.environment", message: `${value.environment} is not defined` }
-      ]);
-    }
-    if (value.lastRunId) {
-      const result = await this.loadResult(value.lastRunId);
-      if (result.specId !== value.specId) {
-        throw new QaError("RUN_MISMATCH", "Last-test pointer references a run for another spec", [
-          { path: "$.lastRunId", message: `${value.lastRunId} belongs to ${result.specId}` }
-        ]);
-      }
-      if (result.environment !== value.environment) {
-        throw new QaError("RUN_MISMATCH", "Last-test pointer and run use different environments", [
-          { path: "$.lastRunId", message: `${value.lastRunId} ran on ${result.environment}` }
-        ]);
-      }
-    }
-    return value;
-  }
-  async loadResult(runId) {
-    return this.validateResult(await readText(this.resultPath(runId), `Run ${runId}`), `Run ${runId}`);
-  }
-  validateResult(valueOrJson, label = "Run result JSON") {
-    return validateDocument("result", parseJson(valueOrJson, label));
-  }
-  async saveResult(valueOrJson) {
-    await this.ensureDirectories();
-    const value = this.validateResult(valueOrJson);
-    const spec = await this.loadSpec(value.specId);
-    const { environments } = await this.loadEnvironments();
-    if (!Object.hasOwn(environments, value.environment)) {
-      throw new QaError("UNKNOWN_ENVIRONMENT", `Run ${value.runId} references an unknown environment`, [
-        { path: "$.environment", message: `${value.environment} is not defined` }
-      ]);
-    }
-    if (Date.parse(value.completedAt) < Date.parse(value.startedAt)) {
-      throw new QaError("INVALID_RUN_TIME", `Run ${value.runId} completed before it started`, [
-        { path: "$.completedAt", message: "must be at or after startedAt" }
-      ]);
-    }
-    const seenStepIndexes = /* @__PURE__ */ new Set();
-    for (const [resultIndex, step] of value.steps.entries()) {
-      if (seenStepIndexes.has(step.index)) {
-        throw new QaError("DUPLICATE_RESULT_STEP", `Run ${value.runId} records a step more than once`, [
-          { path: `$.steps[${resultIndex}].index`, message: `${step.index} is duplicated` }
-        ]);
-      }
-      seenStepIndexes.add(step.index);
-      const specStep = spec.steps[step.index - 1];
-      if (!specStep) {
-        throw new QaError("UNKNOWN_RESULT_STEP", `Run ${value.runId} references an unknown test step`, [
-          { path: `$.steps[${resultIndex}].index`, message: `spec ${spec.id} has only ${spec.steps.length} steps` }
-        ]);
-      }
-      if (step.intent !== specStep.intent) {
-        throw new QaError("RESULT_INTENT_CHANGED", `Run ${value.runId} changed a test intent`, [
-          { path: `$.steps[${resultIndex}].intent`, message: "must match the selected spec exactly" }
-        ]);
-      }
-      const recordedExpectations = step.expectations.map((entry) => entry.expectation);
-      if (JSON.stringify(recordedExpectations) !== JSON.stringify(specStep.expect)) {
-        throw new QaError("RESULT_EXPECTATION_CHANGED", `Run ${value.runId} changed test expectations`, [
-          { path: `$.steps[${resultIndex}].expectations`, message: "must preserve the selected spec's expectations and order" }
-        ]);
-      }
-    }
-    const allowedFixtures = {
-      before: new Set(spec.fixtures?.before ?? []),
-      between: new Set((spec.fixtures?.between ?? []).flatMap((entry) => entry.fixtures)),
-      after: new Set(spec.fixtures?.after ?? [])
-    };
-    for (const [fixtureIndex, fixture] of (value.fixtures ?? []).entries()) {
-      if (!allowedFixtures[fixture.phase].has(fixture.fixtureId)) {
-        throw new QaError("UNKNOWN_RESULT_FIXTURE", `Run ${value.runId} records an unexpected fixture`, [
-          {
-            path: `$.fixtures[${fixtureIndex}].fixtureId`,
-            message: `${fixture.fixtureId} is not declared in the spec's ${fixture.phase} fixture plan`
+        if (!seed) return { created, skipped };
+        for (const fixture of SAMPLE_FIXTURES) {
+          const fixturePath = this.fixturePath(fixture.id);
+          if (await exists(fixturePath)) {
+            await this.loadFixture(fixture.id);
+            skipped.push(path.relative(this.repositoryRoot, fixturePath));
+          } else {
+            await this.saveFixture(fixture);
+            created.push(path.relative(this.repositoryRoot, fixturePath));
           }
-        ]);
+        }
+        for (const sampleSpec of SAMPLE_SPECS) {
+          const sampleSpecPath = this.specPath(sampleSpec.id);
+          if (await exists(sampleSpecPath)) {
+            await this.loadSpec(sampleSpec.id);
+            skipped.push(path.relative(this.repositoryRoot, sampleSpecPath));
+          } else {
+            await this.saveSpec(sampleSpec);
+            created.push(path.relative(this.repositoryRoot, sampleSpecPath));
+          }
+        }
+        if (!await exists(this.lastTestPath)) {
+          await this.selectSpec(SAMPLE_SPEC.id, SAMPLE_SPEC.environment);
+          created.push(path.relative(this.repositoryRoot, this.lastTestPath));
+        } else {
+          await this.readLastTest();
+          skipped.push(path.relative(this.repositoryRoot, this.lastTestPath));
+        }
+        return { created, skipped };
       }
-    }
-    for (const [screenshotIndex, screenshot] of (value.evidence?.screenshots ?? []).entries()) {
-      const screenshotPath = path.join(this.runsDirectory, value.runId, ...screenshot.split("/"));
-      if (!await exists(screenshotPath)) {
-        throw new QaError("MISSING_SCREENSHOT", `Run ${value.runId} references a missing screenshot`, [
-          { path: `$.evidence.screenshots[${screenshotIndex}]`, message: `${screenshot} does not exist` }
-        ]);
+      fixturePath(id) {
+        assertStableId(id, "$.fixtureId");
+        return path.join(this.fixturesDirectory, `${id}.yaml`);
       }
-    }
-    const evidenceScreenshots = new Set(value.evidence?.screenshots ?? []);
-    if (!spec.design && value.design) {
-      throw new QaError("UNEXPECTED_DESIGN_RESULT", `Run ${value.runId} records an undeclared design comparison`, [
-        { path: "$.design", message: "the selected spec has no explicit design reference" }
-      ]);
-    }
-    if (spec.design && !value.design) {
-      throw new QaError("MISSING_DESIGN_RESULT", `Run ${value.runId} omitted its declared design comparison`, [
-        { path: "$.design", message: "a spec with design metadata must record the comparison outcome" }
-      ]);
-    }
-    if (spec.design && value.design) {
-      const expected = designConfigurationForSpec(spec.design, spec.steps.length);
-      if (value.design.reference !== expected.reference) {
-        throw new QaError("DESIGN_REFERENCE_CHANGED", `Run ${value.runId} changed the design reference`, [
-          { path: "$.design.reference", message: "must match the selected spec exactly" }
-        ]);
+      specPath(id) {
+        assertStableId(id, "$.specId");
+        return path.join(this.specsDirectory, `${id}.yaml`);
       }
-      if (value.design.afterStep !== expected.afterStep || value.design.viewport.width !== expected.viewport.width || value.design.viewport.height !== expected.viewport.height) {
-        throw new QaError("DESIGN_CHECKPOINT_CHANGED", `Run ${value.runId} changed the design checkpoint`, [
-          { path: "$.design", message: "viewport and afterStep must match the selected spec" }
-        ]);
-      }
-      if ((/* @__PURE__ */ new Set(["matched", "regression"])).has(value.design.status)) {
-        if (value.design.referenceKind === "unresolved") {
-          throw new QaError("UNRESOLVED_DESIGN_REFERENCE", `Run ${value.runId} checked an unresolved design reference`, [
-            { path: "$.design.referenceKind", message: "a completed comparison requires a resolved reference" }
+      resultPath(runId) {
+        if (typeof runId !== "string" || !/^run_[0-9]{8}_[0-9]{6}(?:_[a-z0-9]+)?$/.test(runId)) {
+          throw new QaError("INVALID_RUN_ID", "Run ID is invalid", [
+            { path: "$.runId", message: "expected run_YYYYMMDD_HHMMSS with an optional lowercase suffix" }
           ]);
         }
-        if (!value.design.actualScreenshot || !evidenceScreenshots.has(value.design.actualScreenshot)) {
-          throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its actual design screenshot`, [
-            { path: "$.design.actualScreenshot", message: "must reference a screenshot in $.evidence.screenshots" }
+        return path.join(this.runsDirectory, runId, "result.json");
+      }
+      screenshotPath(runId, fileName) {
+        this.resultPath(runId);
+        if (typeof fileName !== "string" || !/^[a-z0-9][a-z0-9-]*\.(?:png|jpe?g|webp)$/.test(fileName)) {
+          throw new QaError("INVALID_SCREENSHOT_NAME", "Screenshot filename is invalid", [
+            { path: "$.fileName", message: "use lowercase letters, numbers, and hyphens with a supported image extension" }
           ]);
         }
+        return path.join(this.runsDirectory, runId, "screenshots", fileName);
       }
-      if (value.design.referenceScreenshot && !evidenceScreenshots.has(value.design.referenceScreenshot)) {
-        throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its reference screenshot`, [
-          { path: "$.design.referenceScreenshot", message: "must reference a screenshot in $.evidence.screenshots" }
-        ]);
+      async saveScreenshot(runId, fileName, contents) {
+        const filePath = this.screenshotPath(runId, fileName);
+        await mkdir(path.dirname(filePath), { recursive: true });
+        await atomicWriteFile(filePath, contents);
+        return path.posix.join("screenshots", fileName);
       }
-      if (value.design.status === "regression" && !(value.design.findings ?? []).some((finding) => finding.status === "regression")) {
-        throw new QaError("UNSUPPORTED_DESIGN_REGRESSION", `Run ${value.runId} lacks a concrete design finding`, [
-          { path: "$.design.findings", message: "a regression requires a reference-backed regression finding" }
-        ]);
+      async loadEnvironments() {
+        const source = await readText(this.environmentsPath, "Environments file");
+        return this.validateEnvironments(source);
       }
-    }
-    const successfulHealings = [];
-    for (const [stepIndex, step] of value.steps.entries()) {
-      if (!step.healing || step.healing.outcome !== "healed") continue;
-      successfulHealings.push(step);
-      if (step.status !== "passed") {
-        throw new QaError("HEALING_STATUS_MISMATCH", `Run ${value.runId} records unsuccessful healing as passed`, [
-          { path: `$.steps[${stepIndex}].status`, message: "must be passed when healing outcome is healed" }
-        ]);
+      validateEnvironments(valueOrYaml) {
+        return validateDocument("environments", parseYaml(valueOrYaml, "Environments YAML"));
       }
-      for (const field of ["beforeScreenshot", "afterScreenshot"]) {
-        const screenshot = step.healing[field];
-        if (!screenshot || !evidenceScreenshots.has(screenshot)) {
-          throw new QaError("MISSING_HEALING_EVIDENCE", `Run ${value.runId} is missing healing screenshot evidence`, [
+      async saveEnvironments(valueOrYaml) {
+        await this.ensureDirectories();
+        const value = this.validateEnvironments(valueOrYaml);
+        const specNames = (await readdir(this.specsDirectory)).filter((name) => name.endsWith(".yaml"));
+        for (const name of specNames) {
+          const source = await readText(path.join(this.specsDirectory, name), `Spec ${name}`);
+          const spec = validateDocument("spec", parseYaml(source, `Spec ${name}`));
+          if (!Object.hasOwn(value.environments, spec.environment)) {
+            throw new QaError("ENVIRONMENT_IN_USE", `Environment ${spec.environment} is still referenced`, [
+              { path: `$.environments.${spec.environment}`, message: `required by spec ${spec.id}` }
+            ]);
+          }
+        }
+        await atomicWriteFile(this.environmentsPath, stringifyYaml(value));
+        return value;
+      }
+      async listEnvironments() {
+        const { environments } = await this.loadEnvironments();
+        return Object.entries(environments).sort(([left], [right]) => left.localeCompare(right)).map(([id, environment]) => ({ id, ...environment }));
+      }
+      async loadFixture(id) {
+        const filePath = this.fixturePath(id);
+        const value = this.validateFixture(await readText(filePath, `Fixture ${id}`), `Fixture ${id}`);
+        if (value.id !== id) {
+          throw new QaError("ID_MISMATCH", `Fixture filename and document ID do not match`, [
+            { path: "$.id", message: `expected ${id} for ${path.basename(filePath)}` }
+          ]);
+        }
+        return value;
+      }
+      validateFixture(valueOrYaml, label = "Fixture YAML") {
+        return validateDocument("fixture", parseYaml(valueOrYaml, label));
+      }
+      async saveFixture(valueOrYaml) {
+        await this.ensureDirectories();
+        const value = this.validateFixture(valueOrYaml);
+        await atomicWriteFile(this.fixturePath(value.id), stringifyYaml(value));
+        return value;
+      }
+      async listFixtures() {
+        await this.ensureDirectories();
+        const names = (await readdir(this.fixturesDirectory)).filter((name) => name.endsWith(".yaml"));
+        const fixtures = await Promise.all(names.map((name) => this.loadFixture(name.slice(0, -5))));
+        return fixtures.sort((left, right) => left.id.localeCompare(right.id));
+      }
+      async deleteFixture(id) {
+        await this.loadFixture(id);
+        const referencing = (await this.listSpecs()).filter((spec) => fixtureIds(spec).includes(id));
+        if (referencing.length > 0) {
+          throw new QaError("FIXTURE_IN_USE", `Fixture ${id} is still referenced`, [
+            { path: "$.fixtures", message: `used by ${referencing.map((spec) => spec.id).join(", ")}` }
+          ]);
+        }
+        await unlink(this.fixturePath(id));
+      }
+      async validateSpecReferences(spec) {
+        const { environments } = await this.loadEnvironments();
+        if (!Object.hasOwn(environments, spec.environment)) {
+          throw new QaError("UNKNOWN_ENVIRONMENT", `Spec ${spec.id} references an unknown environment`, [
+            { path: "$.environment", message: `${spec.environment} is not defined in .qa/environments.yaml` }
+          ]);
+        }
+        const availableFixtures = new Set((await this.listFixtures()).map((fixture) => fixture.id));
+        const unknownFixtures = [...new Set(fixtureIds(spec).filter((id) => !availableFixtures.has(id)))];
+        if (unknownFixtures.length > 0) {
+          throw new QaError(
+            "UNKNOWN_FIXTURE",
+            `Spec ${spec.id} references unknown fixtures`,
+            unknownFixtures.map((id) => ({ path: "$.fixtures", message: `${id} is not defined in .qa/fixtures` }))
+          );
+        }
+        for (const [index, entry] of (spec.fixtures?.between ?? []).entries()) {
+          if (entry.afterStep >= spec.steps.length) {
+            throw new QaError("INVALID_FIXTURE_POSITION", `Spec ${spec.id} has an invalid between-step fixture`, [
+              {
+                path: `$.fixtures.between[${index}].afterStep`,
+                message: `must be less than the ${spec.steps.length} test steps`
+              }
+            ]);
+          }
+        }
+        if (spec.design?.afterStep > spec.steps.length) {
+          throw new QaError("INVALID_DESIGN_POSITION", `Spec ${spec.id} has an invalid design checkpoint`, [
             {
-              path: `$.steps[${stepIndex}].healing.${field}`,
-              message: "must reference a screenshot in $.evidence.screenshots"
+              path: "$.design.afterStep",
+              message: `must reference one of the ${spec.steps.length} test steps`
             }
           ]);
         }
+        return spec;
       }
-    }
-    if (value.classification === "healed") {
-      if (successfulHealings.length === 0) {
-        throw new QaError("HEALED_WITHOUT_RECOVERY", `Run ${value.runId} has no successfully healed step`, [
-          { path: "$.classification", message: "healed requires a step with healing.outcome set to healed" }
-        ]);
+      async loadSpec(id) {
+        const filePath = this.specPath(id);
+        const value = validateDocument("spec", parseYaml(await readText(filePath, `Spec ${id}`), `Spec ${id}`));
+        if (value.id !== id) {
+          throw new QaError("ID_MISMATCH", `Spec filename and document ID do not match`, [
+            { path: "$.id", message: `expected ${id} for ${path.basename(filePath)}` }
+          ]);
+        }
+        return this.validateSpecReferences(value);
       }
-      if (value.steps.some((step) => step.status !== "passed")) {
-        throw new QaError("HEALED_WITH_FAILED_STEP", `Run ${value.runId} cannot be healed while a test step did not pass`, [
-          { path: "$.steps", message: "every test step must pass for a healed run" }
-        ]);
+      async validateSpec(valueOrYaml, label = "Spec YAML") {
+        const value = validateDocument("spec", parseYaml(valueOrYaml, label));
+        return this.validateSpecReferences(value);
       }
-    } else if (value.classification === "passed" && successfulHealings.length > 0) {
-      throw new QaError("HEALING_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a successful recovery`, [
-        { path: "$.classification", message: "use healed when recovery was required" }
-      ]);
-    }
-    if (value.classification === "design_regression") {
-      if (!spec.design || value.design?.status !== "regression") {
-        throw new QaError("DESIGN_REGRESSION_WITHOUT_REFERENCE", `Run ${value.runId} lacks a supported design regression`, [
-          { path: "$.classification", message: "design_regression requires an explicit reference and regression result" }
-        ]);
+      async saveSpec(valueOrYaml) {
+        await this.ensureDirectories();
+        const value = await this.validateSpec(valueOrYaml);
+        await atomicWriteFile(this.specPath(value.id), stringifyYaml(value));
+        return value;
       }
-      if (value.steps.some((step) => step.status !== "passed")) {
-        throw new QaError("DESIGN_REGRESSION_WITH_FAILED_STEP", `Run ${value.runId} also has a functional failure`, [
-          { path: "$.steps", message: "functional failures take precedence over design classification" }
-        ]);
+      async listSpecs() {
+        await this.ensureDirectories();
+        const names = (await readdir(this.specsDirectory)).filter((name) => name.endsWith(".yaml"));
+        const specs = await Promise.all(names.map((name) => this.loadSpec(name.slice(0, -5))));
+        return specs.sort((left, right) => left.id.localeCompare(right.id));
       }
-    }
-    if ((/* @__PURE__ */ new Set(["passed", "healed"])).has(value.classification) && value.design?.status === "regression") {
-      throw new QaError("DESIGN_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a design regression`, [
-        { path: "$.classification", message: "use design_regression for a supported design mismatch" }
-      ]);
-    }
-    if ((/* @__PURE__ */ new Set(["passed", "healed"])).has(value.classification) && value.design?.status === "not_checked") {
-      throw new QaError("DESIGN_NOT_CHECKED", `Run ${value.runId} passed without completing its design check`, [
-        { path: "$.design.status", message: "an explicit design reference must be checked or block the run" }
-      ]);
-    }
-    const resultPath = this.resultPath(value.runId);
-    await mkdir(path.dirname(resultPath), { recursive: true });
-    await atomicWriteFile(resultPath, stringifyJson(value));
-    const pointer = validateDocument("lastTest", {
-      specId: value.specId,
-      environment: value.environment,
-      lastRunId: value.runId
-    });
-    await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
-    await this.pruneResults(value.specId, MAX_RECENT_RUNS_PER_SPEC, value.runId);
-    return value;
-  }
-  async listResults({ specId, limit } = {}) {
-    if (specId !== void 0) assertStableId(specId, "$.specId");
-    if (limit !== void 0 && (!Number.isInteger(limit) || limit < 1)) {
-      throw new QaError("INVALID_RESULT_LIMIT", "Result limit must be a positive integer", [
-        { path: "$.limit", message: "must be a positive integer" }
-      ]);
-    }
-    await this.ensureDirectories();
-    const entries = await readdir(this.runsDirectory, { withFileTypes: true });
-    const runIds = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
-    const results = [];
-    for (const runId of runIds) {
-      if (await exists(path.join(this.runsDirectory, runId, "result.json"))) {
-        results.push(await this.loadResult(runId));
+      async deleteSpec(id) {
+        await this.loadSpec(id);
+        if (await exists(this.lastTestPath)) {
+          const selected = await this.readLastTest();
+          if (selected.specId === id) {
+            throw new QaError("SPEC_SELECTED", `Spec ${id} is the most recently selected test`, [
+              { path: "$.specId", message: "select another spec before deleting this one" }
+            ]);
+          }
+        }
+        await unlink(this.specPath(id));
       }
-    }
-    const sorted = results.filter((result) => specId === void 0 || result.specId === specId).sort((left, right) => right.completedAt.localeCompare(left.completedAt) || right.runId.localeCompare(left.runId));
-    return limit === void 0 ? sorted : sorted.slice(0, limit);
-  }
-  listRecentResults({ specId, limit = MAX_RECENT_RUNS_PER_SPEC } = {}) {
-    return this.listResults({ specId, limit });
-  }
-  async pruneResults(specId, keep = MAX_RECENT_RUNS_PER_SPEC, preserveRunId) {
-    assertStableId(specId, "$.specId");
-    if (!Number.isInteger(keep) || keep < 1) {
-      throw new QaError("INVALID_RESULT_LIMIT", "Result retention must be a positive integer", [
-        { path: "$.keep", message: "must be a positive integer" }
-      ]);
-    }
-    const results = await this.listResults({ specId });
-    const retained = new Set(results.slice(0, keep).map((result) => result.runId));
-    if (preserveRunId && results.some((result) => result.runId === preserveRunId) && !retained.has(preserveRunId)) {
-      retained.delete(results[keep - 1].runId);
-      retained.add(preserveRunId);
-    }
-    const expired = results.filter((result) => !retained.has(result.runId));
-    for (const result of expired) {
-      await rm(path.dirname(this.resultPath(result.runId)), { recursive: true });
-    }
-    return expired.map((result) => result.runId);
-  }
-  async deleteResult(runId) {
-    const result = await this.loadResult(runId);
-    const selected = await exists(this.lastTestPath) ? await this.readLastTest() : null;
-    await rm(path.dirname(this.resultPath(runId)), { recursive: true });
-    if (selected?.lastRunId === runId) {
-      const replacement = (await this.listResults({ specId: result.specId })).find((candidate) => candidate.environment === result.environment);
-      const pointer = validateDocument("lastTest", {
-        specId: result.specId,
-        environment: result.environment,
-        ...replacement ? { lastRunId: replacement.runId } : {}
-      });
-      await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
-    }
-    return result;
-  }
-  async validateAll() {
-    const environments = await this.loadEnvironments();
-    const fixtures = await this.listFixtures();
-    const specs = await this.listSpecs();
-    const runs = await this.listResults();
-    const lastTest = await exists(this.lastTestPath) ? await this.readLastTest() : null;
-    return {
-      environments: Object.keys(environments.environments).length,
-      fixtures: fixtures.length,
-      specs: specs.length,
-      runs: runs.length,
-      lastTest
+      async selectSpec(id, environment) {
+        const spec = await this.loadSpec(id);
+        const selectedEnvironment = environment || spec.environment;
+        const { environments } = await this.loadEnvironments();
+        if (!Object.hasOwn(environments, selectedEnvironment)) {
+          throw new QaError("UNKNOWN_ENVIRONMENT", `Cannot select unknown environment ${selectedEnvironment}`, [
+            { path: "$.environment", message: "environment is not defined in .qa/environments.yaml" }
+          ]);
+        }
+        const value = validateDocument("lastTest", { specId: id, environment: selectedEnvironment });
+        await atomicWriteFile(this.lastTestPath, stringifyJson(value));
+        return value;
+      }
+      async readLastTest() {
+        const value = validateDocument(
+          "lastTest",
+          parseJson(await readText(this.lastTestPath, "Last-test pointer"), "Last-test JSON")
+        );
+        await this.loadSpec(value.specId);
+        const { environments } = await this.loadEnvironments();
+        if (!Object.hasOwn(environments, value.environment)) {
+          throw new QaError("UNKNOWN_ENVIRONMENT", "Last-test pointer references an unknown environment", [
+            { path: "$.environment", message: `${value.environment} is not defined` }
+          ]);
+        }
+        if (value.lastRunId) {
+          const result = await this.loadResult(value.lastRunId);
+          if (result.specId !== value.specId) {
+            throw new QaError("RUN_MISMATCH", "Last-test pointer references a run for another spec", [
+              { path: "$.lastRunId", message: `${value.lastRunId} belongs to ${result.specId}` }
+            ]);
+          }
+          if (result.environment !== value.environment) {
+            throw new QaError("RUN_MISMATCH", "Last-test pointer and run use different environments", [
+              { path: "$.lastRunId", message: `${value.lastRunId} ran on ${result.environment}` }
+            ]);
+          }
+        }
+        return value;
+      }
+      async loadResult(runId) {
+        return this.validateResult(await readText(this.resultPath(runId), `Run ${runId}`), `Run ${runId}`);
+      }
+      validateResult(valueOrJson, label = "Run result JSON") {
+        return validateDocument("result", parseJson(valueOrJson, label));
+      }
+      async saveResult(valueOrJson) {
+        await this.ensureDirectories();
+        const value = this.validateResult(valueOrJson);
+        const spec = await this.loadSpec(value.specId);
+        const { environments } = await this.loadEnvironments();
+        if (!Object.hasOwn(environments, value.environment)) {
+          throw new QaError("UNKNOWN_ENVIRONMENT", `Run ${value.runId} references an unknown environment`, [
+            { path: "$.environment", message: `${value.environment} is not defined` }
+          ]);
+        }
+        if (Date.parse(value.completedAt) < Date.parse(value.startedAt)) {
+          throw new QaError("INVALID_RUN_TIME", `Run ${value.runId} completed before it started`, [
+            { path: "$.completedAt", message: "must be at or after startedAt" }
+          ]);
+        }
+        const seenStepIndexes = /* @__PURE__ */ new Set();
+        for (const [resultIndex, step] of value.steps.entries()) {
+          if (seenStepIndexes.has(step.index)) {
+            throw new QaError("DUPLICATE_RESULT_STEP", `Run ${value.runId} records a step more than once`, [
+              { path: `$.steps[${resultIndex}].index`, message: `${step.index} is duplicated` }
+            ]);
+          }
+          seenStepIndexes.add(step.index);
+          const specStep = spec.steps[step.index - 1];
+          if (!specStep) {
+            throw new QaError("UNKNOWN_RESULT_STEP", `Run ${value.runId} references an unknown test step`, [
+              { path: `$.steps[${resultIndex}].index`, message: `spec ${spec.id} has only ${spec.steps.length} steps` }
+            ]);
+          }
+          if (step.intent !== specStep.intent) {
+            throw new QaError("RESULT_INTENT_CHANGED", `Run ${value.runId} changed a test intent`, [
+              { path: `$.steps[${resultIndex}].intent`, message: "must match the selected spec exactly" }
+            ]);
+          }
+          if ((step.channel ?? "web") !== (specStep.channel ?? "web")) {
+            throw new QaError("RESULT_CHANNEL_CHANGED", `Run ${value.runId} changed a test channel`, [
+              { path: `$.steps[${resultIndex}].channel`, message: "must match the selected spec exactly" }
+            ]);
+          }
+          const recordedExpectations = step.expectations.map((entry) => entry.expectation);
+          if (JSON.stringify(recordedExpectations) !== JSON.stringify(specStep.expect)) {
+            throw new QaError("RESULT_EXPECTATION_CHANGED", `Run ${value.runId} changed test expectations`, [
+              { path: `$.steps[${resultIndex}].expectations`, message: "must preserve the selected spec's expectations and order" }
+            ]);
+          }
+        }
+        const allowedFixtures = {
+          before: new Set(spec.fixtures?.before ?? []),
+          between: new Set((spec.fixtures?.between ?? []).flatMap((entry) => entry.fixtures)),
+          after: new Set(spec.fixtures?.after ?? [])
+        };
+        for (const [fixtureIndex, fixture] of (value.fixtures ?? []).entries()) {
+          if (!allowedFixtures[fixture.phase].has(fixture.fixtureId)) {
+            throw new QaError("UNKNOWN_RESULT_FIXTURE", `Run ${value.runId} records an unexpected fixture`, [
+              {
+                path: `$.fixtures[${fixtureIndex}].fixtureId`,
+                message: `${fixture.fixtureId} is not declared in the spec's ${fixture.phase} fixture plan`
+              }
+            ]);
+          }
+        }
+        for (const [screenshotIndex, screenshot] of (value.evidence?.screenshots ?? []).entries()) {
+          const screenshotPath = path.join(this.runsDirectory, value.runId, ...screenshot.split("/"));
+          if (!await exists(screenshotPath)) {
+            throw new QaError("MISSING_SCREENSHOT", `Run ${value.runId} references a missing screenshot`, [
+              { path: `$.evidence.screenshots[${screenshotIndex}]`, message: `${screenshot} does not exist` }
+            ]);
+          }
+        }
+        const evidenceScreenshots = new Set(value.evidence?.screenshots ?? []);
+        if (!spec.design && value.design) {
+          throw new QaError("UNEXPECTED_DESIGN_RESULT", `Run ${value.runId} records an undeclared design comparison`, [
+            { path: "$.design", message: "the selected spec has no explicit design reference" }
+          ]);
+        }
+        if (spec.design && !value.design) {
+          throw new QaError("MISSING_DESIGN_RESULT", `Run ${value.runId} omitted its declared design comparison`, [
+            { path: "$.design", message: "a spec with design metadata must record the comparison outcome" }
+          ]);
+        }
+        if (spec.design && value.design) {
+          const expected = designConfigurationForSpec(spec.design, spec.steps.length);
+          if (value.design.reference !== expected.reference) {
+            throw new QaError("DESIGN_REFERENCE_CHANGED", `Run ${value.runId} changed the design reference`, [
+              { path: "$.design.reference", message: "must match the selected spec exactly" }
+            ]);
+          }
+          if (value.design.afterStep !== expected.afterStep || value.design.viewport.width !== expected.viewport.width || value.design.viewport.height !== expected.viewport.height) {
+            throw new QaError("DESIGN_CHECKPOINT_CHANGED", `Run ${value.runId} changed the design checkpoint`, [
+              { path: "$.design", message: "viewport and afterStep must match the selected spec" }
+            ]);
+          }
+          if ((/* @__PURE__ */ new Set(["matched", "regression"])).has(value.design.status)) {
+            if (value.design.referenceKind === "unresolved") {
+              throw new QaError("UNRESOLVED_DESIGN_REFERENCE", `Run ${value.runId} checked an unresolved design reference`, [
+                { path: "$.design.referenceKind", message: "a completed comparison requires a resolved reference" }
+              ]);
+            }
+            if (!value.design.actualScreenshot || !evidenceScreenshots.has(value.design.actualScreenshot)) {
+              throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its actual design screenshot`, [
+                { path: "$.design.actualScreenshot", message: "must reference a screenshot in $.evidence.screenshots" }
+              ]);
+            }
+          }
+          if (value.design.referenceScreenshot && !evidenceScreenshots.has(value.design.referenceScreenshot)) {
+            throw new QaError("MISSING_DESIGN_EVIDENCE", `Run ${value.runId} is missing its reference screenshot`, [
+              { path: "$.design.referenceScreenshot", message: "must reference a screenshot in $.evidence.screenshots" }
+            ]);
+          }
+          if (value.design.status === "regression" && !(value.design.findings ?? []).some((finding) => finding.status === "regression")) {
+            throw new QaError("UNSUPPORTED_DESIGN_REGRESSION", `Run ${value.runId} lacks a concrete design finding`, [
+              { path: "$.design.findings", message: "a regression requires a reference-backed regression finding" }
+            ]);
+          }
+        }
+        const successfulHealings = [];
+        for (const [stepIndex, step] of value.steps.entries()) {
+          if (!step.healing || step.healing.outcome !== "healed") continue;
+          successfulHealings.push(step);
+          if (step.status !== "passed") {
+            throw new QaError("HEALING_STATUS_MISMATCH", `Run ${value.runId} records unsuccessful healing as passed`, [
+              { path: `$.steps[${stepIndex}].status`, message: "must be passed when healing outcome is healed" }
+            ]);
+          }
+          for (const field of ["beforeScreenshot", "afterScreenshot"]) {
+            const screenshot = step.healing[field];
+            if (!screenshot || !evidenceScreenshots.has(screenshot)) {
+              throw new QaError("MISSING_HEALING_EVIDENCE", `Run ${value.runId} is missing healing screenshot evidence`, [
+                {
+                  path: `$.steps[${stepIndex}].healing.${field}`,
+                  message: "must reference a screenshot in $.evidence.screenshots"
+                }
+              ]);
+            }
+          }
+        }
+        if (value.classification === "healed") {
+          if (successfulHealings.length === 0) {
+            throw new QaError("HEALED_WITHOUT_RECOVERY", `Run ${value.runId} has no successfully healed step`, [
+              { path: "$.classification", message: "healed requires a step with healing.outcome set to healed" }
+            ]);
+          }
+          if (value.steps.some((step) => step.status !== "passed")) {
+            throw new QaError("HEALED_WITH_FAILED_STEP", `Run ${value.runId} cannot be healed while a test step did not pass`, [
+              { path: "$.steps", message: "every test step must pass for a healed run" }
+            ]);
+          }
+        } else if (value.classification === "passed" && successfulHealings.length > 0) {
+          throw new QaError("HEALING_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a successful recovery`, [
+            { path: "$.classification", message: "use healed when recovery was required" }
+          ]);
+        }
+        if (value.classification === "design_regression") {
+          if (!spec.design || value.design?.status !== "regression") {
+            throw new QaError("DESIGN_REGRESSION_WITHOUT_REFERENCE", `Run ${value.runId} lacks a supported design regression`, [
+              { path: "$.classification", message: "design_regression requires an explicit reference and regression result" }
+            ]);
+          }
+          if (value.steps.some((step) => step.status !== "passed")) {
+            throw new QaError("DESIGN_REGRESSION_WITH_FAILED_STEP", `Run ${value.runId} also has a functional failure`, [
+              { path: "$.steps", message: "functional failures take precedence over design classification" }
+            ]);
+          }
+        }
+        if ((/* @__PURE__ */ new Set(["passed", "healed"])).has(value.classification) && value.design?.status === "regression") {
+          throw new QaError("DESIGN_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a design regression`, [
+            { path: "$.classification", message: "use design_regression for a supported design mismatch" }
+          ]);
+        }
+        if ((/* @__PURE__ */ new Set(["passed", "healed"])).has(value.classification) && value.design?.status === "not_checked") {
+          throw new QaError("DESIGN_NOT_CHECKED", `Run ${value.runId} passed without completing its design check`, [
+            { path: "$.design.status", message: "an explicit design reference must be checked or block the run" }
+          ]);
+        }
+        const resultPath = this.resultPath(value.runId);
+        await mkdir(path.dirname(resultPath), { recursive: true });
+        await atomicWriteFile(resultPath, stringifyJson(value));
+        const pointer = validateDocument("lastTest", {
+          specId: value.specId,
+          environment: value.environment,
+          lastRunId: value.runId
+        });
+        await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+        await this.pruneResults(value.specId, MAX_RECENT_RUNS_PER_SPEC, value.runId);
+        return value;
+      }
+      async listResults({ specId, limit } = {}) {
+        if (specId !== void 0) assertStableId(specId, "$.specId");
+        if (limit !== void 0 && (!Number.isInteger(limit) || limit < 1)) {
+          throw new QaError("INVALID_RESULT_LIMIT", "Result limit must be a positive integer", [
+            { path: "$.limit", message: "must be a positive integer" }
+          ]);
+        }
+        await this.ensureDirectories();
+        const entries = await readdir(this.runsDirectory, { withFileTypes: true });
+        const runIds = entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+        const results = [];
+        for (const runId of runIds) {
+          if (await exists(path.join(this.runsDirectory, runId, "result.json"))) {
+            results.push(await this.loadResult(runId));
+          }
+        }
+        const sorted = results.filter((result) => specId === void 0 || result.specId === specId).sort((left, right) => right.completedAt.localeCompare(left.completedAt) || right.runId.localeCompare(left.runId));
+        return limit === void 0 ? sorted : sorted.slice(0, limit);
+      }
+      listRecentResults({ specId, limit = MAX_RECENT_RUNS_PER_SPEC } = {}) {
+        return this.listResults({ specId, limit });
+      }
+      async pruneResults(specId, keep = MAX_RECENT_RUNS_PER_SPEC, preserveRunId) {
+        assertStableId(specId, "$.specId");
+        if (!Number.isInteger(keep) || keep < 1) {
+          throw new QaError("INVALID_RESULT_LIMIT", "Result retention must be a positive integer", [
+            { path: "$.keep", message: "must be a positive integer" }
+          ]);
+        }
+        const results = await this.listResults({ specId });
+        const retained = new Set(results.slice(0, keep).map((result) => result.runId));
+        if (preserveRunId && results.some((result) => result.runId === preserveRunId) && !retained.has(preserveRunId)) {
+          retained.delete(results[keep - 1].runId);
+          retained.add(preserveRunId);
+        }
+        const expired = results.filter((result) => !retained.has(result.runId));
+        for (const result of expired) {
+          await rm(path.dirname(this.resultPath(result.runId)), { recursive: true });
+        }
+        return expired.map((result) => result.runId);
+      }
+      async deleteResult(runId) {
+        const result = await this.loadResult(runId);
+        const selected = await exists(this.lastTestPath) ? await this.readLastTest() : null;
+        await rm(path.dirname(this.resultPath(runId)), { recursive: true });
+        if (selected?.lastRunId === runId) {
+          const replacement = (await this.listResults({ specId: result.specId })).find((candidate) => candidate.environment === result.environment);
+          const pointer = validateDocument("lastTest", {
+            specId: result.specId,
+            environment: result.environment,
+            ...replacement ? { lastRunId: replacement.runId } : {}
+          });
+          await atomicWriteFile(this.lastTestPath, stringifyJson(pointer));
+        }
+        return result;
+      }
+      async validateAll() {
+        const environments = await this.loadEnvironments();
+        const fixtures = await this.listFixtures();
+        const specs = await this.listSpecs();
+        const runs = await this.listResults();
+        const lastTest = await exists(this.lastTestPath) ? await this.readLastTest() : null;
+        return {
+          environments: Object.keys(environments.environments).length,
+          fixtures: fixtures.length,
+          specs: specs.length,
+          runs: runs.length,
+          lastTest
+        };
+      }
     };
   }
-};
+});
+
+// src/trace.js
+function traceEvent({ seq, stage, event, level = "info", message = "", data, now = () => /* @__PURE__ */ new Date() } = {}) {
+  const at = now();
+  const ts = at instanceof Date ? at.toISOString() : new Date(at).toISOString();
+  return {
+    seq,
+    ts,
+    stage,
+    event,
+    level,
+    message,
+    ...data === void 0 ? {} : { data }
+  };
+}
+function createTracer({ now = () => /* @__PURE__ */ new Date(), writeLine, sensitiveValues = [] } = {}) {
+  let sequence = 0;
+  let degraded = false;
+  const buffered = [];
+  const emit = async (stage, event, payload = {}) => {
+    sequence += 1;
+    const { level = "info", message = "", data } = payload ?? {};
+    const entry = traceEvent({
+      seq: sequence,
+      stage,
+      event,
+      level,
+      message,
+      ...data === void 0 ? {} : { data },
+      now
+    });
+    const redacted = redactSensitive(entry, sensitiveValues);
+    const line = `${JSON.stringify(redacted)}
+`;
+    if (typeof writeLine !== "function") {
+      buffered.push(line);
+      return redacted;
+    }
+    try {
+      await writeLine(line);
+    } catch {
+      degraded = true;
+      buffered.push(line);
+    }
+    return redacted;
+  };
+  const close = async () => ({ degraded, buffered: [...buffered] });
+  return {
+    emit,
+    close,
+    get seq() {
+      return sequence;
+    },
+    get degraded() {
+      return degraded;
+    },
+    get buffered() {
+      return [...buffered];
+    }
+  };
+}
+var init_trace = __esm({
+  "src/trace.js"() {
+    init_references();
+  }
+});
+
+// src/planner.js
+function stripTags(value) {
+  return String(value ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+function parseAttributes(tag) {
+  const attrs = {};
+  const pattern = /([a-zA-Z][a-zA-Z0-9_-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+  let match;
+  let first = true;
+  while ((match = pattern.exec(tag)) !== null) {
+    if (first) {
+      first = false;
+      continue;
+    }
+    const name = match[1].toLowerCase();
+    const value = match[2] ?? match[3] ?? match[4] ?? "";
+    attrs[name] = value;
+  }
+  return attrs;
+}
+function parseHtml(html) {
+  const source = typeof html === "string" ? html : "";
+  const titleMatch = source.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  const title = titleMatch ? stripTags(titleMatch[1]) : "";
+  const headings = [];
+  for (const match of source.matchAll(/<h([1-3])[^>]*>([\s\S]*?)<\/h\1>/gi)) {
+    const text = stripTags(match[2]);
+    if (text) headings.push({ level: Number(match[1]), text });
+  }
+  const links = [];
+  for (const match of source.matchAll(/<a[^>]+href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))[^>]*>([\s\S]*?)<\/a>/gi)) {
+    const href = match[1] ?? match[2] ?? match[3] ?? "";
+    const text = stripTags(match[4]);
+    if (href) links.push({ href, text });
+  }
+  const forms = [];
+  for (const match of source.matchAll(/<form([^>]*)>([\s\S]*?)<\/form>/gi)) {
+    const attrs = parseAttributes(`<form${match[1]}>`);
+    const body = match[2];
+    const inputs = [];
+    for (const input2 of body.matchAll(/<input[^>]*>/gi)) {
+      const inputAttrs = parseAttributes(input2[0]);
+      inputs.push({
+        name: inputAttrs.name ?? "",
+        type: (inputAttrs.type ?? "text").toLowerCase() || "text",
+        required: Object.hasOwn(inputAttrs, "required"),
+        placeholder: inputAttrs.placeholder ?? ""
+      });
+    }
+    const buttons = [];
+    for (const button of body.matchAll(/<button[^>]*>([\s\S]*?)<\/button>/gi)) {
+      const text = stripTags(button[1]);
+      if (text) buttons.push(text);
+    }
+    forms.push({
+      action: attrs.action ?? "",
+      method: (attrs.method ?? "get").toLowerCase(),
+      inputs,
+      buttons
+    });
+  }
+  const lower = source.toLowerCase();
+  const signals = {
+    login: lower.includes("password") && lower.includes("sign in"),
+    checkout: lower.includes("checkout") || lower.includes("cart"),
+    payment: lower.includes("card") || lower.includes("payment"),
+    search: lower.includes("search"),
+    list: lower.includes("<table") || lower.includes("pagination") || lower.includes("results"),
+    numeric: /type\s*=\s*["']?number["']?/i.test(source) || lower.includes("quantity"),
+    destructive: lower.includes("delete") || lower.includes("place order")
+  };
+  return { title, headings, links, forms, signals };
+}
+function selectorCandidates(el = {}) {
+  const candidates = [];
+  if (el.testid) candidates.push({ strategy: "testid", value: el.testid, confidence: 0.98 });
+  if (el.role) {
+    candidates.push({
+      strategy: "role",
+      value: el.name ? [el.role, { name: el.name }] : [el.role],
+      confidence: 0.9
+    });
+  }
+  if (el.label) candidates.push({ strategy: "label", value: el.label, confidence: 0.85 });
+  if (el.text) candidates.push({ strategy: "text", value: el.text, confidence: 0.75 });
+  const css = el.id ? `#${el.id}` : el.text ? `${el.tag ?? "button"}:has-text("${String(el.text).slice(0, 32)}")` : `${el.tag ?? "*"}`;
+  candidates.push({ strategy: "css", value: css, confidence: 0.5 });
+  const rank = new Map(STRATEGY_ORDER.map((strategy, index) => [strategy, index]));
+  return [...candidates].sort((a, b) => rank.get(a.strategy) - rank.get(b.strategy));
+}
+function detectLoginForm(page) {
+  const forms = page?.forms ?? [];
+  return forms.find((form) => (form.inputs ?? []).some((input2) => input2.type === "password")) ?? null;
+}
+function cookieFrom(response) {
+  const raw = response.headers?.get?.("set-cookie") ?? "";
+  return String(raw).split(";")[0].trim();
+}
+async function authenticate({ origin, page, credentials, fetchImpl = globalThis.fetch } = {}) {
+  const username = credentials?.username ?? credentials?.user;
+  const password = credentials?.password ?? credentials?.pass;
+  if (!username || !password) {
+    throw new QaError("ORCHESTRATION_AUTH_FAILED", "Username and password are required for authenticated crawl");
+  }
+  const form = detectLoginForm(page ?? { forms: [] });
+  if (!form) {
+    throw new QaError("ORCHESTRATION_AUTH_FAILED", "No login form was discovered for authentication");
+  }
+  const userField = (form.inputs ?? []).find((input2) => ["text", "email", "username"].includes(input2.type) && input2.name)?.name ?? (form.inputs ?? []).find((input2) => input2.type !== "password" && input2.name)?.name ?? "username";
+  const passField = (form.inputs ?? []).find((input2) => input2.type === "password" && input2.name)?.name ?? "password";
+  const action = form.action || "/login";
+  const target = new URL(action, origin).href;
+  const response = await fetchImpl(target, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ [userField]: username, [passField]: password }),
+    redirect: "manual"
+  });
+  const cookie = cookieFrom(response);
+  const authenticated = [200, 201, 301, 302, 303, 307, 308].includes(response.status);
+  if (!authenticated) {
+    throw new QaError("ORCHESTRATION_AUTH_FAILED", `Authentication failed with HTTP ${response.status}`);
+  }
+  return { cookie, authenticated: true, strategy: `form-post:${action}` };
+}
+function normalizePath(href) {
+  if (!href || href.startsWith("mailto:") || href.startsWith("#") || href.startsWith("javascript:")) return null;
+  if (/^(?:[a-z]+:)?\/\//i.test(href)) return null;
+  const [path7] = href.split("#", 1);
+  const clean = path7 && path7[0] === "/" ? path7 : null;
+  if (!clean) return null;
+  const lower = clean.toLowerCase();
+  const ext = lower.split(".").pop();
+  if (clean.includes(".") && BINARY_EXTENSIONS.has(ext)) return null;
+  return clean.split("?")[0] || "/";
+}
+async function crawl({ url, credentials, fetchImpl = globalThis.fetch, maxPages = 25, maxDepth = 3, emit, now = () => /* @__PURE__ */ new Date() } = {}) {
+  if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "A target URL is required for crawl");
+  const origin = new URL(url).origin;
+  const visited = /* @__PURE__ */ new Set();
+  const pages = [];
+  const queue = [{ path: new URL(url).pathname || "/", depth: 0 }];
+  let cookie = "";
+  const at = now instanceof Date ? now : now();
+  const crawledAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  if (credentials?.username && credentials?.password) {
+    try {
+      const probeResponse = await fetchImpl(new URL(queue[0].path, origin).href, { headers: {} });
+      if (probeResponse.ok || [301, 302, 303, 307, 308].includes(probeResponse.status)) {
+        const probeHtml = typeof probeResponse.text === "function" ? await probeResponse.text() : "";
+        const probePage = { forms: parseHtml(probeHtml).forms };
+        const loginForm = detectLoginForm(probePage);
+        if (loginForm) {
+          const auth2 = await authenticate({ origin, page: probePage, credentials, fetchImpl });
+          cookie = auth2.cookie || cookie;
+        }
+      }
+    } catch {
+    }
+  }
+  while (queue.length > 0 && pages.length < maxPages) {
+    const { path: path7, depth } = queue.shift();
+    if (visited.has(path7) || depth > maxDepth) continue;
+    visited.add(path7);
+    const target = new URL(path7, origin).href;
+    let response;
+    try {
+      response = await fetchImpl(target, { headers: cookie ? { cookie } : {} });
+    } catch {
+      continue;
+    }
+    const setCookie = cookieFrom(response);
+    if (setCookie) cookie = setCookie;
+    if (!response.ok && ![301, 302, 303, 307, 308].includes(response.status)) continue;
+    const html = typeof response.text === "function" ? await response.text() : "";
+    const parsed = parseHtml(html);
+    pages.push({ path: path7, depth, status: response.status, ...parsed });
+    await emit?.("plan", "page_crawled", { message: path7 });
+    if (depth >= maxDepth) continue;
+    for (const link of parsed.links) {
+      const next = normalizePath(link.href);
+      if (next && !visited.has(next)) queue.push({ path: next, depth: depth + 1 });
+    }
+  }
+  let auth = { authenticated: false };
+  const loginPage = pages.find((page) => detectLoginForm(page));
+  if (loginPage && credentials?.username && credentials?.password) {
+    try {
+      auth = await authenticate({ origin, page: loginPage, credentials, fetchImpl });
+      cookie = auth.cookie || cookie;
+    } catch {
+      auth = { authenticated: false };
+    }
+  }
+  const degraded = pages.length > 0 && pages.every((page) => (page.links?.length ?? 0) + (page.forms?.length ?? 0) < 2);
+  return { origin, crawledAt, pages, auth: { authenticated: Boolean(auth.authenticated) }, degraded };
+}
+function parsePrd(text) {
+  if (text === void 0 || text === null || String(text).trim() === "") return { requirements: [] };
+  const blocks = [];
+  let current = [];
+  const startsNew = (line) => /^\s*[-*]\s+/.test(line) || /^\s*\d+[.)]\s+/.test(line) || /^\s*#{1,6}\s+/.test(line) || /(REQ-[A-Za-z0-9-]+)/i.test(line);
+  for (const raw of String(text).split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line) {
+      if (current.length > 0) {
+        blocks.push(current.join(" "));
+        current = [];
+      }
+      continue;
+    }
+    if (current.length > 0 && startsNew(raw)) {
+      blocks.push(current.join(" "));
+      current = [];
+    }
+    current.push(line.replace(/^[-*]\s+/, "").replace(/^\d+[.)]\s+/, "").replace(/^#{1,6}\s+/, ""));
+  }
+  if (current.length > 0) blocks.push(current.join(" "));
+  const requirements = [];
+  const hasExplicitIds = blocks.some((block) => /(REQ-[A-Za-z0-9-]+)/i.test(block));
+  let skippedTitle = false;
+  for (const block of blocks) {
+    if (block.length < 8) continue;
+    const idMatch = block.match(/(REQ-[A-Za-z0-9-]+)/i);
+    if (!idMatch && !skippedTitle && requirements.length === 0 && hasExplicitIds && block.length < 60) {
+      skippedTitle = true;
+      continue;
+    }
+    const id = idMatch ? idMatch[1].toUpperCase() : `REQ-${requirements.length + 1}`;
+    if (requirements.some((req) => req.id === id)) continue;
+    requirements.push({ id, text: block.slice(0, 280), keywords: block.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3).slice(0, 8) });
+  }
+  return { requirements };
+}
+function slugifyFlow(value) {
+  return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "flow";
+}
+function promptMatches(text, prompt) {
+  if (!prompt) return false;
+  const keywords = String(prompt).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
+  const hay = String(text ?? "").toLowerCase();
+  return keywords.some((keyword) => {
+    if (hay.includes(keyword)) return true;
+    return (PROMPT_ALIASES[keyword] ?? []).some((alias) => hay.includes(alias));
+  });
+}
+function buildTestPlan({ siteMap, prompt = "", prd = { requirements: [] }, now = () => /* @__PURE__ */ new Date() } = {}) {
+  const pages = siteMap?.pages ?? [];
+  if (pages.length === 0) throw new QaError("PLAN_EMPTY", "Cannot build a test plan from an empty site map");
+  const at = now instanceof Date ? now : now();
+  const generatedAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  const flows = [];
+  const requirements = prd?.requirements ?? [];
+  const requirementFor = (text) => {
+    const hay = String(text).toLowerCase();
+    return requirements.filter((req) => (req.keywords ?? []).slice(0, 3).some((keyword) => hay.includes(keyword))).map((req) => req.id);
+  };
+  const cleanHref = (href) => {
+    if (!href || typeof href !== "string" || !href.startsWith("/")) return null;
+    return href.split("?")[0].split("#")[0] || "/";
+  };
+  const pageByPath = new Map(pages.map((page) => [page.path, page]));
+  const landing = pages.find((page) => page.path === "/dashboard") ?? pages.find((page) => page.path === "/") ?? pages[0];
+  const headingExpect = (target) => {
+    const targetPage = pageByPath.get(target);
+    const heading = (targetPage?.headings ?? [])[0]?.text;
+    if (!heading) return [`${target} content is visible`];
+    return [textExpect(`${heading} is visible`, String(heading).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2), [targetPage])];
+  };
+  const actionExpects = (page, form) => {
+    if ((form.inputs ?? []).some((input2) => input2.type === "password")) {
+      return [textExpect("Customer dashboard is visible", ["customer", "dashboard"], pages), absentExpect("No error message is shown")];
+    }
+    const buttons = (form.buttons ?? []).join(" ").toLowerCase();
+    if (page.path.includes("chat") || /ask|question|chat|support/.test(buttons)) {
+      return [textExpect("Chat transcript is visible", ["chat", "transcript"], pages), "Support response is visible"];
+    }
+    if (page.signals?.payment || page.path.includes("checkout") || /order|pay|checkout/.test(buttons)) {
+      return [textExpect("Order confirmation is visible", ["order", "confirmation"], pages), absentExpect("No error message is shown")];
+    }
+    return ["The submitted outcome is visible", absentExpect("No error message is shown")];
+  };
+  const journeyTo = (target) => {
+    if (!landing || target === landing.path || target === "/login" || target === "/") return [];
+    const previous = /* @__PURE__ */ new Map([[landing.path, null]]);
+    const queue = [{ path: landing.path, depth: 0 }];
+    while (queue.length > 0) {
+      const { path: current, depth } = queue.shift();
+      if (depth >= 2) continue;
+      const edges = (pageByPath.get(current)?.links ?? []).map((link) => ({ to: cleanHref(link.href), text: String(link.text ?? "").trim() })).filter((edge) => edge.to && edge.text && pageByPath.has(edge.to) && !previous.has(edge.to)).slice(0, 10);
+      for (const edge of edges) {
+        previous.set(edge.to, { from: current, ...edge });
+        queue.push({ path: edge.to, depth: depth + 1 });
+      }
+    }
+    if (!previous.has(target)) return [];
+    const hops = [];
+    let node = target;
+    while (node !== landing.path) {
+      const step = previous.get(node);
+      if (!step || hops.length >= 2) return [];
+      hops.unshift({ intent: step.text, page: step.from, expect: headingExpect(node) });
+      node = step.from;
+    }
+    return hops;
+  };
+  const openQuestions = [];
+  if (siteMap.pages.length < 3) openQuestions.push("Crawl discovered fewer than 3 pages; scope may be incomplete");
+  const crawledTexts = (pages2) => pages2.flatMap((page) => [
+    ...(page.headings ?? []).map((heading) => heading.text),
+    ...(page.forms ?? []).flatMap((form) => form.buttons ?? []),
+    ...(page.links ?? []).map((link) => link.text)
+  ]);
+  const textExpect = (prose, keywords, pages2) => {
+    const words = keywords.map((word) => String(word).toLowerCase());
+    const hit = crawledTexts(pages2).find((text) => {
+      const hay = String(text ?? "").toLowerCase();
+      return text && String(text).trim() && words.every((word) => hay.includes(word));
+    });
+    if (!hit) return prose;
+    return { prose, assert: { kind: "text", value: String(hit).trim().slice(0, 120) } };
+  };
+  const absentExpect = (prose) => {
+    const positive = String(prose).replace(/^\s*no\s+/i, "").replace(/\s+is\s+(shown|visible|created)\s*$/i, "").replace(/(.+?)\s+is\s+absent\s*$/i, "$1").trim();
+    if (!positive) return prose;
+    return { prose, assert: { kind: "absent_text", value: positive.slice(0, 120) } };
+  };
+  for (const page of pages) {
+    for (const [formIndex, form] of (page.forms ?? []).entries()) {
+      const base = `${page.path}-form-${formIndex}`;
+      const isLogin = (form.inputs ?? []).some((input2) => input2.type === "password");
+      const authGated = isLogin && page.path !== "/login" && page.path !== "/";
+      const happyTitle = isLogin ? authGated ? `Sign in (auth gate observed at ${page.path})` : `Sign in via ${page.path}` : `Submit form on ${page.path}`;
+      const actionLabel = (form.buttons ?? []).map((button) => String(button).trim()).find((label) => label.length > 0);
+      const happyIntent = actionLabel ?? happyTitle;
+      const happyFlow = {
+        id: `flow_${slugifyFlow(`${base}-happy`)}`,
+        title: happyIntent,
+        category: isLogin ? "happy" : "happy",
+        priority: promptMatches(`${page.path} ${happyTitle} ${happyIntent} ${page.path === "/cart" || page.path === "/checkout" ? "checkout payment order" : ""}`, prompt) ? "critical" : "high",
+        rationale: authGated ? `Login gate observed at ${page.path} (unauthenticated fetch redirected to a sign-in form)` : `Form discovered at ${page.path} with ${(form.inputs ?? []).length} inputs`,
+        pages: isLogin ? [page.path] : [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
+        preconditions: isLogin ? [] : ["authenticated"],
+        steps: [
+          ...journeyTo(page.path),
+          {
+            intent: happyIntent,
+            page: page.path,
+            action: "submit",
+            targetRef: `form:${formIndex}`,
+            expect: actionExpects(page, form)
+          }
+        ],
+        risks: page.signals?.destructive || /delete|place order/i.test(happyTitle) ? ["double submission"] : [],
+        requirementIds: requirementFor(`${page.path} ${happyTitle}`)
+      };
+      flows.push(happyFlow);
+      for (const input2 of (form.inputs ?? []).filter((entry) => entry.required && entry.type !== "password")) {
+        flows.push({
+          id: `flow_${slugifyFlow(`${base}-empty-${input2.name || "field"}`)}`,
+          title: `Reject empty ${input2.name || "required field"} on ${page.path}`,
+          category: "error",
+          priority: "high",
+          rationale: `Required input ${input2.name || "field"} discovered on ${page.path}`,
+          pages: [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
+          preconditions: isLogin ? [] : ["authenticated"],
+          steps: [
+            ...journeyTo(page.path),
+            {
+              intent: `Submit leaving ${input2.name || "required field"} blank`,
+              page: page.path,
+              action: "submit",
+              targetRef: `form:${formIndex}`,
+              expect: [textExpect("An error message is shown", ["error", "message"], pages), absentExpect("No record is created")]
+            }
+          ],
+          risks: [],
+          requirementIds: requirementFor(page.path)
+        });
+      }
+      const errorFlowsForForm = flows.filter((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path));
+      if (!isLogin && errorFlowsForForm.length === 0 && (form.inputs ?? []).length > 0) {
+        flows.push({
+          id: `flow_${slugifyFlow(`${base}-invalid`)}`,
+          title: `Reject invalid submission on ${page.path}`,
+          category: "error",
+          priority: "medium",
+          rationale: `Form on ${page.path} has no required inputs; invalid-submission probe`,
+          pages: [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
+          preconditions: ["authenticated"],
+          steps: [
+            ...journeyTo(page.path),
+            {
+              intent: `Submit an invalid request on ${page.path}`,
+              page: page.path,
+              action: "submit",
+              targetRef: `form:${formIndex}`,
+              expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No duplicate record is created")]
+            }
+          ],
+          risks: [],
+          requirementIds: requirementFor(page.path)
+        });
+      }
+      if (isLogin) {
+        flows.push({
+          id: `flow_${slugifyFlow(`${base}-invalid-creds`)}`,
+          title: `Reject invalid credentials on ${page.path}`,
+          category: "error",
+          priority: "critical",
+          rationale: "Login form requires negative authentication coverage",
+          pages: [page.path],
+          preconditions: [],
+          steps: [{ intent: "Sign in with invalid credentials", page: page.path, expect: [textExpect("An error message is shown", ["error", "message"], pages), absentExpect("No session is created")] }],
+          risks: [],
+          requirementIds: requirementFor("login sign in authentication")
+        });
+        openQuestions.push("Session-isolation flows (logged-out deep links) unverified: single-context runs cannot isolate sessions");
+      }
+    }
+    if (page.signals?.list) {
+      flows.push({
+        id: `flow_${slugifyFlow(`${page.path}-empty-state`)}`,
+        title: `Show empty state on ${page.path}`,
+        category: "edge",
+        priority: "medium",
+        rationale: "List/table surface discovered",
+        pages: [page.path],
+        preconditions: ["authenticated"],
+        steps: [{ intent: `Open ${page.path} with no records`, page: page.path, expect: [textExpect("An empty state is visible", ["empty", "state"], pages), absentExpect("No error message is shown")] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
+      });
+    }
+    if (page.signals?.numeric) {
+      flows.push({
+        id: `flow_${slugifyFlow(`${page.path}-boundary`)}`,
+        title: `Reject out-of-range quantity on ${page.path}`,
+        category: "edge",
+        priority: "medium",
+        rationale: "Numeric input discovered",
+        pages: [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
+        preconditions: ["authenticated"],
+        steps: [...journeyTo(page.path), { intent: "Submit a negative quantity", page: page.path, expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No record is created")] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
+      });
+    }
+    if (page.signals?.payment && (page.forms ?? []).length > 0) {
+      flows.push({
+        id: `flow_${slugifyFlow(`${page.path}-double-submit`)}`,
+        title: `Guard double submission on ${page.path}`,
+        category: "edge",
+        priority: "medium",
+        rationale: "Payment form discovered; double-submission guard",
+        pages: [landing.path, page.path].filter((value, index, all) => all.indexOf(value) === index),
+        preconditions: ["authenticated"],
+        steps: [...journeyTo(page.path), { intent: "Submit payment twice quickly", page: page.path, expect: [textExpect("Order confirmation is visible", ["order", "confirmation"], pages), absentExpect("No error message is shown")] }],
+        risks: ["double submission"],
+        requirementIds: requirementFor("payment checkout order")
+      });
+    }
+  }
+  for (const page of pages) {
+    const hasHappy = flows.some((flow) => flow.category === "happy" && (flow.pages ?? []).includes(page.path));
+    if (!hasHappy) {
+      const heading = (page.headings ?? [])[0]?.text;
+      const seen2 = heading ? textExpect(`${heading} is visible`, String(heading).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2), [page]) : `${page.path} content is visible`;
+      flows.push({
+        id: `flow_${slugifyFlow(`${page.path}-view`)}`,
+        title: `View ${page.path}`,
+        category: "happy",
+        priority: promptMatches(`${page.path} view`, prompt) ? "critical" : "medium",
+        rationale: `Smoke coverage for ${page.path}, which has no happy flow`,
+        pages: [page.path],
+        preconditions: ["authenticated"],
+        steps: [{ intent: `Open ${page.path}`, page: page.path, expect: [seen2, absentExpect("No error message is shown")] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
+      });
+    }
+  }
+  const seen = /* @__PURE__ */ new Set();
+  const deduped = flows.filter((flow) => {
+    if (seen.has(flow.id)) return false;
+    seen.add(flow.id);
+    return true;
+  });
+  for (const page of pages) {
+    if (page.path === "/login" || page.path === "/") continue;
+    const hasSubmittableForm = (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0);
+    const hasEdge = deduped.some((flow) => flow.category === "edge" && (flow.pages ?? []).includes(page.path));
+    if (hasSubmittableForm && !hasEdge) {
+      const fallback = {
+        id: `flow_${slugifyFlow(`${page.path}-invalid-format`)}`,
+        title: `Reject malformed input on ${page.path}`,
+        category: "edge",
+        priority: "medium",
+        rationale: `Form surface on ${page.path} with no other edge coverage; invalid-format probe`,
+        pages: [page.path],
+        preconditions: ["authenticated"],
+        steps: [{ intent: `Submit malformed input on ${page.path}`, page: page.path, expect: [textExpect("A validation error is shown", ["validation", "error"], pages), absentExpect("No record is created")] }],
+        risks: [],
+        requirementIds: requirementFor(page.path)
+      };
+      if (!deduped.some((flow) => flow.id === fallback.id)) deduped.push(fallback);
+    }
+  }
+  const counts = { happy: 0, edge: 0, error: 0 };
+  for (const flow of deduped) counts[flow.category] = (counts[flow.category] ?? 0) + 1;
+  return {
+    version: 1,
+    id: `plan_${Date.parse(generatedAt)}`,
+    target: siteMap.origin,
+    generatedAt,
+    attempt: 1,
+    guidance: { prompt, prd: { requirements } },
+    siteMapRef: "site-map.json",
+    flows: deduped,
+    coverageClaims: counts,
+    openQuestions: [...new Set(openQuestions)]
+  };
+}
+function replan({ plan, gaps, siteMap, now = () => /* @__PURE__ */ new Date() } = {}) {
+  const at = now instanceof Date ? now : now();
+  const generatedAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  const existing = new Set((plan?.flows ?? []).map((flow) => flow.id));
+  const additions = [];
+  for (const gap of gaps?.gaps ?? []) {
+    const suggestion = gap?.suggestion;
+    if (!suggestion || !suggestion.id || existing.has(suggestion.id)) continue;
+    additions.push({
+      category: "error",
+      priority: "high",
+      pages: gap.target ? [gap.target] : [],
+      preconditions: ["authenticated"],
+      risks: [],
+      requirementIds: [],
+      ...suggestion
+    });
+    existing.add(suggestion.id);
+  }
+  void siteMap;
+  return {
+    ...plan,
+    generatedAt,
+    attempt: (plan?.attempt ?? 1) + 1,
+    flows: [...plan?.flows ?? [], ...additions]
+  };
+}
+function renderTestPlanMarkdown(plan) {
+  const lines = [
+    `# Test plan for ${plan?.target ?? "unknown target"}`,
+    "",
+    `Generated ${plan?.generatedAt ?? ""} \xB7 attempt ${plan?.attempt ?? 1} \xB7 ${plan?.flows?.length ?? 0} flows`,
+    "",
+    "## Flows"
+  ];
+  for (const flow of plan?.flows ?? []) {
+    lines.push(`- [${flow.category}/${flow.priority}] ${flow.title} (${flow.id})`);
+    lines.push(`  rationale: ${flow.rationale ?? ""}`);
+  }
+  if ((plan?.openQuestions ?? []).length > 0) {
+    lines.push("", "## Open questions");
+    for (const question of plan.openQuestions) lines.push(`- ${question}`);
+  }
+  return `${lines.join("\n")}
+`;
+}
+var STRATEGY_ORDER, BINARY_EXTENSIONS, PROMPT_ALIASES;
+var init_planner = __esm({
+  "src/planner.js"() {
+    init_errors();
+    STRATEGY_ORDER = Object.freeze(["testid", "role", "label", "text", "css"]);
+    BINARY_EXTENSIONS = /* @__PURE__ */ new Set(["png", "jpg", "jpeg", "webp", "gif", "svg", "ico", "css", "js", "woff", "woff2", "map"]);
+    PROMPT_ALIASES = Object.freeze({
+      checkout: ["/cart", "/checkout", "/confirmation", "cart", "payment", "order"],
+      authentication: ["/login", "/dashboard", "sign in", "auth"]
+    });
+  }
+});
+
+// src/generator.js
+import { mkdir as mkdir2, writeFile } from "node:fs/promises";
+import path3 from "node:path";
+function slugify2(value) {
+  return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "flow";
+}
+function escapeRegex(value) {
+  return String(value).replace(/[/\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+function quote(value) {
+  return `'${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+}
+function expectationProse(expectation) {
+  return typeof expectation === "string" ? expectation : expectation?.prose ?? "";
+}
+function expectationPredicate(expectation) {
+  return typeof expectation === "string" ? null : expectation?.assert ?? null;
+}
+function predicateToPlaywright(predicate) {
+  if (!predicate || !predicate.kind) return null;
+  const { kind, value, selector, count } = predicate;
+  switch (kind) {
+    case "text":
+      if (!value) return null;
+      return `await expect(page.getByText(/${escapeRegex(value).slice(0, 120)}/i).first()).toBeVisible();`;
+    case "absent_text":
+      if (!value) return null;
+      return `await expect(page.getByText(/${escapeRegex(value).slice(0, 120)}/i)).toHaveCount(0);`;
+    case "url_contains":
+      if (!value) return null;
+      return `await expect(page).toHaveURL(/${escapeRegex(value).slice(0, 120)}/);`;
+    case "visible":
+      if (!selector) return null;
+      return `await expect(page.locator(${quote(selector)}).first()).toBeVisible();`;
+    case "absent":
+      if (!selector) return null;
+      return `await expect(page.locator(${quote(selector)})).toHaveCount(0);`;
+    case "count":
+      if (!selector || typeof count !== "number") return null;
+      return `await expect(page.locator(${quote(selector)})).toHaveCount(${count});`;
+    default:
+      return null;
+  }
+}
+function mergeActionSteps(steps = []) {
+  const merged = [];
+  let pending = [];
+  for (const step of steps) {
+    const expectations = step.expect ?? [];
+    if (expectations.length === 0) {
+      pending.push(step);
+      continue;
+    }
+    const carried = pending.filter((earlier) => !earlier.page || !step.page || earlier.page === step.page);
+    for (const orphan of pending.filter((earlier) => !carried.includes(earlier))) {
+      merged.push({ ...orphan, expect: [{ prose: `Action completes: ${orphan.intent}` }] });
+    }
+    merged.push({
+      ...step,
+      inputs: [...carried.flatMap((earlier) => earlier.inputs ?? []), ...step.inputs ?? []]
+    });
+    pending = [];
+  }
+  for (const orphan of pending) {
+    merged.push({ ...orphan, expect: [{ prose: `Action completes: ${orphan.intent}` }] });
+  }
+  return merged;
+}
+function planToSpecs({ plan } = {}) {
+  const specs = [];
+  for (const flow of plan?.flows ?? []) {
+    const id = slugify2(flow.id.replace(/^flow_/, ""));
+    const steps = mergeActionSteps(flow.steps ?? []);
+    specs.push({
+      version: 1,
+      id,
+      title: flow.title,
+      environment: "local",
+      // The saved semantic spec stays selector-free prose — that contract is
+      // the point of the product. Predicates ride in the locators sidecar.
+      steps: steps.map((step) => ({
+        intent: step.intent,
+        ...step.channel ? { channel: step.channel } : {},
+        expect: (step.expect ?? []).map(expectationProse).filter(Boolean)
+      })),
+      _flowId: flow.id,
+      _targetRefs: steps.map((step) => step.targetRef ?? null),
+      _predicates: steps.map((step) => (step.expect ?? []).map(expectationPredicate)),
+      _inputs: steps.map((step) => step.inputs ?? []),
+      _actions: steps.map((step) => step.action ?? null),
+      _pages: steps.map((step) => step.page ?? null),
+      _preconditions: flow.preconditions ?? []
+    });
+  }
+  return specs;
+}
+function inputCandidates(input2, form) {
+  const declared = (form?.inputs ?? []).find((entry) => entry.name === input2.name);
+  const candidates = [];
+  if (declared?.placeholder) candidates.push({ strategy: "label", value: declared.placeholder, confidence: 0.85 });
+  if (input2.name) {
+    candidates.push({ strategy: "label", value: input2.name, confidence: 0.8 });
+    candidates.push({ strategy: "css", value: `[name="${input2.name}"]`, confidence: 0.7 });
+  }
+  if (declared?.type && declared.type !== "text") {
+    candidates.push({ strategy: "css", value: `input[type="${declared.type}"]`, confidence: 0.4 });
+  }
+  return candidates.length > 0 ? candidates : [{ strategy: "css", value: "input", confidence: 0.2 }];
+}
+function bindLocators({ spec, flow, siteMap } = {}) {
+  const pageForms = new Map((siteMap?.pages ?? []).map((page) => [page.path, page.forms ?? []]));
+  const bindings = [];
+  (spec.steps ?? []).forEach((step, index) => {
+    const pagePath = spec._pages?.[index] ?? flow?.pages?.[0] ?? "/";
+    const targetRef = spec._targetRefs?.[index] ?? null;
+    const forms = pageForms.get(pagePath) ?? [];
+    let form = null;
+    if (targetRef && targetRef.startsWith("form:")) form = forms[Number(targetRef.slice(5)) || 0] ?? null;
+    const stepInputs = spec._inputs?.[index] ?? [];
+    if (!form && stepInputs.length > 0) {
+      form = forms.find((candidate) => stepInputs.some((input2) => (candidate.inputs ?? []).some((declared) => declared.name === input2.name))) ?? forms[0] ?? null;
+    }
+    if (!form && forms.length > 0 && (spec._actions?.[index] === "submit" || spec._actions?.[index] === "click")) {
+      form = forms[0];
+    }
+    let candidates = [{ strategy: "text", value: step.intent.slice(0, 48), confidence: 0.6 }];
+    if (form) {
+      const label = (form.buttons ?? [])[0] ?? step.intent.slice(0, 32);
+      candidates = selectorCandidates({ role: "button", name: label, text: label, tag: "button" });
+    }
+    bindings.push({
+      stepIndex: index + 1,
+      targetRef,
+      page: pagePath,
+      action: spec._actions?.[index] ?? (form ? "submit" : "observe"),
+      candidates,
+      inputs: stepInputs.map((input2) => ({ ...input2, candidates: inputCandidates(input2, form) })),
+      expectations: (step.expect ?? []).map((prose, position) => ({
+        prose,
+        predicate: spec._predicates?.[index]?.[position] ?? null,
+        // Filled in by validateSelectors against the live DOM.
+        validated: null
+      })),
+      resolvedStrategy: candidates[0].strategy,
+      assertionValidated: null
+    });
+  });
+  return {
+    specId: spec.id,
+    origin: siteMap?.origin ?? "",
+    preconditions: spec._preconditions ?? [],
+    validated: false,
+    validatedAt: null,
+    probeSource: "planner",
+    bindings
+  };
+}
+async function fetchPageText(origin, pagePath, fetchImpl, cache) {
+  const key = pagePath ?? "/";
+  if (cache.has(key)) return cache.get(key);
+  let html = "";
+  let failed = false;
+  try {
+    const response = await fetchImpl(new URL(key, origin).href);
+    html = typeof response.text === "function" ? await response.text() : "";
+  } catch {
+    failed = true;
+  }
+  const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").toLowerCase();
+  const entry = { html: html.toLowerCase(), text, failed };
+  cache.set(key, entry);
+  return entry;
+}
+async function validateSelectors({ sidecar, origin, fetchImpl = globalThis.fetch, executor, emit, knownPaths = /* @__PURE__ */ new Set() } = {}) {
+  const cache = /* @__PURE__ */ new Map();
+  const bindings = [];
+  let locatorsResolved = 0;
+  let locatorsProbed = 0;
+  let assertionsChecked = 0;
+  let assertionsVerified = 0;
+  let reachable2 = true;
+  for (const binding of sidecar?.bindings ?? []) {
+    let resolvedStrategy = binding.candidates?.[0]?.strategy ?? "text";
+    let probeSource = "planner";
+    let locatorOk = false;
+    let page = { html: "", text: "" };
+    const needsLocator = binding.action !== "navigate" && (binding.inputs ?? []).length + (binding.candidates ?? []).length > 0;
+    try {
+      if (executor?.observe) {
+        await executor.observe(binding.candidates?.[0]?.value ?? "", {});
+        probeSource = "executor";
+        locatorOk = true;
+      } else if (origin && fetchImpl) {
+        page = await fetchPageText(origin, binding.page, fetchImpl, cache);
+        probeSource = "fetch";
+        if (page.failed) reachable2 = false;
+        if (page.html && needsLocator) locatorsProbed += 1;
+        const hit = (binding.candidates ?? []).find((candidate) => {
+          const needle = typeof candidate.value === "string" ? candidate.value : candidate.value?.[1]?.name ?? "";
+          return needle && needle.length >= 2 && page.html.includes(String(needle).toLowerCase());
+        });
+        if (hit) {
+          resolvedStrategy = hit.strategy;
+          locatorOk = true;
+        } else {
+          const fallback = (binding.candidates ?? []).find((candidate) => candidate.strategy === "text" || candidate.strategy === "css");
+          resolvedStrategy = fallback?.strategy ?? resolvedStrategy;
+        }
+      }
+    } catch {
+      reachable2 = false;
+    }
+    if (locatorOk && needsLocator) locatorsResolved += 1;
+    const expectations = [];
+    for (const expectation of binding.expectations ?? []) {
+      const predicate = expectation.predicate;
+      let validated = null;
+      if (predicate && probeSource === "fetch") {
+        if (predicate.kind === "text" && predicate.value) {
+          assertionsChecked += 1;
+          validated = page.text.includes(String(predicate.value).toLowerCase());
+        } else if (predicate.kind === "absent_text" && predicate.value) {
+          assertionsChecked += 1;
+          validated = true;
+        } else if (predicate.kind === "visible" || predicate.kind === "absent" || predicate.kind === "count") {
+          validated = null;
+        } else if (predicate.kind === "url_contains" && predicate.value) {
+          assertionsChecked += 1;
+          const claimed = String(predicate.value).split("?")[0];
+          validated = knownPaths.size === 0 ? null : [...knownPaths].some((known) => known === claimed || known.startsWith(claimed) || claimed.startsWith(known));
+        }
+      }
+      if (validated === true) assertionsVerified += 1;
+      expectations.push({ ...expectation, validated });
+    }
+    bindings.push({ ...binding, resolvedStrategy, probeSource, expectations, assertionValidated: expectations.some((entry) => entry.validated === true) });
+    await emit?.("generate", "selector_validated", {
+      message: `${sidecar.specId} step ${binding.stepIndex}: ${resolvedStrategy}${locatorOk ? "" : " (unresolved)"}`
+    });
+  }
+  const withPredicates = bindings.reduce((total, binding) => total + (binding.expectations ?? []).filter((entry) => entry.predicate).length, 0);
+  const totalExpectations = bindings.reduce((total, binding) => total + (binding.expectations ?? []).length, 0);
+  const assertionsRefuted = bindings.reduce(
+    (total, binding) => total + (binding.expectations ?? []).filter((entry) => entry.validated === false).length,
+    0
+  );
+  return {
+    // Validated means: nothing we could actually probe was refuted. Pages we
+    // could not reach leave the verdict open rather than failing it.
+    validated: reachable2 && bindings.length > 0 && locatorsResolved >= locatorsProbed && assertionsRefuted === 0,
+    bindings,
+    probeSource: bindings[0]?.probeSource ?? "planner",
+    stats: {
+      locatorsResolved,
+      locatorsProbed,
+      locators: bindings.length,
+      assertionsChecked,
+      assertionsVerified,
+      assertionsRefuted,
+      withPredicates,
+      totalExpectations
+    }
+  };
+}
+function renderPlaywrightSpec({ spec, flow, sidecar, validation, origin } = {}) {
+  const validated = validation?.validated ?? sidecar?.validated ?? false;
+  const bindings = validation?.bindings ?? sidecar?.bindings ?? [];
+  const needsAuth = (sidecar?.preconditions ?? spec?._preconditions ?? []).includes("authenticated");
+  const header = [
+    "// AUTOGENERATED by qa-agent orchestrate \u2014 do not edit.",
+    `// source of truth: .qa/specs/${spec.id}.yaml   locators: ${spec.id}.locators.json`,
+    `// flow: ${flow?.id ?? spec._flowId ?? spec.id} (${flow?.category ?? "happy"})  rationale: ${flow?.rationale ?? "planner synthesis"}`,
+    `// validated: ${validated}  probe: ${validation?.probeSource ?? sidecar?.probeSource ?? "planner"}`,
+    "import { test, expect } from '@playwright/test';",
+    "import { resolve } from './_resolve.js';",
+    ...needsAuth ? ["import { signIn } from './_auth.js';"] : [],
+    `import chain from './${spec.id}.locators.json' with { type: 'json' };`,
+    "",
+    `const BASE = process.env.QA_BASE_URL ?? '${origin ?? "http://127.0.0.1:3000"}';`,
+    "",
+    `${validated ? "" : "test.fixme('unvalidated selectors \u2014 see locators.json', async () => {});\n"}`,
+    `test('${String(spec.title).replace(/'/g, "\\'")}', async ({ page }) => {`,
+    ...needsAuth ? ["  await signIn(page, BASE);", ""] : []
+  ];
+  const body = [];
+  (spec.steps ?? []).forEach((step, index) => {
+    const binding = bindings[index] ?? {};
+    const pagePath = binding.page ?? flow?.pages?.[0] ?? "/";
+    const previousPage = index === 0 ? null : bindings[index - 1]?.page;
+    body.push(`  // intent: ${step.intent}`);
+    if (index === 0 || pagePath !== previousPage) {
+      body.push(`  await page.goto(\`\${BASE}${pagePath}\`);`);
+    }
+    for (const [position, input2] of (binding.inputs ?? []).entries()) {
+      body.push(`  await (await resolve(page, chain.bindings[${index}].inputs[${position}].candidates)).fill(${quote(input2.value ?? "")});`);
+    }
+    if (binding.action === "click" || binding.action === "submit") {
+      body.push(`  await (await resolve(page, chain.bindings[${index}].candidates)).click();`);
+    }
+    for (const expectation of binding.expectations ?? []) {
+      const assertion = predicateToPlaywright(expectation.predicate);
+      if (assertion) {
+        body.push(`  ${assertion} // expect: ${expectation.prose}`);
+      } else {
+        body.push(`  // UNVERIFIED expectation (no predicate from the planner): ${expectation.prose}`);
+      }
+    }
+    body.push("");
+  });
+  return `${[...header, ...body, "});", ""].join("\n")}`;
+}
+function renderResolveHelper() {
+  return `const build = (page, c) => ({
+  testid: () => page.getByTestId(c.value),
+  role: () => page.getByRole(...c.value),
+  label: () => page.getByLabel(c.value),
+  text: () => page.getByText(c.value, { exact: false }),
+  css: () => page.locator(c.value),
+}[c.strategy]());
+
+export async function resolve(page, candidates, { timeout = 2000 } = {}) {
+  const attempts = [];
+  for (const c of candidates) {
+    const loc = build(page, c).first();
+    try {
+      await loc.waitFor({ state: 'attached', timeout });
+      attempts.push({ ...c, ok: true });
+      if (attempts.length > 1) console.log('[heal] locator fallback ->', JSON.stringify(attempts));
+      return loc;
+    } catch {
+      attempts.push({ ...c, ok: false });
+    }
+  }
+  const err = new Error(\`locator chain exhausted: \${JSON.stringify(attempts)}\`);
+  err.chainAttempts = attempts;
+  throw err;
+}
+`;
+}
+function renderAuthHelper({ loginPath = "/login", userField = "username", passwordField = "password", submitLabel = "Sign in" } = {}) {
+  return `// Sign-in helper derived from the crawled login form.
+const USER = process.env.QA_USERNAME ?? 'demo';
+const PASS = process.env.QA_PASSWORD ?? 'demo';
+
+export async function signIn(page, base) {
+  await page.goto(\`\${base}${loginPath}\`);
+  await page.locator('[name="${userField}"]').first().fill(USER);
+  await page.locator('[name="${passwordField}"]').first().fill(PASS);
+  await Promise.all([
+    page.waitForLoadState('networkidle').catch(() => {}),
+    page.getByRole('button', { name: ${quote(submitLabel)} }).first().click(),
+  ]);
+}
+`;
+}
+function authDetailsFrom(siteMap) {
+  for (const page of siteMap?.pages ?? []) {
+    for (const form of page.forms ?? []) {
+      const password = (form.inputs ?? []).find((input2) => input2.type === "password");
+      if (!password) continue;
+      const user = (form.inputs ?? []).find((input2) => input2.type !== "password" && input2.name);
+      return {
+        loginPath: form.action || page.path,
+        userField: user?.name ?? "username",
+        passwordField: password.name || "password",
+        submitLabel: (form.buttons ?? [])[0] ?? "Sign in"
+      };
+    }
+  }
+  return null;
+}
+async function generate({ workspace, plan, siteMap, origin, fetchImpl, executor, outDir, emit } = {}) {
+  const specs = planToSpecs({ plan });
+  const artifacts = [];
+  const generatedDir = outDir ?? `${workspace.qaDirectory}/../generated`;
+  await mkdir2(generatedDir, { recursive: true });
+  await writeFile(path3.join(generatedDir, "_resolve.js"), renderResolveHelper());
+  const knownPaths = new Set((siteMap?.pages ?? []).map((page) => page.path));
+  const auth = authDetailsFrom(siteMap);
+  const needsAuth = specs.some((spec) => (spec._preconditions ?? []).includes("authenticated"));
+  if (needsAuth) await writeFile(path3.join(generatedDir, "_auth.js"), renderAuthHelper(auth ?? {}));
+  let validatedCount = 0;
+  const strategies = {};
+  const flowMap = {};
+  const assertions = { checked: 0, verified: 0, refuted: 0, withPredicates: 0, total: 0 };
+  for (const spec of specs) {
+    const flow = (plan.flows ?? []).find((entry) => entry.id === spec._flowId) ?? {};
+    const sidecar = bindLocators({ spec, flow, siteMap });
+    const validation = await validateSelectors({ sidecar, origin: origin ?? siteMap?.origin, fetchImpl, executor, emit, knownPaths });
+    if (validation.validated) validatedCount += 1;
+    for (const binding of validation.bindings) {
+      strategies[binding.resolvedStrategy] = (strategies[binding.resolvedStrategy] ?? 0) + 1;
+    }
+    assertions.checked += validation.stats?.assertionsChecked ?? 0;
+    assertions.refuted += validation.stats?.assertionsRefuted ?? 0;
+    assertions.verified += validation.stats?.assertionsVerified ?? 0;
+    assertions.withPredicates += validation.stats?.withPredicates ?? 0;
+    assertions.total += validation.stats?.totalExpectations ?? 0;
+    const clean = { ...spec };
+    for (const key of ["_flowId", "_targetRefs", "_predicates", "_inputs", "_actions", "_pages", "_preconditions"]) delete clean[key];
+    validateDocument("spec", clean);
+    await workspace.saveSpec(clean);
+    const finalSidecar = {
+      ...sidecar,
+      validated: validation.validated,
+      validatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      probeSource: validation.probeSource,
+      bindings: validation.bindings,
+      stats: validation.stats
+    };
+    await writeFile(path3.join(generatedDir, `${spec.id}.locators.json`), `${JSON.stringify(finalSidecar, null, 2)}
+`);
+    await writeFile(
+      path3.join(generatedDir, `${spec.id}.spec.js`),
+      renderPlaywrightSpec({ spec: { ...clean, _preconditions: spec._preconditions }, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin })
+    );
+    artifacts.push(spec.id);
+    if (spec._flowId) flowMap[spec.id] = spec._flowId;
+  }
+  return {
+    specs: specs.length,
+    validated: validatedCount,
+    unvalidated: specs.length - validatedCount,
+    strategies,
+    assertions,
+    dir: generatedDir,
+    artifacts,
+    flowMap
+  };
+}
+var init_generator = __esm({
+  "src/generator.js"() {
+    init_schema_validator();
+    init_planner();
+  }
+});
+
+// src/reporter.js
+import { mkdir as mkdir3, writeFile as writeFile2 } from "node:fs/promises";
+import path4 from "node:path";
+function computeUntestedRisk({ siteMap, plan, gaps } = {}) {
+  const covered = new Set((plan?.flows ?? []).flatMap((flow) => flow.pages ?? []));
+  const fromGaps = (gaps?.untestedRisks ?? []).map((risk) => ({ ...risk }));
+  for (const page of siteMap?.pages ?? []) {
+    if (!covered.has(page.path)) {
+      if (!fromGaps.some((risk) => risk.area === page.path)) {
+        fromGaps.push({ area: page.path, reason: "no flow covers this page", risk: "medium", impact: "unverified surface" });
+      }
+    }
+  }
+  return fromGaps;
+}
+function diffPrd({ prd, plan } = {}) {
+  const requirements = prd?.requirements ?? [];
+  if (requirements.length === 0) return { coveragePct: 1, requirements: [] };
+  const rows = requirements.map((req) => {
+    const flowIds = (plan?.flows ?? []).filter((flow) => (flow.requirementIds ?? []).includes(req.id)).map((flow) => flow.id);
+    return { id: req.id, text: req.text, status: flowIds.length > 0 ? "covered" : "uncovered", flowIds, note: flowIds.length > 0 ? "" : "no flow maps to this requirement" };
+  });
+  const covered = rows.filter((row) => row.status === "covered").length;
+  return { coveragePct: Math.round(covered / rows.length * 100) / 100, requirements: rows };
+}
+function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals = [], decisions = [], prd = { requirements: [] }, startedAt, finishedAt, orchestrationId = `orch_${Date.now()}`, target = "" } = {}) {
+  const scenarios = (plan?.flows ?? []).map((flow) => {
+    const run = runs.find((r) => r.flowId === flow.id || r.specId === flow.id) ?? {};
+    const fallbackSpec = String(flow.id).replace(/^flow_/, "");
+    return {
+      id: flow.id,
+      title: flow.title,
+      category: flow.category,
+      priority: flow.priority,
+      status: run.status ?? "skipped",
+      classification: run.classification ?? "environment",
+      confidence: run.confidence ?? 0.5,
+      durationMs: run.durationMs ?? 0,
+      specFile: run.specFile ?? `generated/${fallbackSpec}.spec.js`,
+      runId: run.runId,
+      runClassification: run.runClassification,
+      blockedReason: run.blockedReason,
+      screenshots: run.screenshots ?? [],
+      heals: run.heals ?? []
+    };
+  });
+  const counts = { total: scenarios.length, passed: 0, healed: 0, failed: 0, blocked: 0, skipped: 0 };
+  for (const scenario of scenarios) {
+    if (scenario.status === "passed") counts.passed += 1;
+    else if (scenario.status === "healed") counts.healed += 1;
+    else if (scenario.status === "failed") counts.failed += 1;
+    else if (scenario.status === "blocked") counts.blocked += 1;
+    else counts.skipped += 1;
+  }
+  const lastGaps = gapsHistory.at(-1) ?? { score: 1, gaps: [], untestedRisks: [] };
+  const prdGap = diffPrd({ prd, plan });
+  const verdict = counts.failed > 0 ? "defects_found" : counts.blocked > 0 || counts.skipped === counts.total && counts.total > 0 ? "incomplete" : "clean";
+  const exitCode = counts.failed > 0 ? 10 : verdict === "incomplete" ? 11 : 0;
+  const started = startedAt ?? plan?.generatedAt ?? (/* @__PURE__ */ new Date()).toISOString();
+  const finished = finishedAt ?? (/* @__PURE__ */ new Date()).toISOString();
+  return {
+    version: 1,
+    orchestrationId,
+    target,
+    planSource: plan?.source ?? { planner: "deterministic", fellBack: false },
+    startedAt: started,
+    finishedAt: finished,
+    durationMs: Date.parse(finished) - Date.parse(started),
+    summary: {
+      verdict,
+      exitCode,
+      scenarios: counts,
+      coverage: { score: lastGaps.score ?? 1, attempts: gapsHistory.length || 1, blockingGaps: (lastGaps.gaps ?? []).filter((g) => g.severity === "blocking").length, advisoryGaps: (lastGaps.gaps ?? []).filter((g) => g.severity !== "blocking").length },
+      generation: {
+        specs: generation.specs ?? 0,
+        validated: generation.validated ?? 0,
+        unvalidated: generation.unvalidated ?? 0,
+        strategies: generation.strategies ?? {},
+        assertions: generation.assertions ?? { checked: 0, verified: 0, withPredicates: 0, total: 0 }
+      },
+      healing: { attempted: heals.length, succeeded: heals.filter((h) => h.promoted || h.succeeded).length, promoted: heals.filter((h) => h.promoted).length }
+    },
+    decisions,
+    scenarios,
+    gaps: lastGaps.gaps ?? [],
+    untestedRisks: computeUntestedRisk({ siteMap: { pages: [] }, plan, gaps: lastGaps }),
+    prdGap,
+    artifacts: { plan: "test-plan.md", gaps: "gaps.json", trace: "trace.jsonl", specs: "generated/" }
+  };
+}
+function renderReportMarkdown(report) {
+  const lines = [
+    `# Test Quality Report \u2014 ${report.summary.verdict}`,
+    "",
+    `Target ${report.target} \xB7 ${report.summary.scenarios.total} scenarios \xB7 coverage ${report.summary.coverage.score} \xB7 exit ${report.summary.exitCode}`,
+    "",
+    `Planner: ${report.planSource?.planner ?? "deterministic"}${report.planSource?.fellBack ? ` \u2014 fell back: ${report.planSource.fallbackReason}` : ""}`,
+    `Assertions: ${report.summary.generation?.assertions?.withPredicates ?? 0}/${report.summary.generation?.assertions?.total ?? 0} expectations have a checkable predicate \xB7 ${report.summary.generation?.assertions?.verified ?? 0} verified against the live page`,
+    "",
+    "## What the agent decided"
+  ];
+  for (const decision of report.decisions ?? []) {
+    lines.push(`- [${decision.stage}] ${decision.decision}: ${decision.reason}`);
+  }
+  lines.push("", "## Scenarios (defects first)");
+  const ordered = [...report.scenarios ?? []].sort((a, b) => a.status === "failed" ? -1 : 1);
+  for (const scenario of ordered) {
+    lines.push(`- [${scenario.status}/${scenario.classification}] ${scenario.title} (${scenario.id})`);
+  }
+  lines.push("", "## Healer actions");
+  const heals = (report.scenarios ?? []).flatMap((s) => (s.heals ?? []).map((h) => ({ ...h, scenario: s.id })));
+  if (heals.length === 0) lines.push("- none");
+  for (const heal of heals) lines.push(`- ${heal.scenario}: ${heal.from ?? "?"} -> ${heal.to ?? "?"}`);
+  lines.push("", "## Coverage gaps remaining");
+  if ((report.gaps ?? []).length === 0) lines.push("- none");
+  for (const gap of report.gaps ?? []) lines.push(`- [${gap.severity}] ${gap.ruleId} \u2192 ${gap.target}`);
+  lines.push("", "## Untested flow risk");
+  if ((report.untestedRisks ?? []).length === 0) lines.push("- none");
+  for (const risk of report.untestedRisks ?? []) lines.push(`- ${risk.area}: ${risk.reason}`);
+  lines.push("", "## PRD gap analysis");
+  lines.push(`Coverage ${(report.prdGap?.coveragePct ?? 1) * 100}%`);
+  for (const req of report.prdGap?.requirements ?? []) {
+    if (req.status === "uncovered") lines.push(`- ${req.id} UNCOVERED: ${req.text}`);
+  }
+  lines.push("", "## Artifacts", "- test-plan.md, gaps.json, trace.jsonl, generated/");
+  return `${lines.join("\n")}
+`;
+}
+async function writeReport({ outDir, report }) {
+  await mkdir3(outDir, { recursive: true });
+  await writeFile2(path4.join(outDir, "report.json"), `${JSON.stringify(report, null, 2)}
+`);
+  await writeFile2(path4.join(outDir, "report.md"), renderReportMarkdown(report));
+  return { json: path4.join(outDir, "report.json"), markdown: path4.join(outDir, "report.md") };
+}
+var init_reporter = __esm({
+  "src/reporter.js"() {
+  }
+});
+
+// src/coverage.js
+function promptKeywords(prompt) {
+  return [...new Set(String(prompt ?? "").toLowerCase().split(/[^a-z0-9]+/).filter((word) => word.length > 2 && !STOP_WORDS.has(word)))];
+}
+function promptHits(text, prompt) {
+  if (!prompt) return false;
+  const hay = String(text ?? "").toLowerCase();
+  return promptKeywords(prompt).some((keyword) => hay.includes(keyword) || keyword.includes(hay.replace(/^\//, "")));
+}
+function pagesTouched(flow) {
+  const pages = new Set(flow?.pages ?? []);
+  for (const step of flow?.steps ?? []) {
+    if (step.page) pages.add(step.page);
+  }
+  return pages;
+}
+function planCoversPage(plan, path7, predicate = () => true) {
+  return (plan?.flows ?? []).some((flow) => predicate(flow) && pagesTouched(flow).has(path7));
+}
+function scopeFor(prompt, page) {
+  if (!prompt) return "blocking";
+  const text = `${page.path} ${page.title ?? ""} ${(page.headings ?? []).map((heading) => heading.text).join(" ")}`;
+  return promptHits(text, prompt) ? "blocking" : "advisory";
+}
+function isActionOnlyStep(step) {
+  return (step.expect ?? []).length === 0 && ["navigate", "click", "fill", "submit"].includes(step.action);
+}
+function expectationsOf(plan) {
+  return (plan?.flows ?? []).flatMap((flow) => (flow.steps ?? []).flatMap((step) => step.expect ?? []));
+}
+function hasPredicate(expectation) {
+  return Boolean(expectation && typeof expectation === "object" && expectation.assert && expectation.assert.kind);
+}
+function expectationText(expectation) {
+  return typeof expectation === "string" ? expectation : expectation?.prose ?? "";
+}
+function formPages(siteMap) {
+  return (siteMap?.pages ?? []).filter((page) => (page.forms ?? []).length > 0);
+}
+function submittableFormPages(siteMap) {
+  return formPages(siteMap).filter((page) => (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0));
+}
+function checkHappyPath({ plan, siteMap, prompt }) {
+  if (formPages(siteMap).length === 0) return { status: "skipped", detail: "No form surface discovered", evidence: [] };
+  const missing = formPages(siteMap).filter((page) => !planCoversPage(plan, page.path, (flow) => flow.category === "happy"));
+  if (missing.length === 0) return { status: "pass", detail: "Every form page has a happy flow", evidence: [] };
+  const severity = missing.every((page) => scopeFor(prompt, page) === "advisory") ? "advisory" : "blocking";
+  return {
+    status: "fail",
+    severity,
+    detail: `${missing.length} form page(s) have no happy flow${severity === "advisory" ? " (all outside the developer's stated scope)" : ""}`,
+    evidence: missing.map((page) => page.path),
+    gaps: missing.map((page, index) => ({
+      id: `gap_happy_${index}`,
+      ruleId: "happy-path-coverage",
+      kind: "missing_flow",
+      severity: scopeFor(prompt, page),
+      target: page.path,
+      autoFixable: true,
+      suggestion: {
+        id: `flow_${page.path.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "")}-happy`,
+        title: `Complete happy path on ${page.path}`,
+        category: "happy",
+        priority: "high",
+        pages: [page.path],
+        steps: [{ intent: `Complete the primary action on ${page.path}`, expect: ["The expected outcome is visible"] }]
+      }
+    }))
+  };
+}
+function checkErrorPerForm({ plan, siteMap, prompt }) {
+  if (submittableFormPages(siteMap).length === 0) return { status: "skipped", detail: "No submittable form surface discovered", evidence: [] };
+  const missing = submittableFormPages(siteMap).filter((page) => !planCoversPage(plan, page.path, (flow) => flow.category === "error"));
+  if (missing.length === 0) return { status: "pass", detail: "Every form has an error flow", evidence: [] };
+  const severity = missing.every((page) => scopeFor(prompt, page) === "advisory") ? "advisory" : "blocking";
+  return {
+    status: "fail",
+    severity,
+    detail: `${missing.length} of ${submittableFormPages(siteMap).length} forms have no error-state flow${severity === "advisory" ? " (all outside the developer's stated scope)" : ""}`,
+    evidence: missing.map((page) => page.path),
+    gaps: missing.map((page, index) => ({
+      id: `gap_error_${index}`,
+      ruleId: "error-state-per-form",
+      kind: "missing_flow",
+      severity: scopeFor(prompt, page),
+      target: page.path,
+      autoFixable: true,
+      suggestion: {
+        id: `flow_${page.path.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "")}-empty`,
+        title: `Reject empty submission on ${page.path}`,
+        category: "error",
+        priority: "high",
+        pages: [page.path],
+        steps: [{ intent: "Submit leaving required fields blank", expect: ["A validation error is shown", "No record is created"] }]
+      }
+    }))
+  };
+}
+function checkAuthNegative({ plan, siteMap }) {
+  const hasLogin = (siteMap?.pages ?? []).some((page) => (page.forms ?? []).some((form) => (form.inputs ?? []).some((input2) => input2.type === "password")));
+  if (!hasLogin) return { status: "skipped", detail: "No login surface discovered", evidence: [] };
+  const flows = plan.flows ?? [];
+  const hasInvalid = flows.some((flow) => /invalid credential|invalid-cred/i.test(`${flow.title} ${flow.id}`));
+  const hasRedirect = flows.some((flow) => /unauthenticated|redirect/i.test(`${flow.title} ${flow.id}`));
+  const missing = [];
+  if (!hasInvalid) missing.push("invalid-credential flow");
+  if (!hasRedirect) missing.push("unauthenticated-redirect flow");
+  if (missing.length === 0) return { status: "pass", detail: "Negative auth flows present", evidence: [] };
+  return {
+    status: "fail",
+    detail: `Login exists but missing: ${missing.join(", ")}`,
+    evidence: missing,
+    gaps: missing.map((kind, index) => ({
+      id: `gap_auth_${index}`,
+      ruleId: "auth-negative",
+      kind: "missing_flow",
+      severity: "blocking",
+      target: "/login",
+      autoFixable: true,
+      suggestion: kind.includes("invalid") ? { id: "flow_login_invalid_creds", title: "Reject invalid credentials", category: "error", priority: "critical", pages: ["/login"], steps: [{ intent: "Sign in with invalid credentials", expect: ["An error message is shown"] }] } : { id: "flow_unauthenticated_redirect", title: "Redirect unauthenticated deep links to login", category: "error", priority: "high", pages: ["/dashboard"], steps: [{ intent: "Open a protected page without signing in", expect: ["Sign in is required"] }] }
+    }))
+  };
+}
+function checkAssertionPresence({ plan }) {
+  const flows = plan.flows ?? [];
+  if (flows.length === 0) {
+    return {
+      status: "fail",
+      detail: "No flows to assert",
+      evidence: [],
+      gaps: [{ id: "gap_assert_0", ruleId: "assertion-presence", kind: "missing_assertion", severity: "blocking", target: "", autoFixable: false }]
+    };
+  }
+  const silent = flows.filter((flow) => {
+    const steps = flow.steps ?? [];
+    const observing = steps.filter((step) => !isActionOnlyStep(step));
+    return observing.length === 0 || observing.some((step) => (step.expect ?? []).length === 0);
+  });
+  if (silent.length === 0) return { status: "pass", detail: `${flows.length} flow(s) declare what to observe`, evidence: [] };
+  return {
+    status: "fail",
+    detail: `${silent.length} flow(s) contain a step that observes nothing`,
+    evidence: silent.map((flow) => flow.id),
+    gaps: silent.map((flow) => ({
+      id: `gap_assert_${flow.id}`,
+      ruleId: "assertion-presence",
+      kind: "missing_assertion",
+      severity: "blocking",
+      target: [...pagesTouched(flow)][0] ?? "",
+      autoFixable: false,
+      hint: `Flow ${flow.id} has a step with no expectation. Either declare what should be observable, or mark the step as an action (navigate/click/fill/submit).`
+    }))
+  };
+}
+function checkCheckableAssertions({ plan }) {
+  const expectations = expectationsOf(plan);
+  if (expectations.length === 0) return { status: "skipped", detail: "No expectations to check", evidence: [] };
+  const checkable = expectations.filter(hasPredicate);
+  const ratio = checkable.length / expectations.length;
+  const detail = `${checkable.length}/${expectations.length} expectations carry a checkable predicate`;
+  if (ratio >= 0.8) return { status: "pass", detail, evidence: [] };
+  const bare = (plan.flows ?? []).filter((flow) => (flow.steps ?? []).some((step) => (step.expect ?? []).some((expectation) => !hasPredicate(expectation)))).map((flow) => flow.id);
+  return {
+    status: "fail",
+    detail,
+    evidence: bare,
+    gaps: [{
+      id: "gap_checkable_0",
+      ruleId: "checkable-assertions",
+      kind: "unverifiable_assertion",
+      severity: "blocking",
+      target: bare[0] ?? "",
+      autoFixable: false,
+      hint: "Expectations need a machine-checkable predicate whose value is text observed in the crawl. Where the observable text is genuinely unknown, use url_contains or record it in openQuestions \u2014 do not invent page copy."
+    }]
+  };
+}
+function checkCategoryMix({ plan }) {
+  const flows = plan.flows ?? [];
+  if (flows.length === 0) {
+    return {
+      status: "fail",
+      detail: "No flows",
+      evidence: [],
+      gaps: [{ id: "gap_mix_0", ruleId: "category-mix", kind: "missing_flow", severity: "advisory", target: "", autoFixable: false, hint: "The plan contains no flows at all." }]
+    };
+  }
+  const share = (category) => flows.filter((flow) => flow.category === category).length / flows.length;
+  const problems = [];
+  if (share("happy") < 0.2) problems.push(`happy ${Math.round(share("happy") * 100)}% < 20%`);
+  if (share("error") < 0.2) problems.push(`error ${Math.round(share("error") * 100)}% < 20%`);
+  if (share("edge") + share("error") === 0) problems.push("no error or edge coverage at all");
+  if (problems.length === 0) return { status: "pass", detail: "Category mix healthy", evidence: [] };
+  return {
+    status: "fail",
+    detail: problems.join("; "),
+    evidence: problems,
+    gaps: problems.map((problem, index) => ({
+      id: `gap_mix_${index}`,
+      ruleId: "category-mix",
+      kind: "thin_category",
+      severity: "advisory",
+      target: "",
+      autoFixable: false,
+      hint: `Category balance: ${problem}.`
+    }))
+  };
+}
+function checkJourneyDepth({ plan }) {
+  const flows = plan.flows ?? [];
+  if (flows.length === 0) return { status: "skipped", detail: "No flows", evidence: [] };
+  const journeys = flows.filter((flow) => (flow.steps ?? []).length >= 2);
+  if (journeys.length > 0) {
+    return { status: "pass", detail: `${journeys.length}/${flows.length} flow(s) are multi-step journeys`, evidence: journeys.map((flow) => flow.id) };
+  }
+  return {
+    status: "fail",
+    detail: "Every flow is a single step; no user journey is exercised end to end",
+    evidence: flows.map((flow) => flow.id),
+    gaps: [{
+      id: "gap_journey_0",
+      ruleId: "journey-depth",
+      kind: "shallow_plan",
+      severity: "advisory",
+      target: "",
+      autoFixable: false,
+      hint: "Where the crawl shows a sequence (cart -> checkout -> confirmation), plan it as one flow with ordered steps rather than disconnected single-step flows."
+    }]
+  };
+}
+function checkPromptHonored({ plan, prompt }) {
+  if (!prompt) return { status: "skipped", detail: "No prompt scope", evidence: [] };
+  const flows = plan.flows ?? [];
+  if (flows.length === 0) {
+    return {
+      status: "fail",
+      detail: "No flows for prompt",
+      evidence: [],
+      gaps: [{ id: "gap_prompt_0", ruleId: "prompt-honored", kind: "prompt_ignored", severity: "blocking", target: "", autoFixable: false, hint: `The developer asked to focus on: ${prompt}` }]
+    };
+  }
+  const hits = flows.filter((flow) => promptHits(`${flow.title} ${flow.rationale ?? ""} ${[...pagesTouched(flow)].join(" ")}`, prompt));
+  if (hits.length / flows.length >= 0.3) return { status: "pass", detail: `${hits.length}/${flows.length} flows honor prompt`, evidence: [] };
+  return {
+    status: "fail",
+    detail: `Only ${hits.length}/${flows.length} flows touch prompt scope`,
+    evidence: promptKeywords(prompt),
+    // A blocking rule must name something the planner can act on, or the
+    // replan loop can never fire and the run escalates on attempt one.
+    gaps: [{
+      id: "gap_prompt_0",
+      ruleId: "prompt-honored",
+      kind: "prompt_ignored",
+      severity: "blocking",
+      target: "",
+      autoFixable: false,
+      hint: `The developer asked to focus on "${prompt}". Weight the plan toward those areas while keeping baseline coverage elsewhere.`
+    }]
+  };
+}
+function checkEdgeBoundary({ plan, siteMap }) {
+  const needsEdge = (siteMap?.pages ?? []).filter((page) => page.signals?.numeric || page.signals?.list);
+  if (needsEdge.length === 0) return { status: "skipped", detail: "No boundary surface", evidence: [] };
+  const missing = needsEdge.filter((page) => !(plan.flows ?? []).some((flow) => flow.category === "edge" && (flow.pages ?? []).includes(page.path)));
+  if (missing.length === 0) return { status: "pass", detail: "Boundary edges covered", evidence: [] };
+  const severity = (plan.flows ?? []).some((flow) => flow.category === "edge") ? "advisory" : "blocking";
+  return {
+    status: "fail",
+    detail: `${missing.length} boundary page(s) lack edge flows`,
+    evidence: missing.map((page) => page.path),
+    gaps: missing.map((page, index) => ({
+      id: `gap_edge_${index}`,
+      ruleId: "edge-boundary",
+      kind: "missing_flow",
+      severity,
+      target: page.path,
+      autoFixable: true,
+      suggestion: { id: `flow_${page.path.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "")}-edge`, title: `Cover edge state on ${page.path}`, category: "edge", priority: "medium", pages: [page.path], steps: [{ intent: `Exercise the boundary on ${page.path}`, expect: ["A validation or empty state is shown"] }] }
+    }))
+  };
+}
+function checkOrphanPage({ plan, siteMap, prompt }) {
+  if ((siteMap?.pages ?? []).length === 0) return { status: "skipped", detail: "No pages discovered", evidence: [] };
+  const covered = new Set((plan.flows ?? []).flatMap((flow) => [...pagesTouched(flow)]));
+  const orphans = (siteMap?.pages ?? []).filter((page) => !covered.has(page.path));
+  if (orphans.length === 0) return { status: "pass", detail: "All pages covered", evidence: [] };
+  const inScope = orphans.filter((page) => scopeFor(prompt, page) === "blocking");
+  if (prompt && inScope.length === 0) {
+    return { status: "pass", detail: `${orphans.length} page(s) uncovered, all outside the developer's stated scope`, evidence: orphans.map((page) => page.path) };
+  }
+  return {
+    status: "fail",
+    detail: `${inScope.length || orphans.length} page(s) in no flow`,
+    evidence: (inScope.length > 0 ? inScope : orphans).map((page) => page.path),
+    gaps: (inScope.length > 0 ? inScope : orphans).map((page, index) => ({
+      id: `gap_orphan_${index}`,
+      ruleId: "orphan-page",
+      kind: "uncovered_page",
+      severity: "advisory",
+      target: page.path,
+      autoFixable: false,
+      hint: `${page.path} was discovered by the crawl but no flow touches it.`
+    }))
+  };
+}
+function checkDestructiveGuard({ plan }) {
+  const risky = (plan.flows ?? []).filter((flow) => /delete|pay|place order/i.test(flow.title));
+  if (risky.length === 0) return { status: "skipped", detail: "No destructive surface", evidence: [] };
+  const unguarded = risky.filter((flow) => !(flow.steps ?? []).some((step) => /verif|confirm|only one/i.test((step.expect ?? []).map(expectationText).join(" "))));
+  if (unguarded.length === 0) return { status: "pass", detail: "Destructive flows verified", evidence: [] };
+  return { status: "fail", detail: `${unguarded.length} destructive flow(s) lack verification`, evidence: unguarded.map((f) => f.id), gaps: [] };
+}
+function checkPrdCoverage({ plan, prd }) {
+  const requirements = prd?.requirements ?? [];
+  if (requirements.length === 0) return { status: "skipped", detail: "No PRD scope", evidence: [] };
+  const uncovered = requirements.filter((req) => !(plan.flows ?? []).some((flow) => (flow.requirementIds ?? []).includes(req.id)));
+  if (uncovered.length === 0) return { status: "pass", detail: "PRD fully mapped", evidence: [] };
+  return { status: "fail", detail: `${uncovered.length}/${requirements.length} requirements uncovered`, evidence: uncovered.map((r) => r.id), gaps: [] };
+}
+function evaluatePlan({ plan, siteMap = { pages: [] }, prd = { requirements: [] }, prompt = "" } = {}) {
+  const checklist = [];
+  const gaps = [];
+  for (const rule of COVERAGE_RULES) {
+    const result = CHECKS[rule.id]({ plan, siteMap, prd, prompt });
+    const severity = result.severity ?? result.gaps?.[0]?.severity ?? rule.severity;
+    checklist.push({ ruleId: rule.id, severity, ...result });
+    gaps.push(...result.gaps ?? []);
+  }
+  const score = scorePlan(checklist);
+  const untestedRisks = (siteMap.pages ?? []).filter((page) => !planCoversPage(plan, page.path)).map((page) => ({
+    area: page.path,
+    reason: prompt && scopeFor(prompt, page) === "advisory" ? "no flow covers this page (outside the developer's stated scope)" : "no flow covers this page",
+    risk: prompt && scopeFor(prompt, page) === "advisory" ? "low" : "medium",
+    impact: "unverified surface"
+  }));
+  return {
+    version: 1,
+    planId: plan?.id ?? "plan_unknown",
+    attempt: plan?.attempt ?? 1,
+    score,
+    checklist: checklist.map(({ gaps: _gaps, ...entry }) => entry),
+    gaps,
+    untestedRisks
+  };
+}
+function scorePlan(checklist) {
+  if (!checklist || checklist.length === 0) return 0;
+  const applicable = checklist.filter((entry) => entry.status !== "skipped");
+  if (applicable.length === 0) return 1;
+  let total = 0;
+  let earned = 0;
+  for (const entry of applicable) {
+    const weight = entry.severity === "blocking" ? 3 : 1;
+    total += weight;
+    if (entry.status === "pass") earned += weight;
+  }
+  return total === 0 ? 0 : Math.round(earned / total * 100) / 100;
+}
+function decideVerdict({ checklist, gaps = [], attempt = 1, maxReplans = 2, prevScore, score } = {}) {
+  const entries = checklist ?? [];
+  const blocking = entries.filter((entry) => entry.severity === "blocking" && entry.status === "fail");
+  const resolvedScore = score ?? scorePlan(entries);
+  const allGaps = gaps.length > 0 ? gaps : entries.flatMap((entry) => entry.gaps ?? []);
+  if (blocking.length === 0 && resolvedScore >= 0.75) return "pass";
+  const fixableGaps = allGaps.filter((gap) => gap.autoFixable);
+  const hasUnfixableBlocking = blocking.some((entry) => {
+    const related = entry.gaps ?? allGaps.filter((gap) => gap.ruleId === entry.ruleId);
+    return related.length === 0 || related.some((gap) => !gap.autoFixable);
+  });
+  if (hasUnfixableBlocking) return "escalate";
+  if (blocking.length === 0 && resolvedScore < 0.75) {
+    if (attempt < maxReplans && fixableGaps.length > 0) {
+      if (prevScore !== void 0 && resolvedScore <= prevScore) return "escalate";
+      return "replan";
+    }
+    return "escalate";
+  }
+  if (attempt < maxReplans && fixableGaps.length > 0) {
+    if (prevScore !== void 0 && resolvedScore <= prevScore) return "escalate";
+    return "replan";
+  }
+  return "escalate";
+}
+function renderGapsMarkdown(gaps) {
+  const lines = [`# Coverage gaps (${gaps?.gaps?.length ?? 0}) \u2014 score ${gaps?.score ?? 0}`, ""];
+  for (const gap of gaps?.gaps ?? []) {
+    lines.push(`- [${gap.severity}] ${gap.ruleId} \u2192 ${gap.target || "plan"}: ${gap.suggestion?.title ?? gap.kind}`);
+  }
+  if ((gaps?.untestedRisks ?? []).length > 0) {
+    lines.push("", "## Untested risks");
+    for (const risk of gaps.untestedRisks) lines.push(`- ${risk.area}: ${risk.reason}`);
+  }
+  return `${lines.join("\n")}
+`;
+}
+var COVERAGE_RULES, STOP_WORDS, CHECKS;
+var init_coverage = __esm({
+  "src/coverage.js"() {
+    COVERAGE_RULES = Object.freeze([
+      { id: "happy-path-coverage", severity: "blocking" },
+      { id: "error-state-per-form", severity: "blocking" },
+      { id: "auth-negative", severity: "blocking" },
+      { id: "assertion-presence", severity: "blocking" },
+      { id: "checkable-assertions", severity: "blocking" },
+      { id: "prompt-honored", severity: "blocking" },
+      { id: "category-mix", severity: "advisory" },
+      { id: "journey-depth", severity: "advisory" },
+      { id: "edge-boundary", severity: "advisory" },
+      { id: "orphan-page", severity: "advisory" },
+      { id: "destructive-guard", severity: "advisory" },
+      { id: "prd-coverage", severity: "advisory" }
+    ]);
+    STOP_WORDS = /* @__PURE__ */ new Set(["the", "and", "for", "with", "that", "this", "any", "all", "focus", "test", "testing", "please", "make", "sure", "flows", "flow", "app", "application", "path", "paths"]);
+    CHECKS = {
+      "happy-path-coverage": checkHappyPath,
+      "error-state-per-form": checkErrorPerForm,
+      "auth-negative": checkAuthNegative,
+      "assertion-presence": checkAssertionPresence,
+      "checkable-assertions": checkCheckableAssertions,
+      "prompt-honored": checkPromptHonored,
+      "category-mix": checkCategoryMix,
+      "journey-depth": checkJourneyDepth,
+      "edge-boundary": checkEdgeBoundary,
+      "orphan-page": checkOrphanPage,
+      "destructive-guard": checkDestructiveGuard,
+      "prd-coverage": checkPrdCoverage
+    };
+  }
+});
+
+// src/planner-agent.js
+function renderSiteMapBrief(siteMap, { maxChars = MAX_BRIEF_CHARS } = {}) {
+  const lines = [];
+  for (const page of siteMap?.pages ?? []) {
+    lines.push(`### ${page.path}  (HTTP ${page.status}, depth ${page.depth})`);
+    if (page.title) lines.push(`title: ${page.title}`);
+    if ((page.headings ?? []).length > 0) {
+      lines.push(`headings: ${page.headings.map((heading) => `h${heading.level} "${heading.text}"`).join(", ")}`);
+    }
+    if ((page.links ?? []).length > 0) {
+      const links = page.links.slice(0, 25).map((link) => `"${link.text || "(no text)"}" -> ${link.href}`);
+      lines.push(`links: ${links.join(", ")}`);
+    }
+    for (const [index, form] of (page.forms ?? []).entries()) {
+      const inputs = (form.inputs ?? []).map((input2) => `${input2.name || "(unnamed)"}:${input2.type}${input2.required ? " required" : ""}${input2.placeholder ? ` placeholder="${input2.placeholder}"` : ""}`).join(", ");
+      lines.push(`form[${index}]: method=${form.method} action="${form.action}" buttons=[${(form.buttons ?? []).join(", ")}] inputs=[${inputs}]`);
+    }
+    const signals = Object.entries(page.signals ?? {}).filter(([, on]) => on).map(([name]) => name);
+    if (signals.length > 0) lines.push(`signals: ${signals.join(", ")}`);
+    lines.push("");
+  }
+  const rendered = lines.join("\n");
+  return rendered.length > maxChars ? `${rendered.slice(0, maxChars)}
+\u2026 (site map truncated)` : rendered;
+}
+function buildPlannerBrief({ siteMap, prompt = "", prd = { requirements: [] } } = {}) {
+  const sections = [
+    `TARGET: ${siteMap?.origin ?? "unknown"}`,
+    siteMap?.auth?.authenticated ? "CRAWL SESSION: authenticated (protected pages below were fetched signed in)" : "CRAWL SESSION: anonymous (login either was not attempted or did not succeed \u2014 treat protected pages with suspicion)",
+    siteMap?.degraded ? "WARNING: the crawl looks degraded (very few links/forms found). The app may render client-side, so the structure below may be incomplete. Say so in openQuestions." : "",
+    "",
+    "## Crawled pages",
+    renderSiteMapBrief(siteMap)
+  ];
+  if (prompt) sections.push("## Developer focus (natural language)", prompt, "");
+  const requirements = prd?.requirements ?? [];
+  if (requirements.length > 0) {
+    sections.push("## Product requirements", ...requirements.map((requirement) => `- ${requirement.id}: ${requirement.text}`), "");
+  }
+  sections.push("Produce the test plan now.");
+  return sections.filter((section) => section !== "").join("\n");
+}
+function slugFlowId(value, index) {
+  const slug = String(value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+  return `flow_${slug || `plan-${index + 1}`}`;
+}
+function stripEmpty(value) {
+  return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== null && entry !== void 0));
+}
+function normalizePlan({ draft, siteMap, prompt = "", prd = { requirements: [] }, source, now = () => /* @__PURE__ */ new Date() } = {}) {
+  const at = now instanceof Date ? now : now();
+  const generatedAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  const seen = /* @__PURE__ */ new Set();
+  const flows = [];
+  for (const [index, flow] of (draft?.flows ?? []).entries()) {
+    let id = flow.id?.startsWith("flow_") ? flow.id : slugFlowId(flow.id ?? flow.title, index);
+    if (seen.has(id)) id = `${id}-${index + 1}`;
+    seen.add(id);
+    flows.push({
+      id,
+      title: flow.title,
+      category: flow.category,
+      priority: flow.priority,
+      rationale: flow.rationale ?? "",
+      pages: flow.pages ?? [],
+      preconditions: flow.preconditions ?? [],
+      risks: flow.risks ?? [],
+      requirementIds: flow.requirementIds ?? [],
+      steps: (flow.steps ?? []).map((step) => ({
+        intent: step.intent,
+        ...step.page ? { page: step.page } : {},
+        ...step.action ? { action: step.action } : {},
+        ...step.channel ? { channel: step.channel } : {},
+        ...(step.inputs ?? []).length > 0 ? { inputs: step.inputs } : {},
+        expect: (step.expect ?? []).map((expectation) => ({
+          prose: expectation.prose,
+          ...expectation.assert && expectation.assert.kind ? { assert: stripEmpty(expectation.assert) } : {}
+        }))
+      }))
+    });
+  }
+  const counts = { happy: 0, edge: 0, error: 0 };
+  for (const flow of flows) counts[flow.category] = (counts[flow.category] ?? 0) + 1;
+  return {
+    version: 1,
+    id: `plan_${Date.parse(generatedAt)}`,
+    target: siteMap?.origin ?? "",
+    generatedAt,
+    attempt: 1,
+    source,
+    guidance: { prompt, prd: { requirements: prd?.requirements ?? [] } },
+    siteMapRef: "site-map.json",
+    flows,
+    coverageClaims: counts,
+    openQuestions: draft?.openQuestions ?? [],
+    ...draft?.notes ? { notes: draft.notes } : {}
+  };
+}
+function reviewDraft(draft) {
+  if (!draft || typeof draft !== "object") {
+    return { ok: false, reason: "the planner returned no document" };
+  }
+  try {
+    validateDocument("planDraft", draft);
+  } catch (error) {
+    const issues = (error.issues ?? []).slice(0, 8).map((issue) => `${issue.path}: ${issue.message}`).join("; ");
+    return { ok: false, reason: issues || (error instanceof Error ? error.message : String(error)) };
+  }
+  if (!Array.isArray(draft.flows) || draft.flows.length === 0) {
+    return { ok: false, reason: "the plan contains no flows" };
+  }
+  return { ok: true };
+}
+async function planWithAgent({
+  planner,
+  siteMap,
+  prompt = "",
+  prd = { requirements: [] },
+  attempts = 2,
+  emit,
+  now = () => /* @__PURE__ */ new Date()
+} = {}) {
+  const fallback = (reason) => {
+    const plan = buildTestPlan({ siteMap, prompt, prd, now });
+    plan.source = { planner: "deterministic", fellBack: true, fallbackReason: reason };
+    return plan;
+  };
+  if (typeof planner !== "function") return fallback("no planner capability was provided");
+  const brief = buildPlannerBrief({ siteMap, prompt, prd });
+  let feedback;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    let draft;
+    try {
+      await emit?.("plan", "planner_started", { message: `Planner sub-agent, attempt ${attempt}` });
+      draft = await planner({
+        brief,
+        instructions: PLANNER_INSTRUCTIONS,
+        schema: "plan-draft.schema.json",
+        siteMap,
+        prompt,
+        prd,
+        ...feedback ? { feedback } : {}
+      });
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      await emit?.("plan", "planner_failed", { level: "warn", message: `Planner capability failed: ${reason}` });
+      return fallback(reason);
+    }
+    const review = reviewDraft(draft);
+    if (review.ok) {
+      const plan = normalizePlan({
+        draft,
+        siteMap,
+        prompt,
+        prd,
+        now,
+        source: { planner: "agent", fellBack: false, attempts: attempt }
+      });
+      await emit?.("plan", "planner_completed", {
+        message: `${plan.flows.length} flows \xB7 ${plan.openQuestions.length} open question(s) \xB7 attempt ${attempt}`
+      });
+      return plan;
+    }
+    await emit?.("plan", "planner_rejected", { level: "warn", message: `attempt ${attempt}: ${review.reason}` });
+    feedback = `Your previous plan draft was rejected. Fix exactly these problems and return only the corrected JSON document:
+${review.reason}`;
+    if (attempt === attempts) return fallback(`plan draft rejected after ${attempts} attempt(s): ${review.reason}`);
+  }
+  throw new QaError("PLANNER_UNREACHABLE_STATE", "The planner loop exited without a decision");
+}
+var PLANNER_INSTRUCTIONS, MAX_BRIEF_CHARS;
+var init_planner_agent = __esm({
+  "src/planner-agent.js"() {
+    init_planner();
+    init_schema_validator();
+    init_errors();
+    PLANNER_INSTRUCTIONS = `You are the Planner in an autonomous test orchestration pipeline. You are given a crawl of a live web application and you produce a test plan that another sub-agent will turn into executable browser tests.
+
+You are a senior QA engineer. Plan what a careful human tester would actually check.
+
+WHAT MAKES A GOOD PLAN
+- Cover happy paths, error states, and edge cases. A plan that is only happy paths is a failed plan.
+- Prefer real multi-step journeys over single clicks. If the crawl shows cart -> checkout -> confirmation, plan that as ONE flow with ordered steps, not three disconnected flows.
+- Every form deserves at least one success case and one rejection case (missing required field, invalid format, or invalid credentials).
+- Look for destructive or money-moving actions and plan a guard for them (double submission, confirmation required).
+- If a page is reachable only when signed in, put "authenticated" in preconditions and make the FIRST step of the flow sign in, unless a precondition handles it.
+
+THE ASSERTION RULE \u2014 THIS IS THE MOST IMPORTANT RULE
+Each expectation has two parts:
+  - "prose": what a human would write, e.g. "Order confirmation is visible".
+  - "assert": a predicate a browser can evaluate.
+
+The assert value MUST be a string you have reason to believe literally appears in the rendered page. Derive it from the crawled page titles, headings, link text, and button labels you were given.
+
+NEVER copy the prose into the assert value. "Order confirmation is visible" is a description, not page text \u2014 asserting it would always fail. If the crawl shows the confirmation page has the heading "Thank you for your order", then the assert value is "Thank you for your order".
+
+If you genuinely cannot determine the observable text for an expectation, use kind "url_contains" with the path you expect to land on, or omit the assert entirely and add a line to openQuestions. Do not invent page text you did not observe. An expectation with no predicate is honest; a predicate you made up is not.
+
+Predicate kinds:
+  - text          -> value appears somewhere visible on the page
+  - absent_text   -> value must NOT appear (use for "no error is shown")
+  - url_contains  -> the URL contains value after the step
+  - visible       -> the CSS selector resolves to a visible element
+  - absent        -> the CSS selector resolves to nothing
+  - count         -> the CSS selector resolves to exactly count elements
+
+INPUTS
+When a step submits a form, list every field it fills using the exact input name from the site map. Use realistic values (a valid-looking test card number, a plausible email). For a deliberately-invalid case, use the invalid value that triggers the rejection you are asserting. Mark passwords and tokens sensitive: true.
+
+SCOPE
+If the developer gave a natural-language focus, weight the plan toward it \u2014 but still return baseline coverage for the rest of the application. If a PRD was provided, set requirementIds on the flows that cover each requirement, and leave it empty when nothing covers it. Do not claim coverage you did not plan.
+
+Return only a JSON document matching schemas/plan-draft.schema.json.`;
+    MAX_BRIEF_CHARS = 6e4;
+  }
+});
+
+// src/orchestrator.js
+var orchestrator_exports = {};
+__export(orchestrator_exports, {
+  EXIT: () => EXIT,
+  assertTargetAllowed: () => assertTargetAllowed,
+  orchestrate: () => orchestrate,
+  planStages: () => planStages
+});
+import { mkdir as mkdir4, writeFile as writeFile3 } from "node:fs/promises";
+import path5 from "node:path";
+function assertTargetAllowed(target, { allowRemote = false } = {}) {
+  let parsed;
+  try {
+    parsed = new URL(target);
+  } catch {
+    throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", `Invalid target URL: ${target}`);
+  }
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "Only http and https targets are supported");
+  }
+  if (!allowRemote && !LOOPBACK.has(parsed.hostname)) {
+    throw new QaError("ORCHESTRATION_REMOTE_BLOCKED", "Remote targets require --allow-remote");
+  }
+  return parsed;
+}
+function planStages(state) {
+  const order = ["bootstrap", "probe", "plan", "gate", "generate", "run", "heal", "report", "done"];
+  const index = order.indexOf(state.stage);
+  if (index === -1) return "bootstrap";
+  if (state.stage === "gate" && state.verdict === "replan") return "plan";
+  return order[Math.min(index + 1, order.length - 1)];
+}
+async function orchestrate({
+  url,
+  username,
+  password,
+  prompt = "",
+  prd,
+  prdText,
+  outDir,
+  root = process.cwd(),
+  maxReplans = 2,
+  maxPages = 25,
+  maxDepth = 3,
+  allowRemote = false,
+  fetchImpl = globalThis.fetch,
+  executor,
+  variables = process.env,
+  now = () => /* @__PURE__ */ new Date(),
+  emit,
+  planner,
+  planOnly = false
+} = {}) {
+  if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "--url is required");
+  const parsed = assertTargetAllowed(url, { allowRemote });
+  const startedAt = (now() instanceof Date ? now() : new Date(now())).toISOString();
+  const orchestrationId = `orch_${Date.parse(startedAt)}`;
+  const workspace = new QaWorkspace(root);
+  await workspace.ensureDirectories();
+  const directory = outDir ?? path5.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
+  await mkdir4(directory, { recursive: true });
+  const secrets = [password, username].filter((value) => typeof value === "string" && value.length > 3);
+  const tracer = createTracer({
+    now,
+    sensitiveValues: secrets,
+    writeLine: async (line) => {
+      await writeFile3(path5.join(directory, "trace.jsonl"), line, { flag: "a" });
+    }
+  });
+  const say = emit ?? tracer.emit.bind(tracer);
+  if (planner) await say("bootstrap", "planner_ready", { message: "Planner sub-agent capability provided by the host" });
+  const decisions = [];
+  const gapsHistory = [];
+  const heals = [];
+  const runs = [];
+  try {
+    await say("probe", "stage_started", { message: `Probing ${parsed.origin}` });
+    let probeOk = false;
+    try {
+      const response = await fetchImpl(parsed.origin, { method: "GET", redirect: "manual" });
+      probeOk = response.status < 500;
+    } catch {
+      probeOk = false;
+    }
+    if (!probeOk) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", `Target unreachable: ${parsed.origin}`);
+    await say("probe", "stage_completed", { message: "Target reachable" });
+    const credentials = username && password ? { username, password } : void 0;
+    await say("plan", "stage_started", { message: "Crawling target" });
+    let siteMap = await crawl({ url: parsed.href, credentials, fetchImpl, maxPages, maxDepth, emit: say, now });
+    await writeFile3(path5.join(directory, "site-map.json"), `${JSON.stringify(siteMap, null, 2)}
+`);
+    const prdParsed = prdText !== void 0 ? parsePrd(prdText) : { requirements: [] };
+    let plan = planner ? await planWithAgent({ planner, siteMap, prompt, prd: prdParsed, emit: say, now }) : { ...buildTestPlan({ siteMap, prompt, prd: prdParsed, now }), source: { planner: "deterministic", fellBack: false } };
+    let attempt = 1;
+    let prevScore;
+    let gaps = evaluatePlan({ plan, siteMap, prd: prdParsed, prompt });
+    gapsHistory.push(gaps);
+    let verdict = decideVerdict({ checklist: withGaps(gaps), attempt, maxReplans, prevScore, score: gaps.score });
+    decisions.push({ seq: decisions.length + 1, stage: "gate", decision: verdict, reason: `score ${gaps.score}, attempt ${attempt}/${maxReplans}`, at: (/* @__PURE__ */ new Date()).toISOString() });
+    await say("gate", "decision", { message: `${verdict} at ${gaps.score}` });
+    while (verdict === "replan" && attempt < maxReplans) {
+      prevScore = gaps.score;
+      plan = replan({ plan, gaps, siteMap, now });
+      attempt += 1;
+      gaps = evaluatePlan({ plan, siteMap, prd: prdParsed, prompt });
+      gapsHistory.push(gaps);
+      verdict = decideVerdict({ checklist: withGaps(gaps), attempt, maxReplans, prevScore, score: gaps.score });
+      decisions.push({ seq: decisions.length + 1, stage: "gate", decision: verdict, reason: `score ${gaps.score} vs prev ${prevScore}`, at: (/* @__PURE__ */ new Date()).toISOString() });
+      await say("gate", "replan_triggered", { message: `attempt ${attempt}: ${gaps.score}` });
+    }
+    try {
+      validateDocument("testPlan", plan);
+    } catch (error) {
+      await say("plan", "plan_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+    }
+    await writeFile3(path5.join(directory, "test-plan.json"), `${JSON.stringify(plan, null, 2)}
+`);
+    await writeFile3(path5.join(directory, "test-plan.md"), renderTestPlanMarkdown(plan));
+    await writeFile3(path5.join(directory, "gaps.json"), `${JSON.stringify(gaps, null, 2)}
+`);
+    await writeFile3(path5.join(directory, "gaps.md"), renderGapsMarkdown(gaps));
+    if (planOnly) {
+      await say("plan", "plan_only", { message: `Stopping after planning: ${plan.flows.length} flows, score ${gaps.score}` });
+      const report2 = buildReport({ plan, gapsHistory, generation: {}, runs: [], heals: [], decisions, prd: prdParsed, startedAt, finishedAt: (/* @__PURE__ */ new Date()).toISOString(), orchestrationId, target: parsed.origin });
+      await writeReport({ outDir: directory, report: report2 });
+      return { report: report2, plan, gaps, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
+    }
+    try {
+      const environments = await workspace.loadEnvironments().catch(() => ({ version: 1, environments: {} }));
+      environments.environments = { ...environments.environments ?? {}, local: { type: "web", baseUrl: parsed.origin } };
+      await workspace.saveEnvironments(environments);
+    } catch {
+    }
+    await say("generate", "stage_started", { message: `${plan.flows.length} flows` });
+    const generation = await generate({ workspace, plan, siteMap, origin: parsed.origin, fetchImpl, executor, outDir: path5.join(directory, "generated"), emit: say, now });
+    await say("generate", "stage_completed", { message: `${generation.validated}/${generation.specs} validated` });
+    if (generation.specs === 0 || generation.validated === 0) {
+      const report2 = buildReport({ plan, gapsHistory, generation, runs, heals, decisions, prd: prdParsed, startedAt, finishedAt: (/* @__PURE__ */ new Date()).toISOString(), orchestrationId, target: parsed.origin });
+      await writeReport({ outDir: directory, report: report2 });
+      return { report: report2, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
+    }
+    await say("run", "stage_started", { message: "Executing semantic specs" });
+    const flowForSpec = generation.flowMap ?? {};
+    const allSpecs = new Map((await workspace.listSpecs()).map((spec) => [spec.id, spec]));
+    const specs = (generation.artifacts ?? []).map((id) => allSpecs.get(id)).filter(Boolean);
+    for (const spec of specs) {
+      const flowId = flowForSpec[spec.id] ?? spec.id;
+      try {
+        const started = Date.now();
+        const result = await executeRun({ workspace, specId: spec.id, environmentId: spec.environment, executor, variables, fetchImpl });
+        const durationMs = Date.now() - started;
+        const classification = result.classification;
+        const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
+        const healedHere = (result.steps ?? []).some((step) => step.healing?.outcome === "healed");
+        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : healedHere ? "broken_locator" : "none";
+        runs.push({ flowId, specId: spec.id, status, classification: triaged, confidence: status === "failed" ? 0.7 : status === "blocked" ? 0.95 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, runClassification: classification, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), ...status === "blocked" ? { blockedReason: result.explanation } : {} });
+        for (const step of result.steps ?? []) {
+          if (step.healing) heals.push({ specId: spec.id, stepIndex: step.index, promoted: step.healing.outcome === "healed", succeeded: step.healing.outcome === "healed" });
+        }
+        await say("run", "stage_completed", { message: `${spec.id}: ${result.classification}` });
+      } catch (error) {
+        runs.push({ flowId, specId: spec.id, status: "blocked", classification: "environment", confidence: 0.6, durationMs: 0, specFile: `generated/${spec.id}.spec.js`, screenshots: [], heals: [], blockedReason: error instanceof Error ? error.message : String(error) });
+      }
+    }
+    const escalated = verdict === "escalate";
+    const report = buildReport({ plan, gapsHistory, generation, runs, heals, decisions, prd: prdParsed, startedAt, finishedAt: (/* @__PURE__ */ new Date()).toISOString(), orchestrationId, target: parsed.origin });
+    await writeReport({ outDir: directory, report });
+    await writeFile3(path5.join(directory, "report.yaml"), stringifyYaml({ verdict: report.summary.verdict, exitCode: report.summary.exitCode }));
+    const exitCode = report.summary.exitCode !== 0 ? report.summary.exitCode : escalated ? EXIT.ESCALATED : EXIT.OK;
+    return { report, exitCode, artifacts: { dir: directory } };
+  } catch (error) {
+    if (error instanceof QaError && error.code === "ORCHESTRATION_REMOTE_BLOCKED") throw error;
+    if (error instanceof QaError && ["ORCHESTRATION_TARGET_UNREACHABLE", "ORCHESTRATION_AUTH_FAILED"].includes(error.code)) {
+      return { report: null, exitCode: EXIT.UNREACHABLE, error };
+    }
+    if (error instanceof QaError) return { report: null, exitCode: EXIT.INTERNAL, error };
+    throw error;
+  }
+}
+function withGaps(gaps) {
+  return (gaps.checklist ?? []).map((entry) => ({ ...entry, gaps: (gaps.gaps ?? []).filter((gap) => gap.ruleId === entry.ruleId) }));
+}
+var EXIT, LOOPBACK;
+var init_orchestrator = __esm({
+  "src/orchestrator.js"() {
+    init_errors();
+    init_trace();
+    init_planner();
+    init_planner_agent();
+    init_schema_validator();
+    init_coverage();
+    init_generator();
+    init_execution();
+    init_reporter();
+    init_storage();
+    init_documents();
+    EXIT = Object.freeze({ OK: 0, DEFECTS: 10, ESCALATED: 11, UNVALIDATED: 12, UNREACHABLE: 20, USAGE: 30, INTERNAL: 40 });
+    LOOPBACK = /* @__PURE__ */ new Set(["localhost", "127.0.0.1", "::1"]);
+  }
+});
+
+// src/draft.js
+init_errors();
+init_schema_validator();
+var FILLER_PREFIX = /^(?:a|an|the|test(?: that)?|verify(?: that)?|ensure(?: that)?)\s+/i;
+function cleanRequirement(requirement) {
+  if (typeof requirement !== "string" || requirement.trim().length === 0) {
+    throw new QaError("MISSING_REQUIREMENT", "A natural-language requirement is required");
+  }
+  return requirement.trim().replace(/[.!?]+$/, "");
+}
+function sentenceCase(value) {
+  const cleaned = value.replace(FILLER_PREFIX, "").trim();
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
+function slugify(value) {
+  const slug = value.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").replace(/-+/g, "-").slice(0, 64).replace(/-+$/g, "");
+  return slug || "semantic-test";
+}
+var SPEC_CHANNELS = Object.freeze(["web", "chat", "voice", "workflow", "api"]);
+function inferredChannel(requirement, explicit) {
+  if (explicit !== void 0) {
+    if (!SPEC_CHANNELS.includes(explicit)) {
+      throw new QaError("INVALID_CHANNEL", `Channel must be one of: ${SPEC_CHANNELS.join(", ")}`);
+    }
+    return explicit;
+  }
+  if (/chat|conversation|support agent|bot reply/i.test(requirement)) return "chat";
+  if (/voice|call|spoken|utterance|ivr/i.test(requirement)) return "voice";
+  if (/workflow|agent|pipeline|approval|automation/i.test(requirement)) return "workflow";
+  if (/\bapi\b|endpoint|webhook|contract/i.test(requirement)) return "api";
+  return "web";
+}
+function inferredExpectation(requirement) {
+  if (/check\s*out|purchase|place(?:s)? (?:an )?order/i.test(requirement)) {
+    return "Order confirmation is visible";
+  }
+  if (/log\s*in|sign\s*in/i.test(requirement)) return "Customer dashboard is visible";
+  if (/register|sign\s*up|create(?:s)? (?:an )?account/i.test(requirement)) {
+    return "Account confirmation is visible";
+  }
+  if (/search/i.test(requirement)) return "Relevant search results are visible";
+  if (/add(?:s)? .+ (?:to|into) (?:the )?cart/i.test(requirement)) {
+    return "The selected item is visible in the shopping cart";
+  }
+  if (/update|edit|change/i.test(requirement)) return "The saved changes are visible";
+  return "The requested outcome is visible to the user";
+}
+function draftSpec(requirement, options2 = {}) {
+  const cleaned = cleanRequirement(requirement);
+  const title = options2.title?.trim() || sentenceCase(cleaned);
+  const id = options2.id || slugify(title);
+  assertStableId(id);
+  const channel = inferredChannel(cleaned, options2.channel);
+  const fixtures = options2.beforeFixtures?.length ? { before: [...new Set(options2.beforeFixtures)] } : void 0;
+  const spec = {
+    version: 1,
+    id,
+    title,
+    environment: options2.environment || "local",
+    ...fixtures ? { fixtures } : {},
+    steps: [
+      {
+        intent: options2.intent?.trim() || sentenceCase(cleaned),
+        ...channel !== "web" ? { channel } : {},
+        expect: options2.expectations?.length ? options2.expectations.map((expectation) => expectation.trim()) : [inferredExpectation(cleaned)]
+      }
+    ]
+  };
+  return spec;
+}
+
+// src/index.js
+init_documents();
+init_errors();
+init_environment();
+init_execution();
+init_design();
+init_healing();
+init_native_executor();
+init_references();
+init_schema_validator();
+init_storage();
 
 // src/ui-server.js
+init_documents();
+init_errors();
+init_storage();
 import { createServer } from "node:http";
-import { readFile as readFile4 } from "node:fs/promises";
+import { readdir as readdir2, readFile as readFile4 } from "node:fs/promises";
 import path2 from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 var DEFAULT_UI_HOST = "127.0.0.1";
@@ -16636,6 +18866,54 @@ async function serveStatic(response, pathname, assetsDirectory) {
   send(response, 200, contents, asset.type);
   return true;
 }
+function orchestrationDirectory(workspace, orchestrationId) {
+  return path2.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
+}
+async function readOrchestrationJson(directory, fileName) {
+  try {
+    return JSON.parse(await readFile4(path2.join(directory, fileName), "utf8"));
+  } catch {
+    return null;
+  }
+}
+async function readTraceEvents(directory, since = 0) {
+  try {
+    const raw = await readFile4(path2.join(directory, "trace.jsonl"), "utf8");
+    const { redactSensitive: redactSensitive2 } = await Promise.resolve().then(() => (init_references(), references_exports));
+    return raw.split("\n").filter(Boolean).map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    }).filter((entry) => entry && (entry.seq ?? 0) > since).map((entry) => redactSensitive2(entry, []));
+  } catch {
+    return [];
+  }
+}
+async function listOrchestrations(workspace) {
+  let ids;
+  try {
+    ids = await readdir2(path2.join(workspace.qaDirectory, "runs", "orchestrations"));
+  } catch {
+    return [];
+  }
+  const entries = [];
+  for (const id of ids.filter((name) => name.startsWith("orch_"))) {
+    const report = await readOrchestrationJson(orchestrationDirectory(workspace, id), "report.json");
+    entries.push({
+      orchestrationId: id,
+      target: report?.target ?? null,
+      startedAt: report?.startedAt ?? null,
+      verdict: report?.summary?.verdict ?? "unknown",
+      exitCode: report?.summary?.exitCode ?? null,
+      score: report?.summary?.coverage?.score ?? null,
+      scenarios: report?.summary?.scenarios ?? null,
+      planner: report?.planSource?.planner ?? null
+    });
+  }
+  return entries.sort((a, b) => String(b.orchestrationId).localeCompare(String(a.orchestrationId)));
+}
 function createQaUiServer({
   workspace = new QaWorkspace(),
   assetsDirectory = DEFAULT_ASSETS_DIRECTORY
@@ -16705,6 +18983,43 @@ function createQaUiServer({
         send(response, 200, contents, screenshotContentType(fileName));
         return;
       }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length === 2) {
+        sendJson(response, 200, { orchestrations: await listOrchestrations(workspace) });
+        return;
+      }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length >= 3) {
+        const orchId = parts[2];
+        const directory = orchestrationDirectory(workspace, orchId);
+        if (parts[3] === "trace") {
+          const since = Number(url.searchParams.get("since") ?? 0);
+          sendJson(response, 200, { orchestrationId: orchId, events: await readTraceEvents(directory, since) });
+          return;
+        }
+        const [report, gaps, plan] = await Promise.all([
+          readOrchestrationJson(directory, "report.json"),
+          readOrchestrationJson(directory, "gaps.json"),
+          readOrchestrationJson(directory, "test-plan.json")
+        ]);
+        if (!report && !gaps && !plan) throw new QaError("NOT_FOUND", `Orchestration does not exist: ${orchId}`);
+        sendJson(response, 200, {
+          orchestrationId: orchId,
+          report,
+          checklist: gaps?.checklist ?? [],
+          gaps: gaps?.gaps ?? [],
+          untestedRisks: gaps?.untestedRisks ?? [],
+          openQuestions: plan?.openQuestions ?? [],
+          planSource: plan?.source ?? report?.planSource ?? null,
+          flows: (plan?.flows ?? []).map((flow) => ({
+            id: flow.id,
+            title: flow.title,
+            category: flow.category,
+            priority: flow.priority,
+            steps: (flow.steps ?? []).length,
+            pages: flow.pages ?? []
+          }))
+        });
+        return;
+      }
       if (request.method === "GET" && await serveStatic(response, url.pathname, assetsDirectory)) return;
       throw new QaError("NOT_FOUND", `UI route does not exist: ${url.pathname}`);
     } catch (error) {
@@ -16735,23 +19050,100 @@ async function startQaUi(options2 = {}) {
   return { ...application, url };
 }
 
+// src/index.js
+init_trace();
+init_generator();
+init_reporter();
+init_planner();
+init_coverage();
+
+// src/locator-chain.js
+var STRATEGY_ORDER2 = Object.freeze(["testid", "role", "label", "text", "css"]);
+var RANK = new Map(STRATEGY_ORDER2.map((s, i) => [s, i]));
+function buildChain(candidates = []) {
+  const seen = /* @__PURE__ */ new Set();
+  const ordered = [];
+  for (const candidate of [...candidates].sort((a, b) => (RANK.get(a.strategy) ?? 99) - (RANK.get(b.strategy) ?? 99))) {
+    const key = `${candidate.strategy}:${JSON.stringify(candidate.value)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    ordered.push(candidate);
+  }
+  return ordered;
+}
+async function resolveWithChain({ candidates = [], probe }) {
+  const chain = buildChain(candidates);
+  const attempts = [];
+  for (const candidate of chain) {
+    try {
+      const ok = probe ? await probe(candidate) : true;
+      attempts.push({ ...candidate, ok: Boolean(ok) });
+      if (ok) return { resolved: candidate, attempts, strategy: candidate.strategy, value: candidate.value };
+    } catch {
+      attempts.push({ ...candidate, ok: false });
+    }
+  }
+  return { resolved: null, attempts, strategy: null, value: null };
+}
+function triage({ failure, chainResult, observation = "", priorAttempts = 0, httpStatus = 200, consoleErrors = [], networkErrors = [] } = {}) {
+  const attempts = chainResult?.attempts ?? [];
+  const resolved = chainResult?.resolved ?? null;
+  if (failure?.code === "EXPECTATION_MUTATED" || /byte-for-byte|unchanged/i.test(String(failure?.message ?? failure ?? ""))) {
+    return { classification: "app_defect", confidence: 1, evidence: "expectation guard tripped; assertions must never be healed" };
+  }
+  if (!resolved && attempts.length === 0) {
+    return { classification: "environment", confidence: 0.6, evidence: observation || "no locator chain to probe" };
+  }
+  if (resolved && attempts.length > 1) {
+    const from = attempts[0];
+    return { classification: "broken_locator", confidence: 0.9, evidence: `primary ${from.strategy} failed, fallback ${resolved.strategy} resolved`, from, to: resolved };
+  }
+  if (!resolved) {
+    if (httpStatus === 0 || failure?.code === "ENVIRONMENT_UNREACHABLE") {
+      return { classification: "environment", confidence: 0.95, evidence: "target unreachable" };
+    }
+    if ([404, 500, 502, 503].includes(httpStatus) || httpStatus >= 500 || (consoleErrors?.length ?? 0) > 0 || (networkErrors?.length ?? 0) > 0) {
+      return { classification: "app_defect", confidence: 0.85, evidence: `chain exhausted with HTTP ${httpStatus} or console/network errors` };
+    }
+    if (priorAttempts > 0) {
+      return { classification: "flaky", confidence: 0.6, evidence: "exhausted after prior attempts" };
+    }
+    return { classification: "app_defect", confidence: 0.7, evidence: observation || "expected text absent from DOM" };
+  }
+  if (priorAttempts > 0 && attempts.length === 1) {
+    return { classification: "flaky", confidence: 0.8, evidence: "passed on retry with identical locator" };
+  }
+  return { classification: "broken_locator", confidence: 0.7, evidence: "single-strategy resolution" };
+}
+
+// src/index.js
+init_orchestrator();
+init_planner_agent();
+
 // src/cli.js
 import { readFile as readFile5, unlink as unlink2 } from "node:fs/promises";
-import path3 from "node:path";
-import { spawnSync } from "node:child_process";
+import path6 from "node:path";
+import { spawnSync as spawnSync2 } from "node:child_process";
+init_documents();
+init_errors();
+init_execution();
+init_storage();
 var HELP = `qa-agent \u2014 semantic QA workspace and native execution runtime
 
 Usage:
   qa-agent init [--empty] [--root <repository>]
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
-  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
+  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
+  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>]
+                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent audit <run-id>
   qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
@@ -16809,7 +19201,7 @@ function assertNoUnknownOptions(args) {
 }
 async function input(fileName) {
   try {
-    return await readFile5(fileName === "-" ? 0 : path3.resolve(fileName), "utf8");
+    return await readFile5(fileName === "-" ? 0 : path6.resolve(fileName), "utf8");
   } catch (error) {
     if (error.code === "ENOENT") throw new QaError("NOT_FOUND", `Input file does not exist: ${fileName}`);
     throw error;
@@ -16824,11 +19216,11 @@ function printList(items, fields, output) {
 }
 async function editSpec(workspace, id) {
   const spec = await workspace.loadSpec(id);
-  const stagingPath = path3.join(workspace.specsDirectory, `.${id}.edit-${process.pid}.yaml`);
+  const stagingPath = path6.join(workspace.specsDirectory, `.${id}.edit-${process.pid}.yaml`);
   await atomicWriteFile(stagingPath, stringifyYaml(spec));
   try {
-    const editor = process.env.VISUAL || process.env.EDITOR || "vi";
-    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: false });
+    const editor = process.env.VISUAL || process.env.EDITOR || (process.platform === "win32" ? "notepad" : "vi");
+    const result = spawnSync2(editor, [stagingPath], { stdio: "inherit", shell: process.platform === "win32" });
     if (result.error) throw result.error;
     if (result.status !== 0) throw new QaError("EDITOR_FAILED", `${editor} exited with status ${result.status}`);
     return await workspace.saveSpec(await readFile5(stagingPath, "utf8"));
@@ -17004,6 +19396,82 @@ async function resultCommand(workspace, args, output) {
   }
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);
 }
+function auditResult({ spec, result }) {
+  const checks = [];
+  const push = (name, passed2, detail) => checks.push({ name, passed: passed2, ...detail ? { detail } : {} });
+  const classifications = /* @__PURE__ */ new Set(["passed", "healed", "functional_regression", "design_regression", "blocked"]);
+  push("classification is known", classifications.has(result.classification), result.classification);
+  const specSteps = new Map(spec.steps.map((step) => [step.index ?? spec.steps.indexOf(step) + 1, step]));
+  let expectationsIntact = true;
+  let channelsIntact = true;
+  for (const step of result.steps ?? []) {
+    const specStep = spec.steps[(step.index ?? 1) - 1];
+    if (!specStep) {
+      expectationsIntact = false;
+      channelsIntact = false;
+      continue;
+    }
+    const recorded = (step.expectations ?? []).map((entry) => entry.expectation);
+    if (JSON.stringify(recorded) !== JSON.stringify(specStep.expect)) expectationsIntact = false;
+    if ((step.channel ?? "web") !== (specStep.channel ?? "web")) channelsIntact = false;
+  }
+  push("expectations byte-for-byte unchanged", expectationsIntact);
+  push("channels unchanged", channelsIntact);
+  const healedSteps = (result.steps ?? []).filter((step) => step.healing?.outcome === "healed");
+  const healingEvidence = healedSteps.every((step) => Boolean(step.healing.beforeScreenshot) && Boolean(step.healing.afterScreenshot));
+  push(
+    "healing has before/after evidence",
+    healedSteps.length === 0 || healingEvidence,
+    healedSteps.length === 0 ? "no healing claimed" : `${healedSteps.length} healed step(s)`
+  );
+  if (result.classification === "healed") {
+    push("healed classification has recovery", healedSteps.length > 0);
+    push("healed run has no failed steps", !(result.steps ?? []).some((step) => step.status !== "passed"));
+  }
+  if (spec.design) {
+    const design = result.design;
+    push("declared design check completed", Boolean(design) && design.status !== "not_checked", design?.status ?? "missing");
+    if (design?.status === "regression") {
+      push(
+        "design regression has concrete findings",
+        (design.findings ?? []).some((finding) => finding.status === "regression")
+      );
+      push("design regression has actual evidence", Boolean(design.actualScreenshot));
+    }
+  } else {
+    push("no undeclared design result", !result.design);
+  }
+  const screenshots = new Set(result.evidence?.screenshots ?? []);
+  const declaredScreenshots = [
+    ...healedSteps.flatMap((step) => [step.healing.beforeScreenshot, step.healing.afterScreenshot]),
+    ...result.design?.actualScreenshot ? [result.design.actualScreenshot] : [],
+    ...result.design?.referenceScreenshot ? [result.design.referenceScreenshot] : []
+  ].filter(Boolean);
+  push(
+    "declared screenshots are in evidence",
+    declaredScreenshots.every((name) => screenshots.has(name)),
+    `${declaredScreenshots.length} declared`
+  );
+  const serialized = JSON.stringify(result);
+  push("no resolved secret placeholder leaked", !/\b(QA_CUSTOMER_PASSWORD|QA_STAGING_URL)\s*[:=]/i.test(serialized));
+  void specSteps;
+  const passed = checks.every((check) => check.passed);
+  return { passed, checks };
+}
+async function auditCommand(workspace, args, output) {
+  const runId = args.shift();
+  if (!runId) throw new QaError("MISSING_ARGUMENT", "audit requires a run ID");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected audit argument: ${args[0]}`);
+  const result = await workspace.loadResult(runId);
+  const spec = await workspace.loadSpec(result.specId);
+  const audit = auditResult({ spec, result });
+  for (const check of audit.checks) {
+    output(`${check.passed ? "PASS" : "FAIL"}	${check.name}${check.detail ? `	${check.detail}` : ""}`);
+  }
+  output(audit.passed ? `Governance audit passed for ${runId}` : `Governance audit failed for ${runId}`);
+  return audit.passed ? 0 : 1;
+}
 async function runCli(argv = process.argv.slice(2), io = {}) {
   const output = io.output ?? console.log;
   const errorOutput = io.error ?? console.error;
@@ -17031,6 +19499,7 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
     if (command === "create") {
       const id = option(args, "--id");
       const environment = option(args, "--env");
+      const channel = option(args, "--channel");
       const expectations = options(args, "--expect");
       const beforeFixtures = options(args, "--fixture-before");
       assertNoUnknownOptions(args);
@@ -17045,7 +19514,7 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
           if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
         }
       }
-      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures });
+      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures, channel });
       await workspace.saveSpec(spec);
       await workspace.selectSpec(spec.id, spec.environment);
       output(`Created .qa/specs/${spec.id}.yaml`);
@@ -17081,6 +19550,77 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected run-last argument: ${args[0]}`);
       const selected = await workspace.readLastTest();
       return await runCommand(workspace, selected.specId, selected.environment, io, output);
+    } else if (command === "audit") {
+      return await auditCommand(workspace, args, output);
+    } else if (command === "orchestrate") {
+      const { orchestrate: orchestrate2 } = await Promise.resolve().then(() => (init_orchestrator(), orchestrator_exports));
+      const { readFile: readPrdFile } = await import("node:fs/promises");
+      const url = option(args, "--url");
+      const username = option(args, "--username") ?? process.env.QA_USERNAME;
+      const password = option(args, "--password") ?? process.env.QA_PASSWORD;
+      const prompt = option(args, "--prompt") ?? "";
+      const prdPath = option(args, "--prd");
+      const outDir = option(args, "--out");
+      const maxReplansValue = option(args, "--max-replans");
+      const allowRemote = flag(args, "--allow-remote");
+      const json = flag(args, "--json");
+      const planOnly = flag(args, "--plan-only");
+      const planPath = option(args, "--plan");
+      assertNoUnknownOptions(args);
+      if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected orchestrate argument: ${args[0]}`);
+      if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
+      const maxReplans = maxReplansValue === void 0 ? 2 : Number(maxReplansValue);
+      if (!Number.isInteger(maxReplans) || maxReplans < 1) throw new QaError("INVALID_OPTION_VALUE", "--max-replans must be a positive integer");
+      let prdText;
+      if (prdPath) {
+        try {
+          prdText = await readPrdFile(prdPath, "utf8");
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `PRD file is unreadable: ${prdPath}`);
+        }
+      }
+      let planner = io.planner;
+      if (planPath) {
+        let draft;
+        try {
+          draft = parseJson(await readPrdFile(planPath, "utf8"));
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `Plan draft is unreadable or not JSON: ${planPath}`);
+        }
+        planner = async () => draft;
+      }
+      const { report, plan, exitCode, error } = await orchestrate2({
+        url,
+        username,
+        password,
+        prompt,
+        prdText,
+        outDir,
+        root,
+        maxReplans,
+        allowRemote,
+        planOnly,
+        planner,
+        executor: io.nativeExecutor,
+        variables: io.variables ?? process.env,
+        fetchImpl: io.fetchImpl
+      });
+      if (error) throw error;
+      if (json) output(JSON.stringify({ exitCode, report, ...plan ? { plan } : {} }));
+      else {
+        const counts = report.summary.scenarios;
+        const source = report.planSource ?? plan?.source;
+        output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
+        if (source) {
+          output(`Planner: ${source.planner}${source.fellBack ? ` \u2014 FELL BACK: ${source.fallbackReason}` : ""}`);
+        }
+        if (planOnly) output(`Plan only: ${plan?.flows?.length ?? 0} flows \xB7 coverage ${report.summary.coverage.score}`);
+        else {
+          output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean \xB7 ${counts.blocked ?? 0} blocked \xB7 ${counts.failed} failed \xB7 coverage ${report.summary.coverage.score}`);
+        }
+        output(`Report: ${report.artifacts.specs} + report.json`);
+      }
+      return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
     } else if (command === "select") {
       const environment = option(args, "--env");
       const id = args[0];
@@ -17110,42 +19650,96 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
   }
 }
 export {
+  COVERAGE_RULES,
   DEFAULT_DESIGN_VIEWPORT,
   DESIGN_COMPARISON_RULES,
+  EXIT,
   MAX_RECENT_RUNS_PER_SPEC,
   NativeExecutor,
+  ORCHESTRATION_ERROR_CODES,
+  PLANNER_INSTRUCTIONS,
+  PROMPT_ALIASES,
   QaError,
   QaWorkspace,
+  SPEC_CHANNELS,
+  STRATEGY_ORDER,
   assertStableId,
+  assertTargetAllowed,
   atomicWriteFile,
+  authDetailsFrom,
+  authenticate,
+  bindLocators,
+  buildChain,
   buildDesignComparisonRequest,
+  buildPlannerBrief,
+  buildReport,
+  buildTestPlan,
+  channelFor,
   classifyFailure,
+  computeUntestedRisk,
+  crawl,
   createExpectationGuard,
   createNativeDesktopExecutor,
   createNativeWebExecutor,
   createQaUiServer,
   createRunId,
+  createTracer,
+  decideVerdict,
   designConfigurationForSpec,
+  detectLoginForm,
   detectNativeCapability,
+  diffPrd,
   draftSpec,
+  evaluatePlan,
   executeRun,
+  expectationPredicate,
+  expectationProse,
   formatQaError,
+  generate,
+  inputCandidates,
   isStableId,
+  mergeActionSteps,
   normalizeDesignComparison,
+  normalizePlan,
   normalizeRediscovery,
   normalizeTarget,
+  orchestrate,
+  parseHtml,
   parseJson,
+  parsePrd,
   parseYaml,
+  planStages,
+  planToSpecs,
+  planWithAgent,
+  predicateToPlaywright,
   prepareEnvironment,
+  promptMatches,
   redactSensitive,
+  renderAuthHelper,
+  renderGapsMarkdown,
+  renderPlaywrightSpec,
+  renderReportMarkdown,
+  renderResolveHelper,
+  renderSiteMapBrief,
+  renderTestPlanMarkdown,
+  replan,
   resolveDesignReference,
   resolveReference,
   resolveReferences,
+  resolveWithChain,
+  reviewDraft,
   runCli,
+  scorePlan,
+  selectorCandidates,
   slugify,
   spawnApplication,
   startQaUi,
+  stopProcessTree,
   stringifyJson,
   stringifyYaml,
-  validateDocument
+  traceEvent,
+  triage,
+  validateDocument,
+  validateSelectors,
+  writeReport
 };

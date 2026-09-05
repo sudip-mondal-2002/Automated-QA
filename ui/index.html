@@ -105,6 +105,48 @@
           </div>
         </div>
       </section>
+      <section class="panel orchestration-panel" id="orchestration-panel" aria-labelledby="orchestration-title" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Autonomous orchestration</p>
+            <h2 id="orchestration-title">Decision timeline</h2>
+          </div>
+          <span class="count" id="orchestrations-badge">0</span>
+        </div>
+        <div class="orchestration-grid">
+          <div class="stack-list orchestration-list" id="orchestrations-list"></div>
+          <div class="orchestration-detail" id="orchestration-detail">
+            <div class="empty-result" id="orchestration-empty">
+              <span class="empty-icon" aria-hidden="true">⌁</span>
+              <h2>Choose an orchestration</h2>
+              <p>Stage timeline, gate scoring, planned flows, and per-scenario triage will appear here.</p>
+            </div>
+            <div id="orchestration-body" hidden>
+              <dl class="result-metadata" id="orchestration-metadata"></dl>
+
+              <div class="detail-heading"><h3>Coverage gate</h3><span id="gate-score"></span></div>
+              <div class="gate-list" id="gate-list"></div>
+
+              <div class="detail-heading"><h3>Stage timeline</h3><span id="timeline-count"></span></div>
+              <ol class="timeline" id="timeline"></ol>
+
+              <div class="orchestration-columns">
+                <div>
+                  <div class="detail-heading"><h3>Planned flows</h3><span id="flow-count"></span></div>
+                  <div class="flow-list" id="flow-list"></div>
+                </div>
+                <div>
+                  <div class="detail-heading"><h3>Scenarios and triage</h3><span id="scenario-count"></span></div>
+                  <div class="scenario-list" id="scenario-list"></div>
+                </div>
+              </div>
+
+              <div class="detail-heading"><h3>Declared unknowns</h3><span id="unknown-count"></span></div>
+              <div class="unknown-list" id="unknown-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

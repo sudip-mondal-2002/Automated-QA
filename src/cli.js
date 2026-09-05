@@ -14,13 +14,16 @@ Usage:
   qa-agent init [--empty] [--root <repository>]
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
-  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
+  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
+  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>]
+                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent audit <run-id>
   qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
@@ -104,8 +107,12 @@ async function editSpec(workspace, id) {
   const stagingPath = path.join(workspace.specsDirectory, `.${id}.edit-${process.pid}.yaml`);
   await atomicWriteFile(stagingPath, stringifyYaml(spec));
   try {
-    const editor = process.env.VISUAL || process.env.EDITOR || "vi";
-    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: false });
+    const editor = process.env.VISUAL || process.env.EDITOR || (process.platform === "win32" ? "notepad" : "vi");
+    // Most Windows editors are `.cmd`/`.bat` shims, which Node refuses to spawn
+    // without a shell (CVE-2024-27980). The editor is the developer's own
+    // configured command, so deferring to the shell there is the same trust
+    // boundary git and npm use.
+    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: process.platform === "win32" });
     if (result.error) throw result.error;
     if (result.status !== 0) throw new QaError("EDITOR_FAILED", `${editor} exited with status ${result.status}`);
     return await workspace.saveSpec(await readFile(stagingPath, "utf8"));
@@ -274,8 +281,7 @@ async function resultCommand(workspace, args, output) {
   if (action === "show") {
     output(stringifyJson(await workspace.loadResult(args[0])));
     return;
-  }
-  if (action === "validate") {
+  }  if (action === "validate") {
     if (!args[0]) throw new QaError("MISSING_ARGUMENT", "result validate requires a JSON file or '-'");
     const value = workspace.validateResult(await input(args[0]));
     output(`Valid result: ${value.runId}`);
@@ -294,6 +300,91 @@ async function resultCommand(workspace, args, output) {
     return;
   }
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);
+}
+
+export function auditResult({ spec, result }) {
+  const checks = [];
+  const push = (name, passed, detail) => checks.push({ name, passed, ...(detail ? { detail } : {}) });
+
+  const classifications = new Set(["passed", "healed", "functional_regression", "design_regression", "blocked"]);
+  push("classification is known", classifications.has(result.classification), result.classification);
+
+  const specSteps = new Map(spec.steps.map((step) => [step.index ?? spec.steps.indexOf(step) + 1, step]));
+  let expectationsIntact = true;
+  let channelsIntact = true;
+  for (const step of result.steps ?? []) {
+    const specStep = spec.steps[(step.index ?? 1) - 1];
+    if (!specStep) {
+      expectationsIntact = false;
+      channelsIntact = false;
+      continue;
+    }
+    const recorded = (step.expectations ?? []).map((entry) => entry.expectation);
+    if (JSON.stringify(recorded) !== JSON.stringify(specStep.expect)) expectationsIntact = false;
+    if ((step.channel ?? "web") !== (specStep.channel ?? "web")) channelsIntact = false;
+  }
+  push("expectations byte-for-byte unchanged", expectationsIntact);
+  push("channels unchanged", channelsIntact);
+
+  const healedSteps = (result.steps ?? []).filter((step) => step.healing?.outcome === "healed");
+  const healingEvidence = healedSteps.every((step) => Boolean(step.healing.beforeScreenshot) && Boolean(step.healing.afterScreenshot));
+  push(
+    "healing has before/after evidence",
+    healedSteps.length === 0 || healingEvidence,
+    healedSteps.length === 0 ? "no healing claimed" : `${healedSteps.length} healed step(s)`,
+  );
+  if (result.classification === "healed") {
+    push("healed classification has recovery", healedSteps.length > 0);
+    push("healed run has no failed steps", !(result.steps ?? []).some((step) => step.status !== "passed"));
+  }
+
+  if (spec.design) {
+    const design = result.design;
+    push("declared design check completed", Boolean(design) && design.status !== "not_checked", design?.status ?? "missing");
+    if (design?.status === "regression") {
+      push(
+        "design regression has concrete findings",
+        (design.findings ?? []).some((finding) => finding.status === "regression"),
+      );
+      push("design regression has actual evidence", Boolean(design.actualScreenshot));
+    }
+  } else {
+    push("no undeclared design result", !result.design);
+  }
+
+  const screenshots = new Set(result.evidence?.screenshots ?? []);
+  const declaredScreenshots = [
+    ...healedSteps.flatMap((step) => [step.healing.beforeScreenshot, step.healing.afterScreenshot]),
+    ...(result.design?.actualScreenshot ? [result.design.actualScreenshot] : []),
+    ...(result.design?.referenceScreenshot ? [result.design.referenceScreenshot] : []),
+  ].filter(Boolean);
+  push(
+    "declared screenshots are in evidence",
+    declaredScreenshots.every((name) => screenshots.has(name)),
+    `${declaredScreenshots.length} declared`,
+  );
+
+  const serialized = JSON.stringify(result);
+  push("no resolved secret placeholder leaked", !/\b(QA_CUSTOMER_PASSWORD|QA_STAGING_URL)\s*[:=]/i.test(serialized));
+
+  void specSteps;
+  const passed = checks.every((check) => check.passed);
+  return { passed, checks };
+}
+
+async function auditCommand(workspace, args, output) {
+  const runId = args.shift();
+  if (!runId) throw new QaError("MISSING_ARGUMENT", "audit requires a run ID");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected audit argument: ${args[0]}`);
+  const result = await workspace.loadResult(runId);
+  const spec = await workspace.loadSpec(result.specId);
+  const audit = auditResult({ spec, result });
+  for (const check of audit.checks) {
+    output(`${check.passed ? "PASS" : "FAIL"}\t${check.name}${check.detail ? `\t${check.detail}` : ""}`);
+  }
+  output(audit.passed ? `Governance audit passed for ${runId}` : `Governance audit failed for ${runId}`);
+  return audit.passed ? 0 : 1;
 }
 
 export async function runCli(argv = process.argv.slice(2), io = {}) {
@@ -328,6 +419,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     if (command === "create") {
       const id = option(args, "--id");
       const environment = option(args, "--env");
+      const channel = option(args, "--channel");
       const expectations = options(args, "--expect");
       const beforeFixtures = options(args, "--fixture-before");
       assertNoUnknownOptions(args);
@@ -342,7 +434,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
           if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
         }
       }
-      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures });
+      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures, channel });
       await workspace.saveSpec(spec);
       await workspace.selectSpec(spec.id, spec.environment);
       output(`Created .qa/specs/${spec.id}.yaml`);
@@ -380,6 +472,71 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected run-last argument: ${args[0]}`);
       const selected = await workspace.readLastTest();
       return await runCommand(workspace, selected.specId, selected.environment, io, output);
+    } else if (command === "audit") {
+      return await auditCommand(workspace, args, output);
+    } else if (command === "orchestrate") {
+      const { orchestrate } = await import("./orchestrator.js");
+      const { readFile: readPrdFile } = await import("node:fs/promises");
+      const url = option(args, "--url");
+      const username = option(args, "--username") ?? process.env.QA_USERNAME;
+      const password = option(args, "--password") ?? process.env.QA_PASSWORD;
+      const prompt = option(args, "--prompt") ?? "";
+      const prdPath = option(args, "--prd");
+      const outDir = option(args, "--out");
+      const maxReplansValue = option(args, "--max-replans");
+      const allowRemote = flag(args, "--allow-remote");
+      const json = flag(args, "--json");
+      const planOnly = flag(args, "--plan-only");
+      // A plan authored by the Planner sub-agent, handed back on disk. The
+      // runtime never calls a model itself; this is the file-based half of the
+      // same capability `io.planner` provides in process.
+      const planPath = option(args, "--plan");
+      assertNoUnknownOptions(args);
+      if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected orchestrate argument: ${args[0]}`);
+      if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
+      const maxReplans = maxReplansValue === undefined ? 2 : Number(maxReplansValue);
+      if (!Number.isInteger(maxReplans) || maxReplans < 1) throw new QaError("INVALID_OPTION_VALUE", "--max-replans must be a positive integer");
+      let prdText;
+      if (prdPath) {
+        try {
+          prdText = await readPrdFile(prdPath, "utf8");
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `PRD file is unreadable: ${prdPath}`);
+        }
+      }
+      let planner = io.planner;
+      if (planPath) {
+        let draft;
+        try {
+          draft = parseJson(await readPrdFile(planPath, "utf8"));
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `Plan draft is unreadable or not JSON: ${planPath}`);
+        }
+        // A draft on disk is a one-shot answer: the same document every time,
+        // so a rejection falls back rather than looping on an unchanging file.
+        planner = async () => draft;
+      }
+      const { report, plan, exitCode, error } = await orchestrate({
+        url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote, planOnly,
+        planner,
+        executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl,
+      });
+      if (error) throw error;
+      if (json) output(JSON.stringify({ exitCode, report, ...(plan ? { plan } : {}) }));
+      else {
+        const counts = report.summary.scenarios;
+        const source = report.planSource ?? plan?.source;
+        output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
+        if (source) {
+          output(`Planner: ${source.planner}${source.fellBack ? ` — FELL BACK: ${source.fallbackReason}` : ""}`);
+        }
+        if (planOnly) output(`Plan only: ${plan?.flows?.length ?? 0} flows · coverage ${report.summary.coverage.score}`);
+        else {
+          output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean · ${counts.blocked ?? 0} blocked · ${counts.failed} failed · coverage ${report.summary.coverage.score}`);
+        }
+        output(`Report: ${report.artifacts.specs} + report.json`);
+      }
+      return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
     }
     else if (command === "select") {
       const environment = option(args, "--env");

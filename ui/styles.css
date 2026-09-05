@@ -194,3 +194,58 @@ button:disabled { cursor: not-allowed; opacity: .48; }
   .summary-strip span { padding: 0 9px; font-size: 10px; }
   .screenshot-grid { grid-template-columns: 1fr; }
 }
+
+/* ---- Autonomous orchestration ------------------------------------------ */
+
+.orchestration-panel { margin-top: 18px; }
+.orchestration-grid { display: grid; grid-template-columns: minmax(240px, 300px) minmax(0, 1fr); gap: 0; }
+.orchestration-list { align-content: start; border-right: 1px solid var(--line); max-height: 720px; overflow-y: auto; }
+.orchestration-detail { padding: 4px 18px 20px; min-width: 0; }
+
+.gate-list { display: grid; gap: 8px; margin: 12px 0 20px; }
+.gate-row { padding: 10px 12px; border: 1px solid var(--line); border-left-width: 3px; border-radius: 8px; background: #fcfcfd; }
+.gate-row.gate-pass { border-left-color: var(--green); }
+.gate-row.gate-fail { border-left-color: var(--red); }
+.gate-row.gate-skipped { border-left-color: #d0d5dd; opacity: .72; }
+.gate-row-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gate-rule { font-family: "SFMono-Regular", Consolas, monospace; font-size: 11px; font-weight: 700; }
+.gate-detail { margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.gate-hint { margin: 6px 0 0; padding: 8px 10px; border-radius: 6px; background: var(--blue-soft); color: #175cd3; font-size: 11.5px; line-height: 1.5; }
+
+.severity { padding: 2px 6px; border-radius: 4px; font-size: 9.5px; font-weight: 750; text-transform: uppercase; letter-spacing: .03em; }
+.severity-blocking { color: var(--red); background: var(--red-soft); }
+.severity-advisory { color: var(--muted); background: #f2f4f7; }
+
+.timeline { list-style: none; margin: 12px 0 20px; padding: 0 0 0 6px; }
+.timeline-stage { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; padding-bottom: 14px; }
+.timeline-stage::before { content: ""; position: absolute; left: 7px; top: 16px; bottom: 0; width: 1px; background: var(--line); }
+.timeline-stage:last-child::before { display: none; }
+.timeline-marker { width: 9px; height: 9px; margin-top: 5px; border-radius: 999px; background: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+.timeline-stage.warned .timeline-marker { background: var(--amber); box-shadow: 0 0 0 3px var(--amber-soft); }
+.timeline-stage-name { margin: 0 0 4px; font-size: 12px; font-weight: 750; }
+.timeline-event { display: flex; gap: 8px; margin: 0 0 2px; color: var(--muted); font-size: 11.5px; line-height: 1.55; }
+.timeline-event code { flex: 0 0 auto; color: #475467; font-family: "SFMono-Regular", Consolas, monospace; font-size: 10.5px; }
+.timeline-event.warn { color: var(--amber); }
+.timeline-event.warn code { color: var(--amber); }
+
+.orchestration-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+.flow-list, .scenario-list { display: grid; gap: 7px; margin-top: 12px; }
+.flow-row, .scenario-row { padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fcfcfd; }
+.flow-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+.chip { padding: 2px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 750; text-transform: uppercase; letter-spacing: .03em; }
+.chip-happy { color: var(--green); background: var(--green-soft); }
+.chip-error { color: var(--red); background: var(--red-soft); }
+.chip-edge { color: var(--violet); background: var(--violet-soft); }
+.chip-unknown { color: var(--amber); background: var(--amber-soft); }
+
+.unknown-list { display: grid; gap: 6px; margin-top: 12px; }
+.unknown-row { display: flex; align-items: flex-start; gap: 9px; margin: 0; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); font-size: 12px; line-height: 1.55; background: #fcfcfd; }
+.unknown-row .chip { flex: 0 0 auto; margin-top: 1px; }
+
+@media (max-width: 900px) {
+  .orchestration-grid { grid-template-columns: minmax(0, 1fr); }
+  .orchestration-list { border-right: 0; border-bottom: 1px solid var(--line); max-height: 260px; }
+}
+.chip-low { color: var(--muted); background: #f2f4f7; }
+.chip-prd { color: var(--red); background: var(--red-soft); }
