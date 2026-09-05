@@ -15,7 +15,7 @@ Usage:
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
-  qa-agent result <list|show|validate|save> [run-id|file]
+  qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
   qa-agent select <spec-id> [--env <id>]
@@ -229,6 +229,12 @@ async function resultCommand(workspace, args, output) {
     if (!args[0]) throw new QaError("MISSING_ARGUMENT", "result save requires a JSON file or '-'");
     const value = await workspace.saveResult(await input(args[0]));
     output(`Saved .qa/runs/${value.runId}/result.json`);
+    return;
+  }
+  if (action === "delete") {
+    if (!args[0]) throw new QaError("MISSING_ARGUMENT", "result delete requires a run ID");
+    await workspace.deleteResult(args[0]);
+    output(`Deleted result ${args[0]}`);
     return;
   }
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);

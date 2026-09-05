@@ -115,6 +115,12 @@ test("between-step fixtures are accepted only at meaningful boundaries", async (
     () => workspace.saveSpec(spec),
     (error) => error instanceof QaError && error.code === "INVALID_FIXTURE_POSITION",
   );
+  spec.fixtures.between[0].afterStep = 1;
+  spec.design = { reference: "https://design.example/approved.png", afterStep: 3 };
+  await assert.rejects(
+    () => workspace.saveSpec(spec),
+    (error) => error instanceof QaError && error.code === "INVALID_DESIGN_POSITION",
+  );
 });
 
 test("environment updates cannot strand existing specs", async (t) => {

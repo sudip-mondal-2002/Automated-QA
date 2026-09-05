@@ -63,6 +63,10 @@ export class NativeExecutor {
     return this.driver.waitFor?.(expectation, context);
   }
 
+  compareDesign(request, context) {
+    return this.driver.compareDesign?.(request, context);
+  }
+
   consoleErrors(context) {
     return this.driver.consoleErrors?.(context);
   }

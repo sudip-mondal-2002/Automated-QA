@@ -1,11 +1,11 @@
 ---
 name: autonomous-qa
-description: Create, inspect, edit, validate, run, and safely self-heal repository-scoped semantic QA specs and reusable fixtures through native Browser/Chrome or computer-use capabilities. Use when a user describes a UI journey, reusable QA setup, run, rerun, or harmless interaction drift in natural language; do not claim design comparison before that later phase is implemented.
+description: Create, inspect, edit, validate, run, safely self-heal, and compare explicit design references for repository-scoped semantic QA specs through native Browser/Chrome or computer-use capabilities.
 ---
 
 # Autonomous QA — Native execution
 
-Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 3 supports real actions, observations, fixtures, cleanup, screenshots, structured results, semantic target rediscovery, observable-readiness recovery, and conservative failure classification. Design comparison and the localhost UI remain later-phase work.
+Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 4 adds explicit-reference design comparison, declared-viewport evidence, concise visual findings, recent-run retention, and safe run deletion to the existing native execution and conservative self-healing runtime. The localhost UI remains later-phase work.
 
 ## Create and edit workflow
 
@@ -37,9 +37,11 @@ Treat `run <spec-id> [--env <id>]` and `run-last` as skill operations. `run-last
 7. If a test action fails or its target is missing, capture the current state and ask the native executor to rediscover an accessible target from the unchanged intent, current UI, failed/previous target summary, and original expectations. Retry only when the executor explicitly confirms that the replacement is equivalent. Never heal fixture postconditions.
 8. If an action succeeded but an expectation may be waiting on UI readiness, use an observable readiness wait only when the native executor exposes it. Re-observe every original expectation afterward; never use a fixed delay.
 9. A successful recovery must preserve the expectation list byte-for-byte, capture before/after screenshots, and record the original failure, replacement, strategy, outcome, and verification. Emit `healed` only when all test steps pass and at least one recovery verified the unchanged expectations. If verification still fails, record `functional_regression`; if recovery is unavailable, ambiguous, or blocked, fail safely without guessing a pass.
-10. Always attempt `after` fixtures in a finally-style cleanup path after pass, failure, healing, or cancellation when the native session is usable. Record cleanup failures separately; they must not replace the primary classification.
-11. Report console and network errors only when the active native capability exposes them. Otherwise record the inspection as unsupported rather than assuming there were no errors.
-12. Save the validated result through the file-backed workspace so `last-test.json` atomically gains `lastRunId`. Return the classification, concise explanation, result path, and screenshot paths.
+10. When the spec declares `design`, resolve that explicit image, URL, or Figma reference before execution. At `design.afterStep` (or the last step by default), capture the rendered state at the declared viewport and invoke native design comparison using the fixed focused rules. Require concrete findings for component/content presence, major layout/order/grouping/alignment, or obvious style changes. Minor rendering differences and unsupported opinions cannot produce `design_regression`.
+11. Keep functional and design decisions separate. A functional failure remains `functional_regression`; only an otherwise functional run with a supported reference mismatch becomes `design_regression`. Missing comparison capability or evidence blocks the declared design check instead of guessing.
+12. Always attempt `after` fixtures in a finally-style cleanup path after pass, failure, healing, design comparison, or cancellation when the native session is usable. Record cleanup failures separately; they must not replace the primary classification.
+13. Report console and network errors only when the active native capability exposes them. Otherwise record the inspection as unsupported rather than assuming there were no errors.
+14. Save the validated result through the file-backed workspace so `last-test.json` atomically gains `lastRunId`. Return the classification, concise explanation, result path, and screenshot paths.
 
 ## Native execution boundary
 
@@ -51,24 +53,23 @@ The repository runtime's executor contract has five semantic responsibilities:
 - `observe(expectation, context)` returning `passed`, `failed`, or `blocked` plus a visible observation;
 - `screenshot(context)` returning PNG, JPEG, or WebP data.
 
-Phase 3 adapters may additionally expose `rediscover(intent, context)`, `recover(intent, target, context)`, and `waitFor(expectation, context)`. A rediscovered target is eligible only with `equivalent: true` and an accessible target summary. Console inspection, network inspection, and close are optional. Keep adapter-specific details outside `.qa/` documents. Native Browser/Chrome or computer-use tooling is the adapter; Playwright, Stagehand, DOM-selector scripts, coordinate scripts, and fixed sleeps are out of scope.
+Adapters may additionally expose `rediscover(intent, context)`, `recover(intent, target, context)`, `waitFor(expectation, context)`, and `compareDesign(request, context)`. A rediscovered target is eligible only with `equivalent: true` and an accessible target summary. Design screenshots receive the declared viewport in their screenshot context; comparison returns `matched`, `regression`, or `blocked` plus structured findings. Console inspection, network inspection, and close are optional. Keep adapter-specific details outside `.qa/` documents. Native Browser/Chrome or computer-use tooling is the adapter; Playwright, Stagehand, DOM-selector scripts, coordinate scripts, and fixed sleeps are out of scope.
 
 ## Events and results
 
-Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, healing start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
+Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, healing start/completion, design start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
 
-Phase 3 may emit:
+Phase 4 may emit:
 
 - `passed` when declared expectations pass;
 - `healed` when interaction mechanics changed and unchanged expectations pass after evidence-backed recovery;
 - `functional_regression` for a direct failed action or observable outcome;
+- `design_regression` only for a concrete mismatch supported by an explicit reference, actual screenshot, declared viewport, and structured regression finding;
 - `blocked` when execution could not reliably proceed.
-
-The broader schema reserves `design_regression` for the next phase. Never use it without an explicit design reference and the Phase 4 comparison workflow.
 
 ## Inputs and outputs
 
-- Input: natural-language journey, optional environment, reusable fixtures, explicit expectations, and optional design-reference metadata for later phases.
+- Input: natural-language journey, optional environment, reusable fixtures, explicit expectations, and optional explicit design-reference metadata.
 - Output: validated YAML under `.qa/`; validated JSON plus screenshots under `.qa/runs/`; and an atomic `.qa/last-test.json` pointer.
 - IDs use lowercase words separated by hyphens and remain stable after creation.
 
@@ -81,8 +82,11 @@ The broader schema reserves `design_regression` for the next phase. Never use it
 - A replacement target must be explicitly equivalent; similarity alone is insufficient.
 - Successful healing requires before/after evidence and unchanged-expectation verification.
 - A later functional failure overrides an earlier successful healing for the run classification.
+- Agent taste alone cannot produce a design regression; every regression requires an explicit reference and concrete finding.
+- Design baselines, expected components, and visual findings are never healed or updated automatically.
+- Design evidence records the reference, checkpoint, viewport, actual screenshot, and concise comparison result.
 - Use native Browser/Chrome for web UI and computer use only for desktop/native UI.
 - Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, or Stagehand.
-- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not compare design references, repair application code, update baselines, or claim later-phase behavior.
+- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not repair application code, update baselines, perform pixel-perfect diffing, or claim the Phase 5 localhost UI.
 
 The schemas in [`schemas/`](../../../schemas/) remain the authoritative structural contracts. The CLI adds cross-file reference checks, execution orchestration, atomic writes, and path-based validation errors.

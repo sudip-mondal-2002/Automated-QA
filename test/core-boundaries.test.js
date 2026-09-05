@@ -141,6 +141,7 @@ test("native executor capability detection and forwarding are explicit", async (
     rediscover: (...args) => calls.push(["rediscover", ...args]),
     recover: (...args) => calls.push(["recover", ...args]),
     waitFor: (...args) => calls.push(["waitFor", ...args]),
+    compareDesign: (...args) => calls.push(["compareDesign", ...args]),
   });
   assert.deepEqual((await executor.availability()).unsupported, []);
   await executor.connect("target", "context");
@@ -155,8 +156,9 @@ test("native executor capability detection and forwarding are explicit", async (
   await executor.rediscover("intent", "context");
   await executor.recover("intent", "target", "context");
   await executor.waitFor("expectation", "context");
+  await executor.compareDesign("request", "context");
   assert.deepEqual(calls.map(([name]) => name), [
-    "connect", "act", "observe", "screenshot", "console", "network", "close", "rediscover", "recover", "waitFor",
+    "connect", "act", "observe", "screenshot", "console", "network", "close", "rediscover", "recover", "waitFor", "compareDesign",
   ]);
 
   let fallbackContext;

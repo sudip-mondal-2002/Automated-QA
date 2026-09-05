@@ -14,9 +14,9 @@ It also understands an optional design reference, so it can distinguish:
 
 The hackathon product is a **skill plus a small file-backed QA workspace**. It uses native Browser/Chrome for web apps and computer use for desktop/native UI. Playwright and Stagehand are not required, including for fixtures.
 
-## Phase 1–3 quick start
+## Phase 1–4 quick start
 
-Phases 1 through 3 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. The runtime resolves environments and fixture inputs, starts the local demo when needed, executes through a supplied native Browser/Chrome or computer-use capability, records progress events and screenshots, always attempts cleanup, and persists the result. Phase 3 adds conservative semantic target rediscovery, observable-readiness recovery, unchanged-expectation guards, and evidence-backed `healed` classification.
+Phases 1 through 4 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. The runtime resolves environments and fixtures, executes through a supplied native Browser/Chrome or computer-use capability, conservatively heals interaction drift, and persists structured evidence. Phase 4 resolves explicit repository images, URLs, and Figma links; captures the declared checkpoint and viewport; requires concrete visual findings; and emits an evidence-backed `design_regression` only when functional behavior otherwise passes.
 
 ```bash
 npm install
@@ -35,6 +35,8 @@ npm run qa-agent -- spec show checkout-card
 npm run qa-agent -- fixture list
 npm run qa-agent -- select checkout-card --env local
 npm run qa-agent -- last
+npm run qa-agent -- result list
+npm run qa-agent -- result delete <run-id>
 ```
 
 Use `spec save`, `fixture save`, `environment save`, or `result save` with a YAML/JSON filename (or `-` for standard input). Writes are validated before an atomic replacement, and cross-file references are checked before a spec or result is accepted.
@@ -46,7 +48,7 @@ npm run demo
 # http://localhost:3000
 ```
 
-The demo has explicit Phase 3 variants:
+The demo has explicit Phase 3 and 4 variants:
 
 ```bash
 npm run demo -- --variant drift
@@ -54,13 +56,16 @@ npm run demo -- --variant drift
 
 npm run demo -- --variant drift-broken
 # The interaction drifts and the final confirmation outcome is also broken
+
+npm run demo -- --variant design
+# Functional expectations pass, but confirmation order and styling visibly diverge
 ```
 
-The unchanged checkout spec produces `healed` for `drift`, including before/after screenshots and a replacement-target explanation. It produces `functional_regression` for `drift-broken`, even though the earlier checkout action was recovered, because the original confirmation expectation still fails.
+The unchanged checkout spec produces `healed` for `drift`, including before/after screenshots and a replacement-target explanation. It produces `functional_regression` for `drift-broken`, even though the earlier checkout action was recovered, because the original confirmation expectation still fails. A design-aware spec produces `design_regression` for `design` only when its native driver returns a concrete reference-backed layout or style finding.
 
 Then ask the autonomous-QA skill to `run checkout-card --env local` using native Browser/Chrome, or `run-last` to repeat the selected spec and environment. Set `QA_CUSTOMER_USERNAME` and `QA_CUSTOMER_PASSWORD` in the skill's environment; their resolved values are passed to the login fixture but are never stored. A bare `qa-agent run` process without a host-native executor deliberately produces `blocked` rather than claiming browser execution.
 
-The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, `executeRun`, `classifyFailure`, and the expectation/rediscovery guards for host integrations. Native drivers can opt into `rediscover`, `recover`, and `waitFor`; recovery is never inferred from a merely similar target. Run the suite with `npm test`, or enforce 100% production line coverage and the configured branch/function gates with `npm run test:coverage`.
+The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, `executeRun`, the healing guards, and the design resolver/comparison rules for host integrations. Native drivers can opt into `rediscover`, `recover`, `waitFor`, and `compareDesign`; design screenshots receive the declared viewport in their context. Recovery is never inferred from a merely similar target, and a visual opinion without a structured regression finding is blocked. The workspace retains 20 results per spec and exposes recent-listing and safe deletion helpers for the Phase 5 UI. Run the suite with `npm test`, or enforce 100% production line coverage and the configured branch/function gates with `npm run test:coverage`.
 
 ## What the demo must prove
 
@@ -321,6 +326,7 @@ fixtures:
 
 design:
   reference: ${QA_CHECKOUT_DESIGN}
+  afterStep: 2
   viewport:
     width: 1440
     height: 1000
@@ -414,7 +420,7 @@ Compare only demoable signals:
 2. Major layout, order, grouping, alignment, and responsive behavior are plausible matches.
 3. Obvious style differences in color, spacing, typography, or component variant are reported with screenshots.
 
-The design reference must be explicit. The agent may suggest a design issue from its own judgment, but only a supplied reference can produce a `design_regression` result.
+The design reference must be explicit. Repository image paths are resolved without allowing path escape; remote image and Figma links are handed to the available native comparison capability. `afterStep` selects the stable checkpoint and defaults to the last test step; the viewport defaults to 1440×1000. The actual screenshot, reference metadata, viewport, checkpoint, findings, and concise explanation are stored in the run result. Agent taste alone cannot produce a `design_regression`, and baselines are never updated automatically.
 
 ## Result classification
 
