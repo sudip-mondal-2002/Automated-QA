@@ -1,0 +1,20 @@
+version: 1
+id: checkout-card
+title: Customer completes checkout
+environment: local
+fixtures:
+  before:
+    - login-customer
+  after:
+    - cleanup-test-order
+steps:
+  - intent: Open the shopping cart
+    expect:
+      - Cart contains one item
+  - intent: Proceed to checkout
+    expect:
+      - Checkout form is visible
+  - intent: Submit the approved test payment details
+    expect:
+      - Order confirmation is visible
+      - No error message is shown

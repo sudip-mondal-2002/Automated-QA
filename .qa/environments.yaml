@@ -1,0 +1,12 @@
+version: 1
+environments:
+  local:
+    type: web
+    baseUrl: http://localhost:3000
+    startCommand: npm run dev
+  staging:
+    type: web
+    baseUrl: ${QA_STAGING_URL}
+  desktop:
+    type: desktop
+    app: ${QA_DESKTOP_APP}

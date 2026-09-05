@@ -1,0 +1,9 @@
+version: 1
+id: cleanup-test-order
+title: Remove the order created by this test
+steps:
+  - intent: Open the order created during this run
+  - intent: Delete it if it exists
+expect:
+  - The test order is absent
+idempotent: true

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://auto-qa.local/schemas/last-test.schema.json",
+  "title": "Most recently selected semantic test",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specId", "environment"],
+  "properties": {
+    "specId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "environment": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "lastRunId": {
+      "type": "string",
+      "pattern": "^run_[0-9]{8}_[0-9]{6}(?:_[a-z0-9]+)?$"
+    }
+  }
+}
