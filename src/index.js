@@ -1,7 +1,7 @@
 export { draftSpec, slugify, SPEC_CHANNELS } from "./draft.js";
 export { parseJson, parseYaml, stringifyJson, stringifyYaml } from "./documents.js";
 export { formatQaError, ORCHESTRATION_ERROR_CODES, QaError } from "./errors.js";
-export { prepareEnvironment, spawnApplication } from "./environment.js";
+export { prepareEnvironment, spawnApplication, stopProcessTree } from "./environment.js";
 export { channelFor, createRunId, executeRun } from "./execution.js";
 export {
   buildDesignComparisonRequest,

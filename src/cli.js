@@ -106,8 +106,12 @@ async function editSpec(workspace, id) {
   const stagingPath = path.join(workspace.specsDirectory, `.${id}.edit-${process.pid}.yaml`);
   await atomicWriteFile(stagingPath, stringifyYaml(spec));
   try {
-    const editor = process.env.VISUAL || process.env.EDITOR || "vi";
-    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: false });
+    const editor = process.env.VISUAL || process.env.EDITOR || (process.platform === "win32" ? "notepad" : "vi");
+    // Most Windows editors are `.cmd`/`.bat` shims, which Node refuses to spawn
+    // without a shell (CVE-2024-27980). The editor is the developer's own
+    // configured command, so deferring to the shell there is the same trust
+    // boundary git and npm use.
+    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: process.platform === "win32" });
     if (result.error) throw result.error;
     if (result.status !== 0) throw new QaError("EDITOR_FAILED", `${editor} exited with status ${result.status}`);
     return await workspace.saveSpec(await readFile(stagingPath, "utf8"));

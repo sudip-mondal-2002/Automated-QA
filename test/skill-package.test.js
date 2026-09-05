@@ -5,14 +5,24 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
+import { skillLauncher } from "../test-support/helpers.js";
 
 const repositoryRoot = path.resolve(import.meta.dirname, "..");
 const packagedSkill = path.join(repositoryRoot, ".agents", "skills", "autonomous-qa");
 
 function runSkill(launcher, projectRoot, args) {
-  return spawnSync(launcher, [...args, "--root", projectRoot], {
+  const full = [...args, "--root", projectRoot];
+  if (process.platform !== "win32") {
+    return spawnSync(launcher, full, { cwd: projectRoot, encoding: "utf8" });
+  }
+  // Node refuses to spawn a .cmd without a shell (CVE-2024-27980), and with a
+  // shell it quotes nothing — so build the command line ourselves. The skill is
+  // deliberately installed under a path containing a space.
+  const quote = (value) => `"${String(value).replace(/"/g, '\\"')}"`;
+  return spawnSync([launcher, ...full].map(quote).join(" "), {
     cwd: projectRoot,
     encoding: "utf8",
+    shell: true,
   });
 }
 

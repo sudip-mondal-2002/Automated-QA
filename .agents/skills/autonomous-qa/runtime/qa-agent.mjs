@@ -14366,7 +14366,7 @@ var init_documents = __esm({
 });
 
 // src/environment.js
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 function assertWebUrl(baseUrl) {
   let parsed;
@@ -14394,6 +14394,16 @@ async function reachable(baseUrl, fetchImpl, signal) {
     return false;
   }
 }
+function stopProcessTree(child, { platform = process.platform, spawnSyncImpl } = {}) {
+  if (platform !== "win32") {
+    process.kill(-child.pid, "SIGTERM");
+    return;
+  }
+  const run = spawnSyncImpl ?? spawnSync;
+  const result = run("taskkill", ["/pid", String(child.pid), "/T", "/F"], { stdio: "ignore", windowsHide: true });
+  if (result?.error && result.error.code !== "ENOENT") throw result.error;
+  if (result?.error || result?.status !== 0 && result?.status !== 128) child.kill("SIGTERM");
+}
 function spawnApplication(command, repositoryRoot) {
   const child = spawn(command, {
     cwd: repositoryRoot,
@@ -14407,8 +14417,7 @@ function spawnApplication(command, repositoryRoot) {
     async stop() {
       if (child.exitCode !== null || child.signalCode !== null) return;
       try {
-        if (process.platform === "win32") child.kill("SIGTERM");
-        else process.kill(-child.pid, "SIGTERM");
+        stopProcessTree(child);
       } catch (error) {
         if (error.code !== "ESRCH") throw error;
       }
@@ -14688,8 +14697,17 @@ async function resolveDesignReference(reference, {
   }
   let requestedPath;
   try {
-    requestedPath = source.startsWith("file:") ? fileURLToPath2(source) : isAbsolute(source) ? source : resolve(repositoryRoot, source);
-  } catch {
+    if (source.startsWith("file:")) {
+      const fileUrl = new URL(source);
+      if (fileUrl.host && fileUrl.host !== "localhost") {
+        throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL must not name a host");
+      }
+      requestedPath = fileURLToPath2(source);
+    } else {
+      requestedPath = isAbsolute(source) ? source : resolve(repositoryRoot, source);
+    }
+  } catch (error) {
+    if (error instanceof QaError) throw error;
     throw designError("INVALID_DESIGN_REFERENCE", "Design reference file URL is invalid");
   }
   let realRoot;
@@ -18310,7 +18328,7 @@ init_orchestrator();
 // src/cli.js
 import { readFile as readFile5, unlink as unlink2 } from "node:fs/promises";
 import path6 from "node:path";
-import { spawnSync } from "node:child_process";
+import { spawnSync as spawnSync2 } from "node:child_process";
 init_documents();
 init_errors();
 init_execution();
@@ -18405,8 +18423,8 @@ async function editSpec(workspace, id) {
   const stagingPath = path6.join(workspace.specsDirectory, `.${id}.edit-${process.pid}.yaml`);
   await atomicWriteFile(stagingPath, stringifyYaml(spec));
   try {
-    const editor = process.env.VISUAL || process.env.EDITOR || "vi";
-    const result = spawnSync(editor, [stagingPath], { stdio: "inherit", shell: false });
+    const editor = process.env.VISUAL || process.env.EDITOR || (process.platform === "win32" ? "notepad" : "vi");
+    const result = spawnSync2(editor, [stagingPath], { stdio: "inherit", shell: process.platform === "win32" });
     if (result.error) throw result.error;
     if (result.status !== 0) throw new QaError("EDITOR_FAILED", `${editor} exited with status ${result.status}`);
     return await workspace.saveSpec(await readFile5(stagingPath, "utf8"));
@@ -18886,6 +18904,7 @@ export {
   slugify,
   spawnApplication,
   startQaUi,
+  stopProcessTree,
   stringifyJson,
   stringifyYaml,
   traceEvent,

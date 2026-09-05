@@ -19,7 +19,8 @@ The developer installs this skill once, opens their application repository, and 
 
 Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. This installed directory contains everything the skill needs:
 
-- `scripts/qa-agent` — portable internal launcher;
+- `scripts/qa-agent` — POSIX internal launcher;
+- `scripts/qa-agent.cmd` — the same launcher for Windows shells;
 - `runtime/qa-agent.mjs` — bundled Node.js runtime and dependencies;
 - `schemas/` — authoritative document contracts;
 - `ui/` — loopback workspace assets.
@@ -29,6 +30,14 @@ Invoke the launcher from the application repository and always pass its root exp
 ```bash
 "$SKILL_ROOT/scripts/qa-agent" <operation> --root "$PWD"
 ```
+
+On Windows use `"%SKILL_ROOT%\scripts\qa-agent.cmd"` from a shell. When invoking the runtime programmatically rather than through a shell, prefer the launcher-free form, which works identically everywhere and avoids the Node restriction on spawning `.cmd` files without a shell:
+
+```bash
+node "$SKILL_ROOT/scripts/qa-agent.mjs" <operation> --root "$PWD"
+```
+
+Quote both the launcher and every argument: the skill is often installed under a path containing spaces.
 
 The application needs Node.js 20 or newer, but it does not need to install the skill runtime's npm dependencies. Never resolve files outside `SKILL_ROOT` for normal operation.
 
