@@ -14,9 +14,9 @@ It also understands an optional design reference, so it can distinguish:
 
 The hackathon product is a **skill plus a small file-backed QA workspace**. It uses native Browser/Chrome for web apps and computer use for desktop/native UI. Playwright and Stagehand are not required, including for fixtures.
 
-## Phase 1–4 quick start
+## Complete MVP quick start
 
-Phases 1 through 4 are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, and the inspectable `.qa/` workspace. The runtime resolves environments and fixtures, executes through a supplied native Browser/Chrome or computer-use capability, conservatively heals interaction drift, and persists structured evidence. Phase 4 resolves explicit repository images, URLs, and Figma links; captures the declared checkpoint and viewport; requires concrete visual findings; and emits an evidence-backed `design_regression` only when functional behavior otherwise passes.
+All five phases are implemented as a Node.js execution runtime, a repository-scoped skill, JSON Schema contracts, an inspectable `.qa/` workspace, and an optional localhost UI. The runtime resolves environments and fixtures, executes through a supplied native Browser/Chrome or computer-use capability, conservatively heals interaction drift, and persists structured evidence. Explicit repository images, URLs, and Figma links can drive a declared design checkpoint. The Phase 5 UI reads and writes those same files—there is no database or second copy of a spec or result.
 
 ```bash
 npm install
@@ -39,6 +39,15 @@ npm run qa-agent -- result list
 npm run qa-agent -- result delete <run-id>
 ```
 
+Start the workspace UI on its loopback-only default address:
+
+```bash
+npm run ui
+# http://127.0.0.1:4173
+```
+
+The page lists each test with its last status and environment, provides a copy button for its run command, validates and saves spec/fixture YAML, polls for newly completed runs, and renders steps, selected targets, explanations, design findings, and screenshots. One selected run can be deleted from its detail view; deletion uses the same guarded workspace method as the CLI. Use a different local port with `npm run qa-agent -- ui --port 4180`.
+
 Use `spec save`, `fixture save`, `environment save`, or `result save` with a YAML/JSON filename (or `-` for standard input). Writes are validated before an atomic replacement, and cross-file references are checked before a spec or result is accepted.
 
 Start the deterministic checkout target with:
@@ -48,24 +57,28 @@ npm run demo
 # http://localhost:3000
 ```
 
-The demo has explicit Phase 3 and 4 variants:
+The running demo can be restored to any judge-facing state without restarting it:
+
+```bash
+npm run demo:reset -- pass
+npm run demo:reset -- drift
+npm run demo:reset -- functional
+npm run demo:reset -- design
+```
+
+The reset command accepts only a loopback HTTP URL and changes only the deterministic demo application's in-memory session and variant. `pass` restores the approved flow; `drift` moves and renames the checkout action; `functional` breaks the final outcome; and `design` keeps behavior working while visibly changing confirmation order and styling. The older direct variants remain available when starting a separate process:
 
 ```bash
 npm run demo -- --variant drift
-# "Proceed to checkout" moves into a menu and becomes "Continue to payment"
-
 npm run demo -- --variant drift-broken
-# The interaction drifts and the final confirmation outcome is also broken
-
 npm run demo -- --variant design
-# Functional expectations pass, but confirmation order and styling visibly diverge
 ```
 
-The unchanged checkout spec produces `healed` for `drift`, including before/after screenshots and a replacement-target explanation. It produces `functional_regression` for `drift-broken`, even though the earlier checkout action was recovered, because the original confirmation expectation still fails. A design-aware spec produces `design_regression` for `design` only when its native driver returns a concrete reference-backed layout or style finding.
+The unchanged `checkout-card` spec produces `healed` for `drift`, including before/after screenshots and a replacement-target explanation, and `functional_regression` for `functional` without changing its expectations. The seeded `checkout-design` spec points at the demo's approved confirmation reference and produces `design_regression` for `design` only when its native driver returns a concrete reference-backed layout or style finding.
 
 Then ask the autonomous-QA skill to `run checkout-card --env local` using native Browser/Chrome, or `run-last` to repeat the selected spec and environment. Set `QA_CUSTOMER_USERNAME` and `QA_CUSTOMER_PASSWORD` in the skill's environment; their resolved values are passed to the login fixture but are never stored. A bare `qa-agent run` process without a host-native executor deliberately produces `blocked` rather than claiming browser execution.
 
-The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, `executeRun`, the healing guards, and the design resolver/comparison rules for host integrations. Native drivers can opt into `rediscover`, `recover`, `waitFor`, and `compareDesign`; design screenshots receive the declared viewport in their context. Recovery is never inferred from a merely similar target, and a visual opinion without a structured regression finding is blocked. The workspace retains 20 results per spec and exposes recent-listing and safe deletion helpers for the Phase 5 UI. Run the suite with `npm test`, or enforce 100% production line coverage and the configured branch/function gates with `npm run test:coverage`.
+The runtime API exports `createNativeWebExecutor`, `createNativeDesktopExecutor`, `executeRun`, `createQaUiServer`, the healing guards, and the design resolver/comparison rules for host integrations. Native drivers can opt into `rediscover`, `recover`, `waitFor`, and `compareDesign`; design screenshots receive the declared viewport in their context. Recovery is never inferred from a merely similar target, and a visual opinion without a structured regression finding is blocked. The workspace retains 20 results per spec. Run the suite with `npm test`, or enforce 100% production line coverage and the configured branch/function gates with `npm run test:coverage`.
 
 ## What the demo must prove
 
@@ -224,6 +237,11 @@ flowchart TB
     └── <run-id>/
         ├── result.json
         └── screenshots/
+
+ui/
+├── index.html
+├── app.js
+└── styles.css
 ```
 
 No database is required for the hackathon. The UI reads these files directly. Keep only the latest 20 runs per test or expose a “delete run” action.
@@ -494,30 +512,43 @@ Claude:  Use the autonomous QA skill to run checkout-card on staging.
 
 ## Recommended hackathon demo
 
-Use a small checkout or registration app with a supplied design screenshot.
+Use a small checkout or registration app with a supplied design reference.
+
+From a clean checkout, run `npm install` once, then keep these two processes open:
+
+```bash
+# Terminal 1 — deterministic target
+npm run demo
+
+# Terminal 2 — judge-facing workspace
+npm run ui
+```
+
+Before each scenario, run its reset command below, ask the autonomous-QA skill to execute the named spec through native Browser/Chrome, and select the completed run in the UI. The reset endpoint clears login/order data as well as selecting the exact scenario, so rehearsal order does not matter.
 
 ### Demo 1 — Create and pass
 
-1. Ask the skill to create the test from a short requirement.
-2. Reuse the login fixture.
-3. Run the test and show the passing steps and screenshot in the UI.
+1. Run `npm run demo:reset -- pass`.
+2. Ask the skill to create the test from a short requirement, or use `checkout-card`.
+3. Reuse the login fixture.
+4. Run the test and show the passing steps and screenshot in the UI.
 
 ### Demo 2 — Self-heal harmless drift
 
-1. Rename “Proceed to checkout” to “Continue to payment” and move it into a menu.
+1. Run `npm run demo:reset -- drift`; this renames “Proceed to checkout” to “Continue to payment” and moves it into a menu.
 2. Rerun the unchanged spec.
 3. Show that the agent found the equivalent control and verified the same checkout-page expectation.
 
 ### Demo 3 — Refuse to hide a real bug
 
-1. Break the confirmation state or payment response.
+1. Run `npm run demo:reset -- functional` to restore the broken confirmation outcome.
 2. Rerun the same spec.
 3. Show that the agent reports `functional_regression` and does not rewrite the expectation.
 
 ### Demo 4 — Design intelligence
 
-1. Change an obvious component order, spacing, color, or variant from the supplied reference.
-2. Run the design-aware test.
+1. Run `npm run demo:reset -- design` to restore the visible order, spacing, color, and variant mismatch.
+2. Run the seeded `checkout-design` spec.
 3. Show the reference, actual screenshot, and concise `design_regression` explanation.
 
 If time permits, let the coding agent patch the demonstrated application bug and rerun the same test to show a verified fix. This is a bonus, not a dependency for the core demo.
@@ -526,16 +557,16 @@ If time permits, let the coding agent patch the demonstrated application bug and
 
 The hackathon MVP is complete when:
 
-- [ ] A natural-language requirement creates an editable semantic YAML test.
-- [ ] Local or staging web execution works through native Browser/Chrome.
-- [ ] A desktop target can use computer use when available.
-- [ ] Login and cleanup fixtures can be reused.
-- [ ] A moved or renamed control produces `healed`, not a false failure.
-- [ ] A broken expected outcome produces `functional_regression`, not an edited assertion.
-- [ ] A supplied design reference can produce an evidence-backed `design_regression`.
-- [ ] Screenshots and structured results are stored under `.qa/runs/`.
-- [ ] `run-last` reruns the most recent spec.
-- [ ] The localhost UI can edit a spec and display/delete recent runs.
+- [x] A natural-language requirement creates an editable semantic YAML test.
+- [x] Local or staging web execution works through native Browser/Chrome.
+- [x] A desktop target can use computer use when available.
+- [x] Login and cleanup fixtures can be reused.
+- [x] A moved or renamed control produces `healed`, not a false failure.
+- [x] A broken expected outcome produces `functional_regression`, not an edited assertion.
+- [x] A supplied design reference can produce an evidence-backed `design_regression`.
+- [x] Screenshots and structured results are stored under `.qa/runs/`.
+- [x] `run-last` reruns the most recent spec.
+- [x] The localhost UI can edit a spec and display/delete recent runs.
 
 ## Explicitly out of scope
 

@@ -26,3 +26,4 @@ export {
 export { redactSensitive, resolveReference, resolveReferences } from "./references.js";
 export { assertStableId, isStableId, validateDocument } from "./schema-validator.js";
 export { atomicWriteFile, MAX_RECENT_RUNS_PER_SPEC, QaWorkspace } from "./storage.js";
+export { createQaUiServer, startQaUi } from "./ui-server.js";

@@ -6,6 +6,7 @@ import { parseJson, stringifyJson, stringifyYaml } from "./documents.js";
 import { formatQaError, QaError } from "./errors.js";
 import { executeRun } from "./execution.js";
 import { atomicWriteFile, QaWorkspace } from "./storage.js";
+import { startQaUi } from "./ui-server.js";
 
 const HELP = `qa-agent — semantic QA workspace and native execution runtime
 
@@ -18,6 +19,7 @@ Usage:
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
   qa-agent edit <spec-id>
@@ -293,6 +295,20 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     else if (command === "fixture") await fixtureCommand(workspace, args, output);
     else if (command === "environment") await environmentCommand(workspace, args, output);
     else if (command === "result") await resultCommand(workspace, args, output);
+    else if (command === "ui") {
+      const host = option(args, "--host");
+      const portValue = option(args, "--port");
+      const port = portValue === undefined ? undefined : Number(portValue);
+      if (portValue !== undefined && (!Number.isInteger(port) || port < 0 || port > 65_535)) {
+        throw new QaError("INVALID_UI_PORT", "--port must be an integer from 0 to 65535");
+      }
+      assertNoUnknownOptions(args);
+      if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected UI argument: ${args[0]}`);
+      await workspace.validateAll();
+      const application = await (io.startUi ?? startQaUi)({ workspace, host, port });
+      output(`QA workspace UI is ready at ${application.url}`);
+      output("Press Ctrl+C to stop it.");
+    }
     else if (command === "run") {
       const environment = option(args, "--env");
       const id = args.shift();

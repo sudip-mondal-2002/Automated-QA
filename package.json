@@ -1,15 +1,17 @@
 {
   "name": "autonomous-qa-agent",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
-  "description": "File-backed semantic QA runtime with native execution, self-healing, and reference-backed design evidence",
+  "description": "File-backed semantic QA runtime with native execution, design evidence, and a localhost workspace UI",
   "type": "module",
   "bin": {
     "qa-agent": ".agents/skills/autonomous-qa/scripts/qa-agent"
   },
   "scripts": {
     "demo": "node demo-app/server.js",
+    "demo:reset": "node demo-app/reset.js",
     "dev": "node demo-app/server.js",
+    "ui": "node .agents/skills/autonomous-qa/scripts/qa-agent ui",
     "qa-agent": "node .agents/skills/autonomous-qa/scripts/qa-agent",
     "test": "node --test",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=100 --test-coverage-branches=95 --test-coverage-functions=98"

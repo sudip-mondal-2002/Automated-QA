@@ -37,6 +37,11 @@ function send(response, status, body, headers = {}) {
   response.end(body);
 }
 
+function sendJson(response, status, value) {
+  response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
+  response.end(`${JSON.stringify(value)}\n`);
+}
+
 function redirect(response, location) {
   response.writeHead(303, { location });
   response.end();
@@ -48,18 +53,51 @@ async function form(request) {
   return new URLSearchParams(Buffer.concat(chunks).toString("utf8"));
 }
 
+export const DEMO_SCENARIOS = Object.freeze({
+  pass: "stable",
+  drift: "drift",
+  functional: "broken",
+  design: "design",
+});
+
+const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design"]);
+
+export function resetDemoState(state, scenario) {
+  const variant = DEMO_SCENARIOS[scenario];
+  if (!variant) throw new TypeError(`Unknown demo scenario: ${scenario}`);
+  state.loggedIn = false;
+  state.orderCreated = false;
+  state.variant = variant;
+  return { scenario, variant };
+}
+
 export function createDemoApplication({ variant = "stable" } = {}) {
-  if (!new Set(["stable", "drift", "broken", "drift-broken", "design"]).has(variant)) {
+  if (!DEMO_VARIANTS.has(variant)) {
     throw new TypeError(`Unknown demo variant: ${variant}`);
   }
-  const hasCheckoutDrift = variant === "drift" || variant === "drift-broken";
-  const hasBrokenConfirmation = variant === "broken" || variant === "drift-broken";
-  const hasDesignRegression = variant === "design";
   const state = { loggedIn: false, orderCreated: false, variant };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
+    const hasCheckoutDrift = state.variant === "drift" || state.variant === "drift-broken";
+    const hasBrokenConfirmation = state.variant === "broken" || state.variant === "drift-broken";
+    const hasDesignRegression = state.variant === "design";
 
     if (request.method === "GET" && url.pathname === "/") return redirect(response, "/login");
+    if (request.method === "GET" && url.pathname === "/reference/approved-confirmation") {
+      return send(response, 200, page("Approved confirmation reference", `
+        <p class="quiet">Approved checkout design reference</p>
+        <h1>Order confirmation</h1>
+        <p class="success">Order QA-1001 was placed successfully.</p>
+        <a href="#approved-order-link">View test order</a>`));
+    }
+    if (request.method === "POST" && url.pathname === "/__demo/reset") {
+      const values = await form(request);
+      try {
+        return sendJson(response, 200, resetDemoState(state, values.get("scenario")));
+      } catch (error) {
+        return sendJson(response, 422, { error: error.message, scenarios: Object.keys(DEMO_SCENARIOS) });
+      }
+    }
     if (request.method === "GET" && url.pathname === "/login") {
       return send(response, 200, page("Sign in", `
         <h1>Customer sign in</h1>

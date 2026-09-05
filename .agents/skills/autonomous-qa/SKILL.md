@@ -5,7 +5,7 @@ description: Create, inspect, edit, validate, run, safely self-heal, and compare
 
 # Autonomous QA — Native execution
 
-Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 4 adds explicit-reference design comparison, declared-viewport evidence, concise visual findings, recent-run retention, and safe run deletion to the existing native execution and conservative self-healing runtime. The localhost UI remains later-phase work.
+Turn UI requirements into human-editable semantic documents under `.qa/`, execute them through the host's native web or desktop capability, and inspect the same files through the optional loopback UI. The complete MVP includes conservative self-healing, explicit-reference design comparison, recent-run retention, validated YAML editing, evidence viewing, safe run deletion, and deterministic demo reset states.
 
 ## Create and edit workflow
 
@@ -16,6 +16,15 @@ Turn UI requirements into human-editable semantic documents under `.qa/`, then e
 5. Finish changes with `scripts/qa-agent validate`. Return the saved path and mention editable assumptions.
 
 Use `spec`, `fixture`, `environment`, and `result` subcommands for `list`, `show`, `validate`, and `save`; specs and fixtures also support guarded deletion. `edit <spec-id>` replaces the authoritative file only after validation succeeds.
+
+## UI and demo workflow
+
+1. Use `scripts/qa-agent ui` from a validated repository workspace to serve the judge-facing page at `http://127.0.0.1:4173`. A different loopback host or port may be supplied with `--host` and `--port`.
+2. The UI is a view over `.qa/`, not an execution platform. Copy a test's displayed run command and execute it through the host's native Browser/Chrome or computer-use integration; the page polls for the completed file-backed result.
+3. Spec and fixture edits in the UI must preserve the document ID, pass the same schema and cross-file checks as the CLI, and save atomically. Validation errors remain path-based and visible.
+4. Inspect result explanations, step statuses, selected accessible targets, healing notes, design findings, and every declared screenshot. Screenshot URLs must resolve only within the selected run and only to evidence declared by that result.
+5. Delete only an explicitly selected run. The guarded workspace deletion repairs `last-test.json` to a recent run in the same spec and environment, or removes `lastRunId` when no replacement exists.
+6. For this repository's deterministic demo application, start `npm run demo`, then use `npm run demo:reset -- pass|drift|functional|design` before each native run. Reset affects only the loopback demo application's in-memory login, order, and variant state.
 
 ## Run workflow
 
@@ -59,7 +68,7 @@ Adapters may additionally expose `rediscover(intent, context)`, `recover(intent,
 
 Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, healing start/completion, design start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
 
-Phase 4 may emit:
+Runs may emit:
 
 - `passed` when declared expectations pass;
 - `healed` when interaction mechanics changed and unchanged expectations pass after evidence-backed recovery;
@@ -70,7 +79,7 @@ Phase 4 may emit:
 ## Inputs and outputs
 
 - Input: natural-language journey, optional environment, reusable fixtures, explicit expectations, and optional explicit design-reference metadata.
-- Output: validated YAML under `.qa/`; validated JSON plus screenshots under `.qa/runs/`; and an atomic `.qa/last-test.json` pointer.
+- Output: validated YAML under `.qa/`; validated JSON plus screenshots under `.qa/runs/`; an atomic `.qa/last-test.json` pointer; and an optional localhost view of those same artifacts.
 - IDs use lowercase words separated by hyphens and remain stable after creation.
 
 ## Safety invariants
@@ -87,6 +96,9 @@ Phase 4 may emit:
 - Design evidence records the reference, checkpoint, viewport, actual screenshot, and concise comparison result.
 - Use native Browser/Chrome for web UI and computer use only for desktop/native UI.
 - Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, or Stagehand.
-- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not repair application code, update baselines, perform pixel-perfect diffing, or claim the Phase 5 localhost UI.
+- Keep the UI loopback-only. Do not expose it as a remote service, add authentication, or make it a second agent/job platform.
+- UI saves must reuse the authoritative validators and preserve document IDs. UI screenshot reads and run deletion must stay inside the selected run directory.
+- Demo reset may change only the authorized local demo application's in-memory state; never apply it to staging or production targets.
+- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not repair application code, update baselines, or perform pixel-perfect diffing.
 
 The schemas in [`schemas/`](../../../schemas/) remain the authoritative structural contracts. The CLI adds cross-file reference checks, execution orchestration, atomic writes, and path-based validation errors.
