@@ -14,13 +14,14 @@ Usage:
   qa-agent init [--empty] [--root <repository>]
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
-  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
+  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent audit <run-id>
   qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
@@ -274,8 +275,7 @@ async function resultCommand(workspace, args, output) {
   if (action === "show") {
     output(stringifyJson(await workspace.loadResult(args[0])));
     return;
-  }
-  if (action === "validate") {
+  }  if (action === "validate") {
     if (!args[0]) throw new QaError("MISSING_ARGUMENT", "result validate requires a JSON file or '-'");
     const value = workspace.validateResult(await input(args[0]));
     output(`Valid result: ${value.runId}`);
@@ -294,6 +294,91 @@ async function resultCommand(workspace, args, output) {
     return;
   }
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);
+}
+
+export function auditResult({ spec, result }) {
+  const checks = [];
+  const push = (name, passed, detail) => checks.push({ name, passed, ...(detail ? { detail } : {}) });
+
+  const classifications = new Set(["passed", "healed", "functional_regression", "design_regression", "blocked"]);
+  push("classification is known", classifications.has(result.classification), result.classification);
+
+  const specSteps = new Map(spec.steps.map((step) => [step.index ?? spec.steps.indexOf(step) + 1, step]));
+  let expectationsIntact = true;
+  let channelsIntact = true;
+  for (const step of result.steps ?? []) {
+    const specStep = spec.steps[(step.index ?? 1) - 1];
+    if (!specStep) {
+      expectationsIntact = false;
+      channelsIntact = false;
+      continue;
+    }
+    const recorded = (step.expectations ?? []).map((entry) => entry.expectation);
+    if (JSON.stringify(recorded) !== JSON.stringify(specStep.expect)) expectationsIntact = false;
+    if ((step.channel ?? "web") !== (specStep.channel ?? "web")) channelsIntact = false;
+  }
+  push("expectations byte-for-byte unchanged", expectationsIntact);
+  push("channels unchanged", channelsIntact);
+
+  const healedSteps = (result.steps ?? []).filter((step) => step.healing?.outcome === "healed");
+  const healingEvidence = healedSteps.every((step) => Boolean(step.healing.beforeScreenshot) && Boolean(step.healing.afterScreenshot));
+  push(
+    "healing has before/after evidence",
+    healedSteps.length === 0 || healingEvidence,
+    healedSteps.length === 0 ? "no healing claimed" : `${healedSteps.length} healed step(s)`,
+  );
+  if (result.classification === "healed") {
+    push("healed classification has recovery", healedSteps.length > 0);
+    push("healed run has no failed steps", !(result.steps ?? []).some((step) => step.status !== "passed"));
+  }
+
+  if (spec.design) {
+    const design = result.design;
+    push("declared design check completed", Boolean(design) && design.status !== "not_checked", design?.status ?? "missing");
+    if (design?.status === "regression") {
+      push(
+        "design regression has concrete findings",
+        (design.findings ?? []).some((finding) => finding.status === "regression"),
+      );
+      push("design regression has actual evidence", Boolean(design.actualScreenshot));
+    }
+  } else {
+    push("no undeclared design result", !result.design);
+  }
+
+  const screenshots = new Set(result.evidence?.screenshots ?? []);
+  const declaredScreenshots = [
+    ...healedSteps.flatMap((step) => [step.healing.beforeScreenshot, step.healing.afterScreenshot]),
+    ...(result.design?.actualScreenshot ? [result.design.actualScreenshot] : []),
+    ...(result.design?.referenceScreenshot ? [result.design.referenceScreenshot] : []),
+  ].filter(Boolean);
+  push(
+    "declared screenshots are in evidence",
+    declaredScreenshots.every((name) => screenshots.has(name)),
+    `${declaredScreenshots.length} declared`,
+  );
+
+  const serialized = JSON.stringify(result);
+  push("no resolved secret placeholder leaked", !/\b(QA_CUSTOMER_PASSWORD|QA_STAGING_URL)\s*[:=]/i.test(serialized));
+
+  void specSteps;
+  const passed = checks.every((check) => check.passed);
+  return { passed, checks };
+}
+
+async function auditCommand(workspace, args, output) {
+  const runId = args.shift();
+  if (!runId) throw new QaError("MISSING_ARGUMENT", "audit requires a run ID");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected audit argument: ${args[0]}`);
+  const result = await workspace.loadResult(runId);
+  const spec = await workspace.loadSpec(result.specId);
+  const audit = auditResult({ spec, result });
+  for (const check of audit.checks) {
+    output(`${check.passed ? "PASS" : "FAIL"}\t${check.name}${check.detail ? `\t${check.detail}` : ""}`);
+  }
+  output(audit.passed ? `Governance audit passed for ${runId}` : `Governance audit failed for ${runId}`);
+  return audit.passed ? 0 : 1;
 }
 
 export async function runCli(argv = process.argv.slice(2), io = {}) {
@@ -328,6 +413,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     if (command === "create") {
       const id = option(args, "--id");
       const environment = option(args, "--env");
+      const channel = option(args, "--channel");
       const expectations = options(args, "--expect");
       const beforeFixtures = options(args, "--fixture-before");
       assertNoUnknownOptions(args);
@@ -342,7 +428,7 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
           if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
         }
       }
-      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures });
+      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures, channel });
       await workspace.saveSpec(spec);
       await workspace.selectSpec(spec.id, spec.environment);
       output(`Created .qa/specs/${spec.id}.yaml`);
@@ -380,6 +466,8 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected run-last argument: ${args[0]}`);
       const selected = await workspace.readLastTest();
       return await runCommand(workspace, selected.specId, selected.environment, io, output);
+    } else if (command === "audit") {
+      return await auditCommand(workspace, args, output);
     }
     else if (command === "select") {
       const environment = option(args, "--env");

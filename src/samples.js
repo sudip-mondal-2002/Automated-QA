@@ -126,3 +126,49 @@ export const SAMPLE_SPECS = [
 ];
 
 export const SAMPLE_SPEC = SAMPLE_SPECS[0];
+
+export const SAMPLE_CONVERSATIONAL_SPEC = {
+  version: 1,
+  id: "support-chat-refund",
+  title: "Support chat answers the refund policy",
+  environment: "local",
+  fixtures: {
+    before: ["login-customer"],
+    after: ["cleanup-test-order"],
+  },
+  steps: [
+    {
+      intent: "Open the support chat",
+      channel: "chat",
+      expect: ["Chat transcript is visible"],
+    },
+    {
+      intent: "Ask for the refund policy",
+      channel: "chat",
+      expect: ["Support response is visible", "No error message is shown"],
+    },
+  ],
+};
+
+export const SAMPLE_WORKFLOW_SPEC = {
+  version: 1,
+  id: "order-workflow-audit",
+  title: "Order workflow completes its approval steps",
+  environment: "local",
+  fixtures: {
+    before: ["login-customer"],
+    after: ["cleanup-test-order"],
+  },
+  steps: [
+    {
+      intent: "Submit the order for workflow approval",
+      channel: "workflow",
+      expect: ["Workflow approval is visible"],
+    },
+    {
+      intent: "Confirm the approved order outcome",
+      channel: "workflow",
+      expect: ["Order confirmation is visible", "No error message is shown"],
+    },
+  ],
+};

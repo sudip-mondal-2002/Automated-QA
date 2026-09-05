@@ -67,6 +67,7 @@ export function resetDemoState(state, scenario) {
   if (!variant) throw new TypeError(`Unknown demo scenario: ${scenario}`);
   state.loggedIn = false;
   state.orderCreated = false;
+  state.chatAnswered = false;
   state.variant = variant;
   return { scenario, variant };
 }
@@ -75,7 +76,7 @@ export function createDemoApplication({ variant = "stable" } = {}) {
   if (!DEMO_VARIANTS.has(variant)) {
     throw new TypeError(`Unknown demo variant: ${variant}`);
   }
-  const state = { loggedIn: false, orderCreated: false, variant };
+  const state = { loggedIn: false, orderCreated: false, chatAnswered: false, variant };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, "http://localhost");
     const hasCheckoutDrift = state.variant === "drift" || state.variant === "drift-broken";
@@ -122,7 +123,21 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       return send(response, 200, page("Dashboard", `
         <h1>Customer dashboard</h1>
         <p>Welcome back. Your saved card is ready for the deterministic QA checkout.</p>
-        <a class="button" href="/cart">Open shopping cart</a>`));
+        <a class="button" href="/cart">Open shopping cart</a>
+        <a class="button" href="/chat">Open support chat</a>`));
+    }
+    if (request.method === "GET" && url.pathname === "/chat") {
+      const asked = url.searchParams.get("asked") === "1" || state.chatAnswered === true;
+      return send(response, 200, page("Support chat", `
+        <h1>Support chat</h1>
+        <p>Chat transcript is visible.</p>
+        ${asked
+          ? `<p class="success">Support response is visible: refunds are processed in 5 days.</p>`
+          : `<form method="post" action="/chat"><button type="submit">Ask for the refund policy</button></form>`}`));
+    }
+    if (request.method === "POST" && url.pathname === "/chat") {
+      state.chatAnswered = true;
+      return redirect(response, "/chat?asked=1");
     }
     if (request.method === "GET" && url.pathname === "/cart") {
       return send(response, 200, page("Shopping cart", `
@@ -172,6 +187,7 @@ export function createDemoApplication({ variant = "stable" } = {}) {
     if (request.method === "POST" && url.pathname === "/reset") {
       state.loggedIn = false;
       state.orderCreated = false;
+      state.chatAnswered = false;
       return redirect(response, "/login");
     }
     return send(response, 404, page("Not found", "<h1>Not found</h1>"));

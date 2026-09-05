@@ -63,6 +63,18 @@ export function demoNativeExecutor(fetchImpl = globalThis.fetch) {
         await navigate("/orders/current");
         return { selectedTarget: { summary: "Current order link", role: "link", name: "View test order" } };
       }
+      if (intent === "Open the support chat") {
+        await navigate("/chat");
+        return { selectedTarget: { summary: "Support chat link", role: "link", name: "Open support chat" } };
+      }
+      if (intent === "Ask for the refund policy") {
+        await navigate("/chat", { method: "POST" });
+        return { selectedTarget: { summary: "Chat send button", role: "button", name: "Ask for the refund policy" } };
+      }
+      if (intent === "Submit the order for workflow approval" || intent === "Confirm the approved order outcome") {
+        await navigate("/confirmation");
+        return { selectedTarget: { summary: "Workflow approval", role: "button", name: intent } };
+      }
       if (intent === "Delete it if it exists") {
         if (html.includes("Delete test order")) await navigate("/orders/current/delete", { method: "POST" });
         return { selectedTarget: { summary: "Delete test order", role: "button", name: "Delete test order" } };
@@ -99,6 +111,9 @@ export function demoNativeExecutor(fetchImpl = globalThis.fetch) {
         "Order confirmation is visible": html.includes("Order confirmation"),
         "No error message is shown": !html.includes("An error message is shown"),
         "The test order is absent": html.includes("Test order absent"),
+        "Chat transcript is visible": html.includes("Chat transcript is visible"),
+        "Support response is visible": html.includes("Support response is visible"),
+        "Workflow approval is visible": html.includes("Order confirmation") || html.includes("Checkout form") || html.includes("Customer dashboard"),
       };
       const passed = checks[expectation] === true;
       return { status: passed ? "passed" : "failed", observation: passed ? expectation : `${expectation} was not observed` };

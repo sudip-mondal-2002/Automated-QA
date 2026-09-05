@@ -14296,6 +14296,20 @@ function slugify(value) {
   const slug = value.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").replace(/-+/g, "-").slice(0, 64).replace(/-+$/g, "");
   return slug || "semantic-test";
 }
+var SPEC_CHANNELS = Object.freeze(["web", "chat", "voice", "workflow", "api"]);
+function inferredChannel(requirement, explicit) {
+  if (explicit !== void 0) {
+    if (!SPEC_CHANNELS.includes(explicit)) {
+      throw new QaError("INVALID_CHANNEL", `Channel must be one of: ${SPEC_CHANNELS.join(", ")}`);
+    }
+    return explicit;
+  }
+  if (/chat|conversation|support agent|bot reply/i.test(requirement)) return "chat";
+  if (/voice|call|spoken|utterance|ivr/i.test(requirement)) return "voice";
+  if (/workflow|agent|pipeline|approval|automation/i.test(requirement)) return "workflow";
+  if (/\bapi\b|endpoint|webhook|contract/i.test(requirement)) return "api";
+  return "web";
+}
 function inferredExpectation(requirement) {
   if (/check\s*out|purchase|place(?:s)? (?:an )?order/i.test(requirement)) {
     return "Order confirmation is visible";
@@ -14316,6 +14330,7 @@ function draftSpec(requirement, options2 = {}) {
   const title = options2.title?.trim() || sentenceCase(cleaned);
   const id = options2.id || slugify(title);
   assertStableId(id);
+  const channel = inferredChannel(cleaned, options2.channel);
   const fixtures = options2.beforeFixtures?.length ? { before: [...new Set(options2.beforeFixtures)] } : void 0;
   const spec = {
     version: 1,
@@ -14326,6 +14341,7 @@ function draftSpec(requirement, options2 = {}) {
     steps: [
       {
         intent: options2.intent?.trim() || sentenceCase(cleaned),
+        ...channel !== "web" ? { channel } : {},
         expect: options2.expectations?.length ? options2.expectations.map((expectation) => expectation.trim()) : [inferredExpectation(cleaned)]
       }
     ]
@@ -14971,6 +14987,9 @@ function classifyFailure({
 // src/execution.js
 var STEP_STATUSES = /* @__PURE__ */ new Set(["passed", "failed", "blocked"]);
 var SCREENSHOT_EXTENSIONS = /* @__PURE__ */ new Set(["png", "jpg", "jpeg", "webp"]);
+function channelFor(step = {}) {
+  return step.channel ?? "web";
+}
 function instant(clock) {
   const value = clock();
   return (value instanceof Date ? value : new Date(value)).toISOString();
@@ -15127,6 +15146,7 @@ function skippedStep(step, index) {
   return {
     index,
     intent: step.intent,
+    ...step.channel ? { channel: step.channel } : {},
     status: "skipped",
     expectations: step.expect.map((expectation) => ({ expectation, status: "skipped" }))
   };
@@ -15413,13 +15433,15 @@ async function executeRun(options2) {
       }
       const stepResult = await executeSemanticStep(executor, {
         intent: step.intent,
-        expectations: step.expect ?? []
+        expectations: step.expect ?? [],
+        channel: channelFor(step)
       }, {
         runId,
         scope: "fixture",
         phase,
         fixtureId,
         fixtureStepIndex: index + 1,
+        channel: channelFor(step),
         inputs,
         outputs,
         target: resolvedEnvironment,
@@ -15605,6 +15627,7 @@ async function executeRun(options2) {
             runId,
             scope: "test",
             stepIndex: index,
+            channel: channelFor(step),
             outputs,
             target: resolvedEnvironment,
             signal,
@@ -15612,12 +15635,14 @@ async function executeRun(options2) {
           };
           let executed = await executeSemanticStep(executor, {
             intent: step.intent,
-            expectations: step.expect
+            expectations: step.expect,
+            channel: channelFor(step)
           }, stepContext);
           if (executed.status === "failed") {
             executed = await attemptHealing(executor, {
               intent: step.intent,
-              expectations: step.expect
+              expectations: step.expect,
+              channel: channelFor(step)
             }, stepContext, executed, {
               capture,
               event: (type, details) => journal.add(type, details)
@@ -15627,6 +15652,7 @@ async function executeRun(options2) {
           const recorded = redact({
             index,
             intent: step.intent,
+            ...step.channel ? { channel: step.channel } : {},
             status: executed.status,
             expectations: executed.expectations,
             ...executed.selectedTarget ? { selectedTarget: executed.selectedTarget } : {},
@@ -16237,6 +16263,11 @@ var QaWorkspace = class {
           { path: `$.steps[${resultIndex}].intent`, message: "must match the selected spec exactly" }
         ]);
       }
+      if ((step.channel ?? "web") !== (specStep.channel ?? "web")) {
+        throw new QaError("RESULT_CHANNEL_CHANGED", `Run ${value.runId} changed a test channel`, [
+          { path: `$.steps[${resultIndex}].channel`, message: "must match the selected spec exactly" }
+        ]);
+      }
       const recordedExpectations = step.expectations.map((entry) => entry.expectation);
       if (JSON.stringify(recordedExpectations) !== JSON.stringify(specStep.expect)) {
         throw new QaError("RESULT_EXPECTATION_CHANGED", `Run ${value.runId} changed test expectations`, [
@@ -16745,13 +16776,14 @@ Usage:
   qa-agent init [--empty] [--root <repository>]
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
-  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
+  qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent audit <run-id>
   qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
@@ -17004,6 +17036,82 @@ async function resultCommand(workspace, args, output) {
   }
   throw new QaError("UNKNOWN_COMMAND", `Unknown result operation: ${action ?? "(missing)"}`);
 }
+function auditResult({ spec, result }) {
+  const checks = [];
+  const push = (name, passed2, detail) => checks.push({ name, passed: passed2, ...detail ? { detail } : {} });
+  const classifications = /* @__PURE__ */ new Set(["passed", "healed", "functional_regression", "design_regression", "blocked"]);
+  push("classification is known", classifications.has(result.classification), result.classification);
+  const specSteps = new Map(spec.steps.map((step) => [step.index ?? spec.steps.indexOf(step) + 1, step]));
+  let expectationsIntact = true;
+  let channelsIntact = true;
+  for (const step of result.steps ?? []) {
+    const specStep = spec.steps[(step.index ?? 1) - 1];
+    if (!specStep) {
+      expectationsIntact = false;
+      channelsIntact = false;
+      continue;
+    }
+    const recorded = (step.expectations ?? []).map((entry) => entry.expectation);
+    if (JSON.stringify(recorded) !== JSON.stringify(specStep.expect)) expectationsIntact = false;
+    if ((step.channel ?? "web") !== (specStep.channel ?? "web")) channelsIntact = false;
+  }
+  push("expectations byte-for-byte unchanged", expectationsIntact);
+  push("channels unchanged", channelsIntact);
+  const healedSteps = (result.steps ?? []).filter((step) => step.healing?.outcome === "healed");
+  const healingEvidence = healedSteps.every((step) => Boolean(step.healing.beforeScreenshot) && Boolean(step.healing.afterScreenshot));
+  push(
+    "healing has before/after evidence",
+    healedSteps.length === 0 || healingEvidence,
+    healedSteps.length === 0 ? "no healing claimed" : `${healedSteps.length} healed step(s)`
+  );
+  if (result.classification === "healed") {
+    push("healed classification has recovery", healedSteps.length > 0);
+    push("healed run has no failed steps", !(result.steps ?? []).some((step) => step.status !== "passed"));
+  }
+  if (spec.design) {
+    const design = result.design;
+    push("declared design check completed", Boolean(design) && design.status !== "not_checked", design?.status ?? "missing");
+    if (design?.status === "regression") {
+      push(
+        "design regression has concrete findings",
+        (design.findings ?? []).some((finding) => finding.status === "regression")
+      );
+      push("design regression has actual evidence", Boolean(design.actualScreenshot));
+    }
+  } else {
+    push("no undeclared design result", !result.design);
+  }
+  const screenshots = new Set(result.evidence?.screenshots ?? []);
+  const declaredScreenshots = [
+    ...healedSteps.flatMap((step) => [step.healing.beforeScreenshot, step.healing.afterScreenshot]),
+    ...result.design?.actualScreenshot ? [result.design.actualScreenshot] : [],
+    ...result.design?.referenceScreenshot ? [result.design.referenceScreenshot] : []
+  ].filter(Boolean);
+  push(
+    "declared screenshots are in evidence",
+    declaredScreenshots.every((name) => screenshots.has(name)),
+    `${declaredScreenshots.length} declared`
+  );
+  const serialized = JSON.stringify(result);
+  push("no resolved secret placeholder leaked", !/\b(QA_CUSTOMER_PASSWORD|QA_STAGING_URL)\s*[:=]/i.test(serialized));
+  void specSteps;
+  const passed = checks.every((check) => check.passed);
+  return { passed, checks };
+}
+async function auditCommand(workspace, args, output) {
+  const runId = args.shift();
+  if (!runId) throw new QaError("MISSING_ARGUMENT", "audit requires a run ID");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected audit argument: ${args[0]}`);
+  const result = await workspace.loadResult(runId);
+  const spec = await workspace.loadSpec(result.specId);
+  const audit = auditResult({ spec, result });
+  for (const check of audit.checks) {
+    output(`${check.passed ? "PASS" : "FAIL"}	${check.name}${check.detail ? `	${check.detail}` : ""}`);
+  }
+  output(audit.passed ? `Governance audit passed for ${runId}` : `Governance audit failed for ${runId}`);
+  return audit.passed ? 0 : 1;
+}
 async function runCli(argv = process.argv.slice(2), io = {}) {
   const output = io.output ?? console.log;
   const errorOutput = io.error ?? console.error;
@@ -17031,6 +17139,7 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
     if (command === "create") {
       const id = option(args, "--id");
       const environment = option(args, "--env");
+      const channel = option(args, "--channel");
       const expectations = options(args, "--expect");
       const beforeFixtures = options(args, "--fixture-before");
       assertNoUnknownOptions(args);
@@ -17045,7 +17154,7 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
           if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
         }
       }
-      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures });
+      const spec = draftSpec(requirement, { id, environment, expectations, beforeFixtures: inferredFixtures, channel });
       await workspace.saveSpec(spec);
       await workspace.selectSpec(spec.id, spec.environment);
       output(`Created .qa/specs/${spec.id}.yaml`);
@@ -17081,6 +17190,8 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected run-last argument: ${args[0]}`);
       const selected = await workspace.readLastTest();
       return await runCommand(workspace, selected.specId, selected.environment, io, output);
+    } else if (command === "audit") {
+      return await auditCommand(workspace, args, output);
     } else if (command === "select") {
       const environment = option(args, "--env");
       const id = args[0];
@@ -17116,9 +17227,11 @@ export {
   NativeExecutor,
   QaError,
   QaWorkspace,
+  SPEC_CHANNELS,
   assertStableId,
   atomicWriteFile,
   buildDesignComparisonRequest,
+  channelFor,
   classifyFailure,
   createExpectationGuard,
   createNativeDesktopExecutor,

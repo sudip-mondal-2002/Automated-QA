@@ -417,6 +417,11 @@ export class QaWorkspace {
           { path: `$.steps[${resultIndex}].intent`, message: "must match the selected spec exactly" },
         ]);
       }
+      if ((step.channel ?? "web") !== (specStep.channel ?? "web")) {
+        throw new QaError("RESULT_CHANNEL_CHANGED", `Run ${value.runId} changed a test channel`, [
+          { path: `$.steps[${resultIndex}].channel`, message: "must match the selected spec exactly" },
+        ]);
+      }
       const recordedExpectations = step.expectations.map((entry) => entry.expectation);
       if (JSON.stringify(recordedExpectations) !== JSON.stringify(specStep.expect)) {
         throw new QaError("RESULT_EXPECTATION_CHANGED", `Run ${value.runId} changed test expectations`, [

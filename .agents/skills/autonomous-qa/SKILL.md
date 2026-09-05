@@ -40,8 +40,8 @@ The application needs Node.js 20 or newer, but it does not need to install the s
    - Desktop: `setup --type desktop --app <existing-application>`
    - Add `--environment <stable-id>` when `local` is not the right name.
 3. `setup` must not seed this package's demo fixtures or sample checkout tests. It is idempotent and must refuse to overwrite a differently configured environment.
-4. Translate the requested journey into semantic YAML. Preserve what the user intends to do and what they should visibly observe. Never add CSS selectors, XPath, DOM paths, coordinates, fixed timing, or tool-specific browser code.
-5. For one simple outcome, use internal `create`. For a multi-step journey, write YAML matching `schemas/spec.schema.json` and save it through internal `spec save`.
+4. Translate the requested journey into semantic YAML. Preserve what the user intends to do and what they should visibly observe. Never add CSS selectors, XPath, DOM paths, coordinates, fixed timing, or tool-specific browser code. Use optional `channel: web|chat|voice|workflow|api` per step when the journey spans conversational, voice, agentic-workflow, or API surfaces; omit it for plain web UI. The channel is part of the contract and must never change during healing or reruns.
+5. For one simple outcome, use internal `create [--channel <channel>]`. For a multi-step journey, write YAML matching `schemas/spec.schema.json` and save it through internal `spec save`.
 6. Create fixtures only for genuinely reusable setup or cleanup. Store secrets as references such as `${QA_CUSTOMER_PASSWORD}`; never place resolved values in YAML, output, screenshots, or results.
 7. Run internal `validate` before opening the target. Surface path-based validation problems rather than weakening a contract.
 
@@ -96,13 +96,13 @@ The UI never drives the application, schedules jobs, or exposes a remote service
 
 ## Internal document operations
 
-Use `spec`, `fixture`, `environment`, and `result` subcommands for internal `list`, `show`, `validate`, and `save`; specs and fixtures also support guarded deletion. `edit <spec-id>` replaces the authoritative file only after validation succeeds. All saves must reuse the packaged validators and atomic write path.
+Use `spec`, `fixture`, `environment`, and `result` subcommands for internal `list`, `show`, `validate`, and `save`; specs and fixtures also support guarded deletion. `edit <spec-id>` replaces the authoritative file only after validation succeeds. All saves must reuse the packaged validators and atomic write path. Use internal `audit <run-id>` to print the governance checklist (unchanged expectations/channels, healing evidence, design findings, screenshot declarations) before presenting evidence to judges or enterprise reviewers.
 
 The schemas in `schemas/` are authoritative. IDs use lowercase words separated by hyphens and remain stable after creation.
 
 ## Safety invariants
 
-- Expectations describe observable outcomes and remain unchanged during execution and healing.
+- Expectations and channels describe observable outcomes and remain unchanged during execution and healing.
 - Resolved fixture secrets never enter documents, results, events, terminal output, or screenshots.
 - Replacements require explicit semantic equivalence; similarity is insufficient.
 - Healing requires before/after evidence and unchanged-expectation verification.

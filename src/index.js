@@ -1,8 +1,8 @@
-export { draftSpec, slugify } from "./draft.js";
+export { draftSpec, slugify, SPEC_CHANNELS } from "./draft.js";
 export { parseJson, parseYaml, stringifyJson, stringifyYaml } from "./documents.js";
 export { formatQaError, QaError } from "./errors.js";
 export { prepareEnvironment, spawnApplication } from "./environment.js";
-export { createRunId, executeRun } from "./execution.js";
+export { channelFor, createRunId, executeRun } from "./execution.js";
 export {
   buildDesignComparisonRequest,
   DEFAULT_DESIGN_VIEWPORT,
