@@ -1,72 +1,72 @@
 {
-  "totalDuration": 237.533,
-  "plannedDuration": 237.533,
-  "encodedAudioDuration": 237.533,
-  "avEndDelta": 0,
+  "totalDuration": 242,
+  "plannedDuration": 242,
+  "encodedAudioDuration": 242.005333,
+  "avEndDelta": 0.005333,
   "chapters": [
     {
       "id": "01",
-      "title": "The promise",
+      "title": "The actual developer experience",
       "start": 0,
-      "end": 25.567,
-      "duration": 25.567,
-      "narrationDuration": 24.912
+      "end": 26.333333,
+      "duration": 26.333333,
+      "narrationDuration": 25.68
     },
     {
       "id": "02",
-      "title": "Install and validate",
-      "start": 25.567,
-      "end": 52.067,
-      "duration": 26.5,
-      "narrationDuration": 25.848
+      "title": "Install one self-contained skill",
+      "start": 26.333333,
+      "end": 57.1,
+      "duration": 30.766667,
+      "narrationDuration": 30.096
     },
     {
       "id": "03",
-      "title": "Create semantic QA",
-      "start": 52.067,
-      "end": 79,
-      "duration": 26.933,
-      "narrationDuration": 26.28
+      "title": "One request from the app project",
+      "start": 57.1,
+      "end": 90.466667,
+      "duration": 33.366667,
+      "narrationDuration": 32.712
     },
     {
       "id": "04",
-      "title": "Run the real journey",
-      "start": 79,
-      "end": 112.233,
-      "duration": 33.233,
-      "narrationDuration": 32.568
+      "title": "The skill owns the full run",
+      "start": 90.466667,
+      "end": 124.3,
+      "duration": 33.833333,
+      "narrationDuration": 33.168
     },
     {
       "id": "05",
-      "title": "Heal harmless drift",
-      "start": 112.233,
-      "end": 144.4,
-      "duration": 32.167,
-      "narrationDuration": 31.488
+      "title": "Harmless drift can heal",
+      "start": 124.3,
+      "end": 155.6,
+      "duration": 31.3,
+      "narrationDuration": 30.648
     },
     {
       "id": "06",
-      "title": "Keep real bugs red",
-      "start": 144.4,
-      "end": 173.733,
-      "duration": 29.333,
-      "narrationDuration": 28.656
+      "title": "A real bug stays failed",
+      "start": 155.6,
+      "end": 182.266667,
+      "duration": 26.666667,
+      "narrationDuration": 25.992
     },
     {
       "id": "07",
-      "title": "Detect design regression",
-      "start": 173.733,
-      "end": 203.566,
-      "duration": 29.833,
-      "narrationDuration": 29.16
+      "title": "Design is a separate decision",
+      "start": 182.266667,
+      "end": 212.466667,
+      "duration": 30.2,
+      "narrationDuration": 29.544
     },
     {
       "id": "08",
-      "title": "Inspectable correctness",
-      "start": 203.566,
-      "end": 237.533,
-      "duration": 33.967,
-      "narrationDuration": 33.312
+      "title": "Stay in the application project",
+      "start": 212.466667,
+      "end": 242,
+      "duration": 29.533333,
+      "narrationDuration": 28.848
     }
   ]
 }

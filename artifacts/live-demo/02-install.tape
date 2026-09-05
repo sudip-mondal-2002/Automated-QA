@@ -1,6 +1,5 @@
 Output artifacts/live-demo/work/02-install.mov
 
-Require git
 Require npm
 
 Set Shell "bash"
@@ -10,7 +9,7 @@ Set Width 1920
 Set Height 1080
 Set Padding 42
 Set Framerate 30
-Set TypingSpeed 28ms
+Set TypingSpeed 26ms
 Set Theme "Catppuccin Mocha"
 Set MarginFill "#0B1020"
 Set Margin 28
@@ -19,30 +18,28 @@ Set WindowBar "Colorful"
 Set WindowBarSize 42
 
 Hide
-Type "cd /tmp/autoqa-vhs-install"
+Type "rm -rf /tmp/qa-shop-demo-video"
+Enter
+Type "mkdir -p /tmp/qa-shop-demo-video"
+Enter
+Type "cp -R /Users/sudipmondal/mando/auto-qa/demo-app/. /tmp/qa-shop-demo-video/"
+Enter
+Type "cd /tmp/qa-shop-demo-video"
 Enter
 Show
 
-Type "git clone https://github.com/sudip-mondal-2002/auto-qa.git auto-qa"
+Type "pwd"
 Enter
-Sleep 3s
+Sleep 800ms
 
-Type "cd auto-qa"
-Enter
-Sleep 600ms
-
-Type "npm install"
-Enter
-Sleep 3s
-
-Type "npm run qa-agent -- init"
+Type "find . -maxdepth 1 -type f -print | sort"
 Enter
 Sleep 2s
 
-Type "npm run qa-agent -- validate"
+Type "cat package.json"
 Enter
-Sleep 2s
+Sleep 4s
 
-Type "npm run qa-agent -- spec list"
+Type "npm ls --depth=0"
 Enter
 Sleep 4s

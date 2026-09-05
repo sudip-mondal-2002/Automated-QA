@@ -14,6 +14,16 @@ const leadIn = 0.2;
 const tail = 0.45;
 
 const screenshots = {
+  "01": [
+    "02-skill-install.png",
+    "03-developer-prompt.png",
+    "03-workspace-overview.png",
+  ],
+  "03": [
+    "03-developer-prompt.png",
+    "03-create-terminal-check.png",
+    "03-workspace-overview.png",
+  ],
   "04": [
     "04-pass-01-dashboard.png",
     "04-pass-02-cart.png",
@@ -41,10 +51,13 @@ const screenshots = {
 };
 
 const commandCallouts = {
-  "04": "In Codex: Use $autonomous-qa to run checkout-card --env local",
-  "05": "Same spec · same expectations · app reset: drift",
-  "06": "Same spec · outcome fails · no healing",
-  "07": "checkout-design · explicit reference · declared viewport",
+  "02": "$skill-installer Install the autonomous-qa GitHub skill",
+  "03": "$autonomous-qa Set up QA, run checkout, and show evidence",
+  "04": "The skill starts the app · native Browser drives the journey",
+  "05": "$autonomous-qa Rerun last · expectations stay unchanged",
+  "06": "Same rerun prompt · required outcome fails · no healing",
+  "07": "$autonomous-qa Run the explicit-reference design check",
+  "08": "Application files + reviewable .qa evidence · no QA dependency",
 };
 
 function run(program, args, options = {}) {
@@ -79,8 +92,38 @@ function probeStreamDurations(path) {
   return Object.fromEntries(value.streams.map((stream) => [stream.codec_type, Number(stream.duration)]));
 }
 
+function probeDecodedAudioDuration(path) {
+  const sampleRate = Number(execFileSync("ffprobe", [
+    "-v",
+    "error",
+    "-select_streams",
+    "a:0",
+    "-show_entries",
+    "stream=sample_rate",
+    "-of",
+    "default=nw=1:nk=1",
+    path,
+  ], { encoding: "utf8" }).trim());
+  const samples = execFileSync("ffprobe", [
+    "-v",
+    "error",
+    "-select_streams",
+    "a:0",
+    "-show_entries",
+    "frame=nb_samples",
+    "-of",
+    "csv=p=0",
+    path,
+  ], { encoding: "utf8" })
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .reduce((sum, value) => sum + Number(value), 0);
+  return samples / sampleRate;
+}
+
 function seconds(value) {
-  return Number(value.toFixed(3));
+  return Number(value.toFixed(6));
 }
 
 function makeStillClip(image, output, duration) {
@@ -218,6 +261,42 @@ function makeCreationClip(output, duration) {
   ]);
 }
 
+function makeHybridClip(chapterId, image, recording, output, duration, stillRatio = 0.46) {
+  const transition = 0.55;
+  const stillDuration = Math.max(7, duration * stillRatio);
+  const still = join(generatedDirectory, `${chapterId}-still.mp4`);
+  const motion = join(generatedDirectory, `${chapterId}-motion.mp4`);
+  makeStillClip(join(workDirectory, image), still, stillDuration);
+  makeRecordedClip(
+    join(workDirectory, recording),
+    motion,
+    duration - stillDuration + transition,
+  );
+  run("ffmpeg", [
+    "-y",
+    "-i",
+    still,
+    "-i",
+    motion,
+    "-filter_complex",
+    `[0:v][1:v]xfade=transition=fade:duration=${transition}:offset=${seconds(stillDuration - transition)}[v]`,
+    "-map",
+    "[v]",
+    "-t",
+    String(duration),
+    "-an",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "veryfast",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    output,
+  ]);
+}
+
 function overlayChapter(base, chapter, output, duration) {
   const titlePath = join(generatedDirectory, `${chapter.id}-title.txt`);
   const commandPath = join(generatedDirectory, `${chapter.id}-command.txt`);
@@ -314,15 +393,19 @@ let cursor = 0;
 for (const chapter of chapters) {
   const narration = join(workDirectory, "voice", `${chapter.id}.mp3`);
   const audioDuration = probeDuration(narration);
-  const duration = seconds(Math.ceil((audioDuration + leadIn + tail) * 30) / 30);
+  const durationFrames = Math.ceil((audioDuration + leadIn + tail) * 30)
+    + (chapter.id === chapters.at(-1).id ? 1 : 0);
+  const duration = seconds(durationFrames / 30);
   const base = join(generatedDirectory, `${chapter.id}-base.mp4`);
   const titled = join(generatedDirectory, `${chapter.id}-titled.mp4`);
   const scene = join(generatedDirectory, `${chapter.id}-scene.mp4`);
 
-  if (screenshots[chapter.id]) {
+  if (chapter.id === "02") {
+    makeHybridClip(chapter.id, "02-skill-install.png", chapter.visual, base, duration, 0.52);
+  } else if (chapter.id === "08") {
+    makeHybridClip(chapter.id, "03-workspace-overview.png", chapter.visual, base, duration, 0.64);
+  } else if (screenshots[chapter.id]) {
     makeScreenshotSequence(chapter.id, screenshots[chapter.id], base, duration);
-  } else if (chapter.id === "03") {
-    makeCreationClip(base, duration);
   } else {
     makeRecordedClip(join(workDirectory, chapter.visual), base, duration);
   }
@@ -347,16 +430,22 @@ writeFileSync(
 
 const output = join(artifactDirectory, "auto-qa-live-demo.mp4");
 const sceneInputs = timing.flatMap(({ id }) => ["-i", join(generatedDirectory, `${id}-scene.mp4`)]);
-const normalizedScenes = timing.flatMap((_, index) => [
+const narrationInputs = timing.flatMap(({ id }) => ["-i", join(workDirectory, "voice", `${id}.mp3`)]);
+const normalizedVideo = timing.map((_, index) =>
   `[${index}:v]fps=30,setpts=PTS-STARTPTS[v${index}]`,
-  `[${index}:a]aresample=48000,asetpts=PTS-STARTPTS[a${index}]`,
-]);
-const concatStreams = timing.map((_, index) => `[v${index}][a${index}]`).join("");
+);
+const normalizedAudio = timing.map((chapter, index) => {
+  const samples = Math.round(chapter.duration * 48_000);
+  return `[${timing.length + index}:a]loudnorm=I=-16:LRA=7:TP=-1.5,aresample=48000,adelay=${Math.round(leadIn * 1000)}:all=1,asetpts=N/SR/TB,apad=whole_len=${samples},atrim=end_sample=${samples},asetpts=N/SR/TB[a${index}]`;
+});
+const videoStreams = timing.map((_, index) => `[v${index}]`).join("");
+const audioStreams = timing.map((_, index) => `[a${index}]`).join("");
 run("ffmpeg", [
   "-y",
   ...sceneInputs,
+  ...narrationInputs,
   "-filter_complex",
-  `${normalizedScenes.join(";")};${concatStreams}concat=n=${timing.length}:v=1:a=1[v][a]`,
+  `${normalizedVideo.join(";")};${normalizedAudio.join(";")};${videoStreams}concat=n=${timing.length}:v=1:a=0[v];${audioStreams}concat=n=${timing.length}:v=0:a=1[a]`,
   "-map",
   "[v]",
   "-map",
@@ -385,9 +474,10 @@ run("ffmpeg", [
 ]);
 
 const encoded = probeStreamDurations(output);
+const decodedAudioDuration = probeDecodedAudioDuration(output);
 const plannedDuration = seconds(cursor);
 const videoDelta = Math.abs(encoded.video - plannedDuration);
-const avEndDelta = Math.abs(encoded.video - encoded.audio);
+const avEndDelta = Math.abs(encoded.video - decodedAudioDuration);
 if (videoDelta > 1 / 30 + 0.005) {
   throw new Error(`Encoded video drifted ${videoDelta.toFixed(3)}s from the frame-rounded plan`);
 }
@@ -420,7 +510,7 @@ writeFileSync(
   `${JSON.stringify({
     totalDuration: seconds(encoded.video),
     plannedDuration,
-    encodedAudioDuration: seconds(encoded.audio),
+    encodedAudioDuration: seconds(decodedAudioDuration),
     avEndDelta: seconds(avEndDelta),
     chapters: timing,
   }, null, 2)}\n`,

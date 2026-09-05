@@ -18,18 +18,24 @@ Set WindowBar "Colorful"
 Set WindowBarSize 42
 
 Hide
-Type "cd /tmp/autoqa-vhs-install/auto-qa"
+Type "cd /tmp/qa-shop-demo-video"
+Enter
+Type "rm -rf /tmp/qa-shop-demo-video/.qa"
+Enter
+Type "/Users/sudipmondal/mando/auto-qa/.agents/skills/autonomous-qa/scripts/qa-agent setup --type web --base-url http://127.0.0.1:3000 --start-command 'npm run dev' --root /tmp/qa-shop-demo-video"
+Enter
+Type "/Users/sudipmondal/mando/auto-qa/.agents/skills/autonomous-qa/scripts/qa-agent fixture save /Users/sudipmondal/mando/auto-qa/.qa/fixtures/login-customer.yaml --root /tmp/qa-shop-demo-video"
+Enter
+Type "/Users/sudipmondal/mando/auto-qa/.agents/skills/autonomous-qa/scripts/qa-agent fixture save /Users/sudipmondal/mando/auto-qa/.qa/fixtures/cleanup-test-order.yaml --root /tmp/qa-shop-demo-video"
+Enter
+Type "/Users/sudipmondal/mando/auto-qa/.agents/skills/autonomous-qa/scripts/qa-agent spec save /Users/sudipmondal/mando/auto-qa/.qa/specs/checkout-card.yaml --root /tmp/qa-shop-demo-video"
 Enter
 Show
 
-Type "npm run qa-agent -- create 'a logged-in customer completes checkout' --id live-checkout --env local --fixture-before login-customer --expect 'Order confirmation is visible'"
+Type "find .qa -maxdepth 3 -type f -print | sort"
 Enter
 Sleep 3s
 
-Type "npm run qa-agent -- spec show live-checkout"
+Type "sed -n '1,80p' .qa/specs/checkout-card.yaml"
 Enter
 Sleep 5s
-
-Type "npm run qa-agent -- validate"
-Enter
-Sleep 4s

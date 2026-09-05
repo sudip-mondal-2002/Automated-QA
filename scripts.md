@@ -145,4 +145,4 @@ The live sequence in [LIVE_DEMO.md](LIVE_DEMO.md) shows only supported developer
 6. change only the demo application's deterministic state and rerun the same semantic expectation;
 7. demonstrate `healed`, `functional_regression`, and explicit-reference `design_regression` boundaries.
 
-The deliverables in `artifacts/live-demo/` include the MP4, separate narration, captions, timing manifest, contact sheet, terminal recording sources, and renderer. The renderer uses measured narration durations, rounds chapters to 30 fps boundaries, and rejects material audio/video end drift.
+The deliverables in `artifacts/live-demo/` include the MP4, separate narration, captions, timing manifest, contact sheet, terminal recording sources, voice generator, and renderer. `generate-voiceover.mjs` uses the conversational `en-US-BrianMultilingualNeural` voice by default instead of the operating system's robotic speech voice; `AUTO_QA_DEMO_VOICE` can select another Edge neural voice. The renderer uses measured decoded narration durations, rounds chapters to 30 fps boundaries, and rejects audio/video end drift above 12 milliseconds.

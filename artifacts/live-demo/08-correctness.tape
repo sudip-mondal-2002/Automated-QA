@@ -18,14 +18,14 @@ Set WindowBar "Colorful"
 Set WindowBarSize 42
 
 Hide
-Type "cd /tmp/autoqa-vhs-install/auto-qa"
+Type "cd /tmp/qa-shop-demo-video"
 Enter
 Show
 
-Type "npm run test:coverage | tail -n 24"
+Type "find .qa -maxdepth 3 -type f -print | sort"
 Enter
-Sleep 8s
+Sleep 4s
 
-Type "git status --short"
+Type "cat package.json"
 Enter
 Sleep 4s
