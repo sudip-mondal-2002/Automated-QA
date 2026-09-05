@@ -1,28 +1,82 @@
+// The gate scores what determines whether the generated suite can actually
+// pass, not what the plan looks like from a distance. Two principles:
+//
+//   1. A rule may only block when it can name an actionable gap. A blocking
+//      failure with no gap is a dead end — decideVerdict escalates and the
+//      replan loop can never fire, which is why replan was never observed.
+//   2. Shape rules (category ratios, page counts) are advisory. A planner that
+//      consolidates eleven shallow flows into five real journeys is producing a
+//      better plan, and a ratio rule must not outvote that.
 export const COVERAGE_RULES = Object.freeze([
   { id: "happy-path-coverage", severity: "blocking" },
   { id: "error-state-per-form", severity: "blocking" },
   { id: "auth-negative", severity: "blocking" },
-  { id: "assertion-density", severity: "blocking" },
-  { id: "category-mix", severity: "blocking" },
+  { id: "assertion-presence", severity: "blocking" },
+  { id: "checkable-assertions", severity: "blocking" },
   { id: "prompt-honored", severity: "blocking" },
+  { id: "category-mix", severity: "advisory" },
+  { id: "journey-depth", severity: "advisory" },
   { id: "edge-boundary", severity: "advisory" },
   { id: "orphan-page", severity: "advisory" },
   { id: "destructive-guard", severity: "advisory" },
   { id: "prd-coverage", severity: "advisory" },
 ]);
 
+const STOP_WORDS = new Set(["the", "and", "for", "with", "that", "this", "any", "all", "focus", "test", "testing", "please", "make", "sure", "flows", "flow", "app", "application", "path", "paths"]);
+
+function promptKeywords(prompt) {
+  return [...new Set(String(prompt ?? "").toLowerCase().split(/[^a-z0-9]+/).filter((word) => word.length > 2 && !STOP_WORDS.has(word)))];
+}
+
 function promptHits(text, prompt) {
   if (!prompt) return false;
-  const keywords = String(prompt).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2);
   const hay = String(text ?? "").toLowerCase();
-  const aliases = {
-    checkout: ["/cart", "/checkout", "/confirmation", "cart", "payment", "order"],
-    authentication: ["/login", "/dashboard", "sign in", "auth"],
-  };
-  return keywords.some((keyword) => {
-    if (hay.includes(keyword)) return true;
-    return (aliases[keyword] ?? []).some((alias) => hay.includes(alias));
-  });
+  // Match the developer's own words against the plan's own words. The previous
+  // implementation hardcoded aliases for "checkout" and "authentication" — the
+  // two words in the demo command — so every other prompt scored zero.
+  return promptKeywords(prompt).some((keyword) => hay.includes(keyword) || keyword.includes(hay.replace(/^\//, "")));
+}
+
+/** Every page a flow touches, including the ones only its steps name. */
+function pagesTouched(flow) {
+  const pages = new Set(flow?.pages ?? []);
+  for (const step of flow?.steps ?? []) {
+    if (step.page) pages.add(step.page);
+  }
+  return pages;
+}
+
+function planCoversPage(plan, path, predicate = () => true) {
+  return (plan?.flows ?? []).some((flow) => predicate(flow) && pagesTouched(flow).has(path));
+}
+
+/**
+ * A page the developer deliberately scoped out is not a coverage failure.
+ * Missing it stays visible as advisory rather than blocking the run — the gate
+ * must not contradict the prompt the planner was told to honour.
+ */
+function scopeFor(prompt, page) {
+  if (!prompt) return "blocking";
+  const text = `${page.path} ${page.title ?? ""} ${(page.headings ?? []).map((heading) => heading.text).join(" ")}`;
+  return promptHits(text, prompt) ? "blocking" : "advisory";
+}
+
+/** A step that only acts — fill, navigate, click — has nothing to observe yet. */
+function isActionOnlyStep(step) {
+  return (step.expect ?? []).length === 0 && ["navigate", "click", "fill", "submit"].includes(step.action);
+}
+
+function expectationsOf(plan) {
+  return (plan?.flows ?? []).flatMap((flow) => (flow.steps ?? []).flatMap((step) => step.expect ?? []));
+}
+
+function hasPredicate(expectation) {
+  return Boolean(expectation && typeof expectation === "object" && expectation.assert && expectation.assert.kind);
+}
+
+/** An expectation is a bare string (deterministic planner) or { prose, assert }. */
+function expectationText(expectation) {
+  return typeof expectation === "string" ? expectation : expectation?.prose ?? "";
 }
 
 function formPages(siteMap) {
@@ -36,19 +90,21 @@ function submittableFormPages(siteMap) {
   return formPages(siteMap).filter((page) => (page.forms ?? []).some((form) => (form.inputs ?? []).length > 0));
 }
 
-function checkHappyPath({ plan, siteMap }) {
+function checkHappyPath({ plan, siteMap, prompt }) {
   if (formPages(siteMap).length === 0) return { status: "skipped", detail: "No form surface discovered", evidence: [] };
-  const missing = formPages(siteMap).filter((page) => !(plan.flows ?? []).some((flow) => flow.category === "happy" && (flow.pages ?? []).includes(page.path)));
+  const missing = formPages(siteMap).filter((page) => !planCoversPage(plan, page.path, (flow) => flow.category === "happy"));
   if (missing.length === 0) return { status: "pass", detail: "Every form page has a happy flow", evidence: [] };
+  const severity = missing.every((page) => scopeFor(prompt, page) === "advisory") ? "advisory" : "blocking";
   return {
     status: "fail",
-    detail: `${missing.length} form page(s) have no happy flow`,
+    severity,
+    detail: `${missing.length} form page(s) have no happy flow${severity === "advisory" ? " (all outside the developer's stated scope)" : ""}`,
     evidence: missing.map((page) => page.path),
     gaps: missing.map((page, index) => ({
       id: `gap_happy_${index}`,
       ruleId: "happy-path-coverage",
       kind: "missing_flow",
-      severity: "blocking",
+      severity: scopeFor(prompt, page),
       target: page.path,
       autoFixable: true,
       suggestion: {
@@ -63,20 +119,21 @@ function checkHappyPath({ plan, siteMap }) {
   };
 }
 
-function checkErrorPerForm({ plan, siteMap }) {
-  const flows = plan.flows ?? [];
+function checkErrorPerForm({ plan, siteMap, prompt }) {
   if (submittableFormPages(siteMap).length === 0) return { status: "skipped", detail: "No submittable form surface discovered", evidence: [] };
-  const missing = submittableFormPages(siteMap).filter((page) => !flows.some((flow) => flow.category === "error" && (flow.pages ?? []).includes(page.path)));
+  const missing = submittableFormPages(siteMap).filter((page) => !planCoversPage(plan, page.path, (flow) => flow.category === "error"));
   if (missing.length === 0) return { status: "pass", detail: "Every form has an error flow", evidence: [] };
+  const severity = missing.every((page) => scopeFor(prompt, page) === "advisory") ? "advisory" : "blocking";
   return {
     status: "fail",
-    detail: `${missing.length} of ${submittableFormPages(siteMap).length} forms have no error-state flow`,
+    severity,
+    detail: `${missing.length} of ${submittableFormPages(siteMap).length} forms have no error-state flow${severity === "advisory" ? " (all outside the developer's stated scope)" : ""}`,
     evidence: missing.map((page) => page.path),
     gaps: missing.map((page, index) => ({
       id: `gap_error_${index}`,
       ruleId: "error-state-per-form",
       kind: "missing_flow",
-      severity: "blocking",
+      severity: scopeFor(prompt, page),
       target: page.path,
       autoFixable: true,
       suggestion: {
@@ -119,42 +176,175 @@ function checkAuthNegative({ plan, siteMap }) {
   };
 }
 
-function checkAssertionDensity({ plan }) {
+/**
+ * Every step that observes something must say what. A step that only acts —
+ * fill the card, open the page — is exempt: it is honest for it to assert
+ * nothing, and the generator folds it into the step that asserts its outcome.
+ * The previous rule also demanded two expectations per flow, which scored a
+ * precise single assertion as "thin".
+ */
+function checkAssertionPresence({ plan }) {
   const flows = plan.flows ?? [];
-  const thin = flows.filter((flow) => (flow.steps ?? []).some((step) => (step.expect ?? []).length === 0) || (flow.steps ?? []).reduce((n, step) => n + (step.expect ?? []).length, 0) < 2);
-  if (thin.length === 0 && flows.length > 0) return { status: "pass", detail: "Assertion density sufficient", evidence: [] };
   if (flows.length === 0) {
-    return { status: "fail", detail: "No flows to assert", evidence: [], gaps: [{ id: "gap_assert_0", ruleId: "assertion-density", kind: "missing_assertion", severity: "blocking", target: "", autoFixable: false }] };
+    return {
+      status: "fail",
+      detail: "No flows to assert",
+      evidence: [],
+      gaps: [{ id: "gap_assert_0", ruleId: "assertion-presence", kind: "missing_assertion", severity: "blocking", target: "", autoFixable: false }],
+    };
   }
+  const silent = flows.filter((flow) => {
+    const steps = flow.steps ?? [];
+    const observing = steps.filter((step) => !isActionOnlyStep(step));
+    return observing.length === 0 || observing.some((step) => (step.expect ?? []).length === 0);
+  });
+  if (silent.length === 0) return { status: "pass", detail: `${flows.length} flow(s) declare what to observe`, evidence: [] };
   return {
     status: "fail",
-    detail: `${thin.length} flow(s) have thin assertions`,
-    evidence: thin.map((flow) => flow.id),
-    gaps: thin.map((flow) => ({ id: `gap_assert_${flow.id}`, ruleId: "assertion-density", kind: "missing_assertion", severity: "blocking", target: (flow.pages ?? [])[0] ?? "", autoFixable: false })),
+    detail: `${silent.length} flow(s) contain a step that observes nothing`,
+    evidence: silent.map((flow) => flow.id),
+    gaps: silent.map((flow) => ({
+      id: `gap_assert_${flow.id}`,
+      ruleId: "assertion-presence",
+      kind: "missing_assertion",
+      severity: "blocking",
+      target: [...pagesTouched(flow)][0] ?? "",
+      autoFixable: false,
+      hint: `Flow ${flow.id} has a step with no expectation. Either declare what should be observable, or mark the step as an action (navigate/click/fill/submit).`,
+    })),
   };
 }
 
+/**
+ * The rule that decides whether the suite can pass at all.
+ *
+ * An expectation carrying only prose compiles to no assertion — the generator
+ * emits `// UNVERIFIED` rather than asserting the sentence back at the page.
+ * A plan of nothing but prose therefore produces a suite that cannot fail,
+ * which is worse than one that fails loudly. This is not auto-fixable: no
+ * rearrangement of flows invents an observable string, so it escalates with
+ * the reason instead of burning replan attempts.
+ */
+function checkCheckableAssertions({ plan }) {
+  const expectations = expectationsOf(plan);
+  if (expectations.length === 0) return { status: "skipped", detail: "No expectations to check", evidence: [] };
+  const checkable = expectations.filter(hasPredicate);
+  const ratio = checkable.length / expectations.length;
+  const detail = `${checkable.length}/${expectations.length} expectations carry a checkable predicate`;
+  if (ratio >= 0.8) return { status: "pass", detail, evidence: [] };
+  const bare = (plan.flows ?? [])
+    .filter((flow) => (flow.steps ?? []).some((step) => (step.expect ?? []).some((expectation) => !hasPredicate(expectation))))
+    .map((flow) => flow.id);
+  return {
+    status: "fail",
+    detail,
+    evidence: bare,
+    gaps: [{
+      id: "gap_checkable_0",
+      ruleId: "checkable-assertions",
+      kind: "unverifiable_assertion",
+      severity: "blocking",
+      target: bare[0] ?? "",
+      autoFixable: false,
+      hint: "Expectations need a machine-checkable predicate whose value is text observed in the crawl. Where the observable text is genuinely unknown, use url_contains or record it in openQuestions — do not invent page copy.",
+    }],
+  };
+}
+
+/**
+ * Advisory. Ratios describe a plan's shape, and shape is a weak proxy: a
+ * planner that folds eleven shallow flows into five real journeys shifts every
+ * ratio while improving the plan. It reports, it does not block.
+ */
 function checkCategoryMix({ plan }) {
   const flows = plan.flows ?? [];
-  if (flows.length === 0) return { status: "fail", detail: "No flows", evidence: [], gaps: [] };
-  const happy = flows.filter((f) => f.category === "happy").length / flows.length;
-  const error = flows.filter((f) => f.category === "error").length / flows.length;
-  const edge = flows.filter((f) => f.category === "edge").length / flows.length;
+  if (flows.length === 0) {
+    return {
+      status: "fail",
+      detail: "No flows",
+      evidence: [],
+      gaps: [{ id: "gap_mix_0", ruleId: "category-mix", kind: "missing_flow", severity: "advisory", target: "", autoFixable: false, hint: "The plan contains no flows at all." }],
+    };
+  }
+  const share = (category) => flows.filter((flow) => flow.category === category).length / flows.length;
   const problems = [];
-  if (happy < 0.4) problems.push(`happy ${Math.round(happy * 100)}% < 40%`);
-  if (error < 0.2) problems.push(`error ${Math.round(error * 100)}% < 20%`);
-  if (edge < 0.15) problems.push(`edge ${Math.round(edge * 100)}% < 15%`);
+  if (share("happy") < 0.2) problems.push(`happy ${Math.round(share("happy") * 100)}% < 20%`);
+  if (share("error") < 0.2) problems.push(`error ${Math.round(share("error") * 100)}% < 20%`);
+  if (share("edge") + share("error") === 0) problems.push("no error or edge coverage at all");
   if (problems.length === 0) return { status: "pass", detail: "Category mix healthy", evidence: [] };
-  return { status: "fail", detail: problems.join("; "), evidence: problems, gaps: [] };
+  return {
+    status: "fail",
+    detail: problems.join("; "),
+    evidence: problems,
+    gaps: problems.map((problem, index) => ({
+      id: `gap_mix_${index}`,
+      ruleId: "category-mix",
+      kind: "thin_category",
+      severity: "advisory",
+      target: "",
+      autoFixable: false,
+      hint: `Category balance: ${problem}.`,
+    })),
+  };
+}
+
+/**
+ * Advisory reward for real journeys. A plan of single-click flows can satisfy
+ * every coverage rule while testing no actual user path, and nothing else in
+ * the checklist notices.
+ */
+function checkJourneyDepth({ plan }) {
+  const flows = plan.flows ?? [];
+  if (flows.length === 0) return { status: "skipped", detail: "No flows", evidence: [] };
+  const journeys = flows.filter((flow) => (flow.steps ?? []).length >= 2);
+  if (journeys.length > 0) {
+    return { status: "pass", detail: `${journeys.length}/${flows.length} flow(s) are multi-step journeys`, evidence: journeys.map((flow) => flow.id) };
+  }
+  return {
+    status: "fail",
+    detail: "Every flow is a single step; no user journey is exercised end to end",
+    evidence: flows.map((flow) => flow.id),
+    gaps: [{
+      id: "gap_journey_0",
+      ruleId: "journey-depth",
+      kind: "shallow_plan",
+      severity: "advisory",
+      target: "",
+      autoFixable: false,
+      hint: "Where the crawl shows a sequence (cart -> checkout -> confirmation), plan it as one flow with ordered steps rather than disconnected single-step flows.",
+    }],
+  };
 }
 
 function checkPromptHonored({ plan, prompt }) {
   if (!prompt) return { status: "skipped", detail: "No prompt scope", evidence: [] };
   const flows = plan.flows ?? [];
-  if (flows.length === 0) return { status: "fail", detail: "No flows for prompt", evidence: [], gaps: [] };
-  const hits = flows.filter((flow) => promptHits(`${flow.title} ${(flow.pages ?? []).join(" ")}`, prompt)).length;
-  if (hits / flows.length >= 0.3) return { status: "pass", detail: `${hits}/${flows.length} flows honor prompt`, evidence: [] };
-  return { status: "fail", detail: `Only ${hits}/${flows.length} flows touch prompt scope`, evidence: [], gaps: [] };
+  if (flows.length === 0) {
+    return {
+      status: "fail",
+      detail: "No flows for prompt",
+      evidence: [],
+      gaps: [{ id: "gap_prompt_0", ruleId: "prompt-honored", kind: "prompt_ignored", severity: "blocking", target: "", autoFixable: false, hint: `The developer asked to focus on: ${prompt}` }],
+    };
+  }
+  const hits = flows.filter((flow) => promptHits(`${flow.title} ${flow.rationale ?? ""} ${[...pagesTouched(flow)].join(" ")}`, prompt));
+  if (hits.length / flows.length >= 0.3) return { status: "pass", detail: `${hits.length}/${flows.length} flows honor prompt`, evidence: [] };
+  return {
+    status: "fail",
+    detail: `Only ${hits.length}/${flows.length} flows touch prompt scope`,
+    evidence: promptKeywords(prompt),
+    // A blocking rule must name something the planner can act on, or the
+    // replan loop can never fire and the run escalates on attempt one.
+    gaps: [{
+      id: "gap_prompt_0",
+      ruleId: "prompt-honored",
+      kind: "prompt_ignored",
+      severity: "blocking",
+      target: "",
+      autoFixable: false,
+      hint: `The developer asked to focus on "${prompt}". Weight the plan toward those areas while keeping baseline coverage elsewhere.`,
+    }],
+  };
 }
 
 function checkEdgeBoundary({ plan, siteMap }) {
@@ -179,18 +369,36 @@ function checkEdgeBoundary({ plan, siteMap }) {
   };
 }
 
-function checkOrphanPage({ plan, siteMap }) {
+function checkOrphanPage({ plan, siteMap, prompt }) {
   if ((siteMap?.pages ?? []).length === 0) return { status: "skipped", detail: "No pages discovered", evidence: [] };
-  const covered = new Set((plan.flows ?? []).flatMap((flow) => flow.pages ?? []));
-  const orphans = (siteMap?.pages ?? []).map((page) => page.path).filter((path) => !covered.has(path));
+  const covered = new Set((plan.flows ?? []).flatMap((flow) => [...pagesTouched(flow)]));
+  const orphans = (siteMap?.pages ?? []).filter((page) => !covered.has(page.path));
   if (orphans.length === 0) return { status: "pass", detail: "All pages covered", evidence: [] };
-  return { status: "fail", detail: `${orphans.length} page(s) in no flow`, evidence: orphans, gaps: [] };
+  // Pages the developer scoped out are reported, never counted against the plan.
+  const inScope = orphans.filter((page) => scopeFor(prompt, page) === "blocking");
+  if (prompt && inScope.length === 0) {
+    return { status: "pass", detail: `${orphans.length} page(s) uncovered, all outside the developer's stated scope`, evidence: orphans.map((page) => page.path) };
+  }
+  return {
+    status: "fail",
+    detail: `${inScope.length || orphans.length} page(s) in no flow`,
+    evidence: (inScope.length > 0 ? inScope : orphans).map((page) => page.path),
+    gaps: (inScope.length > 0 ? inScope : orphans).map((page, index) => ({
+      id: `gap_orphan_${index}`,
+      ruleId: "orphan-page",
+      kind: "uncovered_page",
+      severity: "advisory",
+      target: page.path,
+      autoFixable: false,
+      hint: `${page.path} was discovered by the crawl but no flow touches it.`,
+    })),
+  };
 }
 
 function checkDestructiveGuard({ plan }) {
   const risky = (plan.flows ?? []).filter((flow) => /delete|pay|place order/i.test(flow.title));
   if (risky.length === 0) return { status: "skipped", detail: "No destructive surface", evidence: [] };
-  const unguarded = risky.filter((flow) => !(flow.steps ?? []).some((step) => /verif|confirm|only one/i.test((step.expect ?? []).join(" "))));
+  const unguarded = risky.filter((flow) => !(flow.steps ?? []).some((step) => /verif|confirm|only one/i.test((step.expect ?? []).map(expectationText).join(" "))));
   if (unguarded.length === 0) return { status: "pass", detail: "Destructive flows verified", evidence: [] };
   return { status: "fail", detail: `${unguarded.length} destructive flow(s) lack verification`, evidence: unguarded.map((f) => f.id), gaps: [] };
 }
@@ -207,9 +415,11 @@ const CHECKS = {
   "happy-path-coverage": checkHappyPath,
   "error-state-per-form": checkErrorPerForm,
   "auth-negative": checkAuthNegative,
-  "assertion-density": checkAssertionDensity,
-  "category-mix": checkCategoryMix,
+  "assertion-presence": checkAssertionPresence,
+  "checkable-assertions": checkCheckableAssertions,
   "prompt-honored": checkPromptHonored,
+  "category-mix": checkCategoryMix,
+  "journey-depth": checkJourneyDepth,
   "edge-boundary": checkEdgeBoundary,
   "orphan-page": checkOrphanPage,
   "destructive-guard": checkDestructiveGuard,
@@ -221,14 +431,23 @@ export function evaluatePlan({ plan, siteMap = { pages: [] }, prd = { requiremen
   const gaps = [];
   for (const rule of COVERAGE_RULES) {
     const result = CHECKS[rule.id]({ plan, siteMap, prd, prompt });
-    const severity = result.gaps?.[0]?.severity ?? rule.severity;
+    // A rule may downgrade itself — a coverage miss confined to pages the
+    // developer scoped out reports without blocking the run.
+    const severity = result.severity ?? result.gaps?.[0]?.severity ?? rule.severity;
     checklist.push({ ruleId: rule.id, severity, ...result });
     gaps.push(...(result.gaps ?? []));
   }
   const score = scorePlan(checklist);
   const untestedRisks = (siteMap.pages ?? [])
-    .filter((page) => !(plan.flows ?? []).some((flow) => (flow.pages ?? []).includes(page.path)))
-    .map((page) => ({ area: page.path, reason: "no flow covers this page", risk: "medium", impact: "unverified surface" }));
+    .filter((page) => !planCoversPage(plan, page.path))
+    .map((page) => ({
+      area: page.path,
+      reason: prompt && scopeFor(prompt, page) === "advisory"
+        ? "no flow covers this page (outside the developer's stated scope)"
+        : "no flow covers this page",
+      risk: prompt && scopeFor(prompt, page) === "advisory" ? "low" : "medium",
+      impact: "unverified surface",
+    }));
   return {
     version: 1,
     planId: plan?.id ?? "plan_unknown",
