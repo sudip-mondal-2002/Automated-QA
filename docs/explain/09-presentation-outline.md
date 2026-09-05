@@ -271,7 +271,8 @@ Plus: remote target without `--allow-remote` → hard stop, not a warning.
 The six verification levels ([08 §5](08-testing-and-demos.md)): unit → contract →
 integration → packaging → live → governance audit.
 
-Numbers: **192 tests, 191 pass, 0 fail**; 10 schemas; 30+ workspace guards; a
+Numbers: **207 tests, 207 pass, 0 fail** in the current demo worktree; 10 schemas;
+30+ workspace guards; a
 packaging test that installs the skill into an external project whose path contains
 spaces and asserts the app's `package.json` is untouched.
 
@@ -328,7 +329,7 @@ Five honest lines — deliver these before anyone asks:
 | A5 | Windows portability: four real bugs | "Does it work outside a Mac?" |
 | A6 | Exit-code contract | "How does this fit CI?" — note headless CI is explicitly out of scope |
 | A7 | Deterministic vs LLM planner comparison table | "Why bother with a model at all?" |
-| A8 | The corner-case matrix (33 cases) | "What edge cases did you consider?" |
+| A8 | The executable corner-case matrix (28 documented contracts) | "What edge cases did you consider?" |
 
 ### A7 content (have this ready — it is the most-asked question)
 Same crawl, same prompt, on `demo-app`:

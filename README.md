@@ -102,6 +102,13 @@ The developer stays in the application project. The internal `qa-agent` launcher
 
 Use [LIVE_DEMO.md](LIVE_DEMO.md) to present the same flow live. The repository also includes [captions](artifacts/live-demo/auto-qa-live-demo.vtt), the [voiceover](artifacts/live-demo/auto-qa-live-demo-voiceover.mp3), a frame-accurate [timing manifest](artifacts/live-demo/timing.json), a [contact sheet](artifacts/live-demo/contact-sheet.png), and the reproducible [renderer](artifacts/live-demo/render-live-demo.mjs).
 
+For an adversarial follow-up, run `npm run demo:corners`. It verifies all 28
+planner, healing, design, and executor contracts in
+[the corner-case matrix](docs/corner-test-cases.md), prints the live reset command
+where one exists, and supports a focused drill such as
+`npm run demo:corners -- --case H7`. Use `npm run demo:reset -- --list` to see
+the deterministic app mutations without restarting the server.
+
 ### What is implemented
 
 All five phases in [phases.md](phases.md) are complete.

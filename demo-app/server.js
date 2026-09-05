@@ -53,15 +53,68 @@ async function form(request) {
   return new URLSearchParams(Buffer.concat(chunks).toString("utf8"));
 }
 
-export const DEMO_SCENARIOS = Object.freeze({
-  pass: "stable",
-  drift: "drift",
-  functional: "broken",
-  design: "design",
-  locator: "locator-drift",
+export const DEMO_SCENARIO_DETAILS = Object.freeze({
+  pass: Object.freeze({
+    variant: "stable",
+    cornerCases: Object.freeze(["D1"]),
+    expected: "passed (design not checked)",
+    description: "Unchanged checkout with no undeclared design judgement.",
+  }),
+  drift: Object.freeze({
+    variant: "drift",
+    cornerCases: Object.freeze(["H1"]),
+    expected: "healed",
+    description: "The checkout action moves and is renamed, but keeps the same destination.",
+  }),
+  "missing-target": Object.freeze({
+    variant: "missing-target",
+    cornerCases: Object.freeze(["H2"]),
+    expected: "functional_regression",
+    description: "The checkout action is removed and no equivalent target exists.",
+  }),
+  functional: Object.freeze({
+    variant: "broken",
+    cornerCases: Object.freeze(["H3"]),
+    expected: "functional_regression",
+    description: "The action works, but the required confirmation outcome changes to an error.",
+  }),
+  fixture: Object.freeze({
+    variant: "fixture-postcondition",
+    cornerCases: Object.freeze(["H4"]),
+    expected: "functional_regression",
+    description: "Sign-in submits, but the login fixture postcondition never becomes true.",
+  }),
+  "drift-functional": Object.freeze({
+    variant: "drift-broken",
+    cornerCases: Object.freeze(["H7"]),
+    expected: "functional_regression",
+    description: "Checkout drift heals first, then the later confirmation outcome fails.",
+  }),
+  design: Object.freeze({
+    variant: "design",
+    cornerCases: Object.freeze(["D4"]),
+    expected: "design_regression",
+    description: "Functionality stays intact while the referenced confirmation design changes.",
+  }),
+  cleanup: Object.freeze({
+    variant: "cleanup-broken",
+    cornerCases: Object.freeze(["E5"]),
+    expected: "passed + cleanup issue",
+    description: "The primary checkout passes, but the after-fixture cannot remove the test order.",
+  }),
+  locator: Object.freeze({
+    variant: "locator-drift",
+    cornerCases: Object.freeze([]),
+    expected: "passed (locator chain)",
+    description: "Stable accessible controls lose their preferred test IDs.",
+  }),
 });
 
-const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design", "locator-drift"]);
+export const DEMO_SCENARIOS = Object.freeze(Object.fromEntries(
+  Object.entries(DEMO_SCENARIO_DETAILS).map(([scenario, details]) => [scenario, details.variant]),
+));
+
+const DEMO_VARIANTS = new Set(Object.values(DEMO_SCENARIOS));
 
 export function resetDemoState(state, scenario) {
   const variant = DEMO_SCENARIOS[scenario];
@@ -94,8 +147,25 @@ export function createDemoApplication({ variant = "stable" } = {}) {
     const hasCheckoutDrift = state.variant === "drift" || state.variant === "drift-broken";
     const hasBrokenConfirmation = state.variant === "broken" || state.variant === "drift-broken";
     const hasDesignRegression = state.variant === "design";
+    const hasMissingCheckoutTarget = state.variant === "missing-target";
+    const hasFixturePostconditionFailure = state.variant === "fixture-postcondition";
+    const hasCleanupFailure = state.variant === "cleanup-broken";
 
     if (request.method === "GET" && url.pathname === "/") return redirect(response, "/login");
+    if (request.method === "GET" && url.pathname === "/spa-shell") {
+      return send(response, 200, `<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><title>Client-rendered demo</title></head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const heading = document.createElement("h1");
+      heading.textContent = "Client-rendered dashboard";
+      document.querySelector("#root").append(heading);
+    </script>
+  </body>
+</html>`);
+    }
     if (request.method === "GET" && url.pathname === "/reference/approved-confirmation") {
       return send(response, 200, page("Approved confirmation reference", `
         <p class="quiet">Approved checkout design reference</p>
@@ -128,6 +198,11 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       const credentials = await form(request);
       if (!credentials.get("username") || !credentials.get("password")) {
         return send(response, 400, page("Sign in failed", "<h1>Sign in failed</h1><p>An error message is shown.</p>"));
+      }
+      if (hasFixturePostconditionFailure) {
+        return send(response, 200, page("Session unavailable", `
+          <h1>Customer sign in</h1>
+          <p>An error message is shown. The customer session could not be established.</p>`));
       }
       state.loggedIn = true;
       grantDemoSession(response);
@@ -164,7 +239,9 @@ export function createDemoApplication({ variant = "stable" } = {}) {
         <h1>Shopping cart</h1>
         <div class="item"><span>QA Demo Card</span><strong>₹499</strong></div>
         <p>Cart contains one item.</p>
-        ${hasCheckoutDrift
+        ${hasMissingCheckoutTarget
+          ? `<p>Checkout is unavailable. No equivalent checkout action is present.</p>`
+          : hasCheckoutDrift
           ? `<details><summary>Checkout options</summary><a class="button" href="/checkout">Continue to payment</a></details>`
           : locatorDrift
             ? `<a class="button" href="/checkout">Proceed to checkout</a>`
@@ -213,6 +290,12 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       return send(response, 200, page("Order history", `<h1>Order history</h1><p>An empty state is visible: no past orders.</p>`));
     }
     if (request.method === "POST" && url.pathname === "/orders/current/delete") {
+      if (hasCleanupFailure) {
+        return send(response, 503, page("Test order", `
+          <h1>Order QA-1001</h1>
+          <p>An error message is shown. The test order could not be removed.</p>
+          <form method="post" action="/orders/current/delete"><button type="submit">Delete test order</button></form>`));
+      }
       state.orderCreated = false;
       return redirect(response, "/orders/current");
     }

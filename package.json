@@ -10,6 +10,7 @@
   "scripts": {
     "build:skill": "node scripts/build-skill-package.mjs",
     "demo": "npm --prefix demo-app run dev --",
+    "demo:corners": "node scripts/demo-corner-cases.mjs",
     "demo:reset": "npm --prefix demo-app run reset --",
     "dev": "npm --prefix demo-app run dev --",
     "ui": ".agents/skills/autonomous-qa/scripts/qa-agent ui",

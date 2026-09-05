@@ -17,6 +17,42 @@ node .agents/skills/autonomous-qa/scripts/qa-agent.mjs orchestrate \
 
 Unit mirror: `test/subagents-corner.test.js` (`node --test test/subagents-corner.test.js`).
 
+## Demo integration
+
+The five-minute demo keeps its four-beat story, while a separate executable
+drill makes this entire matrix available during technical Q&A:
+
+```bash
+npm run demo:corners                    # verify all 28 documented contracts
+npm run demo:corners -- --case H7       # verify and explain one selected case
+npm run demo:corners -- --list          # print the matrix without running tests
+npm run demo:reset -- --list            # list the live app mutations
+```
+
+`demo:corners` reads the IDs and wording from this document, runs the exact
+focused evidence tests mapped to each ID, and fails if the document and evidence
+map drift apart. It distinguishes executable contract evidence from live app
+mutations instead of pretending every capability-boundary case is a browser
+state.
+
+The app now exposes these deterministic live states without changing the
+semantic checkout spec:
+
+| Reset scenario | Corner | Expected result |
+| --- | --- | --- |
+| `pass` | D1 | functional `passed`; no undeclared design verdict |
+| `drift` | H1 | `healed` after one equivalent retry |
+| `missing-target` | H2 | `functional_regression`; no equivalent action exists |
+| `functional` | H3 | `functional_regression`; changed outcome is never re-asserted |
+| `fixture` | H4 | failed login postcondition → `functional_regression` |
+| `drift-functional` | H7 | earlier heal succeeds, later failure wins |
+| `design` | D4 | reference-backed `design_regression` with function intact |
+| `cleanup` | E5 | primary `passed` result retained, cleanup issue recorded |
+
+For P7, start the demo app and plan against
+`http://127.0.0.1:3000/spa-shell`; the HTTP source is only a client-rendered
+shell, so a fetch-only crawl must report degradation rather than full coverage.
+
 ## P — Planner sub-agent (`planWithAgent`, `reviewDraft`, brief)
 
 | ID | Corner | Input | Expected |
@@ -70,7 +106,7 @@ Unit mirror: `test/subagents-corner.test.js` (`node --test test/subagents-corner
 1. `cd demo-app && PORT=4555 node server.js &` (or `npm run dev`), `curl http://127.0.0.1:4555/` 200.
 2. `node .agents/skills/autonomous-qa/scripts/qa-agent.mjs orchestrate --url http://127.0.0.1:4555 --username <u> --password <p> --root "$PWD" --plan-only` — expect `test-plan.json`, `gaps.json`, `report.json` under `.qa/runs/orchestrations/<id>/`, `Planner: deterministic` line. Shell run without executor reporting `blocked` on full `orchestrate` (no `--plan-only`) is correct per README honest notes.
 3. Repeat with `--plan <draft.json>` (valid Planner draft) then with broken draft x2 to observe P2/P3 fallback reason in `report.planSource`.
-4. `npm run reset -- drift|functional|design` in `demo-app` to seed H1/H2/D4 surfaces, re-run; shell mode stays `blocked` (no native capability) — full pass/heal/regression needs host native executor or `scripts/run-with-playwright.mjs`.
+4. Run `npm run reset -- --list` in `demo-app`, choose a documented mutation, and re-run. Shell mode stays `blocked` (no native capability); full pass/heal/regression needs a host native executor or `scripts/run-with-playwright.mjs`.
 
 ## Live verification with a real Chromium executor (2026-09-05)
 
@@ -87,13 +123,13 @@ Ran the demo app (`PORT=4555`, all four `/__demo/reset` scenarios) against two r
 | --- | --- | --- | --- |
 | `stable` | Full login → cart → checkout → confirm → cleanup | `passed` | — |
 | `drift` | "Proceed to checkout" replaced by collapsed `Checkout options` → `Continue to payment` (same `href=/checkout`) | `healed` — explicit equivalent target, one retry, original expectation verified unchanged | H1 |
-| `functional` | Checkout submits but confirmation shows "Order could not be completed"; no confirmation target exists anywhere to rediscover | `functional_regression` — correctly refused to heal a business-outcome failure | H2 |
+| `functional` | Checkout submits but confirmation shows "Order could not be completed" | `functional_regression` — correctly refused to rewrite or re-assert a business outcome | H3 |
 | `design` | Functionally identical to the approved reference (confirmation text present, no error) but link/heading order reversed and restyled as a red banner | `design_regression` with structured order/grouping/style findings, functional verdict untouched | D4 |
 
 This confirms the skill's judgement contract holds under real interaction: an agent driving a real browser correctly separates "interaction drifted, outcome unchanged" (heal) from "the outcome itself broke" (never heal), and treats layout/style regression as orthogonal to functional correctness.
 
 ## Known gaps (as of 2026-09-05)
 
-- **H4 is now implemented** (was: fixture postcondition failures collapsed into `blocked`). `src/execution.js` distinguishes a fixture that returned `"failed"` — a real postcondition assertion failure, now reported as `functional_regression` and never healed — from one that returned `"blocked"`. `test/execution-boundaries.test.js` exercises a fixture whose steps pass but whose postcondition assertion fails, for both the `before` and `between` phases.
-- H7, H8, D4, E5 are exercised correctly elsewhere in the broader `test/` suite (`healing.test.js`, `execution-boundaries.test.js`, `design.test.js`, `execution.test.js`) even though `test/subagents-corner.test.js` doesn't mirror them.
-- D1 (no `design` key → `not_checked`) and E4 (secret redaction) have supporting unit coverage but no single end-to-end test proving the plain "no explicit reference" case or full YAML/trace/screenshot secret-leak path in one run.
+- **H4 is now implemented** (was: fixture postcondition failures collapsed into `blocked`). `src/execution.js` distinguishes a fixture that returned `"failed"` — a real postcondition assertion failure, now reported as `functional_regression` and never healed — from one that returned `"blocked"`. `test/execution-boundaries.test.js` exercises both `before` and `between`; the `fixture` demo mutation exercises the `before` path end to end with the deterministic native executor.
+- H7, H8, D4, and E5 remain distributed across the broader execution/healing/design suites rather than duplicated in `test/subagents-corner.test.js`; `npm run demo:corners` resolves that distribution into one selectable drill.
+- D1 now has an end-to-end deterministic demo assertion: the unchanged checkout passes with no `design` result when no reference was declared. E4 intentionally combines execution-persistence, inspection, and trace-redaction evidence; screenshots are captured only with `avoidSensitiveFields: true`.
