@@ -78,6 +78,40 @@ The skill, not the developer, performs every step below.
 11. Save a result matching `schemas/result.schema.json`, update `.qa/last-test.json` atomically, and keep recent-run retention intact. Report console and network errors only when the native capability exposes them; otherwise record that inspection as unsupported.
 12. Stop only an application process started for this run. Preserve `.qa/` artifacts and any already-running developer process.
 
+## Autonomous orchestration
+
+`orchestrate` is the second entry point: a URL is the only required input, and the runtime probes the target, crawls it, plans, generates, executes, triages, and reports. Run it internally the same way as every other operation.
+
+```bash
+node "$SKILL_ROOT/scripts/qa-agent.mjs" orchestrate --url <loopback-url> --root "$PWD"
+```
+
+The runtime supplies the rails — the crawl, the coverage gate, the generator, the executor contract, the schemas, the trace. It supplies **no judgement**, and it never calls a model. Judgement is a capability the skill provides, exactly as native UI execution already is. Where a stage needs judgement and no capability is available, the runtime falls back to a deterministic path and records that it did so. It does not guess and it does not stall.
+
+## Planner sub-agent
+
+When `orchestrate` reaches the planning stage it needs a test plan for an application neither it nor anyone else has seen. Act as the Planner.
+
+1. The runtime hands over a brief: the crawled site map rendered as structure and observable strings, the developer's natural-language focus, and any PRD requirements. Read `plan-draft.schema.json` in `SKILL_ROOT/schemas/` — it is the authoritative contract for what to return.
+2. Produce a plan draft as JSON matching that schema. Hand it back either in process, as the `planner` capability, or on disk with `--plan <file>`.
+3. The runtime validates every draft against the schema before trusting it. A rejected draft comes back once with the specific reasons; correct exactly those and return the corrected document. After a second rejection the runtime falls back to its deterministic planner and records the reason in `plan.source`.
+
+What makes a plan worth generating tests from:
+
+- Cover happy paths, error states, and edge cases. A plan that is only happy paths is a failed plan.
+- Prefer real multi-step journeys over disconnected single clicks. If the crawl shows cart → checkout → confirmation, that is one flow with ordered steps.
+- Every form deserves at least one success case and one rejection case.
+- Plan a guard for destructive or money-moving actions — double submission, confirmation required.
+- Mark a flow that needs a session with `authenticated` in `preconditions`.
+
+**The assertion rule is the one that matters.** Each expectation carries `prose` — what a human would write — and an optional `assert` predicate that a browser can evaluate. The predicate's value must be a string you have reason to believe literally appears in the rendered page, taken from the crawled titles, headings, link text, and button labels you were given.
+
+Never copy the prose into the predicate. *"Order confirmation is visible"* is a description of an outcome, not text the application renders; asserting it can only ever fail. If the crawl shows the heading is "Thank you for your order", that is the value.
+
+When you cannot determine the observable text — most often because a page is reachable only after an action the crawl never performed — do one of these, in order of preference: assert `url_contains` with the path you expect to land on; omit the predicate and leave the prose alone; or say so in `openQuestions`. An expectation with no predicate is honest and the generator marks it `UNVERIFIED`. A predicate you invented is not, and generation will refute it against the live page anyway.
+
+Record what you could not determine in `openQuestions` rather than resolving it by assumption. That list survives into the plan and the report, and it is how ambiguity stays visible instead of becoming a false claim of coverage.
+
 ## Classification boundary
 
 - `passed`: every declared expectation passed with no recovery.
@@ -117,5 +151,8 @@ The schemas in `schemas/` are authoritative. IDs use lowercase words separated b
 - Healing requires before/after evidence and unchanged-expectation verification.
 - Agent taste cannot create a design regression; explicit reference evidence and concrete findings are required.
 - Do not repair application code, update design baselines, or perform pixel-perfect diffing while running QA.
-- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, Stagehand, DOM-selector scripts, coordinate scripts, or fixed sleeps.
+- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Stagehand, DOM-selector scripts, coordinate scripts, or fixed sleeps.
+- The runtime never adds a Playwright dependency and never drives a browser itself. `orchestrate` emits `generated/*.spec.js` as portable artifacts for the developer's own runner; execution always goes through the native capability and the semantic spec stays the contract.
+- **The runtime never calls a language model.** It ships no provider client, reads no API key, and makes no outbound request except to the target under test. Judgement — planning, rediscovery, design comparison — is a capability this skill supplies as a sub-agent. Where the capability is absent, the runtime falls back to a deterministic path and records that it did.
+- A plan draft is validated against `plan-draft.schema.json` before anything is generated from it. Never widen the schema to accommodate a draft; correct the draft.
 - Do not expose the UI beyond loopback or turn it into an execution service.

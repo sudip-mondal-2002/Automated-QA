@@ -6968,7 +6968,9 @@ var init_schema_validator = __esm({
       fixture: "fixture.schema.json",
       spec: "spec.schema.json",
       result: "result.schema.json",
-      lastTest: "last-test.schema.json"
+      lastTest: "last-test.schema.json",
+      testPlan: "test-plan.schema.json",
+      planDraft: "plan-draft.schema.json"
     };
     ajv = new import_ajv.default({ allErrors: true, strict: true });
     validators = /* @__PURE__ */ new Map();
@@ -17603,6 +17605,7 @@ function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals
     version: 1,
     orchestrationId,
     target,
+    planSource: plan?.source ?? { planner: "deterministic", fellBack: false },
     startedAt: started,
     finishedAt: finished,
     durationMs: Date.parse(finished) - Date.parse(started),
@@ -17634,6 +17637,7 @@ function renderReportMarkdown(report) {
     "",
     `Target ${report.target} \xB7 ${report.summary.scenarios.total} scenarios \xB7 coverage ${report.summary.coverage.score} \xB7 exit ${report.summary.exitCode}`,
     "",
+    `Planner: ${report.planSource?.planner ?? "deterministic"}${report.planSource?.fellBack ? ` \u2014 fell back: ${report.planSource.fallbackReason}` : ""}`,
     `Assertions: ${report.summary.generation?.assertions?.withPredicates ?? 0}/${report.summary.generation?.assertions?.total ?? 0} expectations have a checkable predicate \xB7 ${report.summary.generation?.assertions?.verified ?? 0} verified against the live page`,
     "",
     "## What the agent decided"
@@ -17953,6 +17957,223 @@ var init_coverage = __esm({
   }
 });
 
+// src/planner-agent.js
+function renderSiteMapBrief(siteMap, { maxChars = MAX_BRIEF_CHARS } = {}) {
+  const lines = [];
+  for (const page of siteMap?.pages ?? []) {
+    lines.push(`### ${page.path}  (HTTP ${page.status}, depth ${page.depth})`);
+    if (page.title) lines.push(`title: ${page.title}`);
+    if ((page.headings ?? []).length > 0) {
+      lines.push(`headings: ${page.headings.map((heading) => `h${heading.level} "${heading.text}"`).join(", ")}`);
+    }
+    if ((page.links ?? []).length > 0) {
+      const links = page.links.slice(0, 25).map((link) => `"${link.text || "(no text)"}" -> ${link.href}`);
+      lines.push(`links: ${links.join(", ")}`);
+    }
+    for (const [index, form] of (page.forms ?? []).entries()) {
+      const inputs = (form.inputs ?? []).map((input2) => `${input2.name || "(unnamed)"}:${input2.type}${input2.required ? " required" : ""}${input2.placeholder ? ` placeholder="${input2.placeholder}"` : ""}`).join(", ");
+      lines.push(`form[${index}]: method=${form.method} action="${form.action}" buttons=[${(form.buttons ?? []).join(", ")}] inputs=[${inputs}]`);
+    }
+    const signals = Object.entries(page.signals ?? {}).filter(([, on]) => on).map(([name]) => name);
+    if (signals.length > 0) lines.push(`signals: ${signals.join(", ")}`);
+    lines.push("");
+  }
+  const rendered = lines.join("\n");
+  return rendered.length > maxChars ? `${rendered.slice(0, maxChars)}
+\u2026 (site map truncated)` : rendered;
+}
+function buildPlannerBrief({ siteMap, prompt = "", prd = { requirements: [] } } = {}) {
+  const sections = [
+    `TARGET: ${siteMap?.origin ?? "unknown"}`,
+    siteMap?.auth?.authenticated ? "CRAWL SESSION: authenticated (protected pages below were fetched signed in)" : "CRAWL SESSION: anonymous (login either was not attempted or did not succeed \u2014 treat protected pages with suspicion)",
+    siteMap?.degraded ? "WARNING: the crawl looks degraded (very few links/forms found). The app may render client-side, so the structure below may be incomplete. Say so in openQuestions." : "",
+    "",
+    "## Crawled pages",
+    renderSiteMapBrief(siteMap)
+  ];
+  if (prompt) sections.push("## Developer focus (natural language)", prompt, "");
+  const requirements = prd?.requirements ?? [];
+  if (requirements.length > 0) {
+    sections.push("## Product requirements", ...requirements.map((requirement) => `- ${requirement.id}: ${requirement.text}`), "");
+  }
+  sections.push("Produce the test plan now.");
+  return sections.filter((section) => section !== "").join("\n");
+}
+function slugFlowId(value, index) {
+  const slug = String(value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+  return `flow_${slug || `plan-${index + 1}`}`;
+}
+function stripEmpty(value) {
+  return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== null && entry !== void 0));
+}
+function normalizePlan({ draft, siteMap, prompt = "", prd = { requirements: [] }, source, now = () => /* @__PURE__ */ new Date() } = {}) {
+  const at = now instanceof Date ? now : now();
+  const generatedAt = (at instanceof Date ? at : new Date(at)).toISOString();
+  const seen = /* @__PURE__ */ new Set();
+  const flows = [];
+  for (const [index, flow] of (draft?.flows ?? []).entries()) {
+    let id = flow.id?.startsWith("flow_") ? flow.id : slugFlowId(flow.id ?? flow.title, index);
+    if (seen.has(id)) id = `${id}-${index + 1}`;
+    seen.add(id);
+    flows.push({
+      id,
+      title: flow.title,
+      category: flow.category,
+      priority: flow.priority,
+      rationale: flow.rationale ?? "",
+      pages: flow.pages ?? [],
+      preconditions: flow.preconditions ?? [],
+      risks: flow.risks ?? [],
+      requirementIds: flow.requirementIds ?? [],
+      steps: (flow.steps ?? []).map((step) => ({
+        intent: step.intent,
+        ...step.page ? { page: step.page } : {},
+        ...step.action ? { action: step.action } : {},
+        ...step.channel ? { channel: step.channel } : {},
+        ...(step.inputs ?? []).length > 0 ? { inputs: step.inputs } : {},
+        expect: (step.expect ?? []).map((expectation) => ({
+          prose: expectation.prose,
+          ...expectation.assert && expectation.assert.kind ? { assert: stripEmpty(expectation.assert) } : {}
+        }))
+      }))
+    });
+  }
+  const counts = { happy: 0, edge: 0, error: 0 };
+  for (const flow of flows) counts[flow.category] = (counts[flow.category] ?? 0) + 1;
+  return {
+    version: 1,
+    id: `plan_${Date.parse(generatedAt)}`,
+    target: siteMap?.origin ?? "",
+    generatedAt,
+    attempt: 1,
+    source,
+    guidance: { prompt, prd: { requirements: prd?.requirements ?? [] } },
+    siteMapRef: "site-map.json",
+    flows,
+    coverageClaims: counts,
+    openQuestions: draft?.openQuestions ?? [],
+    ...draft?.notes ? { notes: draft.notes } : {}
+  };
+}
+function reviewDraft(draft) {
+  if (!draft || typeof draft !== "object") {
+    return { ok: false, reason: "the planner returned no document" };
+  }
+  try {
+    validateDocument("planDraft", draft);
+  } catch (error) {
+    const issues = (error.issues ?? []).slice(0, 8).map((issue) => `${issue.path}: ${issue.message}`).join("; ");
+    return { ok: false, reason: issues || (error instanceof Error ? error.message : String(error)) };
+  }
+  if (!Array.isArray(draft.flows) || draft.flows.length === 0) {
+    return { ok: false, reason: "the plan contains no flows" };
+  }
+  return { ok: true };
+}
+async function planWithAgent({
+  planner,
+  siteMap,
+  prompt = "",
+  prd = { requirements: [] },
+  attempts = 2,
+  emit,
+  now = () => /* @__PURE__ */ new Date()
+} = {}) {
+  const fallback = (reason) => {
+    const plan = buildTestPlan({ siteMap, prompt, prd, now });
+    plan.source = { planner: "deterministic", fellBack: true, fallbackReason: reason };
+    return plan;
+  };
+  if (typeof planner !== "function") return fallback("no planner capability was provided");
+  const brief = buildPlannerBrief({ siteMap, prompt, prd });
+  let feedback;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    let draft;
+    try {
+      await emit?.("plan", "planner_started", { message: `Planner sub-agent, attempt ${attempt}` });
+      draft = await planner({
+        brief,
+        instructions: PLANNER_INSTRUCTIONS,
+        schema: "plan-draft.schema.json",
+        siteMap,
+        prompt,
+        prd,
+        ...feedback ? { feedback } : {}
+      });
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      await emit?.("plan", "planner_failed", { level: "warn", message: `Planner capability failed: ${reason}` });
+      return fallback(reason);
+    }
+    const review = reviewDraft(draft);
+    if (review.ok) {
+      const plan = normalizePlan({
+        draft,
+        siteMap,
+        prompt,
+        prd,
+        now,
+        source: { planner: "agent", fellBack: false, attempts: attempt }
+      });
+      await emit?.("plan", "planner_completed", {
+        message: `${plan.flows.length} flows \xB7 ${plan.openQuestions.length} open question(s) \xB7 attempt ${attempt}`
+      });
+      return plan;
+    }
+    await emit?.("plan", "planner_rejected", { level: "warn", message: `attempt ${attempt}: ${review.reason}` });
+    feedback = `Your previous plan draft was rejected. Fix exactly these problems and return only the corrected JSON document:
+${review.reason}`;
+    if (attempt === attempts) return fallback(`plan draft rejected after ${attempts} attempt(s): ${review.reason}`);
+  }
+  throw new QaError("PLANNER_UNREACHABLE_STATE", "The planner loop exited without a decision");
+}
+var PLANNER_INSTRUCTIONS, MAX_BRIEF_CHARS;
+var init_planner_agent = __esm({
+  "src/planner-agent.js"() {
+    init_planner();
+    init_schema_validator();
+    init_errors();
+    PLANNER_INSTRUCTIONS = `You are the Planner in an autonomous test orchestration pipeline. You are given a crawl of a live web application and you produce a test plan that another sub-agent will turn into executable browser tests.
+
+You are a senior QA engineer. Plan what a careful human tester would actually check.
+
+WHAT MAKES A GOOD PLAN
+- Cover happy paths, error states, and edge cases. A plan that is only happy paths is a failed plan.
+- Prefer real multi-step journeys over single clicks. If the crawl shows cart -> checkout -> confirmation, plan that as ONE flow with ordered steps, not three disconnected flows.
+- Every form deserves at least one success case and one rejection case (missing required field, invalid format, or invalid credentials).
+- Look for destructive or money-moving actions and plan a guard for them (double submission, confirmation required).
+- If a page is reachable only when signed in, put "authenticated" in preconditions and make the FIRST step of the flow sign in, unless a precondition handles it.
+
+THE ASSERTION RULE \u2014 THIS IS THE MOST IMPORTANT RULE
+Each expectation has two parts:
+  - "prose": what a human would write, e.g. "Order confirmation is visible".
+  - "assert": a predicate a browser can evaluate.
+
+The assert value MUST be a string you have reason to believe literally appears in the rendered page. Derive it from the crawled page titles, headings, link text, and button labels you were given.
+
+NEVER copy the prose into the assert value. "Order confirmation is visible" is a description, not page text \u2014 asserting it would always fail. If the crawl shows the confirmation page has the heading "Thank you for your order", then the assert value is "Thank you for your order".
+
+If you genuinely cannot determine the observable text for an expectation, use kind "url_contains" with the path you expect to land on, or omit the assert entirely and add a line to openQuestions. Do not invent page text you did not observe. An expectation with no predicate is honest; a predicate you made up is not.
+
+Predicate kinds:
+  - text          -> value appears somewhere visible on the page
+  - absent_text   -> value must NOT appear (use for "no error is shown")
+  - url_contains  -> the URL contains value after the step
+  - visible       -> the CSS selector resolves to a visible element
+  - absent        -> the CSS selector resolves to nothing
+  - count         -> the CSS selector resolves to exactly count elements
+
+INPUTS
+When a step submits a form, list every field it fills using the exact input name from the site map. Use realistic values (a valid-looking test card number, a plausible email). For a deliberately-invalid case, use the invalid value that triggers the rejection you are asserting. Mark passwords and tokens sensitive: true.
+
+SCOPE
+If the developer gave a natural-language focus, weight the plan toward it \u2014 but still return baseline coverage for the rest of the application. If a PRD was provided, set requirementIds on the flows that cover each requirement, and leave it empty when nothing covers it. Do not claim coverage you did not plan.
+
+Return only a JSON document matching schemas/plan-draft.schema.json.`;
+    MAX_BRIEF_CHARS = 6e4;
+  }
+});
+
 // src/orchestrator.js
 var orchestrator_exports = {};
 __export(orchestrator_exports, {
@@ -18002,7 +18223,9 @@ async function orchestrate({
   executor,
   variables = process.env,
   now = () => /* @__PURE__ */ new Date(),
-  emit
+  emit,
+  planner,
+  planOnly = false
 } = {}) {
   if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "--url is required");
   const parsed = assertTargetAllowed(url, { allowRemote });
@@ -18021,6 +18244,7 @@ async function orchestrate({
     }
   });
   const say = emit ?? tracer.emit.bind(tracer);
+  if (planner) await say("bootstrap", "planner_ready", { message: "Planner sub-agent capability provided by the host" });
   const decisions = [];
   const gapsHistory = [];
   const heals = [];
@@ -18042,7 +18266,7 @@ async function orchestrate({
     await writeFile3(path5.join(directory, "site-map.json"), `${JSON.stringify(siteMap, null, 2)}
 `);
     const prdParsed = prdText !== void 0 ? parsePrd(prdText) : { requirements: [] };
-    let plan = buildTestPlan({ siteMap, prompt, prd: prdParsed, now });
+    let plan = planner ? await planWithAgent({ planner, siteMap, prompt, prd: prdParsed, emit: say, now }) : { ...buildTestPlan({ siteMap, prompt, prd: prdParsed, now }), source: { planner: "deterministic", fellBack: false } };
     let attempt = 1;
     let prevScore;
     let gaps = evaluatePlan({ plan, siteMap, prd: prdParsed, prompt });
@@ -18060,12 +18284,23 @@ async function orchestrate({
       decisions.push({ seq: decisions.length + 1, stage: "gate", decision: verdict, reason: `score ${gaps.score} vs prev ${prevScore}`, at: (/* @__PURE__ */ new Date()).toISOString() });
       await say("gate", "replan_triggered", { message: `attempt ${attempt}: ${gaps.score}` });
     }
+    try {
+      validateDocument("testPlan", plan);
+    } catch (error) {
+      await say("plan", "plan_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+    }
     await writeFile3(path5.join(directory, "test-plan.json"), `${JSON.stringify(plan, null, 2)}
 `);
     await writeFile3(path5.join(directory, "test-plan.md"), renderTestPlanMarkdown(plan));
     await writeFile3(path5.join(directory, "gaps.json"), `${JSON.stringify(gaps, null, 2)}
 `);
     await writeFile3(path5.join(directory, "gaps.md"), renderGapsMarkdown(gaps));
+    if (planOnly) {
+      await say("plan", "plan_only", { message: `Stopping after planning: ${plan.flows.length} flows, score ${gaps.score}` });
+      const report2 = buildReport({ plan, gapsHistory, generation: {}, runs: [], heals: [], decisions, prd: prdParsed, startedAt, finishedAt: (/* @__PURE__ */ new Date()).toISOString(), orchestrationId, target: parsed.origin });
+      await writeReport({ outDir: directory, report: report2 });
+      return { report: report2, plan, gaps, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
+    }
     try {
       const environments = await workspace.loadEnvironments().catch(() => ({ version: 1, environments: {} }));
       environments.environments = { ...environments.environments ?? {}, local: { type: "web", baseUrl: parsed.origin } };
@@ -18127,6 +18362,8 @@ var init_orchestrator = __esm({
     init_errors();
     init_trace();
     init_planner();
+    init_planner_agent();
+    init_schema_validator();
     init_coverage();
     init_generator();
     init_execution();
@@ -18585,6 +18822,7 @@ function triage({ failure, chainResult, observation = "", priorAttempts = 0, htt
 
 // src/index.js
 init_orchestrator();
+init_planner_agent();
 
 // src/cli.js
 import { readFile as readFile5, unlink as unlink2 } from "node:fs/promises";
@@ -18601,7 +18839,8 @@ Usage:
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
-  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
+  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>]
+                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
@@ -19029,6 +19268,8 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
       const maxReplansValue = option(args, "--max-replans");
       const allowRemote = flag(args, "--allow-remote");
       const json = flag(args, "--json");
+      const planOnly = flag(args, "--plan-only");
+      const planPath = option(args, "--plan");
       assertNoUnknownOptions(args);
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected orchestrate argument: ${args[0]}`);
       if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
@@ -19042,7 +19283,17 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
           throw new QaError("INVALID_OPTION_VALUE", `PRD file is unreadable: ${prdPath}`);
         }
       }
-      const { report, exitCode, error } = await orchestrate2({
+      let planner = io.planner;
+      if (planPath) {
+        let draft;
+        try {
+          draft = parseJson(await readPrdFile(planPath, "utf8"));
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `Plan draft is unreadable or not JSON: ${planPath}`);
+        }
+        planner = async () => draft;
+      }
+      const { report, plan, exitCode, error } = await orchestrate2({
         url,
         username,
         password,
@@ -19052,16 +19303,25 @@ async function runCli(argv = process.argv.slice(2), io = {}) {
         root,
         maxReplans,
         allowRemote,
+        planOnly,
+        planner,
         executor: io.nativeExecutor,
         variables: io.variables ?? process.env,
         fetchImpl: io.fetchImpl
       });
       if (error) throw error;
-      if (json) output(JSON.stringify({ exitCode, report }));
+      if (json) output(JSON.stringify({ exitCode, report, ...plan ? { plan } : {} }));
       else {
         const counts = report.summary.scenarios;
+        const source = report.planSource ?? plan?.source;
         output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
-        output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean \xB7 ${counts.blocked ?? 0} blocked \xB7 ${counts.failed} failed \xB7 coverage ${report.summary.coverage.score}`);
+        if (source) {
+          output(`Planner: ${source.planner}${source.fellBack ? ` \u2014 FELL BACK: ${source.fallbackReason}` : ""}`);
+        }
+        if (planOnly) output(`Plan only: ${plan?.flows?.length ?? 0} flows \xB7 coverage ${report.summary.coverage.score}`);
+        else {
+          output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean \xB7 ${counts.blocked ?? 0} blocked \xB7 ${counts.failed} failed \xB7 coverage ${report.summary.coverage.score}`);
+        }
         output(`Report: ${report.artifacts.specs} + report.json`);
       }
       return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
@@ -19101,6 +19361,7 @@ export {
   MAX_RECENT_RUNS_PER_SPEC,
   NativeExecutor,
   ORCHESTRATION_ERROR_CODES,
+  PLANNER_INSTRUCTIONS,
   PROMPT_ALIASES,
   QaError,
   QaWorkspace,
@@ -19114,6 +19375,7 @@ export {
   bindLocators,
   buildChain,
   buildDesignComparisonRequest,
+  buildPlannerBrief,
   buildReport,
   buildTestPlan,
   channelFor,
@@ -19142,6 +19404,7 @@ export {
   isStableId,
   mergeActionSteps,
   normalizeDesignComparison,
+  normalizePlan,
   normalizeRediscovery,
   normalizeTarget,
   orchestrate,
@@ -19151,6 +19414,7 @@ export {
   parseYaml,
   planStages,
   planToSpecs,
+  planWithAgent,
   predicateToPlaywright,
   prepareEnvironment,
   promptMatches,
@@ -19160,12 +19424,14 @@ export {
   renderPlaywrightSpec,
   renderReportMarkdown,
   renderResolveHelper,
+  renderSiteMapBrief,
   renderTestPlanMarkdown,
   replan,
   resolveDesignReference,
   resolveReference,
   resolveReferences,
   resolveWithChain,
+  reviewDraft,
   runCli,
   scorePlan,
   selectorCandidates,

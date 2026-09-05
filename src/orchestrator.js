@@ -3,6 +3,8 @@ import path from "node:path";
 import { QaError } from "./errors.js";
 import { createTracer } from "./trace.js";
 import { buildTestPlan, crawl, parsePrd, renderTestPlanMarkdown, replan } from "./planner.js";
+import { planWithAgent } from "./planner-agent.js";
+import { validateDocument } from "./schema-validator.js";
 import { decideVerdict, evaluatePlan, renderGapsMarkdown } from "./coverage.js";
 import { generate } from "./generator.js";
 import { executeRun } from "./execution.js";
@@ -55,6 +57,8 @@ export async function orchestrate({
   variables = process.env,
   now = () => new Date(),
   emit,
+  planner,
+  planOnly = false,
 } = {}) {
   if (!url) throw new QaError("ORCHESTRATION_TARGET_UNREACHABLE", "--url is required");
   const parsed = assertTargetAllowed(url, { allowRemote });
@@ -73,6 +77,9 @@ export async function orchestrate({
     writeLine: async (line) => { await writeFile(path.join(directory, "trace.jsonl"), line, { flag: "a" }); },
   });
   const say = emit ?? tracer.emit.bind(tracer);
+
+  if (planner) await say("bootstrap", "planner_ready", { message: "Planner sub-agent capability provided by the host" });
+
   const decisions = [];
   const gapsHistory = [];
   const heals = [];
@@ -95,7 +102,9 @@ export async function orchestrate({
     let siteMap = await crawl({ url: parsed.href, credentials, fetchImpl, maxPages, maxDepth, emit: say, now });
     await writeFile(path.join(directory, "site-map.json"), `${JSON.stringify(siteMap, null, 2)}\n`);
     const prdParsed = prdText !== undefined ? parsePrd(prdText) : { requirements: [] };
-    let plan = buildTestPlan({ siteMap, prompt, prd: prdParsed, now });
+    let plan = planner
+      ? await planWithAgent({ planner, siteMap, prompt, prd: prdParsed, emit: say, now })
+      : { ...buildTestPlan({ siteMap, prompt, prd: prdParsed, now }), source: { planner: "deterministic", fellBack: false } };
     let attempt = 1;
     let prevScore;
     let gaps = evaluatePlan({ plan, siteMap, prd: prdParsed, prompt });
@@ -115,10 +124,22 @@ export async function orchestrate({
       await say("gate", "replan_triggered", { message: `attempt ${attempt}: ${gaps.score}` });
     }
 
+    try {
+      validateDocument("testPlan", plan);
+    } catch (error) {
+      await say("plan", "plan_invalid", { level: "warn", message: error instanceof Error ? error.message : String(error) });
+    }
     await writeFile(path.join(directory, "test-plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
     await writeFile(path.join(directory, "test-plan.md"), renderTestPlanMarkdown(plan));
     await writeFile(path.join(directory, "gaps.json"), `${JSON.stringify(gaps, null, 2)}\n`);
     await writeFile(path.join(directory, "gaps.md"), renderGapsMarkdown(gaps));
+
+    if (planOnly) {
+      await say("plan", "plan_only", { message: `Stopping after planning: ${plan.flows.length} flows, score ${gaps.score}` });
+      const report = buildReport({ plan, gapsHistory, generation: {}, runs: [], heals: [], decisions, prd: prdParsed, startedAt, finishedAt: new Date().toISOString(), orchestrationId, target: parsed.origin });
+      await writeReport({ outDir: directory, report });
+      return { report, plan, gaps, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
+    }
 
     // point workspace at target
     try {

@@ -47,3 +47,11 @@ export {
 export { COVERAGE_RULES, decideVerdict, evaluatePlan, renderGapsMarkdown, scorePlan } from "./coverage.js";
 export { buildChain, resolveWithChain, triage } from "./locator-chain.js";
 export { EXIT, assertTargetAllowed, orchestrate, planStages } from "./orchestrator.js";
+export {
+  buildPlannerBrief,
+  normalizePlan,
+  PLANNER_INSTRUCTIONS,
+  planWithAgent,
+  renderSiteMapBrief,
+  reviewDraft,
+} from "./planner-agent.js";

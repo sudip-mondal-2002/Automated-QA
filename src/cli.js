@@ -15,7 +15,8 @@ Usage:
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
-  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
+  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>]
+                       [--plan <file>] [--plan-only] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
@@ -485,6 +486,11 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       const maxReplansValue = option(args, "--max-replans");
       const allowRemote = flag(args, "--allow-remote");
       const json = flag(args, "--json");
+      const planOnly = flag(args, "--plan-only");
+      // A plan authored by the Planner sub-agent, handed back on disk. The
+      // runtime never calls a model itself; this is the file-based half of the
+      // same capability `io.planner` provides in process.
+      const planPath = option(args, "--plan");
       assertNoUnknownOptions(args);
       if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected orchestrate argument: ${args[0]}`);
       if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
@@ -498,16 +504,36 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
           throw new QaError("INVALID_OPTION_VALUE", `PRD file is unreadable: ${prdPath}`);
         }
       }
-      const { report, exitCode, error } = await orchestrate({
-        url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote,
+      let planner = io.planner;
+      if (planPath) {
+        let draft;
+        try {
+          draft = parseJson(await readPrdFile(planPath, "utf8"));
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `Plan draft is unreadable or not JSON: ${planPath}`);
+        }
+        // A draft on disk is a one-shot answer: the same document every time,
+        // so a rejection falls back rather than looping on an unchanging file.
+        planner = async () => draft;
+      }
+      const { report, plan, exitCode, error } = await orchestrate({
+        url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote, planOnly,
+        planner,
         executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl,
       });
       if (error) throw error;
-      if (json) output(JSON.stringify({ exitCode, report }));
+      if (json) output(JSON.stringify({ exitCode, report, ...(plan ? { plan } : {}) }));
       else {
         const counts = report.summary.scenarios;
+        const source = report.planSource ?? plan?.source;
         output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
-        output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean · ${counts.blocked ?? 0} blocked · ${counts.failed} failed · coverage ${report.summary.coverage.score}`);
+        if (source) {
+          output(`Planner: ${source.planner}${source.fellBack ? ` — FELL BACK: ${source.fallbackReason}` : ""}`);
+        }
+        if (planOnly) output(`Plan only: ${plan?.flows?.length ?? 0} flows · coverage ${report.summary.coverage.score}`);
+        else {
+          output(`Scenarios ${counts.passed + counts.healed}/${counts.total} clean · ${counts.blocked ?? 0} blocked · ${counts.failed} failed · coverage ${report.summary.coverage.score}`);
+        }
         output(`Report: ${report.artifacts.specs} + report.json`);
       }
       return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
