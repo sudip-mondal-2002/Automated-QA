@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aivar.dev/auto-qa/report.schema.json",
+  "title": "Orchestration report",
+  "description": "report.json — the artifact judges and the loopback UI read: verdict, scenario-by-scenario triage, coverage gaps, and PRD mapping.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "orchestrationId", "target", "startedAt", "finishedAt", "durationMs", "summary", "decisions", "scenarios", "gaps", "untestedRisks", "prdGap", "artifacts"],
+  "properties": {
+    "version": { "const": 1 },
+    "orchestrationId": { "type": "string", "minLength": 1 },
+    "target": { "type": "string" },
+    "planSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planner"],
+      "properties": {
+        "planner": { "enum": ["deterministic", "agent"] },
+        "attempts": { "type": "integer", "minimum": 1 },
+        "fellBack": { "type": "boolean" },
+        "fallbackReason": { "type": "string" }
+      }
+    },
+    "startedAt": { "type": "string", "minLength": 1 },
+    "finishedAt": { "type": "string", "minLength": 1 },
+    "durationMs": { "type": "integer", "minimum": 0 },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "exitCode", "scenarios", "coverage", "generation", "healing"],
+      "properties": {
+        "verdict": { "enum": ["clean", "defects_found", "incomplete"] },
+        "exitCode": { "type": "integer", "minimum": 0 },
+        "scenarios": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["total", "passed", "healed", "failed", "blocked", "skipped"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "passed": { "type": "integer", "minimum": 0 },
+            "healed": { "type": "integer", "minimum": 0 },
+            "failed": { "type": "integer", "minimum": 0 },
+            "blocked": { "type": "integer", "minimum": 0 },
+            "skipped": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["score", "attempts", "blockingGaps", "advisoryGaps"],
+          "properties": {
+            "score": { "type": "number", "minimum": 0, "maximum": 1 },
+            "attempts": { "type": "integer", "minimum": 0 },
+            "blockingGaps": { "type": "integer", "minimum": 0 },
+            "advisoryGaps": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "generation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["specs", "validated", "unvalidated", "strategies", "assertions"],
+          "properties": {
+            "specs": { "type": "integer", "minimum": 0 },
+            "validated": { "type": "integer", "minimum": 0 },
+            "unvalidated": { "type": "integer", "minimum": 0 },
+            "strategies": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+            "assertions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["checked", "verified", "withPredicates", "total"],
+              "properties": {
+                "checked": { "type": "integer", "minimum": 0 },
+                "verified": { "type": "integer", "minimum": 0 },
+                "refuted": { "type": "integer", "minimum": 0 },
+                "withPredicates": { "type": "integer", "minimum": 0 },
+                "total": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        "healing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["attempted", "succeeded", "promoted"],
+          "properties": {
+            "attempted": { "type": "integer", "minimum": 0 },
+            "succeeded": { "type": "integer", "minimum": 0 },
+            "promoted": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seq", "stage", "decision", "reason"],
+        "properties": {
+          "seq": { "type": "integer", "minimum": 1 },
+          "stage": { "type": "string" },
+          "decision": { "type": "string" },
+          "reason": { "type": "string" },
+          "at": { "type": "string" }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "category", "priority", "status", "classification", "confidence", "durationMs", "specFile", "screenshots", "heals"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "priority": { "type": "string" },
+          "status": { "enum": ["passed", "healed", "failed", "blocked", "skipped"] },
+          "classification": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "durationMs": { "type": "integer", "minimum": 0 },
+          "specFile": { "type": "string" },
+          "runId": { "type": "string" },
+          "runClassification": { "type": "string" },
+          "blockedReason": { "type": "string" },
+          "screenshots": { "type": "array", "items": { "type": "string" } },
+          "heals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "stepIndex": { "type": "integer" },
+                "from": {},
+                "to": {},
+                "promoted": { "type": "boolean" },
+                "succeeded": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gaps": { "type": "array", "items": { "type": "object" } },
+    "untestedRisks": { "type": "array", "items": { "type": "object" } },
+    "prdGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coveragePct", "requirements"],
+      "properties": {
+        "coveragePct": { "type": "number", "minimum": 0, "maximum": 1 },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "text", "status", "flowIds", "note"],
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "status": { "enum": ["covered", "uncovered"] },
+              "flowIds": { "type": "array", "items": { "type": "string" } },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan", "gaps", "trace", "specs"],
+      "properties": {
+        "plan": { "type": "string" },
+        "gaps": { "type": "string" },
+        "trace": { "type": "string" },
+        "specs": { "type": "string" }
+      }
+    }
+  }
+}

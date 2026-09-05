@@ -22,13 +22,15 @@ test("demo state reset maps the four judge-facing scenarios deterministically", 
     drift: "drift",
     functional: "broken",
     design: "design",
+    locator: "locator-drift",
   });
-  const state = { loggedIn: true, orderCreated: true, variant: "drift-broken" };
+  const state = { loggedIn: true, orderCreated: true, chatAnswered: true, variant: "drift-broken" };
   for (const [scenario, variant] of Object.entries(DEMO_SCENARIOS)) {
     assert.deepEqual(resetDemoState(state, scenario), { scenario, variant });
-    assert.deepEqual(state, { loggedIn: false, orderCreated: false, variant });
+    assert.deepEqual(state, { loggedIn: false, orderCreated: false, chatAnswered: false, variant });
     state.loggedIn = true;
     state.orderCreated = true;
+    state.chatAnswered = true;
   }
   assert.throws(() => resetDemoState(state, "unknown"), /Unknown demo scenario/);
 });

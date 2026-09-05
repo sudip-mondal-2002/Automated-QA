@@ -1,0 +1,172 @@
+{
+  "origin": "http://127.0.0.1:59035",
+  "crawledAt": "2026-09-04T08:20:57.293Z",
+  "pages": [
+    {
+      "path": "/",
+      "depth": 0,
+      "status": 200,
+      "title": "Sign in · QA Shop",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Customer sign in"
+        }
+      ],
+      "links": [
+        {
+          "href": "/dashboard",
+          "text": "Dashboard"
+        },
+        {
+          "href": "/cart",
+          "text": "Cart"
+        }
+      ],
+      "forms": [
+        {
+          "action": "/login",
+          "method": "post",
+          "inputs": [
+            {
+              "name": "username",
+              "type": "text",
+              "required": true,
+              "placeholder": ""
+            },
+            {
+              "name": "password",
+              "type": "password",
+              "required": true,
+              "placeholder": ""
+            }
+          ],
+          "buttons": [
+            "Sign in"
+          ]
+        }
+      ],
+      "signals": {
+        "login": true,
+        "checkout": true,
+        "payment": false,
+        "search": false,
+        "list": false,
+        "numeric": false,
+        "destructive": false
+      }
+    },
+    {
+      "path": "/dashboard",
+      "depth": 1,
+      "status": 200,
+      "title": "Sign in · QA Shop",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Customer sign in"
+        }
+      ],
+      "links": [
+        {
+          "href": "/dashboard",
+          "text": "Dashboard"
+        },
+        {
+          "href": "/cart",
+          "text": "Cart"
+        }
+      ],
+      "forms": [
+        {
+          "action": "/login",
+          "method": "post",
+          "inputs": [
+            {
+              "name": "username",
+              "type": "text",
+              "required": true,
+              "placeholder": ""
+            },
+            {
+              "name": "password",
+              "type": "password",
+              "required": true,
+              "placeholder": ""
+            }
+          ],
+          "buttons": [
+            "Sign in"
+          ]
+        }
+      ],
+      "signals": {
+        "login": true,
+        "checkout": true,
+        "payment": false,
+        "search": false,
+        "list": false,
+        "numeric": false,
+        "destructive": false
+      }
+    },
+    {
+      "path": "/cart",
+      "depth": 1,
+      "status": 200,
+      "title": "Sign in · QA Shop",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Customer sign in"
+        }
+      ],
+      "links": [
+        {
+          "href": "/dashboard",
+          "text": "Dashboard"
+        },
+        {
+          "href": "/cart",
+          "text": "Cart"
+        }
+      ],
+      "forms": [
+        {
+          "action": "/login",
+          "method": "post",
+          "inputs": [
+            {
+              "name": "username",
+              "type": "text",
+              "required": true,
+              "placeholder": ""
+            },
+            {
+              "name": "password",
+              "type": "password",
+              "required": true,
+              "placeholder": ""
+            }
+          ],
+          "buttons": [
+            "Sign in"
+          ]
+        }
+      ],
+      "signals": {
+        "login": true,
+        "checkout": true,
+        "payment": false,
+        "search": false,
+        "list": false,
+        "numeric": false,
+        "destructive": false
+      }
+    }
+  ],
+  "auth": {
+    "authenticated": false
+  },
+  "degraded": false
+}

@@ -1,10 +1,59 @@
 # Autonomous QA
 
-Autonomous QA is a self-contained Codex skill that turns a product journey into selector-free semantic tests, drives the real UI through native Browser/Chrome or computer use, and saves inspectable evidence without negotiating away correctness.
+This repository ships two things:
 
-The developer experience is deliberately small: **install one skill, open the application repository, and describe what to test**. The skill owns setup, runtime commands, application reachability, native UI execution, evidence persistence, reruns, and the optional local results UI.
+1. **An autonomous test-orchestration agent** — a URL is the only required
+   input; the agent probes, crawls, plans, generates, executes, triages, and
+   reports a real test suite with zero human input between stages. This is
+   the primary submission for the Bessemer Tech Catalyst *Autonomous Test
+   Orchestration Agent* challenge — see [Autonomous orchestration](#autonomous-orchestration--primary-submission)
+   below, which runs standalone via plain `node`, independent of any agent
+   harness.
+2. **A self-contained Codex/Claude skill** built on the same execution engine:
+   install once, describe a journey in your own application repository, and
+   the skill turns it into selector-free semantic tests, drives the real UI
+   through native Browser/Chrome or computer use, and saves inspectable
+   evidence without negotiating away correctness.
 
-## Install once
+## Autonomous orchestration — primary submission
+
+One command, a URL as the only required input, no installed skill or agent
+harness needed:
+
+```bash
+node .agents/skills/autonomous-qa/scripts/qa-agent.mjs orchestrate \
+  --url http://127.0.0.1:4555 \
+  --username demo --password demo \
+  --prompt "focus on checkout and authentication" \
+  --prd docs/prd.md
+```
+
+The pipeline runs with zero human input between stages: probe → fetch-only
+crawl + test-plan synthesis (optionally handed to a Planner sub-agent
+capability, which falls back to the deterministic planner on a rejected or
+missing draft) → coverage gate (pass / replan / escalate, scored on whether
+the suite can pass, not the plan's shape) → Playwright spec generation with
+live selector *and* assertion validation → semantic execution → locator-chain
+healing with bug-vs-broken triage → `report.json`/`report.md` with PRD-gap
+analysis, all schema-validated (`schemas/`) before being written. Every
+decision lands in `trace.jsonl`, viewable via
+`GET /api/orchestrations/:id/trace` on the loopback UI. See
+[docs/architecture.md](docs/architecture.md) and
+[docs/ORCHESTRATOR_DEMO.md](docs/ORCHESTRATOR_DEMO.md).
+
+Two honest notes: (a) shell mode without a browser executor reports `blocked`
+with the missing-capability reason rather than guessing — use
+`scripts/run-with-playwright.mjs` (devDependency `@playwright/test`,
+`npx playwright install chromium`) for real browser runs, or the installed
+skill's own native Browser/Chrome/computer-use capability; (b) generated
+Playwright files are portable artifacts validated against the live DOM —
+execution runs on the semantic engine, and semantic YAML stays the contract.
+
+## The one-skill developer experience
+
+The developer experience below is deliberately small: **install one skill, open the application repository, and describe what to test**. The skill owns setup, runtime commands, application reachability, native UI execution, evidence persistence, reruns, and the optional local results UI. It is also what the orchestration agent above reuses for spec execution — see [docs/architecture.md](docs/architecture.md).
+
+### Install once
 
 In Codex, install the skill directly from this repository:
 
@@ -14,7 +63,7 @@ $skill-installer Install https://github.com/sudip-mondal-2002/auto-qa/tree/main/
 
 The skill is available on the next turn. It contains its own bundled runtime, dependencies, schemas, and UI assets. Your application does **not** add an `autonomous-qa` dependency, npm script, service, or database.
 
-## Use it from the application project
+### Use it from the application project
 
 Open the app repository in Codex and ask for the outcome you want:
 
@@ -28,7 +77,7 @@ That single request makes the skill:
 2. create a project-specific `.qa/` workspace without demo/sample tests;
 3. write and validate semantic specs and reusable fixtures;
 4. start or reuse the app safely on loopback;
-5. drive the journey through native Browser/Chrome or computer use;
+5. reuse a validated adjacent Playwright replay when possible, otherwise drive the journey through native Browser/Chrome or computer use;
 6. preserve the original expectations during any healing attempt;
 7. save the result and screenshots under `.qa/runs/`;
 8. open the packaged loopback results UI when evidence should be reviewed.
@@ -45,7 +94,7 @@ $autonomous-qa Run checkout-design and compare its declared checkpoint with the 
 
 The developer stays in the application project. The internal `qa-agent` launcher is a skill implementation detail, not part of the day-to-day workflow.
 
-## Recorded developer demo
+### Recorded developer demo
 
 [![Watch the one-skill developer demo](artifacts/live-demo/contact-sheet.png)](artifacts/live-demo/auto-qa-live-demo.mp4)
 
@@ -53,7 +102,7 @@ The developer stays in the application project. The internal `qa-agent` launcher
 
 Use [LIVE_DEMO.md](LIVE_DEMO.md) to present the same flow live. The repository also includes [captions](artifacts/live-demo/auto-qa-live-demo.vtt), the [voiceover](artifacts/live-demo/auto-qa-live-demo-voiceover.mp3), a frame-accurate [timing manifest](artifacts/live-demo/timing.json), a [contact sheet](artifacts/live-demo/contact-sheet.png), and the reproducible [renderer](artifacts/live-demo/render-live-demo.mjs).
 
-## What is implemented
+### What is implemented
 
 All five phases in [phases.md](phases.md) are complete.
 
@@ -70,7 +119,9 @@ The installed skill is now a portable package:
 ```text
 .agents/skills/autonomous-qa/
 ├── SKILL.md
-├── runtime/qa-agent.mjs
+├── runtime/
+│   ├── qa-agent.mjs         # bundled runtime, including Playwright
+│   └── playwright-core/     # package/browser metadata only
 ├── schemas/
 ├── scripts/
 │   ├── qa-agent
@@ -80,7 +131,7 @@ The installed skill is now a portable package:
 
 It does not import `src/` or `node_modules/` from this development repository. Automated coverage copies the skill to a separate directory, invokes it from an external CommonJS app project whose path contains spaces, performs setup and a native-executor run, saves evidence, serves the packaged UI, and confirms the app's `package.json` remains untouched.
 
-## Correctness contract
+### Correctness contract
 
 Semantic specs store intent and observable outcomes—not CSS selectors, XPath, DOM paths, coordinates, fixed delays, or browser-specific scripts.
 
@@ -123,7 +174,7 @@ The result taxonomy is intentionally strict:
 
 Healing may rediscover a moved or renamed control, open a newly introduced menu, or wait for observable readiness. It may not change expected copy, business outcomes, success/error states, accessibility requirements, fixture postconditions, or design baselines. Uncertainty never becomes a pass.
 
-## File-backed evidence
+### File-backed evidence
 
 The skill creates these files in the application repository:
 
@@ -132,6 +183,9 @@ The skill creates these files in the application repository:
 ├── environments.yaml
 ├── fixtures/
 ├── specs/
+│   ├── <id>.yaml
+│   ├── <id>.playwright.mjs
+│   └── <id>.playwright.json
 ├── last-test.json
 └── runs/
     └── <run-id>/
@@ -141,16 +195,16 @@ The skill creates these files in the application repository:
 
 These are ordinary reviewable project files. Credential inputs stay as environment references such as `${QA_CUSTOMER_PASSWORD}` and resolved values must never appear in YAML, terminal output, results, or screenshots. The most recent 20 results per spec are retained.
 
-## What happens with the two UIs
+### What happens with the two UIs
 
 There are two browser surfaces, but the developer does not operate two platforms:
 
-- **The application UI** is the system under test. The skill starts or reuses its existing local development command and drives it with the native UI capability.
+- **The application UI** is the system under test. The skill starts or reuses its existing local development command. Trusted reruns use the bundled Playwright runtime and an installed Chrome-family browser; missing, stale, unavailable, or failed replays fall back to the native UI capability once.
 - **The QA workspace UI** is a loopback-only view over `.qa/`. The skill starts it when evidence should be inspected. It edits the same validated YAML, polls for completed results, and displays observations, selected accessible targets, healing notes, design findings, and declared screenshots.
 
 The workspace UI does not execute tests, schedule jobs, maintain a second copy of state, or expose a remote service. Its copy buttons produce `$autonomous-qa` prompts, so reruns return to the skill rather than leaking internal shell commands. See [scripts.md](scripts.md) for exact lifecycle and persistence behavior.
 
-## Standalone demo project
+### Standalone demo project
 
 [`demo-app/`](demo-app/) is a standalone Node project with no dependency on the QA runtime. It provides deterministic pass, interaction-drift, functional-failure, and design-failure states.
 
@@ -172,12 +226,14 @@ npm run reset -- design
 
 The helper accepts only loopback HTTP targets and changes only the demo process's in-memory state. The live demo asks the installed skill to manage QA from this project; it never asks the presenter to clone or operate the QA implementation repository.
 
-## Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
     DEV["Developer in app repo"] -->|"$autonomous-qa request"| SKILL["Installed autonomous-QA skill"]
-    SKILL --> APP["Native Browser / Chrome / computer use"]
+    SKILL --> REPLAY["Trusted Playwright replay"]
+    REPLAY --> TARGET["Application under test"]
+    SKILL -->|"fallback / semantic checkpoint"| APP["Native Browser / Chrome / computer use"]
     APP --> TARGET["Application under test"]
     SKILL <--> FILES[".qa semantic specs + evidence"]
     FILES <--> UI["Packaged loopback reviewer"]
@@ -203,15 +259,17 @@ npm install
 npm run build:skill
 npm test
 npm run test:coverage
+npm run test:soak
+npm run benchmark:replay
 ```
 
 `build:skill` bundles production runtime dependencies and copies authoritative schemas/UI assets into the installable skill. Tests rebuild it automatically. Coverage gates enforce 100% production line coverage, at least 95% branch coverage, and at least 98% function coverage.
 
-For internal diagnostics, maintainers can invoke `.agents/skills/autonomous-qa/scripts/qa-agent`. A bare shell `run` without a host-native executor deliberately saves `blocked`; only the installed skill's native execution flow may claim that it drove the UI.
+For internal diagnostics, maintainers can invoke `.agents/skills/autonomous-qa/scripts/qa-agent`, including `replay status <spec-id>` and `replay validate <spec-id>`. A bare shell run can complete only through a trusted replay; if replay is unavailable and no host-native executor exists, it saves `blocked`.
 
 ## Scope boundaries
 
-The project intentionally excludes Playwright, Stagehand, selector scripts, coordinate scripts, fixed sleeps, headless CI, scheduling, parallel/browser-matrix execution, production testing, databases, remote UI hosting, multi-user auth, automatic baseline updates, and pixel-perfect visual diffing.
+The project intentionally excludes Stagehand, coordinate scripts, fixed sleeps, scheduling, production testing, databases, remote UI hosting, multi-user auth, automatic baseline updates, and pixel-perfect visual diffing. The installed skill bundles its own Playwright runtime but never changes the tested application's dependencies or downloads browsers; it launches an existing Chrome or Edge channel headlessly. Generated replays are constrained, import-free artifacts and are trusted only after three zero-retry fresh-context validations.
 
 The product promise stays narrow: **install one skill, describe intent in the application project, survive harmless UI drift, and keep real functional or design regressions visible.**
 

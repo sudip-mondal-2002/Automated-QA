@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aivar.dev/auto-qa/test-plan.schema.json",
+  "title": "Test plan",
+  "description": "The artifact the Planner produces and the Gate evaluates. Accepts both the deterministic planner's prose expectations and the LLM planner's prose+predicate expectations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "target", "generatedAt", "attempt", "flows"],
+  "properties": {
+    "version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "target": { "type": "string" },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "source": {
+      "description": "Which planner produced this document, and whether it fell back.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planner"],
+      "properties": {
+        "planner": { "enum": ["deterministic", "agent"] },
+        "attempts": { "type": "integer", "minimum": 1, "description": "How many drafts the Planner sub-agent needed before one validated." },
+        "fellBack": { "type": "boolean" },
+        "fallbackReason": { "type": "string" }
+      }
+    },
+    "guidance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "prompt": { "type": "string" },
+        "prd": { "type": "object" }
+      }
+    },
+    "siteMapRef": { "type": "string" },
+    "flows": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/flow" }
+    },
+    "coverageClaims": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "openQuestions": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  },
+  "definitions": {
+    "flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "category", "priority", "pages", "steps"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "category": { "enum": ["happy", "error", "edge"] },
+        "priority": { "enum": ["critical", "high", "medium", "low"] },
+        "rationale": { "type": "string" },
+        "pages": { "type": "array", "items": { "type": "string" } },
+        "preconditions": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "requirementIds": { "type": "array", "items": { "type": "string" } },
+        "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/step" } }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intent", "expect"],
+      "properties": {
+        "intent": { "type": "string", "minLength": 1 },
+        "page": { "type": "string" },
+        "action": { "enum": ["navigate", "click", "fill", "submit", "observe"] },
+        "channel": { "enum": ["web", "chat", "voice", "workflow", "api"] },
+        "targetRef": { "type": "string" },
+        "inputs": {
+          "description": "Field values this step supplies. A list, not a map, so the wire schema stays OpenAI strict-mode compatible.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "string" },
+              "sensitive": { "type": "boolean" }
+            }
+          }
+        },
+        "expect": {
+          "description": "Empty for an action-only step (navigate/click/fill/submit with nothing yet to observe) — mergeActionSteps() in the generator folds it into the step that asserts its outcome. Never empty for an observing step; that is caught by the coverage gate's assertion-presence rule, not this schema.",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              { "$ref": "#/definitions/expectation" }
+            ]
+          }
+        }
+      }
+    },
+    "expectation": {
+      "description": "Prose is the human contract; assert is what executes. They must describe the same thing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prose"],
+      "properties": {
+        "prose": { "type": "string", "minLength": 1 },
+        "assert": { "$ref": "#/definitions/predicate" }
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "enum": ["text", "absent_text", "url_contains", "visible", "absent", "count"]
+        },
+        "value": { "type": ["string", "null"] },
+        "selector": { "type": ["string", "null"] },
+        "count": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    }
+  }
+}

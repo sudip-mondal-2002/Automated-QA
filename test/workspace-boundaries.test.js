@@ -3,7 +3,7 @@ import { mkdir, readFile, rename, symlink, unlink, writeFile } from "node:fs/pro
 import path from "node:path";
 import test from "node:test";
 import { atomicWriteFile, QaError, stringifyJson, stringifyYaml } from "../src/index.js";
-import { passingResult, temporaryWorkspace } from "../test-support/helpers.js";
+import { canSymlink, passingResult, temporaryWorkspace } from "../test-support/helpers.js";
 
 function recordedStep(spec, index = 1) {
   const step = spec.steps[index - 1];
@@ -174,6 +174,13 @@ test("non-ENOENT filesystem failures are not disguised as missing documents", as
 });
 
 test("initialization propagates unexpected access failures", async (t) => {
+  // Creating a symlink needs Developer Mode or elevation on Windows. The
+  // behaviour under test is POSIX ELOOP propagation, so skip rather than fail
+  // on a host policy difference.
+  if (!(await canSymlink(t))) {
+    t.skip("symlink creation is not permitted on this host");
+    return;
+  }
   const { root, workspace } = await temporaryWorkspace(t);
   await unlink(workspace.environmentsPath);
   await symlink(workspace.environmentsPath, workspace.environmentsPath);

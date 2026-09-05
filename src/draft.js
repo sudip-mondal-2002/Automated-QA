@@ -27,6 +27,22 @@ export function slugify(value) {
   return slug || "semantic-test";
 }
 
+export const SPEC_CHANNELS = Object.freeze(["web", "chat", "voice", "workflow", "api"]);
+
+function inferredChannel(requirement, explicit) {
+  if (explicit !== undefined) {
+    if (!SPEC_CHANNELS.includes(explicit)) {
+      throw new QaError("INVALID_CHANNEL", `Channel must be one of: ${SPEC_CHANNELS.join(", ")}`);
+    }
+    return explicit;
+  }
+  if (/chat|conversation|support agent|bot reply/i.test(requirement)) return "chat";
+  if (/voice|call|spoken|utterance|ivr/i.test(requirement)) return "voice";
+  if (/workflow|agent|pipeline|approval|automation/i.test(requirement)) return "workflow";
+  if (/\bapi\b|endpoint|webhook|contract/i.test(requirement)) return "api";
+  return "web";
+}
+
 function inferredExpectation(requirement) {
   if (/check\s*out|purchase|place(?:s)? (?:an )?order/i.test(requirement)) {
     return "Order confirmation is visible";
@@ -48,6 +64,7 @@ export function draftSpec(requirement, options = {}) {
   const title = options.title?.trim() || sentenceCase(cleaned);
   const id = options.id || slugify(title);
   assertStableId(id);
+  const channel = inferredChannel(cleaned, options.channel);
 
   const fixtures = options.beforeFixtures?.length
     ? { before: [...new Set(options.beforeFixtures)] }
@@ -62,6 +79,7 @@ export function draftSpec(requirement, options = {}) {
     steps: [
       {
         intent: options.intent?.trim() || sentenceCase(cleaned),
+        ...(channel !== "web" ? { channel } : {}),
         expect: options.expectations?.length
           ? options.expectations.map((expectation) => expectation.trim())
           : [inferredExpectation(cleaned)],
