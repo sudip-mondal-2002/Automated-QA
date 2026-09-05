@@ -4,6 +4,12 @@ import { readFile } from "node:fs/promises";
 import { detectNativeCapability } from "./native-executor.js";
 import { prepareEnvironment } from "./environment.js";
 import { QaError } from "./errors.js";
+import {
+  classifyFailure,
+  createExpectationGuard,
+  normalizeRediscovery,
+  normalizeTarget,
+} from "./healing.js";
 import { redactSensitive, resolveReferences } from "./references.js";
 
 const STEP_STATUSES = new Set(["passed", "failed", "blocked"]);
@@ -30,19 +36,6 @@ function mergeOutputs(target, source) {
   }
 }
 
-function normalizeSelectedTarget(value) {
-  if (!value || typeof value !== "object") return undefined;
-  const role = value.role ? String(value.role) : undefined;
-  const name = value.name ? String(value.name) : undefined;
-  const summary = value.summary ? String(value.summary) : [role, name].filter(Boolean).join(" ");
-  if (!summary) return undefined;
-  return {
-    summary,
-    ...(role ? { role } : {}),
-    ...(name ? { name } : {}),
-  };
-}
-
 function normalizeObservation(expectation, response) {
   if (typeof response === "boolean") {
     return { expectation, status: response ? "passed" : "failed" };
@@ -56,6 +49,28 @@ function normalizeObservation(expectation, response) {
     status,
     ...(response.observation ? { observation: String(response.observation) } : {}),
   };
+}
+
+async function observeExpectations(executor, expectations, context) {
+  const results = [];
+  for (const expectation of expectations) {
+    try {
+      results.push(normalizeObservation(expectation, await executor.observe(expectation, context)));
+    } catch (error) {
+      results.push({
+        expectation,
+        status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
+        observation: errorMessage(error),
+      });
+    }
+  }
+  return results;
+}
+
+function expectationStatus(expectations) {
+  return expectations.some((entry) => entry.status === "blocked")
+    ? "blocked"
+    : expectations.some((entry) => entry.status === "failed") ? "failed" : "passed";
 }
 
 async function screenshotArtifact(artifact) {
@@ -104,20 +119,23 @@ async function executeSemanticStep(executor, item, context) {
   try {
     action = await executor.act(item.intent, context);
   } catch (error) {
+    const status = error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed";
     return {
-      status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
+      status,
       expectations: item.expectations.map((expectation) => ({
         expectation,
-        status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
+        status,
         observation: errorMessage(error),
       })),
       explanation: errorMessage(error),
+      failure: { stage: "action", status, explanation: errorMessage(error) },
     };
   }
 
   if (action?.status === "blocked" || action?.status === "failed") {
     const status = action.status;
-    const selectedTarget = normalizeSelectedTarget(action.selectedTarget);
+    const selectedTarget = normalizeTarget(action.selectedTarget);
+    const explanation = action.observation ? String(action.observation) : `Action ${status}`;
     return {
       status,
       expectations: item.expectations.map((expectation) => ({
@@ -126,48 +144,38 @@ async function executeSemanticStep(executor, item, context) {
         ...(action.observation ? { observation: String(action.observation) } : {}),
       })),
       ...(selectedTarget ? { selectedTarget } : {}),
-      ...(action.observation ? { explanation: String(action.observation) } : {}),
+      explanation,
+      failure: {
+        stage: "action",
+        status,
+        explanation,
+        ...(selectedTarget ? { previousTarget: selectedTarget } : {}),
+      },
     };
   }
 
   mergeOutputs(context.outputs, action?.outputs);
-  const expectations = [];
-  for (const expectation of item.expectations) {
-    try {
-      expectations.push(normalizeObservation(expectation, await executor.observe(expectation, context)));
-    } catch (error) {
-      expectations.push({
-        expectation,
-        status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
-        observation: errorMessage(error),
-      });
-    }
-  }
-  const status = expectations.some((entry) => entry.status === "blocked")
-    ? "blocked"
-    : expectations.some((entry) => entry.status === "failed") ? "failed" : "passed";
-  const selectedTarget = normalizeSelectedTarget(action?.selectedTarget);
+  const expectations = await observeExpectations(executor, item.expectations, context);
+  const status = expectationStatus(expectations);
+  const selectedTarget = normalizeTarget(action?.selectedTarget);
+  const problem = expectations.find((entry) => entry.status !== "passed");
   return {
     status,
     expectations,
     ...(selectedTarget ? { selectedTarget } : {}),
+    ...(problem ? {
+      failure: {
+        stage: "expectation",
+        status,
+        explanation: problem.observation || `${problem.expectation}: ${problem.status}`,
+        ...(selectedTarget ? { previousTarget: selectedTarget } : {}),
+      },
+    } : {}),
   };
 }
 
 async function observeFixturePostconditions(executor, fixture, context) {
-  const expectations = [];
-  for (const expectation of fixture.expect) {
-    try {
-      expectations.push(normalizeObservation(expectation, await executor.observe(expectation, context)));
-    } catch (error) {
-      expectations.push({
-        expectation,
-        status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
-        observation: errorMessage(error),
-      });
-    }
-  }
-  return expectations;
+  return observeExpectations(executor, fixture.expect, context);
 }
 
 function fixtureExplanation(expectations, fallback) {
@@ -183,6 +191,210 @@ function skippedStep(step, index) {
     status: "skipped",
     expectations: step.expect.map((expectation) => ({ expectation, status: "skipped" })),
   };
+}
+
+function healingEventStatus(classification) {
+  if (classification === "healed") return "passed";
+  return classification === "blocked" ? "blocked" : "failed";
+}
+
+function healingOutcome(classification) {
+  if (classification === "healed") return "healed";
+  return classification === "blocked" ? "blocked" : "failed";
+}
+
+function originalFailureExplanation(failure, previousTarget) {
+  const explanation = failure.explanation || `${failure.stage} ${failure.status}`;
+  return previousTarget
+    ? `${explanation}. Previous target: ${previousTarget.summary}`
+    : explanation;
+}
+
+async function attemptHealing(executor, item, context, failed, hooks = {}) {
+  if (failed.status !== "failed" || !failed.failure) return failed;
+
+  const guard = createExpectationGuard(item.expectations);
+  const previousTarget = failed.failure.previousTarget ?? context.previousTarget;
+  const failure = { ...failed.failure, previousTarget };
+  const canRediscover = failure.stage === "action" && executor.supports?.("rediscover") === true;
+  const canWait = failure.stage === "expectation" && executor.supports?.("waitFor") === true;
+  let decision = classifyFailure({
+    failure,
+    ...(failure.stage === "action" ? { rediscovery: canRediscover ? undefined : null } : {}),
+    readinessAvailable: canWait,
+  });
+  if (!new Set(["rediscover_target", "wait_for_readiness"]).has(decision.decision)) return failed;
+
+  const strategy = decision.decision === "rediscover_target" ? "target_rediscovery" : "readiness_wait";
+  const details = { phase: "test", stepIndex: context.stepIndex };
+  await hooks.event?.("healing_started", {
+    ...details,
+    message: originalFailureExplanation(failure, previousTarget),
+  });
+  const beforeScreenshot = await hooks.capture?.(`healing-before-step-${context.stepIndex}`, details);
+  let replacement = strategy === "readiness_wait"
+    ? `Observable readiness for: ${guard.expectations.filter((expectation) => (
+      failed.expectations.find((entry) => entry.expectation === expectation)?.status !== "passed"
+    )).join("; ")}`
+    : "No equivalent target selected";
+  let selectedTarget = failed.selectedTarget ?? previousTarget;
+  let expectations = failed.expectations;
+  let verification;
+
+  try {
+    if (strategy === "target_rediscovery") {
+      let rediscovery;
+      try {
+        rediscovery = normalizeRediscovery(await executor.rediscover(item.intent, {
+          ...context,
+          failure: {
+            stage: failure.stage,
+            status: failure.status,
+            explanation: failure.explanation,
+          },
+          currentObservation: failure.explanation,
+          previousTarget,
+          expectations: guard.expectations,
+        }));
+      } catch (error) {
+        rediscovery = {
+          status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "ambiguous",
+          explanation: errorMessage(error),
+        };
+      }
+      decision = classifyFailure({ failure, rediscovery });
+      if (decision.decision !== "retry_equivalent_target") {
+        verification = {
+          status: decision.classification === "blocked" ? "blocked" : "failed",
+          explanation: decision.reason,
+        };
+      } else {
+        selectedTarget = rediscovery.target;
+        replacement = selectedTarget.summary;
+        let action;
+        try {
+          action = await executor.recover(item.intent, selectedTarget, {
+            ...context,
+            healing: true,
+            originalFailure: failure.explanation,
+            previousTarget,
+          });
+        } catch (error) {
+          action = {
+            status: error?.code === "NATIVE_BLOCKED" ? "blocked" : "failed",
+            observation: errorMessage(error),
+          };
+        }
+        if (action?.status === "blocked" || action?.status === "failed") {
+          const status = action.status;
+          const explanation = action.observation ? String(action.observation) : `Replacement action ${status}`;
+          expectations = guard.expectations.map((expectation) => ({ expectation, status, observation: explanation }));
+          verification = { status, explanation };
+        } else {
+          mergeOutputs(context.outputs, action?.outputs);
+          selectedTarget = normalizeTarget(action?.selectedTarget) ?? selectedTarget;
+          guard.assertUnchanged();
+          expectations = await observeExpectations(executor, guard.expectations, {
+            ...context,
+            healing: true,
+            selectedTarget,
+          });
+          verification = {
+            status: expectationStatus(expectations),
+            explanation: expectations.find((entry) => entry.status !== "passed")?.observation,
+          };
+        }
+      }
+    } else {
+      for (const expectation of guard.expectations) {
+        const initial = failed.expectations.find((entry) => entry.expectation === expectation);
+        if (initial?.status === "passed") continue;
+        try {
+          const waitResult = normalizeObservation(expectation, await executor.waitFor(expectation, {
+            ...context,
+            healing: true,
+            previousTarget,
+          }));
+          if (waitResult.status === "blocked") {
+            verification = { status: "blocked", explanation: waitResult.observation };
+            break;
+          }
+        } catch (error) {
+          verification = { status: "blocked", explanation: errorMessage(error) };
+          break;
+        }
+      }
+      if (!verification) {
+        guard.assertUnchanged();
+        expectations = await observeExpectations(executor, guard.expectations, {
+          ...context,
+          healing: true,
+          selectedTarget,
+        });
+        verification = {
+          status: expectationStatus(expectations),
+          explanation: expectations.find((entry) => entry.status !== "passed")?.observation,
+        };
+      }
+    }
+    guard.assertUnchanged();
+  } catch (error) {
+    verification = { status: "blocked", explanation: errorMessage(error) };
+  }
+
+  decision = classifyFailure({
+    failure,
+    verification,
+    recoveryAttempted: true,
+    expectationsUnchanged: true,
+  });
+  const afterScreenshot = await hooks.capture?.(`healing-after-step-${context.stepIndex}`, details);
+  if (decision.classification === "healed" && (!beforeScreenshot || !afterScreenshot)) {
+    decision = {
+      decision: "blocked",
+      classification: "blocked",
+      reason: "Recovery passed but required before/after screenshot evidence is unavailable",
+    };
+    verification = { status: "blocked", explanation: decision.reason };
+  }
+
+  const classification = decision.classification;
+  const healing = {
+    strategy,
+    outcome: healingOutcome(classification),
+    originalFailure: originalFailureExplanation(failure, previousTarget),
+    replacement,
+    verification: decision.reason,
+    ...(beforeScreenshot ? { beforeScreenshot } : {}),
+    ...(afterScreenshot ? { afterScreenshot } : {}),
+  };
+  await hooks.event?.("healing_completed", {
+    ...details,
+    status: healingEventStatus(classification),
+    message: `${replacement}: ${decision.reason}`,
+  });
+  return {
+    status: classification === "healed" ? "passed" : classification === "blocked" ? "blocked" : "failed",
+    expectations,
+    ...(selectedTarget ? { selectedTarget } : {}),
+    explanation: verification.explanation || decision.reason,
+    healing,
+    failure,
+  };
+}
+
+async function previousTargetsFor(workspace, specId, environment) {
+  try {
+    const selected = await workspace.readLastTest();
+    if (selected.specId !== specId || selected.environment !== environment || !selected.lastRunId) return new Map();
+    const previous = await workspace.loadResult(selected.lastRunId);
+    return new Map(previous.steps.flatMap((step) => {
+      const target = normalizeTarget(step.selectedTarget);
+      return target ? [[step.index, target]] : [];
+    }));
+  } catch {
+    return new Map();
+  }
 }
 
 export async function executeRun(options) {
@@ -221,6 +433,8 @@ export async function executeRun(options) {
   let primaryClassification = "passed";
   let primaryExplanation = "All declared expectations passed";
   let canExecuteCleanup = false;
+  let previousTargets = new Map();
+  let healedSteps = 0;
 
   const capture = async (label, details = {}) => {
     try {
@@ -235,10 +449,12 @@ export async function executeRun(options) {
       const relativePath = await workspace.saveScreenshot(runId, fileName, artifact.contents);
       result.evidence.screenshots.push(relativePath);
       await journal.add("screenshot_captured", { message: relativePath, ...details });
+      return relativePath;
     } catch (error) {
       const notice = `screenshot capture: ${errorMessage(error)}`;
       if (!result.evidence.unsupported.includes(notice)) result.evidence.unsupported.push(notice);
       await journal.add("capability_notice", { status: "blocked", message: notice, ...details });
+      return undefined;
     }
   };
 
@@ -318,6 +534,7 @@ export async function executeRun(options) {
   try {
     spec = await workspace.loadSpec(specId);
     result.environment = options.environmentId ?? spec.environment;
+    previousTargets = await previousTargetsFor(workspace, specId, result.environment);
     const environmentDocument = await workspace.loadEnvironments();
     const environment = environmentDocument.environments[result.environment];
     if (!environment) {
@@ -365,23 +582,36 @@ export async function executeRun(options) {
             break;
           }
           await journal.add("step_started", { phase: "test", stepIndex: index, message: step.intent });
-          const executed = await executeSemanticStep(executor, {
-            intent: step.intent,
-            expectations: step.expect,
-          }, {
+          const stepContext = {
             runId,
             scope: "test",
             stepIndex: index,
             outputs,
             target: resolvedEnvironment,
             signal,
-          });
+            previousTarget: previousTargets.get(index),
+          };
+          let executed = await executeSemanticStep(executor, {
+            intent: step.intent,
+            expectations: step.expect,
+          }, stepContext);
+          if (executed.status === "failed") {
+            executed = await attemptHealing(executor, {
+              intent: step.intent,
+              expectations: step.expect,
+            }, stepContext, executed, {
+              capture,
+              event: (type, details) => journal.add(type, details),
+            });
+          }
+          if (executed.healing?.outcome === "healed") healedSteps += 1;
           const recorded = redact({
             index,
             intent: step.intent,
             status: executed.status,
             expectations: executed.expectations,
             ...(executed.selectedTarget ? { selectedTarget: executed.selectedTarget } : {}),
+            ...(executed.healing ? { healing: executed.healing } : {}),
           });
           result.steps.push(recorded);
           await capture(`${executed.status === "passed" ? "checkpoint" : "failure"}-step-${index}`, {
@@ -464,12 +694,19 @@ export async function executeRun(options) {
     } catch {}
   }
 
+  if (primaryClassification === "passed" && healedSteps > 0) {
+    primaryClassification = "healed";
+    primaryExplanation = `Recovered ${healedSteps} interaction${healedSteps === 1 ? "" : "s"} and verified every original expectation unchanged`;
+  }
   result.classification = primaryClassification;
   const cleanupProblems = result.fixtures.filter((fixture) => fixture.phase === "after" && fixture.status !== "passed");
   result.explanation = redact(cleanupProblems.length > 0
     ? `${primaryExplanation}. Cleanup issue: ${cleanupProblems.map((fixture) => `${fixture.fixtureId} ${fixture.status}`).join(", ")}`
     : primaryExplanation);
-  await journal.add("run_completed", { status: result.classification === "passed" ? "passed" : "failed", message: result.explanation });
+  await journal.add("run_completed", {
+    status: new Set(["passed", "healed"]).has(result.classification) ? "passed" : "failed",
+    message: result.explanation,
+  });
   result.completedAt = instant(clock);
   await workspace.saveResult(result);
   return result;

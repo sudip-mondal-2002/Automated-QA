@@ -42,6 +42,13 @@ export function demoNativeExecutor(fetchImpl = globalThis.fetch) {
         return { selectedTarget: { summary: "Shopping cart link", role: "link", name: "Cart" } };
       }
       if (intent === "Proceed to checkout") {
+        if (!html.includes("Proceed to checkout")) {
+          return {
+            status: "failed",
+            observation: "The previously used Proceed to checkout control is absent",
+            selectedTarget: { summary: "Proceed to checkout link", role: "link", name: "Proceed to checkout" },
+          };
+        }
         await navigate("/checkout");
         return { selectedTarget: { summary: "Checkout link", role: "link", name: "Proceed to checkout" } };
       }
@@ -61,6 +68,28 @@ export function demoNativeExecutor(fetchImpl = globalThis.fetch) {
         return { selectedTarget: { summary: "Delete test order", role: "button", name: "Delete test order" } };
       }
       return { status: "failed", observation: `Unsupported deterministic intent: ${intent}` };
+    },
+    rediscover(intent) {
+      if (intent === "Proceed to checkout" && html.includes("Continue to payment")) {
+        return {
+          status: "found",
+          equivalent: true,
+          target: {
+            summary: "Continue to payment link inside the Checkout options menu",
+            role: "link",
+            name: "Continue to payment",
+          },
+          observation: "The checkout action moved into Checkout options and was renamed Continue to payment",
+        };
+      }
+      return { status: "not_found", explanation: `No equivalent control was found for ${intent}` };
+    },
+    async recover(intent, target) {
+      if (intent === "Proceed to checkout" && target?.name === "Continue to payment") {
+        await navigate("/checkout");
+        return { selectedTarget: target };
+      }
+      return { status: "failed", observation: `The replacement target cannot perform ${intent}` };
     },
     observe(expectation) {
       const checks = {

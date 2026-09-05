@@ -67,11 +67,15 @@
     "healing": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["originalFailure", "replacement", "verification"],
+      "required": ["strategy", "outcome", "originalFailure", "replacement", "verification"],
       "properties": {
+        "strategy": { "enum": ["target_rediscovery", "readiness_wait"] },
+        "outcome": { "enum": ["healed", "failed", "blocked"] },
         "originalFailure": { "type": "string", "minLength": 1 },
         "replacement": { "type": "string", "minLength": 1 },
-        "verification": { "type": "string", "minLength": 1 }
+        "verification": { "type": "string", "minLength": 1 },
+        "beforeScreenshot": { "$ref": "#/$defs/screenshotPath" },
+        "afterScreenshot": { "$ref": "#/$defs/screenshotPath" }
       }
     },
     "stepResult": {
@@ -107,10 +111,7 @@
       "properties": {
         "screenshots": {
           "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^screenshots/[a-z0-9][a-z0-9-]*\\.(?:png|jpe?g|webp)$"
-          }
+          "items": { "$ref": "#/$defs/screenshotPath" }
         },
         "consoleErrors": {
           "type": "array",
@@ -142,6 +143,8 @@
             "fixture_completed",
             "step_started",
             "step_completed",
+            "healing_started",
+            "healing_completed",
             "screenshot_captured",
             "cleanup_started",
             "cleanup_completed",
@@ -154,6 +157,10 @@
         "stepIndex": { "type": "integer", "minimum": 1 },
         "message": { "type": "string", "minLength": 1 }
       }
+    },
+    "screenshotPath": {
+      "type": "string",
+      "pattern": "^screenshots/[a-z0-9][a-z0-9-]*\\.(?:png|jpe?g|webp)$"
     },
     "designResult": {
       "type": "object",

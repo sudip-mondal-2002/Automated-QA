@@ -138,6 +138,9 @@ test("native executor capability detection and forwarding are explicit", async (
     consoleErrors: (...args) => calls.push(["console", ...args]),
     networkErrors: (...args) => calls.push(["network", ...args]),
     close: (...args) => calls.push(["close", ...args]),
+    rediscover: (...args) => calls.push(["rediscover", ...args]),
+    recover: (...args) => calls.push(["recover", ...args]),
+    waitFor: (...args) => calls.push(["waitFor", ...args]),
   });
   assert.deepEqual((await executor.availability()).unsupported, []);
   await executor.connect("target", "context");
@@ -147,7 +150,25 @@ test("native executor capability detection and forwarding are explicit", async (
   await executor.consoleErrors("context");
   await executor.networkErrors("context");
   await executor.close("context");
-  assert.deepEqual(calls.map(([name]) => name), ["connect", "act", "observe", "screenshot", "console", "network", "close"]);
+  assert.equal(executor.supports("rediscover"), true);
+  assert.equal(executor.supports("missing"), false);
+  await executor.rediscover("intent", "context");
+  await executor.recover("intent", "target", "context");
+  await executor.waitFor("expectation", "context");
+  assert.deepEqual(calls.map(([name]) => name), [
+    "connect", "act", "observe", "screenshot", "console", "network", "close", "rediscover", "recover", "waitFor",
+  ]);
+
+  let fallbackContext;
+  const fallback = createNativeWebExecutor({
+    act(_intent, context) { fallbackContext = context; },
+    observe() {},
+    screenshot() {},
+  });
+  await fallback.recover("intent", { summary: "Replacement" }, { runId: "run" });
+  assert.deepEqual(fallbackContext.recovery.target, { summary: "Replacement" });
+  assert.equal(await fallback.rediscover("intent", {}), undefined);
+  assert.equal(await fallback.waitFor("expectation", {}), undefined);
 
   assert.match((await detectNativeCapability({ type: "desktop" })).explanation, /computer use/);
   assert.match((await detectNativeCapability({ type: "web" })).explanation, /Browser or Chrome/);

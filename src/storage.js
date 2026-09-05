@@ -438,6 +438,45 @@ export class QaWorkspace {
       }
     }
 
+    const evidenceScreenshots = new Set(value.evidence?.screenshots ?? []);
+    const successfulHealings = [];
+    for (const [stepIndex, step] of value.steps.entries()) {
+      if (!step.healing || step.healing.outcome !== "healed") continue;
+      successfulHealings.push(step);
+      if (step.status !== "passed") {
+        throw new QaError("HEALING_STATUS_MISMATCH", `Run ${value.runId} records unsuccessful healing as passed`, [
+          { path: `$.steps[${stepIndex}].status`, message: "must be passed when healing outcome is healed" },
+        ]);
+      }
+      for (const field of ["beforeScreenshot", "afterScreenshot"]) {
+        const screenshot = step.healing[field];
+        if (!screenshot || !evidenceScreenshots.has(screenshot)) {
+          throw new QaError("MISSING_HEALING_EVIDENCE", `Run ${value.runId} is missing healing screenshot evidence`, [
+            {
+              path: `$.steps[${stepIndex}].healing.${field}`,
+              message: "must reference a screenshot in $.evidence.screenshots",
+            },
+          ]);
+        }
+      }
+    }
+    if (value.classification === "healed") {
+      if (successfulHealings.length === 0) {
+        throw new QaError("HEALED_WITHOUT_RECOVERY", `Run ${value.runId} has no successfully healed step`, [
+          { path: "$.classification", message: "healed requires a step with healing.outcome set to healed" },
+        ]);
+      }
+      if (value.steps.some((step) => step.status !== "passed")) {
+        throw new QaError("HEALED_WITH_FAILED_STEP", `Run ${value.runId} cannot be healed while a test step did not pass`, [
+          { path: "$.steps", message: "every test step must pass for a healed run" },
+        ]);
+      }
+    } else if (value.classification === "passed" && successfulHealings.length > 0) {
+      throw new QaError("HEALING_CLASSIFICATION_MISMATCH", `Run ${value.runId} hides a successful recovery`, [
+        { path: "$.classification", message: "use healed when recovery was required" },
+      ]);
+    }
+
     const resultPath = this.resultPath(value.runId);
     await mkdir(path.dirname(resultPath), { recursive: true });
     await atomicWriteFile(resultPath, stringifyJson(value));

@@ -1,11 +1,11 @@
 ---
 name: autonomous-qa
-description: Create, inspect, edit, validate, and run repository-scoped semantic QA specs and reusable fixtures through native Browser/Chrome or computer-use capabilities. Use when a user describes a UI journey, reusable QA setup, run, or rerun in natural language; do not claim healing or design comparison before their later phases are implemented.
+description: Create, inspect, edit, validate, run, and safely self-heal repository-scoped semantic QA specs and reusable fixtures through native Browser/Chrome or computer-use capabilities. Use when a user describes a UI journey, reusable QA setup, run, rerun, or harmless interaction drift in natural language; do not claim design comparison before that later phase is implemented.
 ---
 
 # Autonomous QA — Native execution
 
-Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 2 supports real actions, observations, fixtures, cleanup, screenshots, events, and structured results. Target healing, design comparison, and the localhost UI remain later-phase work.
+Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 3 supports real actions, observations, fixtures, cleanup, screenshots, structured results, semantic target rediscovery, observable-readiness recovery, and conservative failure classification. Design comparison and the localhost UI remain later-phase work.
 
 ## Create and edit workflow
 
@@ -34,10 +34,12 @@ Treat `run <spec-id> [--env <id>]` and `run-last` as skill operations. `run-last
    - For every intent, observe the current UI, perform the minimum semantic action, and check every declared expectation unchanged.
    - Verify each fixture's top-level `expect` postcondition. An idempotent cleanup fixture passes when the target is already clean.
 6. Capture a screenshot after fixture checkpoints and test steps, and at failures. Do not capture credential entry while secret fields are populated. Store screenshots under `.qa/runs/<run-id>/screenshots/` and refer to them with run-relative paths.
-7. If an action or expectation fails, stop later test steps. In Phase 2, record a direct expectation failure as `functional_regression` and a capability, environment, login, fixture, or cancellation impediment as `blocked`. Do not rediscover a replacement target or emit `healed`; that belongs to Phase 3.
-8. Always attempt `after` fixtures in a finally-style cleanup path after pass, failure, or cancellation when the native session is usable. Record cleanup failures separately; they must not replace the primary classification.
-9. Report console and network errors only when the active native capability exposes them. Otherwise record the inspection as unsupported rather than assuming there were no errors.
-10. Save the validated result through the file-backed workspace so `last-test.json` atomically gains `lastRunId`. Return the classification, concise explanation, result path, and screenshot paths.
+7. If a test action fails or its target is missing, capture the current state and ask the native executor to rediscover an accessible target from the unchanged intent, current UI, failed/previous target summary, and original expectations. Retry only when the executor explicitly confirms that the replacement is equivalent. Never heal fixture postconditions.
+8. If an action succeeded but an expectation may be waiting on UI readiness, use an observable readiness wait only when the native executor exposes it. Re-observe every original expectation afterward; never use a fixed delay.
+9. A successful recovery must preserve the expectation list byte-for-byte, capture before/after screenshots, and record the original failure, replacement, strategy, outcome, and verification. Emit `healed` only when all test steps pass and at least one recovery verified the unchanged expectations. If verification still fails, record `functional_regression`; if recovery is unavailable, ambiguous, or blocked, fail safely without guessing a pass.
+10. Always attempt `after` fixtures in a finally-style cleanup path after pass, failure, healing, or cancellation when the native session is usable. Record cleanup failures separately; they must not replace the primary classification.
+11. Report console and network errors only when the active native capability exposes them. Otherwise record the inspection as unsupported rather than assuming there were no errors.
+12. Save the validated result through the file-backed workspace so `last-test.json` atomically gains `lastRunId`. Return the classification, concise explanation, result path, and screenshot paths.
 
 ## Native execution boundary
 
@@ -49,19 +51,20 @@ The repository runtime's executor contract has five semantic responsibilities:
 - `observe(expectation, context)` returning `passed`, `failed`, or `blocked` plus a visible observation;
 - `screenshot(context)` returning PNG, JPEG, or WebP data.
 
-Console inspection, network inspection, and close are optional. Keep adapter-specific details outside `.qa/` documents. Native Browser/Chrome or computer-use tooling is the adapter; Playwright, Stagehand, DOM-selector scripts, and coordinate scripts are out of scope.
+Phase 3 adapters may additionally expose `rediscover(intent, context)`, `recover(intent, target, context)`, and `waitFor(expectation, context)`. A rediscovered target is eligible only with `equivalent: true` and an accessible target summary. Console inspection, network inspection, and close are optional. Keep adapter-specific details outside `.qa/` documents. Native Browser/Chrome or computer-use tooling is the adapter; Playwright, Stagehand, DOM-selector scripts, coordinate scripts, and fixed sleeps are out of scope.
 
 ## Events and results
 
-Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
+Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, healing start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
 
-Phase 2 may emit only:
+Phase 3 may emit:
 
 - `passed` when declared expectations pass;
+- `healed` when interaction mechanics changed and unchanged expectations pass after evidence-backed recovery;
 - `functional_regression` for a direct failed action or observable outcome;
 - `blocked` when execution could not reliably proceed.
 
-The broader schema reserves `healed` and `design_regression` for later phases. Never use either classification yet.
+The broader schema reserves `design_regression` for the next phase. Never use it without an explicit design reference and the Phase 4 comparison workflow.
 
 ## Inputs and outputs
 
@@ -75,8 +78,11 @@ The broader schema reserves `healed` and `design_regression` for later phases. N
 - Fixture inputs that may contain secrets remain references such as `${QA_CUSTOMER_PASSWORD}` in stored documents. Resolved values must not enter results, events, terminal output, or screenshots.
 - Fixture workflows remain semantic and verify their own postcondition. Cleanup fixtures should be idempotent.
 - Unsupported inspection is explicit. Uncertainty never becomes a pass.
+- A replacement target must be explicitly equivalent; similarity alone is insufficient.
+- Successful healing requires before/after evidence and unchanged-expectation verification.
+- A later functional failure overrides an earlier successful healing for the run classification.
 - Use native Browser/Chrome for web UI and computer use only for desktop/native UI.
 - Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, or Stagehand.
-- Do not heal targets, compare design references, update baselines, or claim later-phase behavior.
+- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not compare design references, repair application code, update baselines, or claim later-phase behavior.
 
 The schemas in [`schemas/`](../../../schemas/) remain the authoritative structural contracts. The CLI adds cross-file reference checks, execution orchestration, atomic writes, and path-based validation errors.

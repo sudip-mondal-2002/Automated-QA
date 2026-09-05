@@ -1,8 +1,8 @@
 {
   "name": "autonomous-qa-agent",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "File-backed semantic QA workspace with native execution and reusable fixtures",
+  "description": "File-backed semantic QA runtime with native execution, fixtures, and evidence-backed self-healing",
   "type": "module",
   "bin": {
     "qa-agent": ".agents/skills/autonomous-qa/scripts/qa-agent"
