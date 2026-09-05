@@ -72,7 +72,13 @@ export function buildReport({ plan, gapsHistory = [], generation = {}, runs = []
       exitCode,
       scenarios: counts,
       coverage: { score: lastGaps.score ?? 1, attempts: gapsHistory.length || 1, blockingGaps: (lastGaps.gaps ?? []).filter((g) => g.severity === "blocking").length, advisoryGaps: (lastGaps.gaps ?? []).filter((g) => g.severity !== "blocking").length },
-      generation: { specs: generation.specs ?? 0, validated: generation.validated ?? 0, unvalidated: generation.unvalidated ?? 0, strategies: generation.strategies ?? {} },
+      generation: {
+        specs: generation.specs ?? 0,
+        validated: generation.validated ?? 0,
+        unvalidated: generation.unvalidated ?? 0,
+        strategies: generation.strategies ?? {},
+        assertions: generation.assertions ?? { checked: 0, verified: 0, withPredicates: 0, total: 0 },
+      },
       healing: { attempted: heals.length, succeeded: heals.filter((h) => h.promoted || h.succeeded).length, promoted: heals.filter((h) => h.promoted).length },
     },
     decisions,
@@ -89,6 +95,8 @@ export function renderReportMarkdown(report) {
     `# Test Quality Report — ${report.summary.verdict}`,
     "",
     `Target ${report.target} · ${report.summary.scenarios.total} scenarios · coverage ${report.summary.coverage.score} · exit ${report.summary.exitCode}`,
+    "",
+    `Assertions: ${report.summary.generation?.assertions?.withPredicates ?? 0}/${report.summary.generation?.assertions?.total ?? 0} expectations have a checkable predicate · ${report.summary.generation?.assertions?.verified ?? 0} verified against the live page`,
     "",
     "## What the agent decided",
   ];

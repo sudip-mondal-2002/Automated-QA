@@ -64,7 +64,14 @@ export async function orchestrate({
   await workspace.ensureDirectories();
   const directory = outDir ?? path.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
   await mkdir(directory, { recursive: true });
-  const tracer = createTracer({ now, writeLine: async (line) => { await writeFile(path.join(directory, "trace.jsonl"), line, { flag: "a" }); } });
+  // Seed redaction with everything secret this run knows about. The tracer was
+  // constructed with no sensitiveValues at all, so nothing was redacted.
+  const secrets = [password, username].filter((value) => typeof value === "string" && value.length > 3);
+  const tracer = createTracer({
+    now,
+    sensitiveValues: secrets,
+    writeLine: async (line) => { await writeFile(path.join(directory, "trace.jsonl"), line, { flag: "a" }); },
+  });
   const say = emit ?? tracer.emit.bind(tracer);
   const decisions = [];
   const gapsHistory = [];
@@ -130,9 +137,13 @@ export async function orchestrate({
     }
 
     await say("run", "stage_started", { message: "Executing semantic specs" });
-    const specs = await workspace.listSpecs();
+    // Execute exactly what this run generated. Listing the shared spec
+    // directory and taking the last N picked up the developer's own specs
+    // (listSpecs sorts alphabetically) and silently dropped generated ones.
     const flowForSpec = generation.flowMap ?? {};
-    for (const spec of specs.slice(-generation.specs)) {
+    const allSpecs = new Map((await workspace.listSpecs()).map((spec) => [spec.id, spec]));
+    const specs = (generation.artifacts ?? []).map((id) => allSpecs.get(id)).filter(Boolean);
+    for (const spec of specs) {
       const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
@@ -140,7 +151,14 @@ export async function orchestrate({
         const durationMs = Date.now() - started;
         const classification = result.classification;
         const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
-        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : "broken_locator";
+        // A clean run is not a broken locator. Only a run that actually
+        // recovered from locator drift earns that label.
+        const healedHere = (result.steps ?? []).some((step) => step.healing?.outcome === "healed");
+        const triaged = status === "failed"
+          ? "app_defect"
+          : status === "blocked"
+            ? "environment"
+            : healedHere ? "broken_locator" : "none";
         runs.push({ flowId, specId: spec.id, status, classification: triaged, confidence: status === "failed" ? 0.7 : status === "blocked" ? 0.95 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, runClassification: classification, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), ...(status === "blocked" ? { blockedReason: result.explanation } : {}) });
         for (const step of result.steps ?? []) {
           if (step.healing) heals.push({ specId: spec.id, stepIndex: step.index, promoted: step.healing.outcome === "healed", succeeded: step.healing.outcome === "healed" });

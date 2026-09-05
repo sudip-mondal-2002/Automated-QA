@@ -12982,9 +12982,9 @@ var require_lexer = __commonJS({
         }
       }
       *parseQuotedScalar() {
-        const quote = this.charAt(0);
-        let end = this.buffer.indexOf(quote, this.pos + 1);
-        if (quote === "'") {
+        const quote2 = this.charAt(0);
+        let end = this.buffer.indexOf(quote2, this.pos + 1);
+        if (quote2 === "'") {
           while (end !== -1 && this.buffer[end + 1] === "'")
             end = this.buffer.indexOf("'", end + 2);
         } else {
@@ -17108,94 +17108,268 @@ import path3 from "node:path";
 function slugify2(value) {
   return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "flow";
 }
-function expectationToPlaywright(expectation) {
-  const escaped = String(expectation).replace(/[/\\^$*+?.()|[\]{}]/g, "\\$&").slice(0, 80);
-  if (/no error|absent|no record/i.test(expectation)) return null;
-  return `await expect(page.getByText(/${escaped}/i).first()).toBeVisible();`;
+function escapeRegex(value) {
+  return String(value).replace(/[/\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+function quote(value) {
+  return `'${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+}
+function expectationProse(expectation) {
+  return typeof expectation === "string" ? expectation : expectation?.prose ?? "";
+}
+function expectationPredicate(expectation) {
+  return typeof expectation === "string" ? null : expectation?.assert ?? null;
+}
+function predicateToPlaywright(predicate) {
+  if (!predicate || !predicate.kind) return null;
+  const { kind, value, selector, count } = predicate;
+  switch (kind) {
+    case "text":
+      if (!value) return null;
+      return `await expect(page.getByText(/${escapeRegex(value).slice(0, 120)}/i).first()).toBeVisible();`;
+    case "absent_text":
+      if (!value) return null;
+      return `await expect(page.getByText(/${escapeRegex(value).slice(0, 120)}/i)).toHaveCount(0);`;
+    case "url_contains":
+      if (!value) return null;
+      return `await expect(page).toHaveURL(/${escapeRegex(value).slice(0, 120)}/);`;
+    case "visible":
+      if (!selector) return null;
+      return `await expect(page.locator(${quote(selector)}).first()).toBeVisible();`;
+    case "absent":
+      if (!selector) return null;
+      return `await expect(page.locator(${quote(selector)})).toHaveCount(0);`;
+    case "count":
+      if (!selector || typeof count !== "number") return null;
+      return `await expect(page.locator(${quote(selector)})).toHaveCount(${count});`;
+    default:
+      return null;
+  }
+}
+function mergeActionSteps(steps = []) {
+  const merged = [];
+  let pending = [];
+  for (const step of steps) {
+    const expectations = step.expect ?? [];
+    if (expectations.length === 0) {
+      pending.push(step);
+      continue;
+    }
+    const carried = pending.filter((earlier) => !earlier.page || !step.page || earlier.page === step.page);
+    for (const orphan of pending.filter((earlier) => !carried.includes(earlier))) {
+      merged.push({ ...orphan, expect: [{ prose: `Action completes: ${orphan.intent}` }] });
+    }
+    merged.push({
+      ...step,
+      inputs: [...carried.flatMap((earlier) => earlier.inputs ?? []), ...step.inputs ?? []]
+    });
+    pending = [];
+  }
+  for (const orphan of pending) {
+    merged.push({ ...orphan, expect: [{ prose: `Action completes: ${orphan.intent}` }] });
+  }
+  return merged;
 }
 function planToSpecs({ plan } = {}) {
   const specs = [];
   for (const flow of plan?.flows ?? []) {
     const id = slugify2(flow.id.replace(/^flow_/, ""));
+    const steps = mergeActionSteps(flow.steps ?? []);
     specs.push({
       version: 1,
       id,
       title: flow.title,
       environment: "local",
-      steps: (flow.steps ?? []).map((step) => ({
+      // The saved semantic spec stays selector-free prose — that contract is
+      // the point of the product. Predicates ride in the locators sidecar.
+      steps: steps.map((step) => ({
         intent: step.intent,
-        expect: step.expect
+        ...step.channel ? { channel: step.channel } : {},
+        expect: (step.expect ?? []).map(expectationProse).filter(Boolean)
       })),
       _flowId: flow.id,
-      _targetRefs: (flow.steps ?? []).map((step) => step.targetRef ?? null)
+      _targetRefs: steps.map((step) => step.targetRef ?? null),
+      _predicates: steps.map((step) => (step.expect ?? []).map(expectationPredicate)),
+      _inputs: steps.map((step) => step.inputs ?? []),
+      _actions: steps.map((step) => step.action ?? null),
+      _pages: steps.map((step) => step.page ?? null),
+      _preconditions: flow.preconditions ?? []
     });
   }
   return specs;
+}
+function inputCandidates(input2, form) {
+  const declared = (form?.inputs ?? []).find((entry) => entry.name === input2.name);
+  const candidates = [];
+  if (declared?.placeholder) candidates.push({ strategy: "label", value: declared.placeholder, confidence: 0.85 });
+  if (input2.name) {
+    candidates.push({ strategy: "label", value: input2.name, confidence: 0.8 });
+    candidates.push({ strategy: "css", value: `[name="${input2.name}"]`, confidence: 0.7 });
+  }
+  if (declared?.type && declared.type !== "text") {
+    candidates.push({ strategy: "css", value: `input[type="${declared.type}"]`, confidence: 0.4 });
+  }
+  return candidates.length > 0 ? candidates : [{ strategy: "css", value: "input", confidence: 0.2 }];
 }
 function bindLocators({ spec, flow, siteMap } = {}) {
   const pageForms = new Map((siteMap?.pages ?? []).map((page) => [page.path, page.forms ?? []]));
   const bindings = [];
   (spec.steps ?? []).forEach((step, index) => {
-    const flowStep = flow?.steps?.[index] ?? {};
-    const pagePath = flowStep.page ?? flow?.pages?.[0] ?? "/";
-    const targetRef = spec._targetRefs?.[index] ?? flowStep.targetRef ?? null;
-    let candidates = [{ strategy: "text", value: step.intent.slice(0, 48), confidence: 0.6 }];
-    if (targetRef && targetRef.startsWith("form:")) {
-      const formIndex = Number(targetRef.slice(5)) || 0;
-      const form = (pageForms.get(pagePath) ?? [])[formIndex];
-      if (form) {
-        const firstInput = (form.inputs ?? [])[0];
-        candidates = selectorCandidates({
-          testid: void 0,
-          role: "button",
-          name: (form.buttons ?? [])[0] ?? step.intent.slice(0, 32),
-          text: (form.buttons ?? [])[0] ?? firstInput?.name ?? step.intent.slice(0, 32),
-          tag: "button"
-        });
-      }
+    const pagePath = spec._pages?.[index] ?? flow?.pages?.[0] ?? "/";
+    const targetRef = spec._targetRefs?.[index] ?? null;
+    const forms = pageForms.get(pagePath) ?? [];
+    let form = null;
+    if (targetRef && targetRef.startsWith("form:")) form = forms[Number(targetRef.slice(5)) || 0] ?? null;
+    const stepInputs = spec._inputs?.[index] ?? [];
+    if (!form && stepInputs.length > 0) {
+      form = forms.find((candidate) => stepInputs.some((input2) => (candidate.inputs ?? []).some((declared) => declared.name === input2.name))) ?? forms[0] ?? null;
     }
-    bindings.push({ stepIndex: index + 1, targetRef, page: pagePath, candidates, resolvedStrategy: candidates[0].strategy, assertionValidated: true });
+    if (!form && forms.length > 0 && (spec._actions?.[index] === "submit" || spec._actions?.[index] === "click")) {
+      form = forms[0];
+    }
+    let candidates = [{ strategy: "text", value: step.intent.slice(0, 48), confidence: 0.6 }];
+    if (form) {
+      const label = (form.buttons ?? [])[0] ?? step.intent.slice(0, 32);
+      candidates = selectorCandidates({ role: "button", name: label, text: label, tag: "button" });
+    }
+    bindings.push({
+      stepIndex: index + 1,
+      targetRef,
+      page: pagePath,
+      action: spec._actions?.[index] ?? (form ? "submit" : "observe"),
+      candidates,
+      inputs: stepInputs.map((input2) => ({ ...input2, candidates: inputCandidates(input2, form) })),
+      expectations: (step.expect ?? []).map((prose, position) => ({
+        prose,
+        predicate: spec._predicates?.[index]?.[position] ?? null,
+        // Filled in by validateSelectors against the live DOM.
+        validated: null
+      })),
+      resolvedStrategy: candidates[0].strategy,
+      assertionValidated: null
+    });
   });
-  return { specId: spec.id, origin: siteMap?.origin ?? "", validated: true, validatedAt: (/* @__PURE__ */ new Date()).toISOString(), probeSource: "planner", bindings };
+  return {
+    specId: spec.id,
+    origin: siteMap?.origin ?? "",
+    preconditions: spec._preconditions ?? [],
+    validated: false,
+    validatedAt: null,
+    probeSource: "planner",
+    bindings
+  };
 }
-async function validateSelectors({ sidecar, origin, fetchImpl = globalThis.fetch, executor, emit } = {}) {
-  let validated = true;
+async function fetchPageText(origin, pagePath, fetchImpl, cache) {
+  const key = pagePath ?? "/";
+  if (cache.has(key)) return cache.get(key);
+  let html = "";
+  let failed = false;
+  try {
+    const response = await fetchImpl(new URL(key, origin).href);
+    html = typeof response.text === "function" ? await response.text() : "";
+  } catch {
+    failed = true;
+  }
+  const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").toLowerCase();
+  const entry = { html: html.toLowerCase(), text, failed };
+  cache.set(key, entry);
+  return entry;
+}
+async function validateSelectors({ sidecar, origin, fetchImpl = globalThis.fetch, executor, emit, knownPaths = /* @__PURE__ */ new Set() } = {}) {
+  const cache = /* @__PURE__ */ new Map();
   const bindings = [];
+  let locatorsResolved = 0;
+  let locatorsProbed = 0;
+  let assertionsChecked = 0;
+  let assertionsVerified = 0;
+  let reachable2 = true;
   for (const binding of sidecar?.bindings ?? []) {
     let resolvedStrategy = binding.candidates?.[0]?.strategy ?? "text";
     let probeSource = "planner";
-    let assertionValidated = true;
+    let locatorOk = false;
+    let page = { html: "", text: "" };
+    const needsLocator = binding.action !== "navigate" && (binding.inputs ?? []).length + (binding.candidates ?? []).length > 0;
     try {
       if (executor?.observe) {
         await executor.observe(binding.candidates?.[0]?.value ?? "", {});
         probeSource = "executor";
+        locatorOk = true;
       } else if (origin && fetchImpl) {
-        const response = await fetchImpl(new URL(binding.page ?? "/", origin).href);
-        const html = typeof response.text === "function" ? await response.text() : "";
-        const hit = (binding.candidates ?? []).some((candidate) => {
-          const needle = typeof candidate.value === "string" ? candidate.value.slice(0, 24) : candidate.value?.[1]?.name ?? "";
-          return needle && html.toLowerCase().includes(String(needle).toLowerCase().slice(0, 12));
+        page = await fetchPageText(origin, binding.page, fetchImpl, cache);
+        probeSource = "fetch";
+        if (page.failed) reachable2 = false;
+        if (page.html && needsLocator) locatorsProbed += 1;
+        const hit = (binding.candidates ?? []).find((candidate) => {
+          const needle = typeof candidate.value === "string" ? candidate.value : candidate.value?.[1]?.name ?? "";
+          return needle && needle.length >= 2 && page.html.includes(String(needle).toLowerCase());
         });
-        if (!hit) {
-          const fallback = (binding.candidates ?? []).find((c) => c.strategy === "text" || c.strategy === "css");
-          resolvedStrategy = fallback?.strategy ?? resolvedStrategy;
-          probeSource = "fetch";
+        if (hit) {
+          resolvedStrategy = hit.strategy;
+          locatorOk = true;
         } else {
-          probeSource = "fetch";
+          const fallback = (binding.candidates ?? []).find((candidate) => candidate.strategy === "text" || candidate.strategy === "css");
+          resolvedStrategy = fallback?.strategy ?? resolvedStrategy;
         }
       }
     } catch {
-      validated = false;
-      assertionValidated = false;
+      reachable2 = false;
     }
-    bindings.push({ ...binding, resolvedStrategy, probeSource, assertionValidated });
-    if (!assertionValidated) validated = false;
-    await emit?.("generate", "selector_validated", { message: `${sidecar.specId} step ${binding.stepIndex}: ${resolvedStrategy}` });
+    if (locatorOk && needsLocator) locatorsResolved += 1;
+    const expectations = [];
+    for (const expectation of binding.expectations ?? []) {
+      const predicate = expectation.predicate;
+      let validated = null;
+      if (predicate && probeSource === "fetch") {
+        if (predicate.kind === "text" && predicate.value) {
+          assertionsChecked += 1;
+          validated = page.text.includes(String(predicate.value).toLowerCase());
+        } else if (predicate.kind === "absent_text" && predicate.value) {
+          assertionsChecked += 1;
+          validated = true;
+        } else if (predicate.kind === "visible" || predicate.kind === "absent" || predicate.kind === "count") {
+          validated = null;
+        } else if (predicate.kind === "url_contains" && predicate.value) {
+          assertionsChecked += 1;
+          const claimed = String(predicate.value).split("?")[0];
+          validated = knownPaths.size === 0 ? null : [...knownPaths].some((known) => known === claimed || known.startsWith(claimed) || claimed.startsWith(known));
+        }
+      }
+      if (validated === true) assertionsVerified += 1;
+      expectations.push({ ...expectation, validated });
+    }
+    bindings.push({ ...binding, resolvedStrategy, probeSource, expectations, assertionValidated: expectations.some((entry) => entry.validated === true) });
+    await emit?.("generate", "selector_validated", {
+      message: `${sidecar.specId} step ${binding.stepIndex}: ${resolvedStrategy}${locatorOk ? "" : " (unresolved)"}`
+    });
   }
-  return { validated, bindings, probeSource: bindings[0]?.probeSource ?? "planner" };
+  const withPredicates = bindings.reduce((total, binding) => total + (binding.expectations ?? []).filter((entry) => entry.predicate).length, 0);
+  const totalExpectations = bindings.reduce((total, binding) => total + (binding.expectations ?? []).length, 0);
+  const assertionsRefuted = bindings.reduce(
+    (total, binding) => total + (binding.expectations ?? []).filter((entry) => entry.validated === false).length,
+    0
+  );
+  return {
+    // Validated means: nothing we could actually probe was refuted. Pages we
+    // could not reach leave the verdict open rather than failing it.
+    validated: reachable2 && bindings.length > 0 && locatorsResolved >= locatorsProbed && assertionsRefuted === 0,
+    bindings,
+    probeSource: bindings[0]?.probeSource ?? "planner",
+    stats: {
+      locatorsResolved,
+      locatorsProbed,
+      locators: bindings.length,
+      assertionsChecked,
+      assertionsVerified,
+      assertionsRefuted,
+      withPredicates,
+      totalExpectations
+    }
+  };
 }
 function renderPlaywrightSpec({ spec, flow, sidecar, validation, origin } = {}) {
   const validated = validation?.validated ?? sidecar?.validated ?? false;
+  const bindings = validation?.bindings ?? sidecar?.bindings ?? [];
+  const needsAuth = (sidecar?.preconditions ?? spec?._preconditions ?? []).includes("authenticated");
   const header = [
     "// AUTOGENERATED by qa-agent orchestrate \u2014 do not edit.",
     `// source of truth: .qa/specs/${spec.id}.yaml   locators: ${spec.id}.locators.json`,
@@ -17203,25 +17377,37 @@ function renderPlaywrightSpec({ spec, flow, sidecar, validation, origin } = {}) 
     `// validated: ${validated}  probe: ${validation?.probeSource ?? sidecar?.probeSource ?? "planner"}`,
     "import { test, expect } from '@playwright/test';",
     "import { resolve } from './_resolve.js';",
+    ...needsAuth ? ["import { signIn } from './_auth.js';"] : [],
     `import chain from './${spec.id}.locators.json' with { type: 'json' };`,
     "",
     `const BASE = process.env.QA_BASE_URL ?? '${origin ?? "http://127.0.0.1:3000"}';`,
     "",
     `${validated ? "" : "test.fixme('unvalidated selectors \u2014 see locators.json', async () => {});\n"}`,
-    `test('${String(spec.title).replace(/'/g, "\\'")}', async ({ page }) => {`
+    `test('${String(spec.title).replace(/'/g, "\\'")}', async ({ page }) => {`,
+    ...needsAuth ? ["  await signIn(page, BASE);", ""] : []
   ];
   const body = [];
   (spec.steps ?? []).forEach((step, index) => {
-    const binding = (validation?.bindings ?? sidecar?.bindings ?? [])[index];
-    const pagePath = binding?.page ?? flow?.pages?.[0] ?? "/";
+    const binding = bindings[index] ?? {};
+    const pagePath = binding.page ?? flow?.pages?.[0] ?? "/";
+    const previousPage = index === 0 ? null : bindings[index - 1]?.page;
     body.push(`  // intent: ${step.intent}`);
-    if (index === 0 || binding?.page !== (validation?.bindings ?? sidecar?.bindings ?? [])[index - 1]?.page) {
+    if (index === 0 || pagePath !== previousPage) {
       body.push(`  await page.goto(\`\${BASE}${pagePath}\`);`);
     }
-    body.push(`  await (await resolve(page, chain.bindings[${index}].candidates)).click();`);
-    for (const expectation of step.expect ?? []) {
-      const assertion = expectationToPlaywright(expectation);
-      if (assertion) body.push(`  ${assertion} // expect: ${expectation}`);
+    for (const [position, input2] of (binding.inputs ?? []).entries()) {
+      body.push(`  await (await resolve(page, chain.bindings[${index}].inputs[${position}].candidates)).fill(${quote(input2.value ?? "")});`);
+    }
+    if (binding.action === "click" || binding.action === "submit") {
+      body.push(`  await (await resolve(page, chain.bindings[${index}].candidates)).click();`);
+    }
+    for (const expectation of binding.expectations ?? []) {
+      const assertion = predicateToPlaywright(expectation.predicate);
+      if (assertion) {
+        body.push(`  ${assertion} // expect: ${expectation.prose}`);
+      } else {
+        body.push(`  // UNVERIFIED expectation (no predicate from the planner): ${expectation.prose}`);
+      }
     }
     body.push("");
   });
@@ -17255,36 +17441,96 @@ export async function resolve(page, candidates, { timeout = 2000 } = {}) {
 }
 `;
 }
+function renderAuthHelper({ loginPath = "/login", userField = "username", passwordField = "password", submitLabel = "Sign in" } = {}) {
+  return `// Sign-in helper derived from the crawled login form.
+const USER = process.env.QA_USERNAME ?? 'demo';
+const PASS = process.env.QA_PASSWORD ?? 'demo';
+
+export async function signIn(page, base) {
+  await page.goto(\`\${base}${loginPath}\`);
+  await page.locator('[name="${userField}"]').first().fill(USER);
+  await page.locator('[name="${passwordField}"]').first().fill(PASS);
+  await Promise.all([
+    page.waitForLoadState('networkidle').catch(() => {}),
+    page.getByRole('button', { name: ${quote(submitLabel)} }).first().click(),
+  ]);
+}
+`;
+}
+function authDetailsFrom(siteMap) {
+  for (const page of siteMap?.pages ?? []) {
+    for (const form of page.forms ?? []) {
+      const password = (form.inputs ?? []).find((input2) => input2.type === "password");
+      if (!password) continue;
+      const user = (form.inputs ?? []).find((input2) => input2.type !== "password" && input2.name);
+      return {
+        loginPath: form.action || page.path,
+        userField: user?.name ?? "username",
+        passwordField: password.name || "password",
+        submitLabel: (form.buttons ?? [])[0] ?? "Sign in"
+      };
+    }
+  }
+  return null;
+}
 async function generate({ workspace, plan, siteMap, origin, fetchImpl, executor, outDir, emit } = {}) {
   const specs = planToSpecs({ plan });
   const artifacts = [];
   const generatedDir = outDir ?? `${workspace.qaDirectory}/../generated`;
   await mkdir2(generatedDir, { recursive: true });
   await writeFile(path3.join(generatedDir, "_resolve.js"), renderResolveHelper());
+  const knownPaths = new Set((siteMap?.pages ?? []).map((page) => page.path));
+  const auth = authDetailsFrom(siteMap);
+  const needsAuth = specs.some((spec) => (spec._preconditions ?? []).includes("authenticated"));
+  if (needsAuth) await writeFile(path3.join(generatedDir, "_auth.js"), renderAuthHelper(auth ?? {}));
   let validatedCount = 0;
   const strategies = {};
   const flowMap = {};
+  const assertions = { checked: 0, verified: 0, refuted: 0, withPredicates: 0, total: 0 };
   for (const spec of specs) {
-    const flow = (plan.flows ?? []).find((f) => f.id === spec._flowId) ?? {};
+    const flow = (plan.flows ?? []).find((entry) => entry.id === spec._flowId) ?? {};
     const sidecar = bindLocators({ spec, flow, siteMap });
-    const validation = await validateSelectors({ sidecar, origin: origin ?? siteMap?.origin, fetchImpl, executor, emit });
+    const validation = await validateSelectors({ sidecar, origin: origin ?? siteMap?.origin, fetchImpl, executor, emit, knownPaths });
     if (validation.validated) validatedCount += 1;
     for (const binding of validation.bindings) {
       strategies[binding.resolvedStrategy] = (strategies[binding.resolvedStrategy] ?? 0) + 1;
     }
+    assertions.checked += validation.stats?.assertionsChecked ?? 0;
+    assertions.refuted += validation.stats?.assertionsRefuted ?? 0;
+    assertions.verified += validation.stats?.assertionsVerified ?? 0;
+    assertions.withPredicates += validation.stats?.withPredicates ?? 0;
+    assertions.total += validation.stats?.totalExpectations ?? 0;
     const clean = { ...spec };
-    delete clean._flowId;
-    delete clean._targetRefs;
+    for (const key of ["_flowId", "_targetRefs", "_predicates", "_inputs", "_actions", "_pages", "_preconditions"]) delete clean[key];
     validateDocument("spec", clean);
     await workspace.saveSpec(clean);
-    const finalSidecar = { ...sidecar, validated: validation.validated, validatedAt: (/* @__PURE__ */ new Date()).toISOString(), probeSource: validation.probeSource, bindings: validation.bindings };
+    const finalSidecar = {
+      ...sidecar,
+      validated: validation.validated,
+      validatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      probeSource: validation.probeSource,
+      bindings: validation.bindings,
+      stats: validation.stats
+    };
     await writeFile(path3.join(generatedDir, `${spec.id}.locators.json`), `${JSON.stringify(finalSidecar, null, 2)}
 `);
-    await writeFile(path3.join(generatedDir, `${spec.id}.spec.js`), renderPlaywrightSpec({ spec: clean, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin }));
+    await writeFile(
+      path3.join(generatedDir, `${spec.id}.spec.js`),
+      renderPlaywrightSpec({ spec: { ...clean, _preconditions: spec._preconditions }, flow, sidecar: finalSidecar, validation, origin: origin ?? siteMap?.origin })
+    );
     artifacts.push(spec.id);
     if (spec._flowId) flowMap[spec.id] = spec._flowId;
   }
-  return { specs: specs.length, validated: validatedCount, unvalidated: specs.length - validatedCount, strategies, dir: generatedDir, artifacts, flowMap };
+  return {
+    specs: specs.length,
+    validated: validatedCount,
+    unvalidated: specs.length - validatedCount,
+    strategies,
+    assertions,
+    dir: generatedDir,
+    artifacts,
+    flowMap
+  };
 }
 var init_generator = __esm({
   "src/generator.js"() {
@@ -17365,7 +17611,13 @@ function buildReport({ plan, gapsHistory = [], generation = {}, runs = [], heals
       exitCode,
       scenarios: counts,
       coverage: { score: lastGaps.score ?? 1, attempts: gapsHistory.length || 1, blockingGaps: (lastGaps.gaps ?? []).filter((g) => g.severity === "blocking").length, advisoryGaps: (lastGaps.gaps ?? []).filter((g) => g.severity !== "blocking").length },
-      generation: { specs: generation.specs ?? 0, validated: generation.validated ?? 0, unvalidated: generation.unvalidated ?? 0, strategies: generation.strategies ?? {} },
+      generation: {
+        specs: generation.specs ?? 0,
+        validated: generation.validated ?? 0,
+        unvalidated: generation.unvalidated ?? 0,
+        strategies: generation.strategies ?? {},
+        assertions: generation.assertions ?? { checked: 0, verified: 0, withPredicates: 0, total: 0 }
+      },
       healing: { attempted: heals.length, succeeded: heals.filter((h) => h.promoted || h.succeeded).length, promoted: heals.filter((h) => h.promoted).length }
     },
     decisions,
@@ -17381,6 +17633,8 @@ function renderReportMarkdown(report) {
     `# Test Quality Report \u2014 ${report.summary.verdict}`,
     "",
     `Target ${report.target} \xB7 ${report.summary.scenarios.total} scenarios \xB7 coverage ${report.summary.coverage.score} \xB7 exit ${report.summary.exitCode}`,
+    "",
+    `Assertions: ${report.summary.generation?.assertions?.withPredicates ?? 0}/${report.summary.generation?.assertions?.total ?? 0} expectations have a checkable predicate \xB7 ${report.summary.generation?.assertions?.verified ?? 0} verified against the live page`,
     "",
     "## What the agent decided"
   ];
@@ -17758,9 +18012,14 @@ async function orchestrate({
   await workspace.ensureDirectories();
   const directory = outDir ?? path5.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
   await mkdir4(directory, { recursive: true });
-  const tracer = createTracer({ now, writeLine: async (line) => {
-    await writeFile3(path5.join(directory, "trace.jsonl"), line, { flag: "a" });
-  } });
+  const secrets = [password, username].filter((value) => typeof value === "string" && value.length > 3);
+  const tracer = createTracer({
+    now,
+    sensitiveValues: secrets,
+    writeLine: async (line) => {
+      await writeFile3(path5.join(directory, "trace.jsonl"), line, { flag: "a" });
+    }
+  });
   const say = emit ?? tracer.emit.bind(tracer);
   const decisions = [];
   const gapsHistory = [];
@@ -17822,9 +18081,10 @@ async function orchestrate({
       return { report: report2, exitCode: EXIT.UNVALIDATED, artifacts: { dir: directory } };
     }
     await say("run", "stage_started", { message: "Executing semantic specs" });
-    const specs = await workspace.listSpecs();
     const flowForSpec = generation.flowMap ?? {};
-    for (const spec of specs.slice(-generation.specs)) {
+    const allSpecs = new Map((await workspace.listSpecs()).map((spec) => [spec.id, spec]));
+    const specs = (generation.artifacts ?? []).map((id) => allSpecs.get(id)).filter(Boolean);
+    for (const spec of specs) {
       const flowId = flowForSpec[spec.id] ?? spec.id;
       try {
         const started = Date.now();
@@ -17832,7 +18092,8 @@ async function orchestrate({
         const durationMs = Date.now() - started;
         const classification = result.classification;
         const status = classification === "passed" ? "passed" : classification === "healed" ? "healed" : classification === "blocked" ? "blocked" : "failed";
-        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : "broken_locator";
+        const healedHere = (result.steps ?? []).some((step) => step.healing?.outcome === "healed");
+        const triaged = status === "failed" ? "app_defect" : status === "blocked" ? "environment" : healedHere ? "broken_locator" : "none";
         runs.push({ flowId, specId: spec.id, status, classification: triaged, confidence: status === "failed" ? 0.7 : status === "blocked" ? 0.95 : 0.9, durationMs, specFile: `generated/${spec.id}.spec.js`, runId: result.runId, runClassification: classification, screenshots: result.evidence?.screenshots ?? [], heals: (result.steps ?? []).flatMap((s) => s.healing ? [{ stepIndex: s.index, from: s.healing.originalFailure, to: s.healing.replacement, promoted: s.healing.outcome === "healed", succeeded: s.healing.outcome === "healed" }] : []), ...status === "blocked" ? { blockedReason: result.explanation } : {} });
         for (const step of result.steps ?? []) {
           if (step.healing) heals.push({ specId: spec.id, stepIndex: step.index, promoted: step.healing.outcome === "healed", succeeded: step.healing.outcome === "healed" });
@@ -18848,6 +19109,7 @@ export {
   assertStableId,
   assertTargetAllowed,
   atomicWriteFile,
+  authDetailsFrom,
   authenticate,
   bindLocators,
   buildChain,
@@ -18872,9 +19134,13 @@ export {
   draftSpec,
   evaluatePlan,
   executeRun,
+  expectationPredicate,
+  expectationProse,
   formatQaError,
   generate,
+  inputCandidates,
   isStableId,
+  mergeActionSteps,
   normalizeDesignComparison,
   normalizeRediscovery,
   normalizeTarget,
@@ -18885,9 +19151,11 @@ export {
   parseYaml,
   planStages,
   planToSpecs,
+  predicateToPlaywright,
   prepareEnvironment,
   promptMatches,
   redactSensitive,
+  renderAuthHelper,
   renderGapsMarkdown,
   renderPlaywrightSpec,
   renderReportMarkdown,
