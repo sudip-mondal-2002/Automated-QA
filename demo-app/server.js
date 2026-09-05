@@ -73,17 +73,6 @@ export function resetDemoState(state, scenario) {
   return { scenario, variant };
 }
 
-const DEMO_SESSION_COOKIE = "qa-demo-session";
-
-function demoSession(request) {
-  const header = request.headers.cookie ?? "";
-  return header.split(";").map((part) => part.trim()).includes(`${DEMO_SESSION_COOKIE}=authenticated`);
-}
-
-function grantDemoSession(response) {
-  response.setHeader("Set-Cookie", `${DEMO_SESSION_COOKIE}=authenticated; Path=/; HttpOnly; SameSite=Lax`);
-}
-
 export function createDemoApplication({ variant = "stable" } = {}) {
   if (!DEMO_VARIANTS.has(variant)) {
     throw new TypeError(`Unknown demo variant: ${variant}`);
@@ -112,15 +101,12 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       }
     }
     if (request.method === "GET" && url.pathname === "/login") {
-      // NOTE: inputs intentionally carry no `required` attribute. Native
-      // browser bubbles are unobservable by design; the server-side 400 +
-      // error-message path below is the validation under test.
       return send(response, 200, page("Sign in", `
         <h1>Customer sign in</h1>
         <p class="quiet">Use the configured QA customer credentials.</p>
         <form method="post" action="/login">
-          <label>Email <input name="username" autocomplete="username"></label>
-          <label>Password <input name="password" type="password" autocomplete="current-password"></label>
+          <label>Email <input name="username" autocomplete="username" required></label>
+          <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
           <button type="submit">Sign in</button>
         </form>`));
     }
@@ -130,13 +116,9 @@ export function createDemoApplication({ variant = "stable" } = {}) {
         return send(response, 400, page("Sign in failed", "<h1>Sign in failed</h1><p>An error message is shown.</p>"));
       }
       state.loggedIn = true;
-      grantDemoSession(response);
       return redirect(response, "/dashboard");
     }
-    // Cookie sessions let crawlers and multi-request agents (fetch with a
-    // cookie jar, Playwright with a browser context) see authed pages. The
-    // legacy in-memory flag is kept for the reset helper and direct flows.
-    if (!state.loggedIn && !demoSession(request)) return redirect(response, "/login");
+    if (!state.loggedIn) return redirect(response, "/login");
 
     if (request.method === "GET" && url.pathname === "/dashboard") {
       return send(response, 200, page("Dashboard", `
@@ -172,12 +154,10 @@ export function createDemoApplication({ variant = "stable" } = {}) {
     }
     if (request.method === "GET" && url.pathname === "/checkout") {
       const locatorDrift = state.variant === "locator-drift";
-      // NOTE: no `required` on the card input (see login: server-side
-      // validation is the behavior under test, native bubbles are not).
       return send(response, 200, page("Checkout", `
         <h1>Checkout form</h1>
         <p>Total: ₹499 · Saved test card ending in 4242</p>
-        <form method="post" action="/checkout"><label>Card <input name="card"></label><button type="submit" ${locatorDrift ? "" : `data-testid="place-order"`}>Place order</button></form>`));
+        <form method="post" action="/checkout"><label>Card <input name="card" required></label><button type="submit" ${locatorDrift ? "" : `data-testid="place-order"`}>Place order</button></form>`));
     }
     if (request.method === "POST" && url.pathname === "/checkout") {
       const values = await form(request);

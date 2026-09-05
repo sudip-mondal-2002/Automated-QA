@@ -24,20 +24,16 @@ selectors. The .spec.js carries validated:true and the strategy
 counts. Every button was confirmed against the live page before
 the file was written.
 
-## 2:30 — it adapts without failing
-curl -X POST localhost:4555/__demo/reset -d 'scenario=locator'
-Re-run. The suite stays green: renamed controls still resolve and every
-fuzzy resolution leaves a receipt (`fuzzy 1/2`) in the selected target.
-Re-run again on `pass`: identical greens. Then show the contrast:
+## 2:30 — it repairs itself
+curl -X POST localhost:4555/__demo/reset -d '{"variant":"locator-drift"}'
+Re-run. Healer walks the chain, finds the button by role, promotes
+it in the sidecar. Re-run again: passes first try.
 
 ## 3:30 — it refuses to lie
-curl -X POST localhost:4555/__demo/reset -d 'scenario=functional'
-Re-run. Same pipeline, different verdict: the two confirmation-dependent
-flows go `app_defect`, nothing heals, exit 10. The healer is
-architecturally forbidden from touching an assertion. (A live `healed`
-recovery is unit-proven in test/healing.test.js; the semantic healer fires
-on action-stage failures with before/after evidence. Full cross-run sidecar
-promotion is scoped roadmap, not claimed.)
+curl -X POST localhost:4555/__demo/reset -d '{"variant":"broken"}'
+Re-run. Same failure signature, different verdict: app_defect,
+no heal attempted, exit 10. The healer is architecturally
+forbidden from touching an assertion.
 
 ## 4:15 — the report
 report.md, PRD gap section: REQ-4 promo code, uncovered, no promo
