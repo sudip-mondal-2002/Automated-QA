@@ -102,8 +102,12 @@ export function createPlaywrightDriver({ page, baseUrl } = {}) {
     // Single-submit fallback: on a page with exactly one submit button, an
     // intent like "Submit leaving card blank" names the test setup, not the
     // control. Guessing across multiple buttons would be dishonest; with one
-    // candidate the primary action is unambiguous.
-    const fallback = !match && submits.length === 1 ? submits[0] : null;
+    // candidate the primary action is unambiguous. Never apply it to a
+    // navigation-shaped intent ("Open …") — e.g. "Open the login page" would
+    // otherwise resolve to that page's lone "Sign in" submit button and
+    // click it a step early, before credentials are meant to be entered.
+    const isNavigationIntent = /^(open|view|go to)\b/i.test(intent);
+    const fallback = !match && !isNavigationIntent && submits.length === 1 ? submits[0] : null;
     // Fuzzy-match receipt: a partial keyword overlap (e.g. "Proceed to
     // checkout" resolving to a renamed "Continue to payment") is drift
     // absorbed, and the receipt names it. Exact matches stay clean. Display
