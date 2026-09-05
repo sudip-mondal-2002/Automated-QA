@@ -479,7 +479,7 @@ happy 1 step   Open /cart
 > coverage, and one honestly declared blind spot. The score went *down* because the
 > plan stopped claiming coverage it could not isolate. Use this to explain why a
 > coverage score is a diagnostic, not a KPI.
-| Real Chromium via `scripts/run-with-playwright.mjs` | Browser opens; **5/11 scenarios genuinely pass**; exit 10 `defects_found` |
+| Real Chromium via `scripts/run-with-playwright.mjs` | Browser opens; **5/11 scenarios genuinely pass**; the pipeline completes with red verdict `defects_found` (exit 10), not a crash |
 | Shell mode, no executor | Every scenario `blocked` **with reasons**; exit 11 `incomplete` — by design |
 | Dead port | `ORCHESTRATION_TARGET_UNREACHABLE`, exit 20 |
 | Remote URL without `--allow-remote` | `ORCHESTRATION_REMOTE_BLOCKED`, hard stop |

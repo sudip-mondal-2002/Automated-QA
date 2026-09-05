@@ -33,7 +33,7 @@ crawl + test-plan synthesis (optionally handed to a Planner sub-agent
 capability, which falls back to the deterministic planner on a rejected or
 missing draft) → coverage gate (pass / replan / escalate, scored on whether
 the suite can pass, not the plan's shape) → Playwright spec generation with
-live selector *and* assertion validation → semantic execution → locator-chain
+fetch preflight → browser replay → semantic execution → locator-chain
 healing with bug-vs-broken triage → `report.json`/`report.md` with PRD-gap
 analysis, all schema-validated (`schemas/`) before being written. Every
 decision lands in `trace.jsonl`, viewable via
@@ -46,8 +46,9 @@ with the missing-capability reason rather than guessing — use
 `scripts/run-with-playwright.mjs` (devDependency `@playwright/test`,
 `npx playwright install chromium`) for real browser runs, or the installed
 skill's own native Browser/Chrome/computer-use capability; (b) generated
-Playwright files are portable artifacts validated against the live DOM —
-execution runs on the semantic engine, and semantic YAML stays the contract.
+Playwright files and locator sidecars are disposable mechanical artifacts.
+Fetch preflight can reject obvious misses, but only browser replay proves runtime
+behavior. Semantic YAML is canonical, and source hashes reject edited artifacts.
 
 ## The one-skill developer experience
 
@@ -270,7 +271,7 @@ npm run test:soak
 npm run benchmark:replay
 ```
 
-`build:skill` bundles production runtime dependencies and copies authoritative schemas/UI assets into the installable skill. Tests rebuild it automatically. Coverage gates enforce 100% production line coverage, at least 95% branch coverage, and at least 98% function coverage.
+`build:skill` bundles `ajv`, `yaml`, and only Playwright's matcher/browser-control runtime—not the Playwright test runner or a browser binary—and copies authoritative schemas/UI assets into the installable skill. The runtime uses an already-installed Chrome or Edge channel and never invokes browser installation. Tests rebuild the artifact automatically. Coverage gates enforce 100% production line coverage, at least 95% branch coverage, and at least 98% function coverage.
 
 For internal diagnostics, maintainers can invoke `.agents/skills/autonomous-qa/scripts/qa-agent`, including `replay status <spec-id>` and `replay validate <spec-id>`. A bare shell run can complete only through a trusted replay; if replay is unavailable and no host-native executor exists, it saves `blocked`.
 

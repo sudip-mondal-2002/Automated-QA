@@ -267,9 +267,11 @@ graded one), but structurally stable:
              "withPredicates": 2, "totalExpectations": 2 } }
 ```
 
-**The separation is the point:** semantic YAML is the *contract* (human, stable,
-selector-free); the sidecar is *rewritable state* (mechanical, regenerable,
-validated against the live page). Healing rewrites state, never contract.
+**The separation is the point:** semantic YAML is the canonical *contract* (human,
+stable, selector-free); generated JavaScript and sidecars are disposable,
+rewritable state (mechanical and regenerable). Fetch preflight can reject obvious
+misses, browser replay proves behavior, and source hashes reject edits. Healing
+rewrites state, never contract.
 
 `trace.jsonl` is likewise unvalidated by design — it is an append-only event log, and
 schema-validating one line at a time would add cost without catching the failure mode

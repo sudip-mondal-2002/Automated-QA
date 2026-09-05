@@ -198,21 +198,21 @@ coverage it could not isolate (see slide 21, point 5).
 
 ---
 
-### Slide 15 — Live validation, not a validation flag
+### Slide 15 — Fetch preflight, then browser proof
 Before / after, honestly labelled as a fix:
 
 | Before | After |
 | --- | --- |
-| `assertionValidated: true` hardcoded | Every predicate probed against the live page |
-| Locator "validation" = 12-char substring match on raw HTML | Candidate chain probed; unreachable pages leave the verdict **open**, not true |
+| `assertionValidated: true` hardcoded | Fetch preflight records what it could and could not check |
+| Locator "validation" = 12-char substring match on raw HTML | Obvious misses are rejected; authenticated and post-action checks stay **open** until browser replay |
 | — | `url_contains` checked against the **crawled path set** |
 
 Headline number: on the LLM-planner comparison run, 23/23 expectations carried a
 predicate, 22 were statically checkable, **18 verified, 4 refuted — and all 4
 refuted strings were ones the model had itself listed under `openQuestions`.**
 
-> Notes: this is the strongest single evidence slide. The validation layer caught
-> exactly the assertions the model was already unsure about.
+> Notes: preflight is an honest filter, not runtime proof. Browser replay is the
+> evidence for behavior that depends on authentication or prior actions.
 
 ---
 
