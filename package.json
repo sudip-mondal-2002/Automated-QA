@@ -1,16 +1,21 @@
 {
   "name": "autonomous-qa-agent",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
-  "description": "File-backed semantic QA runtime with native execution, self-healing, and reference-backed design evidence",
+  "description": "File-backed semantic QA runtime with native execution, design evidence, and a localhost workspace UI",
   "type": "module",
   "bin": {
     "qa-agent": ".agents/skills/autonomous-qa/scripts/qa-agent"
   },
   "scripts": {
-    "demo": "node demo-app/server.js",
-    "dev": "node demo-app/server.js",
-    "qa-agent": "node .agents/skills/autonomous-qa/scripts/qa-agent",
+    "build:skill": "node scripts/build-skill-package.mjs",
+    "demo": "npm --prefix demo-app run dev --",
+    "demo:reset": "npm --prefix demo-app run reset --",
+    "dev": "npm --prefix demo-app run dev --",
+    "ui": ".agents/skills/autonomous-qa/scripts/qa-agent ui",
+    "qa-agent": ".agents/skills/autonomous-qa/scripts/qa-agent",
+    "pretest": "npm run build:skill",
+    "pretest:coverage": "npm run build:skill",
     "test": "node --test",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=100 --test-coverage-branches=95 --test-coverage-functions=98"
   },
@@ -20,5 +25,8 @@
   "dependencies": {
     "ajv": "^8.20.0",
     "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.9"
   }
 }

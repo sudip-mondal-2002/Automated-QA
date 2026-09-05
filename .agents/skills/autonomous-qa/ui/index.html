@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#101828">
+    <title>Intent QA · Workspace</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">IQ</span>
+        <span>
+          <strong>Intent QA</strong>
+          <small>Semantic test workspace</small>
+        </span>
+      </div>
+      <div class="topbar-actions">
+        <span class="connection" id="connection-status"><i></i> Connecting</span>
+        <button class="button button-secondary" id="copy-rerun" type="button">Copy rerun prompt</button>
+        <button class="icon-button" id="refresh" type="button" aria-label="Refresh workspace" title="Refresh workspace">↻</button>
+      </div>
+    </header>
+
+    <main class="workspace-shell">
+      <section class="workspace-intro">
+        <div>
+          <p class="eyebrow">File-backed · Native execution</p>
+          <h1>QA evidence you can read and trust.</h1>
+          <p>Review semantic tests, edit their source of truth, and inspect what the agent actually observed.</p>
+        </div>
+        <div class="summary-strip" aria-label="Workspace summary">
+          <span><strong id="test-count">—</strong> tests</span>
+          <span><strong id="run-count">—</strong> recent runs</span>
+          <span><strong id="environment-count">—</strong> environments</span>
+        </div>
+      </section>
+
+      <div class="workspace-grid">
+        <aside class="panel navigation-panel" aria-label="Tests and fixtures">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Library</p><h2>Tests</h2></div>
+            <span class="count" id="tests-badge">0</span>
+          </div>
+          <div class="stack-list" id="tests-list"></div>
+          <div class="section-divider"></div>
+          <div class="subheading"><h3>Reusable fixtures</h3><span class="count" id="fixtures-badge">0</span></div>
+          <div class="fixture-list" id="fixtures-list"></div>
+        </aside>
+
+        <section class="panel editor-panel" aria-labelledby="editor-title">
+          <div class="panel-heading editor-heading">
+            <div>
+              <p class="eyebrow" id="editor-kind">YAML editor</p>
+              <h2 id="editor-title">Select a test or fixture</h2>
+            </div>
+            <span class="save-state" id="save-state">No document selected</span>
+          </div>
+          <textarea id="yaml-editor" aria-label="YAML document" spellcheck="false" disabled placeholder="Choose a test or fixture to inspect its editable YAML."></textarea>
+          <div class="validation-message neutral" id="validation-message" role="status">Validation feedback will appear here.</div>
+          <div class="editor-actions">
+            <button class="button button-secondary" id="validate-document" type="button" disabled>Validate</button>
+            <button class="button button-primary" id="save-document" type="button" disabled>Save changes</button>
+          </div>
+        </section>
+
+        <aside class="panel runs-panel" aria-label="Recent runs">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Evidence</p><h2>Recent runs</h2></div>
+            <span class="live-label">Auto-refresh</span>
+          </div>
+          <div class="stack-list runs-list" id="runs-list"></div>
+        </aside>
+      </div>
+
+      <section class="panel result-panel" id="result-panel" aria-labelledby="result-title">
+        <div class="empty-result" id="empty-result">
+          <span class="empty-icon" aria-hidden="true">◎</span>
+          <h2>Choose a run to inspect</h2>
+          <p>Step observations, selected targets, healing evidence, and design findings will appear here.</p>
+        </div>
+        <div id="result-detail" hidden>
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Result detail</p>
+              <div class="result-title-row"><h2 id="result-title"></h2><span id="result-status"></span></div>
+              <p class="result-explanation" id="result-explanation"></p>
+            </div>
+            <button class="button button-danger" id="delete-run" type="button">Delete this run</button>
+          </div>
+          <dl class="result-metadata" id="result-metadata"></dl>
+          <div class="detail-grid">
+            <div>
+              <div class="detail-heading"><h3>Steps and observations</h3><span id="step-count"></span></div>
+              <div class="step-list" id="step-list"></div>
+            </div>
+            <div>
+              <div class="detail-heading"><h3>Visual evidence</h3><span id="screenshot-count"></span></div>
+              <div class="screenshot-grid" id="screenshot-grid"></div>
+              <div class="design-findings" id="design-findings"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

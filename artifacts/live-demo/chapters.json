@@ -1,0 +1,50 @@
+[
+  {
+    "id": "01",
+    "title": "The actual developer experience",
+    "visual": "01-hook.mov",
+    "narration": "Let me show you the developer experience I actually want. You install one skill, open your application project, and describe the journey that matters. The skill handles setup, starts the app when necessary, drives the real browser, and saves the evidence. The important part is what it refuses to do: it can recover harmless UI drift, but it cannot rewrite correctness to manufacture a pass."
+  },
+  {
+    "id": "02",
+    "title": "Install one self-contained skill",
+    "visual": "02-install.mov",
+    "narration": "Installation is one request in Codex. I point the built-in skill installer at this GitHub directory, and the response confirms that autonomous QA is ready on the next turn. That copy is self-contained: runtime, dependencies, schemas, and the reviewer UI all travel with the skill. Now look at the application project. It has only its own dev and reset scripts. There is no QA dependency, no runner script, and nothing to install for this small demo app."
+  },
+  {
+    "id": "03",
+    "title": "One request from the app project",
+    "visual": "03-create.mov",
+    "narration": "From the separate QA Shop project, I make one request: set up QA, verify checkout, keep the cart, checkout form, and confirmation as required outcomes, save screenshots, and show me the evidence. The skill discovers the existing dev command, creates a project-specific dot Q A workspace, validates the semantic test, and moves into the native browser. The YAML is reviewable intent and observable outcomes. No selector, XPath, coordinate, fixed sleep, or browser script leaks into the application."
+  },
+  {
+    "id": "04",
+    "title": "The skill owns the full run",
+    "visual": "04-pass.mov",
+    "narration": "Here is the real journey. The skill starts or reuses the local app, then Codex drives it through the native Browser capability. The reusable fixture signs in, the agent opens the cart, reaches checkout, submits the approved test payment, and observes the confirmation. When the run is complete, the packaged workspace opens on the saved result. Every expectation passed, the accessible targets are recorded, and the screenshots explain the decision. The developer never operated a separate QA service."
+  },
+  {
+    "id": "05",
+    "title": "Harmless drift can heal",
+    "visual": "05-heal.mov",
+    "narration": "Now I change only the demo application. Proceed to checkout moves into a menu and becomes Continue to payment. I ask the skill to rerun the last test and keep every expectation unchanged. The old target is absent, so the agent captures the failure, finds one explicitly equivalent accessible control, retries once, and checks the original checkout-form expectation. It passes. That is a healed interaction with before-and-after evidence, not an edited requirement."
+  },
+  {
+    "id": "06",
+    "title": "A real bug stays failed",
+    "visual": "06-functional.mov",
+    "narration": "Next I switch the application to a real functional bug and use the same rerun prompt. The checkout interaction works, but the product says the order could not be completed. There is nothing to heal because the action succeeded and the required outcome failed. The result stays a functional regression, and the original expectation still says order confirmation is visible. That is the correctness boundary in one screen."
+  },
+  {
+    "id": "07",
+    "title": "Design is a separate decision",
+    "visual": "07-design.mov",
+    "narration": "Finally, checkout works but the approved design does not. The action appears before the heading, and the green success treatment becomes a red warning panel. The skill runs the separate design checkpoint at its declared viewport. The result includes the explicit approved reference, the actual screenshot, and concrete order and style findings. That supports a design regression. It is not the agent grading the page by taste, and it never updates the baseline for me."
+  },
+  {
+    "id": "08",
+    "title": "Stay in the application project",
+    "visual": "08-correctness.mov",
+    "narration": "Everything the developer keeps is inside the application project: semantic specs, fixtures, results, screenshots, and the last-run pointer. The workspace UI is optional, and its copy buttons produce autonomous-QA prompts instead of leaking runner commands. So the live loop is simple: install one skill, describe intent, let it own execution and evidence, survive harmless UI churn, and keep real product or design regressions visible."
+  }
+]

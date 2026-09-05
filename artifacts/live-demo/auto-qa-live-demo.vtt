@@ -1,0 +1,161 @@
+WEBVTT
+
+1
+00:00:00.200 --> 00:00:04.151
+Let me show you the developer experience I actually want.
+
+2
+00:00:04.151 --> 00:00:09.682
+You install one skill, open your application project, and describe the journey that matters.
+
+3
+00:00:09.682 --> 00:00:16.398
+The skill handles setup, starts the app when necessary, drives the real browser, and saves the evidence.
+
+4
+00:00:16.398 --> 00:00:25.880
+The important part is what it refuses to do: it can recover harmless UI drift, but it cannot rewrite correctness to manufacture a pass.
+
+5
+00:00:26.533 --> 00:00:28.878
+Installation is one request in Codex.
+
+6
+00:00:28.878 --> 00:00:37.868
+I point the built-in skill installer at this GitHub directory, and the response confirms that autonomous QA is ready on the next turn.
+
+7
+00:00:37.868 --> 00:00:44.122
+That copy is self-contained: runtime, dependencies, schemas, and the reviewer UI all travel with the skill.
+
+8
+00:00:44.122 --> 00:00:46.467
+Now look at the application project.
+
+9
+00:00:46.467 --> 00:00:49.985
+It has only its own dev and reset scripts.
+
+10
+00:00:49.985 --> 00:00:56.629
+There is no QA dependency, no runner script, and nothing to install for this small demo app.
+
+11
+00:00:57.300 --> 00:01:10.895
+From the separate QA Shop project, I make one request: set up QA, verify checkout, keep the cart, checkout form, and confirmation as required outcomes, save screenshots, and show me the evidence.
+
+12
+00:01:10.895 --> 00:01:21.091
+The skill discovers the existing dev command, creates a project-specific dot Q A workspace, validates the semantic test, and moves into the native browser.
+
+13
+00:01:21.091 --> 00:01:24.489
+The YAML is reviewable intent and observable outcomes.
+
+14
+00:01:24.489 --> 00:01:30.012
+No selector, XPath, coordinate, fixed sleep, or browser script leaks into the application.
+
+15
+00:01:30.667 --> 00:01:32.793
+Here is the real journey.
+
+16
+00:01:32.793 --> 00:01:40.022
+The skill starts or reuses the local app, then Codex drives it through the native Browser capability.
+
+17
+00:01:40.022 --> 00:01:48.952
+The reusable fixture signs in, the agent opens the cart, reaches checkout, submits the approved test payment, and observes the confirmation.
+
+18
+00:01:48.952 --> 00:01:54.480
+When the run is complete, the packaged workspace opens on the saved result.
+
+19
+00:01:54.480 --> 00:02:00.433
+Every expectation passed, the accessible targets are recorded, and the screenshots explain the decision.
+
+20
+00:02:00.433 --> 00:02:03.835
+The developer never operated a separate QA service.
+
+21
+00:02:04.500 --> 00:02:07.480
+Now I change only the demo application.
+
+22
+00:02:07.480 --> 00:02:12.588
+Proceed to checkout moves into a menu and becomes Continue to payment.
+
+23
+00:02:12.588 --> 00:02:18.547
+I ask the skill to rerun the last test and keep every expectation unchanged.
+
+24
+00:02:18.547 --> 00:02:29.189
+The old target is absent, so the agent captures the failure, finds one explicitly equivalent accessible control, retries once, and checks the original checkout-form expectation.
+
+25
+00:02:29.189 --> 00:02:30.040
+It passes.
+
+26
+00:02:30.040 --> 00:02:35.148
+That is a healed interaction with before-and-after evidence, not an edited requirement.
+
+27
+00:02:35.800 --> 00:02:41.916
+Next I switch the application to a real functional bug and use the same rerun prompt.
+
+28
+00:02:41.916 --> 00:02:47.267
+The checkout interaction works, but the product says the order could not be completed.
+
+29
+00:02:47.267 --> 00:02:52.618
+There is nothing to heal because the action succeeded and the required outcome failed.
+
+30
+00:02:52.618 --> 00:02:58.734
+The result stays a functional regression, and the original expectation still says order confirmation is visible.
+
+31
+00:02:58.734 --> 00:03:01.792
+That is the correctness boundary in one screen.
+
+32
+00:03:02.467 --> 00:03:06.012
+Finally, checkout works but the approved design does not.
+
+33
+00:03:06.012 --> 00:03:12.315
+The action appears before the heading, and the green success treatment becomes a red warning panel.
+
+34
+00:03:12.315 --> 00:03:16.648
+The skill runs the separate design checkpoint at its declared viewport.
+
+35
+00:03:16.648 --> 00:03:22.951
+The result includes the explicit approved reference, the actual screenshot, and concrete order and style findings.
+
+36
+00:03:22.951 --> 00:03:24.920
+That supports a design regression.
+
+37
+00:03:24.920 --> 00:03:32.011
+It is not the agent grading the page by taste, and it never updates the baseline for me.
+
+38
+00:03:32.667 --> 00:03:40.780
+Everything the developer keeps is inside the application project: semantic specs, fixtures, results, screenshots, and the last-run pointer.
+
+39
+00:03:40.780 --> 00:03:48.443
+The workspace UI is optional, and its copy buttons produce autonomous-QA prompts instead of leaking runner commands.
+
+40
+00:03:48.443 --> 00:04:01.515
+So the live loop is simple: install one skill, describe intent, let it own execution and evidence, survive harmless UI churn, and keep real product or design regressions visible.

@@ -1,0 +1,57 @@
+WEBVTT
+
+01
+00:00:00.220 --> 00:00:10.470
+Intent QA separates the application under test from the evidence workspace. The shop runs locally, while this dashboard reads the same file-backed QA artifacts used by the command line and the native agent.
+
+02
+00:00:11.153 --> 00:00:24.381
+Tests stay human-readable. This YAML records intent and observable outcomes, never selectors or coordinates. The editor reuses the authoritative validator, preserves the document identity, and saves atomically only after references are valid.
+
+03
+00:00:25.053 --> 00:00:35.227
+First, the stable journey. A reusable login fixture signs in without exposing credentials in evidence. The agent reaches the customer dashboard and begins the unchanged checkout specification.
+
+04
+00:00:35.887 --> 00:00:44.978
+The agent opens the shopping cart and checks the visible outcome: exactly one item is present. It resolves the checkout action semantically instead of relying on a stored selector.
+
+05
+00:00:45.653 --> 00:00:54.580
+At checkout, the next expectation is visible before submission. The saved test card and total are present, so the agent performs the approved payment action and continues.
+
+06
+00:00:55.253 --> 00:01:03.335
+The expected confirmation appears with no error message. Cleanup runs afterward, screenshots are stored, and the functional result is classified as passed.
+
+07
+00:01:03.987 --> 00:01:13.709
+The result view explains the decision. Every step passed, every original expectation is preserved, and each selected accessible target is recorded beside the evidence captured during the run.
+
+08
+00:01:14.387 --> 00:01:23.995
+Now the demo resets to harmless drift. Proceed to checkout has moved inside a menu and is renamed Continue to payment. The specification and its expected checkout form remain unchanged.
+
+09
+00:01:24.653 --> 00:01:37.472
+The original target is absent, so the agent captures the failure, rediscovers an explicitly equivalent accessible control, retries once, and verifies the same expectation. Before-and-after evidence supports the healed classification.
+
+10
+00:01:38.153 --> 00:01:47.926
+Next is a genuine functional bug. The checkout interaction still succeeds, but the application shows an order failure instead of the required confirmation. This is not eligible for healing.
+
+11
+00:01:48.587 --> 00:01:58.738
+The result stays honest: functional regression. The missing confirmation is recorded as the failed observable outcome, later steps do not invent success, and the original assertion is never rewritten.
+
+12
+00:01:59.420 --> 00:02:08.654
+Finally, the behavior works, but the approved confirmation design does not. The action moves ahead of the heading, and the green success treatment becomes a prominent red warning panel.
+
+13
+00:02:09.320 --> 00:02:20.624
+Because the functional steps passed, the explicit design checkpoint runs at its declared viewport. Concrete order and style findings, plus the actual screenshot and reference provenance, support a design regression.
+
+14
+00:02:21.287 --> 00:02:34.836
+That is the complete loop: semantic YAML, reusable fixtures, native execution, conservative healing, functional and design classification, and inspectable file-backed evidence. Harmless drift recovers; real regressions remain visible.

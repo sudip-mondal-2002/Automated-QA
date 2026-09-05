@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://auto-qa.local/schemas/environments.schema.json",
+  "title": "QA environments",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "environments"],
+  "properties": {
+    "version": { "const": 1 },
+    "environments": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/environment" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "environment": {
+      "oneOf": [
+        { "$ref": "#/$defs/webEnvironment" },
+        { "$ref": "#/$defs/desktopEnvironment" }
+      ]
+    },
+    "webEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "baseUrl"],
+      "properties": {
+        "type": { "const": "web" },
+        "baseUrl": { "type": "string", "minLength": 1 },
+        "startCommand": { "type": "string", "minLength": 1 }
+      }
+    },
+    "desktopEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "app"],
+      "properties": {
+        "type": { "const": "desktop" },
+        "app": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

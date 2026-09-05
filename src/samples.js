@@ -94,6 +94,35 @@ export const SAMPLE_SPECS = [
       },
     ],
   },
+  {
+    version: 1,
+    id: "checkout-design",
+    title: "Checkout matches the approved confirmation design",
+    environment: "local",
+    fixtures: {
+      before: ["login-customer"],
+      after: ["cleanup-test-order"],
+    },
+    design: {
+      reference: "http://localhost:3000/reference/approved-confirmation",
+      afterStep: 3,
+      viewport: { width: 1280, height: 900 },
+    },
+    steps: [
+      {
+        intent: "Open the shopping cart",
+        expect: ["Cart contains one item"],
+      },
+      {
+        intent: "Proceed to checkout",
+        expect: ["Checkout form is visible"],
+      },
+      {
+        intent: "Submit the approved test payment details",
+        expect: ["Order confirmation is visible", "No error message is shown"],
+      },
+    ],
+  },
 ];
 
 export const SAMPLE_SPEC = SAMPLE_SPECS[0];

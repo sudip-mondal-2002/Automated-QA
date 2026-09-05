@@ -6,11 +6,14 @@ import { parseJson, stringifyJson, stringifyYaml } from "./documents.js";
 import { formatQaError, QaError } from "./errors.js";
 import { executeRun } from "./execution.js";
 import { atomicWriteFile, QaWorkspace } from "./storage.js";
+import { startQaUi } from "./ui-server.js";
 
 const HELP = `qa-agent — semantic QA workspace and native execution runtime
 
 Usage:
   qa-agent init [--empty] [--root <repository>]
+  qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
+                 [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]...
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
@@ -18,6 +21,7 @@ Usage:
   qa-agent result <list|show|validate|save|delete> [run-id|file]
   qa-agent run <spec-id> [--env <id>]
   qa-agent run-last
+  qa-agent ui [--host <loopback-host>] [--port <port>]
   qa-agent select <spec-id> [--env <id>]
   qa-agent last
   qa-agent edit <spec-id>
@@ -209,6 +213,58 @@ async function environmentCommand(workspace, args, output) {
   throw new QaError("UNKNOWN_COMMAND", `Unknown environment operation: ${action ?? "(missing)"}`);
 }
 
+async function setupCommand(workspace, args, output) {
+  const type = option(args, "--type");
+  const environmentId = option(args, "--environment") ?? "local";
+  const baseUrl = option(args, "--base-url");
+  const startCommand = option(args, "--start-command");
+  const app = option(args, "--app");
+  assertNoUnknownOptions(args);
+  if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected setup argument: ${args[0]}`);
+  if (!type) throw new QaError("MISSING_OPTION_VALUE", "setup requires --type web or --type desktop");
+
+  let target;
+  if (type === "web") {
+    if (!baseUrl) throw new QaError("MISSING_OPTION_VALUE", "web setup requires --base-url");
+    if (app) throw new QaError("INVALID_SETUP_OPTION", "--app is only valid for desktop setup");
+    target = { type, baseUrl, ...(startCommand ? { startCommand } : {}) };
+  } else if (type === "desktop") {
+    if (!app) throw new QaError("MISSING_OPTION_VALUE", "desktop setup requires --app");
+    if (baseUrl || startCommand) {
+      throw new QaError("INVALID_SETUP_OPTION", "--base-url and --start-command are only valid for web setup");
+    }
+    target = { type, app };
+  } else {
+    throw new QaError("INVALID_ENVIRONMENT_TYPE", "--type must be web or desktop");
+  }
+
+  await workspace.ensureDirectories();
+  let environments;
+  try {
+    environments = await workspace.loadEnvironments();
+  } catch (error) {
+    if (!(error instanceof QaError) || error.code !== "NOT_FOUND") throw error;
+    environments = { version: 1, environments: {} };
+  }
+
+  const existing = environments.environments[environmentId];
+  if (existing && JSON.stringify(existing) !== JSON.stringify(target)) {
+    throw new QaError(
+      "ENVIRONMENT_EXISTS",
+      `Environment ${environmentId} already exists with different settings; edit .qa/environments.yaml explicitly`,
+    );
+  }
+
+  if (!existing) {
+    environments.environments[environmentId] = target;
+    await workspace.saveEnvironments(environments);
+    output(`Created environment ${environmentId}`);
+  } else {
+    output(`Kept existing environment ${environmentId}`);
+  }
+  output(`QA workspace is ready at ${workspace.qaDirectory}`);
+}
+
 async function resultCommand(workspace, args, output) {
   const action = args.shift();
   if (action === "list") {
@@ -264,6 +320,11 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       return 0;
     }
 
+    if (command === "setup") {
+      await setupCommand(workspace, args, output);
+      return 0;
+    }
+
     if (command === "create") {
       const id = option(args, "--id");
       const environment = option(args, "--env");
@@ -293,6 +354,20 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
     else if (command === "fixture") await fixtureCommand(workspace, args, output);
     else if (command === "environment") await environmentCommand(workspace, args, output);
     else if (command === "result") await resultCommand(workspace, args, output);
+    else if (command === "ui") {
+      const host = option(args, "--host");
+      const portValue = option(args, "--port");
+      const port = portValue === undefined ? undefined : Number(portValue);
+      if (portValue !== undefined && (!Number.isInteger(port) || port < 0 || port > 65_535)) {
+        throw new QaError("INVALID_UI_PORT", "--port must be an integer from 0 to 65535");
+      }
+      assertNoUnknownOptions(args);
+      if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected UI argument: ${args[0]}`);
+      await workspace.validateAll();
+      const application = await (io.startUi ?? startQaUi)({ workspace, host, port });
+      output(`QA workspace UI is ready at ${application.url}`);
+      output("Press Ctrl+C to stop it.");
+    }
     else if (command === "run") {
       const environment = option(args, "--env");
       const id = args.shift();

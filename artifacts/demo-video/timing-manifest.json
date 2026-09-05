@@ -1,0 +1,167 @@
+{
+  "voice": "Samantha",
+  "speechRate": 185,
+  "frameRate": 30,
+  "expectedDuration": 155.26666666666665,
+  "finalDuration": 155.314059,
+  "audioDuration": 155.314059,
+  "videoEnd": 155.313672,
+  "audioEnd": 155.314059,
+  "avEndDelta": 0.00038699999998925705,
+  "scenes": [
+    {
+      "id": "01",
+      "frame": "01-overview.jpg",
+      "label": "OVERVIEW",
+      "title": "Two interfaces. One source of truth.",
+      "narration": "Intent QA separates the application under test from the evidence workspace. The shop runs locally, while this dashboard reads the same file-backed QA artifacts used by the command line and the native agent.",
+      "audioDuration": 10.250431,
+      "duration": 10.933333333333334,
+      "start": 0,
+      "end": 10.933333333333334
+    },
+    {
+      "id": "02",
+      "frame": "02-editor.jpg",
+      "label": "SEMANTIC TEST",
+      "title": "Human-readable YAML, validated before save",
+      "narration": "Tests stay human-readable. This YAML records intent and observable outcomes, never selectors or coordinates. The editor reuses the authoritative validator, preserves the document identity, and saves atomically only after references are valid.",
+      "audioDuration": 13.227528,
+      "duration": 13.9,
+      "start": 10.933333333333334,
+      "end": 24.833333333333336
+    },
+    {
+      "id": "03",
+      "frame": "03-dashboard.jpg",
+      "label": "SCENARIO 1 · PASS",
+      "title": "Reusable login fixture",
+      "narration": "First, the stable journey. A reusable login fixture signs in without exposing credentials in evidence. The agent reaches the customer dashboard and begins the unchanged checkout specification.",
+      "audioDuration": 10.174104,
+      "duration": 10.833333333333334,
+      "start": 24.833333333333336,
+      "end": 35.66666666666667
+    },
+    {
+      "id": "04",
+      "frame": "04-cart.jpg",
+      "label": "SCENARIO 1 · PASS",
+      "title": "Semantic navigation",
+      "narration": "The agent opens the shopping cart and checks the visible outcome: exactly one item is present. It resolves the checkout action semantically instead of relying on a stored selector.",
+      "audioDuration": 9.091383,
+      "duration": 9.766666666666667,
+      "start": 35.66666666666667,
+      "end": 45.43333333333334
+    },
+    {
+      "id": "05",
+      "frame": "05-checkout.jpg",
+      "label": "SCENARIO 1 · PASS",
+      "title": "Expectations remain explicit",
+      "narration": "At checkout, the next expectation is visible before submission. The saved test card and total are present, so the agent performs the approved payment action and continues.",
+      "audioDuration": 8.926803,
+      "duration": 9.6,
+      "start": 45.43333333333334,
+      "end": 55.03333333333334
+    },
+    {
+      "id": "06",
+      "frame": "06-confirmation.jpg",
+      "label": "SCENARIO 1 · PASS",
+      "title": "Approved outcome observed",
+      "narration": "The expected confirmation appears with no error message. Cleanup runs afterward, screenshots are stored, and the functional result is classified as passed.",
+      "audioDuration": 8.081451,
+      "duration": 8.733333333333333,
+      "start": 55.03333333333334,
+      "end": 63.76666666666667
+    },
+    {
+      "id": "07",
+      "frame": "07-pass-result.jpg",
+      "label": "RESULT · PASSED",
+      "title": "Steps, targets, and evidence",
+      "narration": "The result view explains the decision. Every step passed, every original expectation is preserved, and each selected accessible target is recorded beside the evidence captured during the run.",
+      "audioDuration": 9.722132,
+      "duration": 10.4,
+      "start": 63.76666666666667,
+      "end": 74.16666666666667
+    },
+    {
+      "id": "08",
+      "frame": "08-drift-cart.jpg",
+      "label": "SCENARIO 2 · HARMLESS DRIFT",
+      "title": "The control moved and changed name",
+      "narration": "Now the demo resets to harmless drift. Proceed to checkout has moved inside a menu and is renamed Continue to payment. The specification and its expected checkout form remain unchanged.",
+      "audioDuration": 9.608163,
+      "duration": 10.266666666666667,
+      "start": 74.16666666666667,
+      "end": 84.43333333333334
+    },
+    {
+      "id": "09",
+      "frame": "09-healed-result.jpg",
+      "label": "RESULT · HEALED",
+      "title": "Equivalent target, unchanged expectation",
+      "narration": "The original target is absent, so the agent captures the failure, rediscovers an explicitly equivalent accessible control, retries once, and verifies the same expectation. Before-and-after evidence supports the healed classification.",
+      "audioDuration": 12.818231,
+      "duration": 13.5,
+      "start": 84.43333333333334,
+      "end": 97.93333333333334
+    },
+    {
+      "id": "10",
+      "frame": "10-functional-app.jpg",
+      "label": "SCENARIO 3 · REAL BUG",
+      "title": "Interaction succeeds; outcome fails",
+      "narration": "Next is a genuine functional bug. The checkout interaction still succeeds, but the application shows an order failure instead of the required confirmation. This is not eligible for healing.",
+      "audioDuration": 9.772562,
+      "duration": 10.433333333333334,
+      "start": 97.93333333333334,
+      "end": 108.36666666666667
+    },
+    {
+      "id": "11",
+      "frame": "11-functional-result.jpg",
+      "label": "RESULT · FUNCTIONAL REGRESSION",
+      "title": "No assertion rewriting",
+      "narration": "The result stays honest: functional regression. The missing confirmation is recorded as the failed observable outcome, later steps do not invent success, and the original assertion is never rewritten.",
+      "audioDuration": 10.151701,
+      "duration": 10.833333333333334,
+      "start": 108.36666666666667,
+      "end": 119.2
+    },
+    {
+      "id": "12",
+      "frame": "12-design-app.jpg",
+      "label": "SCENARIO 4 · DESIGN MISMATCH",
+      "title": "Functionally correct, visibly wrong",
+      "narration": "Finally, the behavior works, but the approved confirmation design does not. The action moves ahead of the heading, and the green success treatment becomes a prominent red warning panel.",
+      "audioDuration": 9.233696,
+      "duration": 9.9,
+      "start": 119.2,
+      "end": 129.1
+    },
+    {
+      "id": "13",
+      "frame": "13-design-result.jpg",
+      "label": "RESULT · DESIGN REGRESSION",
+      "title": "Reference-backed visual findings",
+      "narration": "Because the functional steps passed, the explicit design checkpoint runs at its declared viewport. Concrete order and style findings, plus the actual screenshot and reference provenance, support a design regression.",
+      "audioDuration": 11.30449,
+      "duration": 11.966666666666667,
+      "start": 129.1,
+      "end": 141.06666666666666
+    },
+    {
+      "id": "14",
+      "frame": "14-outro.jpg",
+      "label": "COMPLETE MVP",
+      "title": "Intent survives drift. Regressions stay visible.",
+      "narration": "That is the complete loop: semantic YAML, reusable fixtures, native execution, conservative healing, functional and design classification, and inspectable file-backed evidence. Harmless drift recovers; real regressions remain visible.",
+      "audioDuration": 13.549388,
+      "duration": 14.2,
+      "start": 141.06666666666666,
+      "end": 155.26666666666665
+    }
+  ]
+}

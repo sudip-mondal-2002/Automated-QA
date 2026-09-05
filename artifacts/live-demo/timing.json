@@ -1,0 +1,72 @@
+{
+  "totalDuration": 242,
+  "plannedDuration": 242,
+  "encodedAudioDuration": 242.005333,
+  "avEndDelta": 0.005333,
+  "chapters": [
+    {
+      "id": "01",
+      "title": "The actual developer experience",
+      "start": 0,
+      "end": 26.333333,
+      "duration": 26.333333,
+      "narrationDuration": 25.68
+    },
+    {
+      "id": "02",
+      "title": "Install one self-contained skill",
+      "start": 26.333333,
+      "end": 57.1,
+      "duration": 30.766667,
+      "narrationDuration": 30.096
+    },
+    {
+      "id": "03",
+      "title": "One request from the app project",
+      "start": 57.1,
+      "end": 90.466667,
+      "duration": 33.366667,
+      "narrationDuration": 32.712
+    },
+    {
+      "id": "04",
+      "title": "The skill owns the full run",
+      "start": 90.466667,
+      "end": 124.3,
+      "duration": 33.833333,
+      "narrationDuration": 33.168
+    },
+    {
+      "id": "05",
+      "title": "Harmless drift can heal",
+      "start": 124.3,
+      "end": 155.6,
+      "duration": 31.3,
+      "narrationDuration": 30.648
+    },
+    {
+      "id": "06",
+      "title": "A real bug stays failed",
+      "start": 155.6,
+      "end": 182.266667,
+      "duration": 26.666667,
+      "narrationDuration": 25.992
+    },
+    {
+      "id": "07",
+      "title": "Design is a separate decision",
+      "start": 182.266667,
+      "end": 212.466667,
+      "duration": 30.2,
+      "narrationDuration": 29.544
+    },
+    {
+      "id": "08",
+      "title": "Stay in the application project",
+      "start": 212.466667,
+      "end": 242,
+      "duration": 29.533333,
+      "narrationDuration": 28.848
+    }
+  ]
+}

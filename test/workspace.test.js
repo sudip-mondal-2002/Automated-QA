@@ -5,13 +5,13 @@ import test from "node:test";
 import { atomicWriteFile, QaError } from "../src/index.js";
 import { passingResult, temporaryWorkspace } from "../test-support/helpers.js";
 
-test("init creates and validates the complete Phase 1–2 workspace", async (t) => {
+test("init creates and validates the complete seeded workspace", async (t) => {
   const { root, workspace } = await temporaryWorkspace(t);
   const summary = await workspace.validateAll();
 
   assert.deepEqual(
     { environments: summary.environments, fixtures: summary.fixtures, specs: summary.specs, runs: summary.runs },
-    { environments: 3, fixtures: 2, specs: 2, runs: 0 },
+    { environments: 3, fixtures: 2, specs: 3, runs: 0 },
   );
   assert.deepEqual(summary.lastTest, { specId: "checkout-card", environment: "local" });
   await Promise.all([
@@ -31,7 +31,7 @@ test("init is idempotent and preserves existing editable YAML", async (t) => {
   const outcome = await workspace.init();
   assert.equal((await workspace.loadSpec("checkout-card")).title, "Manually edited checkout");
   assert.equal(outcome.created.length, 0);
-  assert.equal(outcome.skipped.length, 6);
+  assert.equal(outcome.skipped.length, 7);
 });
 
 test("spec and fixture CRUD remains reference-safe", async (t) => {

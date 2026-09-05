@@ -1,92 +1,112 @@
 ---
 name: autonomous-qa
-description: Create, inspect, edit, validate, run, safely self-heal, and compare explicit design references for repository-scoped semantic QA specs through native Browser/Chrome or computer-use capabilities.
+description: Set up and run repository-scoped semantic QA end to end through native Browser, Chrome, or computer-use capabilities, including evidence, conservative self-healing, design comparison, reruns, and the local results UI.
 ---
 
-# Autonomous QA — Native execution
+# Autonomous QA — one-skill developer experience
 
-Turn UI requirements into human-editable semantic documents under `.qa/`, then execute them through the host's native web or desktop capability. Phase 4 adds explicit-reference design comparison, declared-viewport evidence, concise visual findings, recent-run retention, and safe run deletion to the existing native execution and conservative self-healing runtime. The localhost UI remains later-phase work.
+The developer installs this skill once, opens their application repository, and describes the journey to test. Own the rest of the QA lifecycle: inspect the app, initialize its `.qa/` workspace, create or update semantic tests, start or reuse the application, execute through the native UI capability, persist validated evidence, and open the local results UI when useful.
 
-## Create and edit workflow
+## Developer contract
 
-1. Run `scripts/qa-agent init` from the repository root when `.qa/` is absent. Initialization validates existing content and never overwrites edits.
-2. Preserve what the user intends to do and what they should visibly observe. Never add CSS selectors, XPath, DOM paths, coordinates, fixed timing, or tool-specific browser code to specs or fixtures.
-3. For a simple one-outcome request, use `scripts/qa-agent create "<requirement>"`. Use `--env`, `--id`, repeatable `--expect`, and repeatable `--fixture-before` when those details were supplied.
-4. For a multi-step journey, create complete YAML matching [the spec schema](../../../schemas/spec.schema.json), save it through `scripts/qa-agent spec save <file>`, then select it with `scripts/qa-agent select <spec-id> [--env <id>]`.
-5. Finish changes with `scripts/qa-agent validate`. Return the saved path and mention editable assumptions.
+- Keep the developer in their application repository. Do not ask them to clone this skill's source repository, install its npm dependencies, add a QA package or script, or operate an agent runtime.
+- Treat `$autonomous-qa ...` natural-language requests as the public interface. The launcher and runtime described below are internal implementation details.
+- Do not tell the developer to run `qa-agent`, `npm run qa-agent`, or a separate QA UI command. Run those internally when needed.
+- Do not modify application code while testing unless the developer explicitly asks for a product fix. Writing `.qa/` artifacts in the application repository is expected.
+- Summarize the saved spec, classification, evidence paths, and any actionable regression. Avoid narrating internal plumbing.
 
-Use `spec`, `fixture`, `environment`, and `result` subcommands for `list`, `show`, `validate`, and `save`; specs and fixtures also support guarded deletion. `edit <spec-id>` replaces the authoritative file only after validation succeeds.
+## Self-contained runtime
 
-## Run workflow
+Resolve `SKILL_ROOT` as the directory containing this `SKILL.md`. This installed directory contains everything the skill needs:
 
-Treat `run <spec-id> [--env <id>]` and `run-last` as skill operations. `run-last` must load `.qa/last-test.json` and repeat its exact spec and environment. The Node runtime exposes the same operations when a host integration supplies a native executor; a bare shell process without that capability correctly saves `blocked` instead of pretending to run a UI.
+- `scripts/qa-agent` — portable internal launcher;
+- `runtime/qa-agent.mjs` — bundled Node.js runtime and dependencies;
+- `schemas/` — authoritative document contracts;
+- `ui/` — loopback workspace assets.
 
-1. Validate and load the spec, selected environment, and every referenced fixture before opening the target.
-2. Resolve environment-variable references and earlier `${outputs.*}` values only when needed. Pass resolved fixture inputs directly to the native action; never print or persist their values.
-3. Detect the required capability before launch:
-   - `type: web` requires native Browser or Chrome control.
+Invoke the launcher from the application repository and always pass its root explicitly:
+
+```bash
+"$SKILL_ROOT/scripts/qa-agent" <operation> --root "$PWD"
+```
+
+The application needs Node.js 20 or newer, but it does not need to install the skill runtime's npm dependencies. Never resolve files outside `SKILL_ROOT` for normal operation.
+
+## First request in an application
+
+1. Inspect only enough project metadata to identify the application type, existing start command, and local target. Prefer an already documented development command and URL. Never invent or run a production deployment command.
+2. If `.qa/environments.yaml` is absent, initialize a project-specific workspace internally:
+   - Web: `setup --type web --base-url <loopback-url> [--start-command <existing-command>]`
+   - Desktop: `setup --type desktop --app <existing-application>`
+   - Add `--environment <stable-id>` when `local` is not the right name.
+3. `setup` must not seed this package's demo fixtures or sample checkout tests. It is idempotent and must refuse to overwrite a differently configured environment.
+4. Translate the requested journey into semantic YAML. Preserve what the user intends to do and what they should visibly observe. Never add CSS selectors, XPath, DOM paths, coordinates, fixed timing, or tool-specific browser code.
+5. For one simple outcome, use internal `create`. For a multi-step journey, write YAML matching `schemas/spec.schema.json` and save it through internal `spec save`.
+6. Create fixtures only for genuinely reusable setup or cleanup. Store secrets as references such as `${QA_CUSTOMER_PASSWORD}`; never place resolved values in YAML, output, screenshots, or results.
+7. Run internal `validate` before opening the target. Surface path-based validation problems rather than weakening a contract.
+
+## End-to-end run workflow
+
+The skill, not the developer, performs every step below.
+
+1. Load the selected spec, environment, and referenced fixtures. `run-last` means the exact spec and environment in `.qa/last-test.json`.
+2. Detect the required native capability before launch:
+   - `type: web` requires Browser or Chrome control.
    - `type: desktop` requires computer use.
-   - If the capability is missing or mismatched, save `blocked` with the precise reason and stop.
-4. For a web target, check `baseUrl`. If it is unreachable and the environment declares `startCommand`, start it from the repository root, wait for observable reachability, and stop only the process started for this run after completion. Never start a production target.
-5. Open or connect to the resolved target. Execute fixture and test intents using the same semantic action-and-observation loop:
-   - Run `before` fixtures in declaration order.
-   - After each passing test step, run fixtures declared at that `between.afterStep` boundary.
-   - For every intent, observe the current UI, perform the minimum semantic action, and check every declared expectation unchanged.
-   - Verify each fixture's top-level `expect` postcondition. An idempotent cleanup fixture passes when the target is already clean.
-6. Capture a screenshot after fixture checkpoints and test steps, and at failures. Do not capture credential entry while secret fields are populated. Store screenshots under `.qa/runs/<run-id>/screenshots/` and refer to them with run-relative paths.
-7. If a test action fails or its target is missing, capture the current state and ask the native executor to rediscover an accessible target from the unchanged intent, current UI, failed/previous target summary, and original expectations. Retry only when the executor explicitly confirms that the replacement is equivalent. Never heal fixture postconditions.
-8. If an action succeeded but an expectation may be waiting on UI readiness, use an observable readiness wait only when the native executor exposes it. Re-observe every original expectation afterward; never use a fixed delay.
-9. A successful recovery must preserve the expectation list byte-for-byte, capture before/after screenshots, and record the original failure, replacement, strategy, outcome, and verification. Emit `healed` only when all test steps pass and at least one recovery verified the unchanged expectations. If verification still fails, record `functional_regression`; if recovery is unavailable, ambiguous, or blocked, fail safely without guessing a pass.
-10. When the spec declares `design`, resolve that explicit image, URL, or Figma reference before execution. At `design.afterStep` (or the last step by default), capture the rendered state at the declared viewport and invoke native design comparison using the fixed focused rules. Require concrete findings for component/content presence, major layout/order/grouping/alignment, or obvious style changes. Minor rendering differences and unsupported opinions cannot produce `design_regression`.
-11. Keep functional and design decisions separate. A functional failure remains `functional_regression`; only an otherwise functional run with a supported reference mismatch becomes `design_regression`. Missing comparison capability or evidence blocks the declared design check instead of guessing.
-12. Always attempt `after` fixtures in a finally-style cleanup path after pass, failure, healing, design comparison, or cancellation when the native session is usable. Record cleanup failures separately; they must not replace the primary classification.
-13. Report console and network errors only when the active native capability exposes them. Otherwise record the inspection as unsupported rather than assuming there were no errors.
-14. Save the validated result through the file-backed workspace so `last-test.json` atomically gains `lastRunId`. Return the classification, concise explanation, result path, and screenshot paths.
+   - If the required capability is unavailable, save `blocked` with the precise reason. Never imply that a shell-only run drove a UI.
+3. For web targets, check `baseUrl`. When a loopback target is unreachable and `startCommand` exists, start it from the application repository, wait for observable reachability, and remember whether this skill started the process. Reuse an already healthy target.
+4. Connect to the target and execute fixture and test intents through the native capability:
+   - run `before` fixtures in declaration order;
+   - after each passing step, run fixtures at that `between.afterStep` boundary;
+   - observe the current UI, perform the minimum semantic action, and verify every declared expectation unchanged;
+   - verify each fixture's top-level postcondition.
+5. Capture evidence after fixture checkpoints and test steps, and at failures. Do not capture credential entry while secret fields are populated. Save images only under `.qa/runs/<run-id>/screenshots/` and use run-relative paths in the result.
+6. When an action fails or its target is missing, capture current state and rediscover from the unchanged intent, current UI, failed or previous accessible target, and original expectations. Retry once only when the replacement is explicitly equivalent. Never heal a fixture postcondition.
+7. When an action succeeds but the expected UI may still be settling, wait only on an observable readiness condition supported by the native capability. Never use a fixed sleep.
+8. A successful recovery must retain the expectation list byte-for-byte, capture before and after evidence, and record the failed target, equivalent replacement, strategy, retry outcome, and verification.
+9. If the spec declares `design`, resolve the explicit image, URL, or Figma reference. At the declared checkpoint, capture the actual viewport and compare only component/content presence, major layout/order/grouping/alignment, and obvious style changes. Record structured findings and provenance.
+10. Always attempt `after` fixtures in a finally-style cleanup path while the native session remains usable. Cleanup failure is separate and must not replace the primary classification.
+11. Save a result matching `schemas/result.schema.json`, update `.qa/last-test.json` atomically, and keep recent-run retention intact. Report console and network errors only when the native capability exposes them; otherwise record that inspection as unsupported.
+12. Stop only an application process started for this run. Preserve `.qa/` artifacts and any already-running developer process.
 
-## Native execution boundary
+## Classification boundary
 
-The repository runtime's executor contract has five semantic responsibilities:
+- `passed`: every declared expectation passed with no recovery.
+- `healed`: interaction mechanics drifted, one evidence-backed equivalent retry succeeded, and every original expectation passed unchanged.
+- `functional_regression`: an action or observable product outcome failed. Do not heal expected copy, business outcomes, success/error states, fixture postconditions, or accessibility expectations.
+- `design_regression`: functionality passed, but an explicit reference and actual screenshot support concrete design findings.
+- `blocked`: execution or a declared check could not proceed reliably.
 
-- capability detection for `web` or `desktop`;
-- `connect(target)`;
-- `act(intent, context)` returning an optional accessible target summary and earlier-run outputs;
-- `observe(expectation, context)` returning `passed`, `failed`, or `blocked` plus a visible observation;
-- `screenshot(context)` returning PNG, JPEG, or WebP data.
+A later functional failure overrides earlier healing. Missing comparison evidence blocks a declared design check. Uncertainty never becomes a pass, and design baselines are never updated automatically.
 
-Adapters may additionally expose `rediscover(intent, context)`, `recover(intent, target, context)`, `waitFor(expectation, context)`, and `compareDesign(request, context)`. A rediscovered target is eligible only with `equivalent: true` and an accessible target summary. Design screenshots receive the declared viewport in their screenshot context; comparison returns `matched`, `regression`, or `blocked` plus structured findings. Console inspection, network inspection, and close are optional. Keep adapter-specific details outside `.qa/` documents. Native Browser/Chrome or computer-use tooling is the adapter; Playwright, Stagehand, DOM-selector scripts, coordinate scripts, and fixed sleeps are out of scope.
+## Results UI
 
-## Events and results
+Start the packaged UI internally after a run when the user asks to inspect evidence, when a regression benefits from visual review, or during a demo. Use internal `ui` with a free loopback port if the default is busy, then open the returned URL.
 
-Emit ordered execution events for run start/completion, environment readiness, capability notices, fixture start/completion, step start/completion, healing start/completion, design start/completion, screenshots, and cleanup. Results must conform to [the result schema](../../../schemas/result.schema.json) and preserve every recorded spec intent and expectation byte-for-byte.
+The UI is a file-backed reviewer, not a second agent platform. It:
 
-Phase 4 may emit:
+- lists specs, environments, classifications, and recent results;
+- copies `$autonomous-qa` run and rerun prompts rather than shell commands;
+- validates and atomically saves spec or fixture YAML;
+- polls for completed result files;
+- shows expectations, observations, accessible targets, healing notes, design findings, and declared screenshots;
+- deletes only an explicitly selected run and safely repairs the last-run pointer.
 
-- `passed` when declared expectations pass;
-- `healed` when interaction mechanics changed and unchanged expectations pass after evidence-backed recovery;
-- `functional_regression` for a direct failed action or observable outcome;
-- `design_regression` only for a concrete mismatch supported by an explicit reference, actual screenshot, declared viewport, and structured regression finding;
-- `blocked` when execution could not reliably proceed.
+The UI never drives the application, schedules jobs, or exposes a remote service. Keep it loopback-only.
 
-## Inputs and outputs
+## Internal document operations
 
-- Input: natural-language journey, optional environment, reusable fixtures, explicit expectations, and optional explicit design-reference metadata.
-- Output: validated YAML under `.qa/`; validated JSON plus screenshots under `.qa/runs/`; and an atomic `.qa/last-test.json` pointer.
-- IDs use lowercase words separated by hyphens and remain stable after creation.
+Use `spec`, `fixture`, `environment`, and `result` subcommands for internal `list`, `show`, `validate`, and `save`; specs and fixtures also support guarded deletion. `edit <spec-id>` replaces the authoritative file only after validation succeeds. All saves must reuse the packaged validators and atomic write path.
+
+The schemas in `schemas/` are authoritative. IDs use lowercase words separated by hyphens and remain stable after creation.
 
 ## Safety invariants
 
-- Expectations describe observable outcomes and never change during execution.
-- Fixture inputs that may contain secrets remain references such as `${QA_CUSTOMER_PASSWORD}` in stored documents. Resolved values must not enter results, events, terminal output, or screenshots.
-- Fixture workflows remain semantic and verify their own postcondition. Cleanup fixtures should be idempotent.
-- Unsupported inspection is explicit. Uncertainty never becomes a pass.
-- A replacement target must be explicitly equivalent; similarity alone is insufficient.
-- Successful healing requires before/after evidence and unchanged-expectation verification.
-- A later functional failure overrides an earlier successful healing for the run classification.
-- Agent taste alone cannot produce a design regression; every regression requires an explicit reference and concrete finding.
-- Design baselines, expected components, and visual findings are never healed or updated automatically.
-- Design evidence records the reference, checkpoint, viewport, actual screenshot, and concise comparison result.
-- Use native Browser/Chrome for web UI and computer use only for desktop/native UI.
-- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, or Stagehand.
-- Do not heal expected copy, business outcomes, success/error states, fixture postconditions, accessibility expectations, or design baselines. Do not repair application code, update baselines, perform pixel-perfect diffing, or claim the Phase 5 localhost UI.
-
-The schemas in [`schemas/`](../../../schemas/) remain the authoritative structural contracts. The CLI adds cross-file reference checks, execution orchestration, atomic writes, and path-based validation errors.
+- Expectations describe observable outcomes and remain unchanged during execution and healing.
+- Resolved fixture secrets never enter documents, results, events, terminal output, or screenshots.
+- Replacements require explicit semantic equivalence; similarity is insufficient.
+- Healing requires before/after evidence and unchanged-expectation verification.
+- Agent taste cannot create a design regression; explicit reference evidence and concrete findings are required.
+- Do not repair application code, update design baselines, or perform pixel-perfect diffing while running QA.
+- Keep storage file-backed. Do not add a database, headless CI, scheduling, parallel runs, Playwright, Stagehand, DOM-selector scripts, coordinate scripts, or fixed sleeps.
+- Do not expose the UI beyond loopback or turn it into an execution service.

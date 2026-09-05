@@ -158,6 +158,25 @@ test("CLI run reports passing and failing classifications", async (t) => {
   assert.match(failed.output.join("\n"), /functional_regression/);
 });
 
+test("CLI starts the Phase 5 localhost UI with explicit loopback options", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-ui-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await invoke(root, ["init"]);
+  let received;
+  const result = await invoke(root, ["ui", "--host", "localhost", "--port", "0"], {
+    startUi: async (options) => {
+      received = options;
+      return { url: "http://localhost:54321" };
+    },
+  });
+  assert.equal(result.exitCode, 0);
+  assert.equal(received.host, "localhost");
+  assert.equal(received.port, 0);
+  assert.equal(received.workspace.repositoryRoot, root);
+  assert.match(result.output.join("\n"), /http:\/\/localhost:54321/);
+  assert.match(result.output.join("\n"), /Ctrl\+C/);
+});
+
 test("CLI rejects missing values, unknown operations, files, and extra arguments", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "auto-qa-cli-errors-"));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -182,6 +201,9 @@ test("CLI rejects missing values, unknown operations, files, and extra arguments
     [["result", "validate"], "MISSING_ARGUMENT"],
     [["result", "save"], "MISSING_ARGUMENT"],
     [["result", "delete"], "MISSING_ARGUMENT"],
+    [["ui", "--port", "nope"], "INVALID_UI_PORT"],
+    [["ui", "--mystery"], "UNKNOWN_OPTION"],
+    [["ui", "extra"], "UNKNOWN_ARGUMENT"],
     [["run"], "MISSING_ARGUMENT"],
     [["run", "checkout-card", "extra"], "UNKNOWN_ARGUMENT"],
     [["run-last", "extra"], "UNKNOWN_ARGUMENT"],
