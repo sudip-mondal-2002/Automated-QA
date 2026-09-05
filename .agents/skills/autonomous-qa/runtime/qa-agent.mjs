@@ -18617,7 +18617,7 @@ init_documents();
 init_errors();
 init_storage();
 import { createServer } from "node:http";
-import { readFile as readFile4 } from "node:fs/promises";
+import { readdir as readdir2, readFile as readFile4 } from "node:fs/promises";
 import path2 from "node:path";
 import { fileURLToPath as fileURLToPath3 } from "node:url";
 var DEFAULT_UI_HOST = "127.0.0.1";
@@ -18795,6 +18795,54 @@ async function serveStatic(response, pathname, assetsDirectory) {
   send(response, 200, contents, asset.type);
   return true;
 }
+function orchestrationDirectory(workspace, orchestrationId) {
+  return path2.join(workspace.qaDirectory, "runs", "orchestrations", orchestrationId);
+}
+async function readOrchestrationJson(directory, fileName) {
+  try {
+    return JSON.parse(await readFile4(path2.join(directory, fileName), "utf8"));
+  } catch {
+    return null;
+  }
+}
+async function readTraceEvents(directory, since = 0) {
+  try {
+    const raw = await readFile4(path2.join(directory, "trace.jsonl"), "utf8");
+    const { redactSensitive: redactSensitive2 } = await Promise.resolve().then(() => (init_references(), references_exports));
+    return raw.split("\n").filter(Boolean).map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    }).filter((entry) => entry && (entry.seq ?? 0) > since).map((entry) => redactSensitive2(entry, []));
+  } catch {
+    return [];
+  }
+}
+async function listOrchestrations(workspace) {
+  let ids;
+  try {
+    ids = await readdir2(path2.join(workspace.qaDirectory, "runs", "orchestrations"));
+  } catch {
+    return [];
+  }
+  const entries = [];
+  for (const id of ids.filter((name) => name.startsWith("orch_"))) {
+    const report = await readOrchestrationJson(orchestrationDirectory(workspace, id), "report.json");
+    entries.push({
+      orchestrationId: id,
+      target: report?.target ?? null,
+      startedAt: report?.startedAt ?? null,
+      verdict: report?.summary?.verdict ?? "unknown",
+      exitCode: report?.summary?.exitCode ?? null,
+      score: report?.summary?.coverage?.score ?? null,
+      scenarios: report?.summary?.scenarios ?? null,
+      planner: report?.planSource?.planner ?? null
+    });
+  }
+  return entries.sort((a, b) => String(b.orchestrationId).localeCompare(String(a.orchestrationId)));
+}
 function createQaUiServer({
   workspace = new QaWorkspace(),
   assetsDirectory = DEFAULT_ASSETS_DIRECTORY
@@ -18864,18 +18912,41 @@ function createQaUiServer({
         send(response, 200, contents, screenshotContentType(fileName));
         return;
       }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length === 2) {
+        sendJson(response, 200, { orchestrations: await listOrchestrations(workspace) });
+        return;
+      }
       if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length >= 3) {
-        const { readFile: readTrace } = await import("node:fs/promises");
         const orchId = parts[2];
-        const since = Number(url.searchParams.get("since") ?? 0);
-        try {
-          const raw = await readTrace(path2.join(workspace.qaDirectory, "runs", "orchestrations", orchId, "trace.jsonl"), "utf8");
-          const lines = raw.split("\n").filter(Boolean).map((line) => JSON.parse(line)).filter((entry) => (entry.seq ?? 0) > since);
-          const { redactSensitive: redactSensitive2 } = await Promise.resolve().then(() => (init_references(), references_exports));
-          sendJson(response, 200, { orchestrationId: orchId, events: lines.map((entry) => redactSensitive2(entry, [])) });
-        } catch {
-          sendJson(response, 200, { orchestrationId: orchId, events: [] });
+        const directory = orchestrationDirectory(workspace, orchId);
+        if (parts[3] === "trace") {
+          const since = Number(url.searchParams.get("since") ?? 0);
+          sendJson(response, 200, { orchestrationId: orchId, events: await readTraceEvents(directory, since) });
+          return;
         }
+        const [report, gaps, plan] = await Promise.all([
+          readOrchestrationJson(directory, "report.json"),
+          readOrchestrationJson(directory, "gaps.json"),
+          readOrchestrationJson(directory, "test-plan.json")
+        ]);
+        if (!report && !gaps && !plan) throw new QaError("NOT_FOUND", `Orchestration does not exist: ${orchId}`);
+        sendJson(response, 200, {
+          orchestrationId: orchId,
+          report,
+          checklist: gaps?.checklist ?? [],
+          gaps: gaps?.gaps ?? [],
+          untestedRisks: gaps?.untestedRisks ?? [],
+          openQuestions: plan?.openQuestions ?? [],
+          planSource: plan?.source ?? report?.planSource ?? null,
+          flows: (plan?.flows ?? []).map((flow) => ({
+            id: flow.id,
+            title: flow.title,
+            category: flow.category,
+            priority: flow.priority,
+            steps: (flow.steps ?? []).length,
+            pages: flow.pages ?? []
+          }))
+        });
         return;
       }
       if (request.method === "GET" && await serveStatic(response, url.pathname, assetsDirectory)) return;
