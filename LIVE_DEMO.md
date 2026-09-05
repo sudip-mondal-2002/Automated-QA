@@ -167,6 +167,44 @@ Say:
 
 Stop at **4:50**. Leave the final evidence overview visible for the remaining ten seconds if the event clock requires a full five-minute slot.
 
+## Optional corner-case drill — after the five-minute demo
+
+Keep this outside the timed developer story. It is the technical-Q&A path for
+the full judgement matrix in [`docs/corner-test-cases.md`](docs/corner-test-cases.md).
+From the implementation repository, run:
+
+```bash
+npm run demo:corners
+```
+
+The command verifies all 28 documented contracts with their focused evidence
+tests. A judge can choose one instead of watching a fixed happy path:
+
+```bash
+npm run demo:corners -- --case H7
+```
+
+In the standalone `qa-shop-demo`, list every live mutation with:
+
+```bash
+npm run reset -- --list
+```
+
+The four timed beats already cover D1 (`pass`), H1 (`drift`), H3
+(`functional`), and D4 (`design`). The optional live challenges add:
+
+| Prompted challenge | Reset command | What must happen |
+| --- | --- | --- |
+| Removed action (H2) | `npm run reset -- missing-target` | no equivalent target; `functional_regression` |
+| Failed fixture postcondition (H4) | `npm run reset -- fixture` | never heal; `functional_regression` |
+| Heal, then fail later (H7) | `npm run reset -- drift-functional` | the later failure overrides the earlier heal |
+| Cleanup failure (E5) | `npm run reset -- cleanup` | primary verdict stays `passed`; cleanup issue remains visible |
+
+For the degraded-crawl challenge (P7), point a plan-only run at
+`http://127.0.0.1:3000/spa-shell`. Keep the other capability-boundary cases in
+the executable drill: they are runtime contracts, not fake application
+mutations.
+
 ## Timing fallback table
 
 | If this slips | Do this immediately | Never do this |

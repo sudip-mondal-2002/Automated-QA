@@ -194,7 +194,7 @@ No framework, no build step, no bundler — a single ES module using `fetch` and
 
 ## 5. The demo application (`demo-app/`)
 
-A standalone Node HTTP server, **zero dependencies**, ~240 lines, no QA runtime
+A standalone Node HTTP server, **zero dependencies**, no QA runtime
 import. It exists so every classification can be demonstrated deterministically.
 
 ### Routes
@@ -202,7 +202,8 @@ import. It exists so every classification can be demonstrated deterministically.
 POST, conversational channel) · `/cart` · `/checkout` (GET form, POST with
 empty-card 400 validation) · `/confirmation` · `/orders/current` (+ DELETE) ·
 `/orders/history` (empty state) · `/reference/approved-confirmation` (the design
-baseline as a served page) · `/__demo/reset` · `/reset`.
+baseline as a served page) · `/spa-shell` (client-rendered degraded-crawl target) ·
+`/__demo/reset` · `/reset`.
 
 Everything after `/login` is gated on **either** the in-memory `state.loggedIn` flag
 **or** a `qa-demo-session` cookie (`HttpOnly; SameSite=Lax`), added in PR #3 so a
@@ -221,15 +222,20 @@ restarting**:
 
 | Scenario | Variant | Visible change | Expected classification |
 | --- | --- | --- | --- |
-| `pass` | `stable` | Approved flow | `passed` |
+| `pass` | `stable` | Approved flow, with no design declaration | `passed`; no design judgement (D1) |
 | `drift` | `drift` | "Proceed to checkout" becomes a collapsed `<details>` → "Continue to payment" (same href) | `healed` |
+| `missing-target` | `missing-target` | Checkout action removed; no equivalent target exists | `functional_regression` (H2) |
 | `functional` | `broken` | Confirmation renders "Order could not be completed" | `functional_regression` |
+| `fixture` | `fixture-postcondition` | Login submits but never reaches its declared dashboard postcondition | `functional_regression` (H4) |
+| `drift-functional` | `drift-broken` | Checkout drift heals, then confirmation fails | `functional_regression`; later failure wins (H7) |
 | `design` | `design` | Confirmation is functionally identical but heading/link order reversed and restyled as a red banner | `design_regression` |
+| `cleanup` | `cleanup-broken` | Test order cannot be removed by the after fixture | primary `passed`; cleanup issue retained (E5) |
 | `locator` | `locator-drift` | `data-testid` attributes removed | triage `broken_locator` |
 
 `demo-app/reset.js` is an **app-development utility, not part of the skill runtime**:
 it accepts only loopback HTTP targets and mutates only the demo process's in-memory
-state — it cannot target staging or production.
+state — it cannot target staging or production. `npm run reset -- --list` prints
+the mutations, corner IDs, and expected outcomes.
 
 ### Verified agent-driven run (2026-09-05, real Chromium)
 
@@ -237,8 +243,13 @@ state — it cannot target staging or production.
 | --- | --- | --- | --- |
 | `stable` | Full login → cart → checkout → confirm → cleanup | `passed` | — |
 | `drift` | Control moved into a collapsed menu and renamed, same destination | `healed` — explicit equivalent target, one retry, expectations verified unchanged | H1 |
-| `functional` | Checkout submits, confirmation shows an error; no confirmation target exists to rediscover | `functional_regression` — refused to heal a business outcome | H2 |
+| `functional` | Checkout submits, confirmation shows an error | `functional_regression` — refused to rewrite or re-assert a business outcome | H3 |
 | `design` | Functionally identical, order reversed, red banner | `design_regression` with structured order/grouping/style findings; functional verdict untouched | D4 |
+
+The additional H2/H4/H7/E5 states are integration-tested with the deterministic
+native executor in `test/demo-corner-scenarios.test.js`. Run
+`npm run demo:corners` for the complete 28-case drill; this does not overstate
+those additions as separately agent-driven Chromium observations.
 
 ---
 

@@ -51,7 +51,7 @@ planner journey/predicate code added branches faster than tests covered them.
 
 ---
 
-## 2. The 31 test files, by concern
+## 2. The 35 test files, by concern
 
 | Concern | Files | Tests |
 | --- | --- | --- |
@@ -67,8 +67,9 @@ planner journey/predicate code added branches faster than tests covered them.
 | **UI** | `ui-server`, `ui-orchestrations`, `ui-trace` | 9 |
 | **CLI** | `cli`, `cli-coverage`, `cli-audit` | 13 |
 | **Sub-agent corner cases** | `subagents-corner` | 11 |
+| **Deterministic replay** | `replay`, `replay-browser` | 12 |
 | **Packaging** | `skill-package` | 1 |
-| **Demo app & reference driver** | `demo-reset`, `playwright-executor` | 13 |
+| **Demo app, corner drill & reference driver** | `demo-reset`, `demo-corner-scenarios`, `corner-demo`, `playwright-executor` | 16 |
 
 ### Test names that double as specification
 The suite reads like a requirements document. A sample:
@@ -126,8 +127,11 @@ so healing paths are exercised end to end without a browser.
 
 ## 4. The corner-case matrix (`docs/corner-test-cases.md`)
 
-A 33-case matrix scoped specifically to the **judgement sub-agents**, mirrored in
-`test/subagents-corner.test.js`.
+A 28-case matrix scoped specifically to the **judgement sub-agents**. The fast
+boundary cases live in `test/subagents-corner.test.js`; integration evidence for
+H4/H7/D1/D4/E4/E5 stays in the execution, healing, design, and live-demo suites.
+`npm run demo:corners` reads the matrix from the document and runs the exact
+mapped evidence for every ID.
 
 ### P — Planner sub-agent (10 cases)
 | ID | Corner | Expected |
@@ -162,12 +166,15 @@ drive · secret leak → never anywhere · `after` cleanup failure → finally p
 runs, primary classification preserved · remote target without `--allow-remote` →
 `ORCHESTRATION_REMOTE_BLOCKED`.
 
-### Documented gaps in this matrix
-- **H4 is now implemented.** PR #3 split fixture `failed` from `blocked` in
-  `execution.js`, and `test/execution-boundaries.test.js` gained coverage for a
-  fixture whose steps pass but whose postcondition assertion fails.
-- D1 (no `design` key) and E4 (secret redaction) have unit coverage but no single
-  end-to-end test proving the whole YAML → trace → screenshot path in one run.
+### Demo linkage
+
+- **H4 is implemented and live-seedable.** PR #3 split fixture `failed` from
+  `blocked` in `execution.js`; `npm run demo:reset -- fixture` now exposes the
+  same boundary through the demo app.
+- D1, H1, H2, H3, H4, H7, D4, and E5 have deterministic app states. P7 has the
+  client-rendered `/spa-shell` target. The remaining cases are runtime contracts,
+  so the demo runner presents their focused executable evidence instead of a
+  fabricated UI mutation.
 
 ---
 

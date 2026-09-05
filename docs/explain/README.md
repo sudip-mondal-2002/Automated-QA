@@ -20,7 +20,7 @@ H4, and hardened the reference Playwright driver — see
 | 05 | [Execution, healing, design, safety](05-execution-healing-safety.md) | `executeRun()` end to end, fixtures, the healing machine, design comparison, evidence, the event journal, the governance audit |
 | 06 | [Storage, schemas, evidence](06-storage-schemas-evidence.md) | The `.qa/` layout, all 10 contracts, the 30+ workspace guards, the 15 `saveResult` guards, the secret path |
 | 07 | [UI, CLI, developer surface](07-ui-cli-surface.md) | 20 CLI commands, the loopback API, the reviewer front end, the demo app and its scenario switch, demo assets |
-| 08 | [Testing and demos](08-testing-and-demos.md) | 192 tests, real coverage numbers, test infrastructure, the 33-case corner matrix, six verification levels, missing tests |
+| 08 | [Testing and demos](08-testing-and-demos.md) | real test and coverage numbers, test infrastructure, the executable 28-case corner matrix, six verification levels, missing tests |
 | 09 | [Presentation outline](09-presentation-outline.md) | 22 slides with content and speaker notes, plus 8 appendix slides |
 | 10 | [Gaps and roadmap](10-gaps-and-roadmap.md) | What is already fixed, 13 open gaps ranked, missing self-verification, work order, answers to the hard questions |
 
@@ -53,7 +53,7 @@ H4, and hardened the reference Playwright driver — see
 - [`README.md`](../../README.md) — the public pitch and install path
 - [`docs/architecture.md`](../architecture.md) — the as-implemented orchestrator diagram
 - [`docs/ORCHESTRATOR_DEMO.md`](../ORCHESTRATOR_DEMO.md) — the 5-minute orchestration demo script
-- [`docs/corner-test-cases.md`](../corner-test-cases.md) — the 33-case sub-agent corner matrix
+- [`docs/corner-test-cases.md`](../corner-test-cases.md) — the executable 28-case sub-agent corner matrix
 - [`docs/prd.md`](../prd.md) — the demo app's PRD (used for PRD-gap analysis)
 - [`LIVE_DEMO.md`](../../LIVE_DEMO.md) — the developer-experience demo runbook
 - [`scripts.md`](../../scripts.md) — lifecycle and persistence behaviour

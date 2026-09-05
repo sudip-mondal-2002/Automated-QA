@@ -47,3 +47,26 @@ input exists on /checkout. A product gap, not a test gap.
 Fetch-only crawler for portability. Playwright files as portable
 artifacts. Semantic YAML as the contract, selectors as rewritable
 state.
+
+## Optional technical-Q&A drill (off clock)
+
+Run the complete documented judgement matrix:
+
+```bash
+npm run demo:corners
+```
+
+Or let the reviewer select a single adversarial contract:
+
+```bash
+npm run demo:corners -- --case P3
+npm run demo:corners -- --case H7
+npm run demo:corners -- --case E5
+```
+
+`npm run demo:reset -- --list` shows the app-backed cases. In addition to the
+headline `pass`, `drift`, `functional`, and `design` states, the live target now
+has `missing-target` (H2), `fixture` (H4), `drift-functional` (H7), and
+`cleanup` (E5). Plan against `/spa-shell` for the degraded client-rendered
+crawl case (P7). The remaining cases stay explicit runtime probes rather than
+being disguised as UI mutations.

@@ -73,16 +73,23 @@ Selects one deterministic application state without restarting the server:
 
 | Scenario | Visible application state | Expected QA classification |
 | --- | --- | --- |
-| `pass` | Approved checkout flow | `passed` |
-| `drift` | Checkout action moved into a menu and renamed | `healed` with unchanged expectations |
-| `functional` | Checkout action works but confirmation outcome is broken | `functional_regression` |
-| `design` | Checkout works but confirmation order/style differs from the explicit reference | `design_regression` |
+| `pass` | Approved checkout flow, no design declaration (D1) | `passed`; no design judgement |
+| `drift` | Checkout action moved into a menu and renamed (H1) | `healed` with unchanged expectations |
+| `missing-target` | Checkout action removed with no equivalent (H2) | `functional_regression` |
+| `functional` | Checkout action works but confirmation outcome changes (H3) | `functional_regression` |
+| `fixture` | Login action completes but its postcondition fails (H4) | `functional_regression` |
+| `drift-functional` | Drift heals, then confirmation fails (H7) | `functional_regression`; later failure wins |
+| `design` | Checkout works but confirmation differs from the explicit reference (D4) | `design_regression` |
+| `cleanup` | Checkout passes but the after fixture cannot remove the order (E5) | `passed` with a cleanup issue |
+| `locator` | Preferred test IDs disappear but accessible controls remain | locator-chain fallback remains explicit |
 
 ```bash
 npm run reset -- pass
 npm run reset -- drift
+npm run reset -- missing-target
 npm run reset -- functional
 npm run reset -- design
+npm run reset -- --list
 ```
 
 The reset helper accepts only loopback HTTP URLs, clears only in-memory demo state, and cannot target staging or production.
@@ -129,9 +136,16 @@ Enforces:
 - at least 95% branch coverage;
 - at least 98% function coverage.
 
+### `npm run demo:corners`
+
+Reads the 28 contracts in `docs/corner-test-cases.md`, runs their exact focused
+evidence tests, and prints the live reset command for app-backed cases. Use
+`npm run demo:corners -- --case H7` for one reviewer-selected challenge or
+`npm run demo:corners -- --list` to inspect the matrix without executing it.
+
 ### Root demo aliases
 
-`npm run demo`, `npm run dev`, and `npm run demo:reset -- <scenario>` delegate to the standalone `demo-app/` project for maintainer convenience. They are not required by an installed-skill user.
+`npm run demo`, `npm run dev`, and `npm run demo:reset -- <scenario>` delegate to the standalone `demo-app/` project for maintainer convenience. `npm run demo:reset -- --list` prints the live corner-case catalog. These aliases are not required by an installed-skill user.
 
 ## Live developer demo and recording
 
