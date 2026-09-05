@@ -497,6 +497,8 @@ The hackathon MVP is complete when:
 
 ## Build order
 
+See [phases.md](phases.md) for the phased implementation plan and per-phase exit criteria.
+
 1. Semantic spec, fixture, and result schemas.
 2. Skill workflow plus native Browser/Chrome execution.
 3. Self-healing classifier with unchanged-expectation verification.
