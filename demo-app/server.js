@@ -58,9 +58,10 @@ export const DEMO_SCENARIOS = Object.freeze({
   drift: "drift",
   functional: "broken",
   design: "design",
+  locator: "locator-drift",
 });
 
-const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design"]);
+const DEMO_VARIANTS = new Set(["stable", "drift", "broken", "drift-broken", "design", "locator-drift"]);
 
 export function resetDemoState(state, scenario) {
   const variant = DEMO_SCENARIOS[scenario];
@@ -140,21 +141,29 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       return redirect(response, "/chat?asked=1");
     }
     if (request.method === "GET" && url.pathname === "/cart") {
+      const locatorDrift = state.variant === "locator-drift";
       return send(response, 200, page("Shopping cart", `
         <h1>Shopping cart</h1>
         <div class="item"><span>QA Demo Card</span><strong>₹499</strong></div>
         <p>Cart contains one item.</p>
         ${hasCheckoutDrift
           ? `<details><summary>Checkout options</summary><a class="button" href="/checkout">Continue to payment</a></details>`
-          : `<a class="button" href="/checkout">Proceed to checkout</a>`}`));
+          : locatorDrift
+            ? `<a class="button" href="/checkout">Proceed to checkout</a>`
+            : `<a class="button" data-testid="proceed-checkout" href="/checkout">Proceed to checkout</a>`}`));
     }
     if (request.method === "GET" && url.pathname === "/checkout") {
+      const locatorDrift = state.variant === "locator-drift";
       return send(response, 200, page("Checkout", `
         <h1>Checkout form</h1>
         <p>Total: ₹499 · Saved test card ending in 4242</p>
-        <form method="post" action="/checkout"><button type="submit">Place order</button></form>`));
+        <form method="post" action="/checkout"><label>Card <input name="card" required></label><button type="submit" ${locatorDrift ? "" : `data-testid="place-order"`}>Place order</button></form>`));
     }
     if (request.method === "POST" && url.pathname === "/checkout") {
+      const values = await form(request);
+      if (!values.get("card") && request.headers["content-type"]?.includes("application/x-www-form-urlencoded")) {
+        return send(response, 400, page("Checkout", `<h1>Checkout form</h1><p>A validation error names the card field.</p><p>No order is created.</p>`));
+      }
       state.orderCreated = true;
       return redirect(response, "/confirmation");
     }
@@ -179,6 +188,9 @@ export function createDemoApplication({ variant = "stable" } = {}) {
       return send(response, 200, page("Test order", state.orderCreated
         ? `<h1>Order QA-1001</h1><form method="post" action="/orders/current/delete"><button type="submit">Delete test order</button></form>`
         : `<h1>Test order absent</h1><p>There is no test order to remove.</p>`));
+    }
+    if (request.method === "GET" && url.pathname === "/orders/history") {
+      return send(response, 200, page("Order history", `<h1>Order history</h1><p>An empty state is visible: no past orders.</p>`));
     }
     if (request.method === "POST" && url.pathname === "/orders/current/delete") {
       state.orderCreated = false;

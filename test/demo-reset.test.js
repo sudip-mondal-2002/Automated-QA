@@ -22,6 +22,7 @@ test("demo state reset maps the four judge-facing scenarios deterministically", 
     drift: "drift",
     functional: "broken",
     design: "design",
+    locator: "locator-drift",
   });
   const state = { loggedIn: true, orderCreated: true, chatAnswered: true, variant: "drift-broken" };
   for (const [scenario, variant] of Object.entries(DEMO_SCENARIOS)) {

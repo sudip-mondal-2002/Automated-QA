@@ -15,6 +15,7 @@ Usage:
   qa-agent setup --type <web|desktop> [--environment <id>] [--base-url <url>]
                  [--start-command <command>] [--app <application>]
   qa-agent create <requirement> [--id <id>] [--env <id>] [--expect <text>]... [--channel <web|chat|voice|workflow|api>]
+  qa-agent orchestrate --url <url> [--username <u>] [--password <p>] [--prompt <text>] [--prd <file>] [--out <dir>] [--max-replans <n>] [--allow-remote] [--json]
   qa-agent spec <list|show|validate|save|delete> [id|file]
   qa-agent fixture <list|show|validate|save|delete> [id|file]
   qa-agent environment <list|show|validate|save> [id|file]
@@ -468,6 +469,43 @@ export async function runCli(argv = process.argv.slice(2), io = {}) {
       return await runCommand(workspace, selected.specId, selected.environment, io, output);
     } else if (command === "audit") {
       return await auditCommand(workspace, args, output);
+    } else if (command === "orchestrate") {
+      const { orchestrate } = await import("./orchestrator.js");
+      const { readFile: readPrdFile } = await import("node:fs/promises");
+      const url = option(args, "--url");
+      const username = option(args, "--username") ?? process.env.QA_USERNAME;
+      const password = option(args, "--password") ?? process.env.QA_PASSWORD;
+      const prompt = option(args, "--prompt") ?? "";
+      const prdPath = option(args, "--prd");
+      const outDir = option(args, "--out");
+      const maxReplansValue = option(args, "--max-replans");
+      const allowRemote = flag(args, "--allow-remote");
+      const json = flag(args, "--json");
+      assertNoUnknownOptions(args);
+      if (args.length > 0) throw new QaError("UNKNOWN_ARGUMENT", `Unexpected orchestrate argument: ${args[0]}`);
+      if (!url) throw new QaError("MISSING_OPTION_VALUE", "orchestrate requires --url");
+      const maxReplans = maxReplansValue === undefined ? 2 : Number(maxReplansValue);
+      if (!Number.isInteger(maxReplans) || maxReplans < 1) throw new QaError("INVALID_OPTION_VALUE", "--max-replans must be a positive integer");
+      let prdText;
+      if (prdPath) {
+        try {
+          prdText = await readPrdFile(prdPath, "utf8");
+        } catch {
+          throw new QaError("INVALID_OPTION_VALUE", `PRD file is unreadable: ${prdPath}`);
+        }
+      }
+      const { report, exitCode, error } = await orchestrate({
+        url, username, password, prompt, prdText, outDir, root, maxReplans, allowRemote,
+        executor: io.nativeExecutor, variables: io.variables ?? process.env, fetchImpl: io.fetchImpl,
+      });
+      if (error) throw error;
+      if (json) output(JSON.stringify({ exitCode, report }));
+      else {
+        output(`Orchestration ${report.orchestrationId}: ${report.summary.verdict} (exit ${exitCode})`);
+        output(`Scenarios ${report.summary.scenarios.passed + report.summary.scenarios.healed}/${report.summary.scenarios.total} clean · coverage ${report.summary.coverage.score}`);
+        output(`Report: ${report.artifacts.specs} + report.json`);
+      }
+      return exitCode > 9 ? exitCode : exitCode === 0 ? 0 : 1;
     }
     else if (command === "select") {
       const environment = option(args, "--env");

@@ -273,6 +273,20 @@ export function createQaUiServer({
         send(response, 200, contents, screenshotContentType(fileName));
         return;
       }
+      if (request.method === "GET" && parts[0] === "api" && parts[1] === "orchestrations" && parts.length >= 3) {
+        const { readFile: readTrace } = await import("node:fs/promises");
+        const orchId = parts[2];
+        const since = Number(url.searchParams.get("since") ?? 0);
+        try {
+          const raw = await readTrace(path.join(workspace.qaDirectory, "runs", "orchestrations", orchId, "trace.jsonl"), "utf8");
+          const lines = raw.split("\n").filter(Boolean).map((line) => JSON.parse(line)).filter((entry) => (entry.seq ?? 0) > since);
+          const { redactSensitive } = await import("./references.js");
+          sendJson(response, 200, { orchestrationId: orchId, events: lines.map((entry) => redactSensitive(entry, [])) });
+        } catch {
+          sendJson(response, 200, { orchestrationId: orchId, events: [] });
+        }
+        return;
+      }
       if (request.method === "GET" && await serveStatic(response, url.pathname, assetsDirectory)) return;
       throw new QaError("NOT_FOUND", `UI route does not exist: ${url.pathname}`);
     } catch (error) {
