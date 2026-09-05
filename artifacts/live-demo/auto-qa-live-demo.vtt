@@ -1,0 +1,161 @@
+WEBVTT
+
+1
+00:00:00.200 --> 00:00:01.644
+Here’s the whole idea.
+
+2
+00:00:01.644 --> 00:00:06.699
+Most UI tests fail because a selector moved, not because the product is broken.
+
+3
+00:00:06.699 --> 00:00:12.114
+Intent QA stores what the user is trying to do, and what must remain true.
+
+4
+00:00:12.114 --> 00:00:19.335
+It can recover a harmless interaction change, but it will not rewrite an assertion or explain away a real bug.
+
+5
+00:00:19.335 --> 00:00:25.112
+Let me show you the entire developer experience, from a clean checkout to the correctness boundaries.
+
+6
+00:00:25.767 --> 00:00:28.587
+I’m starting from a clean clone.
+
+7
+00:00:28.587 --> 00:00:35.166
+Installation is ordinary npm: install the dependencies, initialize the QA workspace, and validate it.
+
+8
+00:00:35.166 --> 00:00:40.806
+Init is idempotent, so it creates anything missing without overwriting an edit.
+
+9
+00:00:40.806 --> 00:00:47.855
+Validation applies the schemas and the cross-file checks before we spend time opening a browser.
+
+10
+00:00:47.855 --> 00:00:51.615
+A spec list confirms the repository is ready.
+
+11
+00:00:52.267 --> 00:00:55.851
+Now I create a test from a normal requirement.
+
+12
+00:00:55.851 --> 00:01:02.620
+I choose the local environment, reuse the login fixture, and state the visible outcome I care about.
+
+13
+00:01:02.620 --> 00:01:04.611
+The result is editable YAML.
+
+14
+00:01:04.611 --> 00:01:09.787
+Notice what is not here: no CSS selector, XPath, coordinate, or fixed sleep.
+
+15
+00:01:09.787 --> 00:01:18.547
+The intent and expectation are the source of truth, and the CLI and workspace UI validate and save the exact same file.
+
+16
+00:01:19.200 --> 00:01:25.446
+For execution, I ask the autonomous QA skill to run checkout card on local.
+
+17
+00:01:25.446 --> 00:01:32.138
+This is the important boundary: Codex drives the real app through its native Browser capability.
+
+18
+00:01:32.138 --> 00:01:41.507
+The reusable fixture signs in, the agent opens the cart, reaches checkout, submits the approved test payment, and observes the confirmation.
+
+19
+00:01:41.507 --> 00:01:45.522
+The workspace picks up the completed file-backed result automatically.
+
+20
+00:01:45.522 --> 00:01:51.768
+Every step passed, the accessible targets are recorded, and the screenshots explain the decision.
+
+21
+00:01:52.433 --> 00:01:56.137
+Now I change the application, not the test.
+
+22
+00:01:56.137 --> 00:02:01.694
+Proceed to checkout moves into a menu and becomes Continue to payment.
+
+23
+00:02:01.694 --> 00:02:05.862
+I rerun the same spec with every expectation unchanged.
+
+24
+00:02:05.862 --> 00:02:17.438
+The old target is gone, so the agent captures that failure, rediscovers one explicitly equivalent accessible control, retries once, and checks the original checkout-form expectation.
+
+25
+00:02:17.438 --> 00:02:18.364
+It passes.
+
+26
+00:02:18.364 --> 00:02:23.921
+That is a healed interaction, supported by before-and-after evidence—not an edited requirement.
+
+27
+00:02:24.600 --> 00:02:26.771
+Next, a real functional bug.
+
+28
+00:02:26.771 --> 00:02:33.284
+The checkout interaction still works, but the application says the order could not be completed.
+
+29
+00:02:33.284 --> 00:02:38.928
+There is nothing to heal: the action succeeded and the required outcome failed.
+
+30
+00:02:38.928 --> 00:02:47.177
+The result stays a functional regression, and the original assertion still says that an order confirmation must be visible.
+
+31
+00:02:47.177 --> 00:02:53.256
+This is the correctness guarantee—the agent never negotiates the expectation to manufacture a pass.
+
+32
+00:02:53.933 --> 00:02:57.736
+Finally, behavior succeeds but the approved design does not.
+
+33
+00:02:57.736 --> 00:03:04.498
+The action appears before the heading, and the green success treatment becomes a red warning panel.
+
+34
+00:03:04.498 --> 00:03:10.415
+Because the functional steps passed, the separate design checkpoint runs at its declared viewport.
+
+35
+00:03:10.415 --> 00:03:16.754
+The result shows the explicit reference, the actual screenshot, and concrete order and style findings.
+
+36
+00:03:16.754 --> 00:03:23.093
+That supports a design regression; it is not the agent grading the page by taste.
+
+37
+00:03:23.766 --> 00:03:25.404
+Everything remains inspectable.
+
+38
+00:03:25.404 --> 00:03:34.142
+Specs, results, screenshots, and the last-run pointer are ordinary repository files, so the UI is optional.
+
+39
+00:03:34.142 --> 00:03:46.156
+Ninety-seven tests enforce the path guards, atomic saves, immutable expectations, healing boundary, classification rules, design evidence, demo resets, and the localhost workspace.
+
+40
+00:03:46.156 --> 00:03:57.078
+That is the complete loop: install, describe intent, run the native browser, recover harmless drift, and keep real regressions visible.

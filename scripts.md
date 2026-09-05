@@ -83,31 +83,36 @@ npm run demo:reset -- pass
 
 Ask the autonomous-QA skill to run `checkout-card --env local`, then inspect the completed card in the QA UI. Use `drift` and `functional` with the unchanged `checkout-card` spec. Use `design` with `checkout-design`.
 
-## Recorded full demo
+## Live developer demo
 
-The generated demo package lives in `artifacts/demo-video/`. It covers the same two-UI workflow in fourteen timed scenes: workspace overview, YAML editing, the passing checkout, harmless drift and healing, a functional regression, a design regression, and the final evidence summary.
+The current judge-facing package lives in `artifacts/live-demo/`. It follows the same path you should present live:
 
-The voiceover is not placed against guessed pauses. `render-video.mjs` generates every scene's narration separately, measures the real audio duration, rounds the scene boundary to the next 30 fps frame, and adds 650 milliseconds of visual breathing room. The final render rejects an overall duration mismatch above 80 milliseconds and an encoded audio/video end-time difference above 8 milliseconds.
+1. clone and install with ordinary npm;
+2. initialize and validate the file-backed QA workspace;
+3. create and inspect selector-free semantic YAML;
+4. ask Codex to run the spec through the autonomous-QA skill and native Browser;
+5. inspect the completed result and screenshots in the workspace UI;
+6. rerun the unchanged spec against harmless drift and a real functional bug;
+7. run the declared design checkpoint against its explicit reference;
+8. close with the repository files and enforced production coverage.
 
-```bash
-# Start the isolated recording workspace and demo servers.
-node artifacts/demo-video/recording-server.mjs
+The edited recording is 3:58 because it removes execution waiting. The live presentation reserves five minutes so Browser execution and workspace polling do not force rushed narration. Follow [LIVE_DEMO.md](LIVE_DEMO.md) for the exact timing windows, shell commands, Codex prompts, words to say, and recovery lines.
 
-# After refreshing the frames, regenerate voiceover, captions, timing data,
-# the H.264/AAC video, and both visual QA contact sheets.
-node artifacts/demo-video/render-video.mjs
-```
+The terminal sections are recordings of real commands, defined by the VHS tapes in the same directory. Browser sections use real application states and real workspace result details captured from the isolated demo on `127.0.0.1:4312` and QA UI on `127.0.0.1:4190`. Fixture credentials are prepared off-camera, so neither the video nor its source screenshots expose credential fields or a password-save prompt.
 
-Generated delivery files:
+`chapters.json` is the conversational narration source. `render-live-demo.mjs` measures each narration file, adds a short lead-in and tail, rounds the chapter to the next 30 fps frame, moves through the real browser states with restrained transitions, and applies the chapter and command callouts. The renderer fails if the encoded duration drifts by more than one frame from the plan or if audio and video end timestamps differ by more than 12 milliseconds.
 
-- `auto-qa-full-demo.mp4` — 1280×720, 30 fps H.264 video with synchronized AAC voiceover.
-- `auto-qa-full-demo-voiceover.m4a` — the exact audio track used by the video.
-- `auto-qa-full-demo.vtt` — fourteen caption cues constrained to their scene boundaries.
-- `timing-manifest.json` — measured narration, start, end, and duration for every scene.
-- `contact-sheet.png` — the fourteen source browser captures.
-- `playback-contact-sheet.png` — one midpoint sampled from every rendered scene, including its title overlay.
+Delivery files:
 
-The recording server uses temporary ports `4312` and `4190` and a temporary `.qa` workspace, so producing the video does not modify the repository's live QA results. Stop it with `Ctrl+C`; the temporary workspace is removed.
+- `auto-qa-live-demo.mp4` — 1920×1080, constant 30 fps H.264 video with synchronized AAC narration;
+- `auto-qa-live-demo-voiceover.mp3` — the exact normalized narration track from the video;
+- `auto-qa-live-demo.vtt` — sentence-level captions constrained to their narration chapters;
+- `timing.json` — planned chapters, measured narration, encoded duration, and A/V end delta;
+- `contact-sheet.png` — one midpoint from every rendered chapter;
+- `02-install.tape`, `03-create.tape`, and `08-correctness.tape` — reproducible real terminal motion;
+- `render-live-demo.mjs` — the H.264/AAC assembly and timing validator.
+
+The browser and synthesized voice source files are generated under `artifacts/live-demo/work/`, which is intentionally ignored. The reviewed delivery files above are committed so the demo plays directly from GitHub without requiring the recording environment.
 
 ## npm scripts
 

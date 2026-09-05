@@ -30,11 +30,11 @@ The implementation is covered by the Node.js test suite and production coverage 
 
 ### Recorded end-to-end demo
 
-[![Watch the complete Autonomous QA demo](artifacts/demo-video/playback-contact-sheet.png)](artifacts/demo-video/auto-qa-full-demo.mp4)
+[![Watch the live developer demo](artifacts/live-demo/contact-sheet.png)](artifacts/live-demo/auto-qa-live-demo.mp4)
 
-[Watch or download the complete narrated demo (2:35, MP4)](artifacts/demo-video/auto-qa-full-demo.mp4). It walks through the file-backed workspace and semantic editor, a passing checkout, harmless interaction drift that heals, a real functional regression that remains failed, and a reference-backed design regression.
+[Watch or download the live developer demo (3:58, MP4)](artifacts/live-demo/auto-qa-live-demo.mp4). It starts from a clean clone, installs and initializes the workspace, validates and creates semantic QA, shows the exact Codex skill request, performs the checkout journey, and then proves all three correctness boundaries: harmless interaction drift heals with the original expectations unchanged, a functional bug remains failed, and a design regression requires explicit reference-backed findings.
 
-The repository also includes the [captions](artifacts/demo-video/auto-qa-full-demo.vtt), [timing manifest](artifacts/demo-video/timing-manifest.json), [separate voiceover](artifacts/demo-video/auto-qa-full-demo-voiceover.m4a), source frames, and reproducible renderer. The encoded audio and video end timestamps differ by less than one millisecond. See [scripts.md](scripts.md#recorded-full-demo) for the UI behavior and recording workflow.
+Use the [five-minute live-demo runbook](LIVE_DEMO.md) when presenting it yourself. It contains the exact commands, Codex prompts, proof points, timing windows, and recovery lines. The repository also includes [captions](artifacts/live-demo/auto-qa-live-demo.vtt), a [timing manifest](artifacts/live-demo/timing.json), the [separate voiceover](artifacts/live-demo/auto-qa-live-demo-voiceover.mp3), real terminal recording tapes, and the [renderer](artifacts/live-demo/render-live-demo.mjs). The renderer rounds every chapter to a 30 fps frame boundary and rejects an encoded audio/video end mismatch above 12 milliseconds. See [scripts.md](scripts.md#live-developer-demo) for the two-UI behavior and recording package.
 
 ## Complete MVP quick start
 

@@ -1,0 +1,72 @@
+{
+  "totalDuration": 237.533,
+  "plannedDuration": 237.533,
+  "encodedAudioDuration": 237.533,
+  "avEndDelta": 0,
+  "chapters": [
+    {
+      "id": "01",
+      "title": "The promise",
+      "start": 0,
+      "end": 25.567,
+      "duration": 25.567,
+      "narrationDuration": 24.912
+    },
+    {
+      "id": "02",
+      "title": "Install and validate",
+      "start": 25.567,
+      "end": 52.067,
+      "duration": 26.5,
+      "narrationDuration": 25.848
+    },
+    {
+      "id": "03",
+      "title": "Create semantic QA",
+      "start": 52.067,
+      "end": 79,
+      "duration": 26.933,
+      "narrationDuration": 26.28
+    },
+    {
+      "id": "04",
+      "title": "Run the real journey",
+      "start": 79,
+      "end": 112.233,
+      "duration": 33.233,
+      "narrationDuration": 32.568
+    },
+    {
+      "id": "05",
+      "title": "Heal harmless drift",
+      "start": 112.233,
+      "end": 144.4,
+      "duration": 32.167,
+      "narrationDuration": 31.488
+    },
+    {
+      "id": "06",
+      "title": "Keep real bugs red",
+      "start": 144.4,
+      "end": 173.733,
+      "duration": 29.333,
+      "narrationDuration": 28.656
+    },
+    {
+      "id": "07",
+      "title": "Detect design regression",
+      "start": 173.733,
+      "end": 203.566,
+      "duration": 29.833,
+      "narrationDuration": 29.16
+    },
+    {
+      "id": "08",
+      "title": "Inspectable correctness",
+      "start": 203.566,
+      "end": 237.533,
+      "duration": 33.967,
+      "narrationDuration": 33.312
+    }
+  ]
+}
